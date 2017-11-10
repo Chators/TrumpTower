@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TrumpTower.Draw;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
+using TrumpTower.LibraryTrumpTower.Spawns;
 
 namespace TrumpTower
 {
@@ -29,6 +30,7 @@ namespace TrumpTower
         SpriteFont _imgDollars;
         SpriteFont _imgNextWave;
         Texture2D _imgMissile;
+        Texture2D _imgNorthKoreaIsComming;
 
         MouseState lastStateMouse;
 
@@ -114,6 +116,9 @@ namespace TrumpTower
             // TEXT
             _imgDollars = Content.Load<SpriteFont>("dollars");
             _imgNextWave = Content.Load<SpriteFont>("next_wave");
+
+            // TEXTURE KOREA
+            _imgNorthKoreaIsComming = Content.Load<Texture2D>("north_korea_is_comming");
 
             ManagerSound.LoadContent(Content);
         }
@@ -214,11 +219,22 @@ namespace TrumpTower
             //MISSILES
             List<Missile> _missiles = _map.Missiles;
             foreach (Missile missile in _missiles) spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
+            
             //TEXT
             spriteBatch.DrawString(_imgDollars, "Dollars : " + _map.Dollars, new Vector2(1620, 10), Color.White);
+
+            // IMG IS COMMING NORTH KOREA MDR
             spriteBatch.DrawString(_imgNextWave, "Vague : " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(_imgNextWave, "Prochaine vague dans : " + Map.TimerNextWave/60, new Vector2(10, 40), Color.White);
-            
+            Wave waveIsComming = Map.WaveIsComming;
+            if (waveIsComming != null)
+            {
+                if (waveIsComming.TimerBeforeStarting > 0)
+                {
+                    spriteBatch.DrawString(_imgNextWave, "Prochaine vague dans : " + waveIsComming.TimerBeforeStarting / 60, new Vector2(10, 40), Color.White);
+                    spriteBatch.Draw(_imgNorthKoreaIsComming, waveIsComming.Position, null, Color.White);
+                }
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
