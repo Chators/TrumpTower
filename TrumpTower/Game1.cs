@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LibraryTrumpTower.Constants;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,6 +25,8 @@ namespace TrumpTower
         Texture2D _imgWall;
         Texture2D _imgEnemy1;
         Texture2D _imgTower1;
+        Texture2D _imgTower2;
+        Texture2D _imgTower3;
         SoundEffect _explosion;
         SoundEffect _manDie;
         SpriteFont _imgDollars;
@@ -106,6 +109,8 @@ namespace TrumpTower
 
             // TOWER
             _imgTower1 = Content.Load<Texture2D>("tower1");
+            _imgTower2 = Content.Load<Texture2D>("tower2");
+            _imgTower3 = Content.Load<Texture2D>("tower3");
             _explosion = Content.Load<SoundEffect>("songExplosion");
 
             // MISSILE 
@@ -162,7 +167,7 @@ namespace TrumpTower
                     {
                         if (_map.Dollars >= 400)
                         {
-                            _map.CreateTower(new Tower(_map, "base", 1, new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap)));
+                            _map.CreateTower(new Tower(_map, TowerType.area, 1, new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap)));
                             _map.ChangeLocation((int)position.X, (int)position.Y, (int)MapTexture.notEmptyTower);
                             _map.Dollars -= 400;
                         }
@@ -209,8 +214,22 @@ namespace TrumpTower
 
             //TOWERS
             List<Tower> _towers = _map.Towers;
-            foreach (Tower tower in _towers) spriteBatch.Draw(_imgTower1, tower.Position, null, Color.White);
 
+            foreach (Tower tower in _towers)
+            {
+                if (tower.Type == TowerType.simple)
+                {
+                    spriteBatch.Draw(_imgTower1, tower.Position, null, Color.White);
+                }
+                else if (tower.Type == TowerType.slow)
+                {
+                    spriteBatch.Draw(_imgTower2, tower.Position, null, Color.White);
+                }
+                else if (tower.Type == TowerType.area)
+                {
+                    spriteBatch.Draw(_imgTower3, tower.Position, null, Color.White);
+                }
+            }
             //MISSILES
             List<Missile> _missiles = _map.Missiles;
             foreach (Missile missile in _missiles) spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);

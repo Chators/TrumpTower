@@ -48,6 +48,7 @@
     <Compile Include="Constants\ManagerSound.cs" />
     <Compile Include="Constants\Move.cs" />
     <Compile Include="Constants\MapTexture.cs" />
+    <Compile Include="Constants\TowerType.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Missile.cs" />
