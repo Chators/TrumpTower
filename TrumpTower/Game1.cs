@@ -22,11 +22,13 @@ namespace TrumpTower
         int[,] _mapPoint;
         Map _map;
         List<Texture2D> _imgMaps;
+        Vector2 _towerSelector;
         Texture2D _imgWall;
         Texture2D _imgEnemy1;
         Texture2D _imgTower1;
         Texture2D _imgTower2;
         Texture2D _imgTower3;
+        Texture2D _imgSelector;
         SoundEffect _explosion;
         SoundEffect _manDie;
         SpriteFont _imgDollars;
@@ -71,7 +73,7 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
             _map = new Map(_mapPoint);
-
+            _towerSelector = new Vector2(-1000, -1000);
             graphics.PreferredBackBufferWidth = _mapPoint.GetLength(1) * Constant.imgSizeMap;
             graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
             graphics.ApplyChanges();
@@ -120,6 +122,9 @@ namespace TrumpTower
             _imgDollars = Content.Load<SpriteFont>("dollars");
             _imgNextWave = Content.Load<SpriteFont>("next_wave");
 
+            //SELECTOR
+            _imgSelector = Content.Load<Texture2D>("selector");
+
             ManagerSound.LoadContent(Content);
         }
 
@@ -165,20 +170,22 @@ namespace TrumpTower
                         newStateMouse.Y > position.Y * Constant.imgSizeMap &&
                         newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
                     {
-                        if (_map.Dollars >= 400)
+                        _towerSelector = new Vector2(position.X * Constant.imgSizeMap , position.Y * Constant.imgSizeMap);
+
+                        /*if (_map.Dollars >= 400)
                         {
                             _map.CreateTower(new Tower(_map, TowerType.area, 1, new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap)));
                             _map.ChangeLocation((int)position.X, (int)position.Y, (int)MapTexture.notEmptyTower);
                             _map.Dollars -= 400;
-                        }
-                    }
+                        }*/
+                    } 
                 }
             }
             
         }
 
         /// <summary>
-        /// This is called when the game should draw itself.
+        /// This is called when the game should draw itself.elector
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
@@ -230,14 +237,24 @@ namespace TrumpTower
                     spriteBatch.Draw(_imgTower3, tower.Position, null, Color.White);
                 }
             }
+
+            spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, -64), null, Color.White);
+            spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-64, -64), null, Color.White);
+            spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, -64), null, Color.White);
+            spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(64, -64), null, Color.White);
+            spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, 64), null, Color.White);
+            spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-64, 64), null, Color.White);
+            spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, 64) , null, Color.White);
+            
+
             //MISSILES
             List<Missile> _missiles = _map.Missiles;
             foreach (Missile missile in _missiles) spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
             //TEXT
             spriteBatch.DrawString(_imgDollars, "Dollars : " + _map.Dollars, new Vector2(1620, 10), Color.White);
             spriteBatch.DrawString(_imgNextWave, "Vague : " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(_imgNextWave, "Prochaine vague dans : " + Map.TimerNextWave/60, new Vector2(10, 40), Color.White);
-            
+            spriteBatch.DrawString(_imgNextWave, "Prochaine vague dans : " + Map.TimerNextWave / 60, new Vector2(10, 40), Color.White);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
