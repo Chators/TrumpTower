@@ -138,6 +138,7 @@ namespace TrumpTower
                 Exit();
 
             // TODO: Add your update logic here
+            if (_map.Wall.IsDead()) Exit(); // If base loses hp, game will exit.
             _map.Update();
 
             MouseState newStateMouse = Mouse.GetState();
