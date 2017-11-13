@@ -35,6 +35,7 @@ namespace TrumpTower
         SpriteFont _imgDollars;
         SpriteFont _imgNextWave;
         Texture2D _imgMissile;
+        Texture2D _imgMissile1;
 
         MouseState lastStateMouse;
 
@@ -119,6 +120,7 @@ namespace TrumpTower
 
             // MISSILE 
             _imgMissile = Content.Load<Texture2D>("missile2");
+            _imgMissile1 = Content.Load<Texture2D>("missile1");
 
             // TEXT
             _imgDollars = Content.Load<SpriteFont>("dollars");
@@ -300,7 +302,22 @@ namespace TrumpTower
 
             //MISSILES
             List<Missile> _missiles = _map.Missiles;
-            foreach (Missile missile in _missiles) spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
+
+            foreach (Missile missile in _missiles)
+            {
+                if(missile.Tower == TowerType.simple)
+                {
+                    spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
+                }
+                else if (missile.Tower == TowerType.slow)
+                {
+                    spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
+                }
+                else if (missile.Tower == TowerType.area)
+                {
+                    spriteBatch.Draw(_imgMissile1, missile.Position, null, Color.White);
+                }
+            }
             //TEXT
             spriteBatch.DrawString(_imgDollars, "Dollars : " + _map.Dollars, new Vector2(1620, 10), Color.White);
             spriteBatch.DrawString(_imgNextWave, "Vague : " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(10, 10), Color.White);

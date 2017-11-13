@@ -115,7 +115,7 @@ namespace TrumpTower.LibraryTrumpTower
         internal void ShootOn(Enemy myEnemy)
         {
             _reload = _attackSpeed * 60;
-            _map.CreateMissile(new Missile(_map, "base", Damage, Position, myEnemy));
+            _map.CreateMissile(new Missile(_map, this, Damage, Position, myEnemy));
         }
     }
 }
