@@ -14,6 +14,7 @@ namespace TrumpTower.LibraryTrumpTower
         Map _map;
         readonly TowerType _type;
         readonly int _lvl;
+        int _price;
         public double Scope { get; private set; }
         public int Damage { get; private set; }
         readonly double _attackSpeed;
@@ -33,18 +34,21 @@ namespace TrumpTower.LibraryTrumpTower
                 Damage = 6;
                 Scope = 5;
                 _attackSpeed = 0.8;
+                
             }
             else if(type == TowerType.slow)
             {
                 Damage = 19;
                 Scope = 3.5;
                 _attackSpeed = 1.8;
+               
             }
             else if(type == TowerType.area)
             {
                 Damage = 15;
                 Scope = 6.5;
                 _attackSpeed = 1.2;
+               
             }
         }
 
@@ -77,6 +81,24 @@ namespace TrumpTower.LibraryTrumpTower
         internal void Reloading() => _reload--;
 
         public TowerType Type => _type;
+        
+
+        static public int TowerPrice(TowerType type)
+        {
+            if(type == TowerType.simple)
+            {
+                return 200;
+            }
+            else if(type == TowerType.slow)
+            {
+                return 300;
+            }
+            else if(type == TowerType.area)
+            {
+                return 400;
+            }
+            return 0;
+        }
 
         internal bool WithinReachOf(Vector2 target)
         {

@@ -30,8 +30,8 @@ namespace TrumpTower.LibraryTrumpTower
             _wave = wave;
             Wall = wall;
             _name = name;
-            CurrentHp = 100;
-            MaxHp = 100;
+            CurrentHp = 30;
+            MaxHp = 30;
             _damage = 50;
             Speed = 3;
             Bounty = 100;
