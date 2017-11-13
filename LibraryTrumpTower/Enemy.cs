@@ -38,7 +38,7 @@ namespace TrumpTower.LibraryTrumpTower
             _position = wave.Position;
             _moveToState = 0;
         }
-        //
+
         private void UpdateMove()
         {
             /*if (Position != Wall.Position)
