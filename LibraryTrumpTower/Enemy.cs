@@ -17,7 +17,7 @@ namespace TrumpTower.LibraryTrumpTower
         Vector2 _position;
         string _name;
         int _moveToState;
-        Move _currentDirection;
+        public Move CurrentDirection { get; private set; }
         public double CurrentHp { get; private set; }
         public double MaxHp { get; private set; }
         readonly int _damage;
@@ -45,27 +45,31 @@ namespace TrumpTower.LibraryTrumpTower
             if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = Wall.Position;
 
             Vector2 _moveToPosition = ShortestWay[_moveToState];
-            if (WithinReach(Position, _moveToPosition, Speed)) _moveToState++;
+            if (WithinReach(Position, _moveToPosition, Speed))
+            {
+                _position = _moveToPosition;
+                _moveToState++;
+            }
 
             if (Position.X < _moveToPosition.X)
             {
                 _position.X += (int)Speed;
-                _currentDirection = Move.right;
+                CurrentDirection = Move.right;
             }
-            if (Position.X > _moveToPosition.X)
+            else if (Position.X > _moveToPosition.X)
             {
                 _position.X -= (int)Speed;
-                _currentDirection = Move.left;
+                CurrentDirection = Move.left;
             }
-            if (Position.Y < _moveToPosition.Y)
+            else if (Position.Y < _moveToPosition.Y)
             {
                 _position.Y += (int)Speed;
-                _currentDirection = Move.top;
+                CurrentDirection = Move.down;
             }
-            if (Position.Y > _moveToPosition.Y)
+            else if (Position.Y > _moveToPosition.Y)
             {
                 _position.Y -= (int)Speed;
-                _currentDirection = Move.down;
+                CurrentDirection = Move.top;
             }
         }
 
@@ -74,7 +78,6 @@ namespace TrumpTower.LibraryTrumpTower
             if (!IsStarting) TimerBeforeStarting--;
             else
             {
-                
                  UpdateAttackWall();
                  UpdateMove();
             } 
