@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TrumpTower.Draw;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
+using TrumpTower.LibraryTrumpTower.Spawns;
 
 namespace TrumpTower
 {
@@ -29,9 +30,9 @@ namespace TrumpTower
         SpriteFont _imgDollars;
         SpriteFont _imgNextWave;
         Texture2D _imgMissile;
-
+        WaveIsCommingImg _waveSprite;
         MouseState lastStateMouse;
-
+        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -54,7 +55,7 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,7 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,10,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,13,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,4 ,10,1 ,10,1 ,1 ,10 ,1 ,1 ,1 ,1 ,1 ,1 },
+                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,4 ,10,1 ,10,1 ,1 ,10,1 ,1 ,1 ,1 ,1 ,1 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,16,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,13,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 },
@@ -72,6 +73,8 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = _mapPoint.GetLength(1) * Constant.imgSizeMap;
             graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
             graphics.ApplyChanges();
+
+            _waveSprite = new WaveIsCommingImg(_map, Map.WaveIsComming);
 
             base.Initialize();
         }
@@ -115,6 +118,9 @@ namespace TrumpTower
             _imgDollars = Content.Load<SpriteFont>("dollars");
             _imgNextWave = Content.Load<SpriteFont>("next_wave");
 
+            // TEXTURE KOREA
+            WaveIsCommingImg.LoadContent(Content);
+
             ManagerSound.LoadContent(Content);
         }
 
@@ -143,6 +149,8 @@ namespace TrumpTower
             MouseState newStateMouse = Mouse.GetState();
             HandleInput(newStateMouse, lastStateMouse);
             lastStateMouse = newStateMouse;
+            _waveSprite.Update(Map.WaveIsComming);
+
             base.Update(gameTime);
         }
 
@@ -169,7 +177,6 @@ namespace TrumpTower
                     }
                 }
             }
-            
         }
 
         /// <summary>
@@ -214,11 +221,15 @@ namespace TrumpTower
             //MISSILES
             List<Missile> _missiles = _map.Missiles;
             foreach (Missile missile in _missiles) spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
+            
             //TEXT
             spriteBatch.DrawString(_imgDollars, "Dollars : " + _map.Dollars, new Vector2(1620, 10), Color.White);
+
+            // IMG IS COMMING NORTH KOREA MDR
             spriteBatch.DrawString(_imgNextWave, "Vague : " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(_imgNextWave, "Prochaine vague dans : " + Map.TimerNextWave/60, new Vector2(10, 40), Color.White);
-            
+            _waveSprite.Draw(GraphicsDevice, spriteBatch);
+              
+
             spriteBatch.End();
 
             base.Draw(gameTime);

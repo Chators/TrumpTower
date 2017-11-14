@@ -20,7 +20,7 @@ namespace TrumpTower.LibraryTrumpTower
         // WAVE
         public static int WavesCounter { get; set; }
         public static int WavesTotals { get; set; }
-        public static int TimerNextWave { get; set; }
+        public static Wave WaveIsComming { get; set; }
 
         public Map(int[,] map)
         {
@@ -35,7 +35,6 @@ namespace TrumpTower.LibraryTrumpTower
 
             WavesCounter = 0;
             WavesTotals = 0;
-            TimerNextWave = 0;
 
             //
             // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
@@ -75,12 +74,18 @@ namespace TrumpTower.LibraryTrumpTower
 
         public void Update()
         {
-            TimerNextWave = -1;
+            List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
             {
                 spawn.Update();
-                int timerSmallerSpawn = spawn.SeekSmallerTimer();
-                if (TimerNextWave == -1 || timerSmallerSpawn < TimerNextWave && (timerSmallerSpawn > 0)) TimerNextWave = timerSmallerSpawn;
+                _waves.AddRange(spawn.Waves);
+            }
+
+            WaveIsComming = null;
+            for (int i = 0; i < _waves.Count; i++)
+            {
+                if (WaveIsComming == null) WaveIsComming = _waves[i];
+                else if (WaveIsComming.TimerBeforeStarting == 0 || _waves[i].TimerBeforeStarting < WaveIsComming.TimerBeforeStarting  && _waves[i].TimerBeforeStarting > 0) WaveIsComming = _waves[i];
             }
 
             foreach (Tower tower in Towers) tower.Update(GetAllEnemies());
