@@ -33,11 +33,14 @@ namespace TrumpTower
         Texture2D _imgSelector;
         SoundEffect _explosion;
         SoundEffect _manDie;
-        SpriteFont _imgDollars;
         SpriteFont _imgNextWave;
         Texture2D _imgMissile;
         WaveIsComingImg _waveSprite;
         Texture2D _imgMissile1;
+
+        // DOLLARS
+        SpriteFont _spriteDollars;
+        Texture2D _imgDollars;
 
         MouseState lastStateMouse;
         
@@ -79,6 +82,7 @@ namespace TrumpTower
             };
             _map = new Map(_mapPoint);
             _towerSelector = new Vector2(-1000, -1000);
+
             graphics.PreferredBackBufferWidth = _mapPoint.GetLength(1) * Constant.imgSizeMap;
             graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
             graphics.ApplyChanges();
@@ -103,7 +107,7 @@ namespace TrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                _imgMaps.Add(Content.Load<Texture2D>(name));
+                _imgMaps.Add(Content.Load<Texture2D>("Map/"+name));
             }
 
             // HEALTH BAR
@@ -113,24 +117,25 @@ namespace TrumpTower
             _imgWall = Content.Load<Texture2D>("wall");
 
             // ENEMY 
-            _imgEnemy1 = Content.Load<Texture2D>("enemy1");
-            _manDie = Content.Load<SoundEffect>("songManDie");
+            _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
+            _manDie = Content.Load<SoundEffect>("Sound/songManDie");
 
             // TOWER
-            _imgTower1 = Content.Load<Texture2D>("tower1");
-            _imgTower2 = Content.Load<Texture2D>("tower2");
-            _imgTower3 = Content.Load<Texture2D>("tower3");
-            _explosion = Content.Load<SoundEffect>("songExplosion");
+            _imgTower1 = Content.Load<Texture2D>("Towers/tower1");
+            _imgTower2 = Content.Load<Texture2D>("Towers/tower2");
+            _imgTower3 = Content.Load<Texture2D>("Towers/tower3");
+            _explosion = Content.Load<SoundEffect>("Sound/songExplosion");
 
             // MISSILE 
-            _imgMissile = Content.Load<Texture2D>("missile2");
-            _imgMissile1 = Content.Load<Texture2D>("missile1");
+            _imgMissile = Content.Load<Texture2D>("Missiles/missile2");
+            _imgMissile1 = Content.Load<Texture2D>("Missiles/missile1");
 
-            // TEXT
-            _imgDollars = Content.Load<SpriteFont>("dollars");
-            _imgNextWave = Content.Load<SpriteFont>("next_wave");
+            // DOLLARS
+            _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
+            _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
 
-            // TEXTURE KOREA
+            // WAVE
+            _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
             WaveIsComingImg.LoadContent(Content);
 
             //SELECTOR
@@ -337,15 +342,18 @@ namespace TrumpTower
                     spriteBatch.Draw(_imgMissile1, missile.Position, null, Color.White);
                 }
             }
-            //TEXT
-            spriteBatch.DrawString(_imgDollars, "Dollars : " + _map.Dollars, new Vector2(1620, 10), Color.White);
+            //TEXT DOLLARS
+            Vector2 _positionDollars = new Vector2(10, 10);
+            Rectangle sourceRectangl = new Rectangle(0, 0, 120, 500);
+            spriteBatch.Draw(new Texture2D(GraphicsDevice, 120, 500), new Vector2(15, 10), Color.Black);
+            spriteBatch.Draw(_imgDollars, _positionDollars, Color.White);
+            
+            //spriteBatch.Draw(_imgDollars, _positionDollars, Color.White);
+            spriteBatch.DrawString(_spriteDollars, _map.Dollars+"", new Vector2(50, 17), Color.White);
 
             // IMG IS COMMING NORTH KOREA MDR
-            spriteBatch.DrawString(_imgNextWave, "Vague : " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(10, 50), Color.White);
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
-              
-
-            spriteBatch.DrawString(_imgNextWave, "Prochaine vague dans : " + Map.TimerNextWave / 60, new Vector2(10, 40), Color.White);
 
             spriteBatch.End();
 

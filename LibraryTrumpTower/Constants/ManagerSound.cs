@@ -15,8 +15,8 @@ namespace TrumpTower.LibraryTrumpTower.Constants
 
         static public void LoadContent(ContentManager Content)
         {
-            ManDie = Content.Load<SoundEffect>("songManDie");
-            Explosion = Content.Load<SoundEffect>("songExplosion");
+            ManDie = Content.Load<SoundEffect>("Sound/songManDie");
+            Explosion = Content.Load<SoundEffect>("Sound/songExplosion");
         }
     }
 }
