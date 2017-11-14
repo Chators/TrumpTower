@@ -333,6 +333,13 @@
 /processorParam:TextureFormat=Color
 /build:bigDirtCornerRightDown.png
 
+#begin timerIsComming.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:timerIsComming.spritefont
+
 #begin north_korea_is_comming.png
 /importer:TextureImporter
 /processor:TextureProcessor

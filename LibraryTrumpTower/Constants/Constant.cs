@@ -9,5 +9,6 @@ namespace TrumpTower.LibraryTrumpTower.Constants
     public class Constant
     {
         public static int imgSizeMap = 64;
+        public static float PI = 3.14159265359f;
     }
 }

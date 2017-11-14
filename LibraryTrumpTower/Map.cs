@@ -74,19 +74,18 @@ namespace TrumpTower.LibraryTrumpTower
 
         public void Update()
         {
+            List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
             {
                 spawn.Update();
+                _waves.AddRange(spawn.Waves);
+            }
 
-                List<Wave> _wavesIsComming = new List<Wave>();
-                _wavesIsComming.Add(spawn.SeekWaveIsComming());
-
-                Wave WaveIsComming = _wavesIsComming[0];
-                for(int i = 1; i < _wavesIsComming.Count; i++) 
-                {
-                    Wave _wave = _wavesIsComming[i];
-                    if (_wave.TimerBeforeStarting > 0 && _wave.TimerBeforeStarting < WaveIsComming.TimerBeforeStarting) WaveIsComming = _wave;
-                }
+            WaveIsComming = null;
+            for (int i = 0; i < _waves.Count; i++)
+            {
+                if (WaveIsComming == null) WaveIsComming = _waves[i];
+                else if (WaveIsComming.TimerBeforeStarting == 0 || _waves[i].TimerBeforeStarting < WaveIsComming.TimerBeforeStarting  && _waves[i].TimerBeforeStarting > 0) WaveIsComming = _waves[i];
             }
 
             foreach (Tower tower in Towers) tower.Update(GetAllEnemies());
