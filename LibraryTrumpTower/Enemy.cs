@@ -17,6 +17,7 @@ namespace TrumpTower.LibraryTrumpTower
         Vector2 _position;
         string _name;
         int _moveToState;
+        public Move CurrentDirection { get; private set; }
         public double CurrentHp { get; private set; }
         public double MaxHp { get; private set; }
         readonly int _damage;
@@ -41,18 +42,35 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateMove()
         {
-            /*if (Position != Wall.Position)
-            {*/
-                if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = Wall.Position;
+            if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = Wall.Position;
 
-                Vector2 _moveToPosition = ShortestWay[_moveToState];
-                if (WithinReach(Position, _moveToPosition, Speed)) _moveToState++;
+            Vector2 _moveToPosition = ShortestWay[_moveToState];
+            if (WithinReach(Position, _moveToPosition, Speed))
+            {
+                _position = _moveToPosition;
+                _moveToState++;
+            }
 
-                if (Position.X < _moveToPosition.X) _position.X += (int)Speed;
-                if (Position.X > _moveToPosition.X) _position.X -= (int)Speed;
-                if (Position.Y < _moveToPosition.Y) _position.Y += (int)Speed;
-                if (Position.Y > _moveToPosition.Y) _position.Y -= (int)Speed;
-            //}
+            if (Position.X < _moveToPosition.X)
+            {
+                _position.X += (int)Speed;
+                CurrentDirection = Move.right;
+            }
+            else if (Position.X > _moveToPosition.X)
+            {
+                _position.X -= (int)Speed;
+                CurrentDirection = Move.left;
+            }
+            else if (Position.Y < _moveToPosition.Y)
+            {
+                _position.Y += (int)Speed;
+                CurrentDirection = Move.down;
+            }
+            else if (Position.Y > _moveToPosition.Y)
+            {
+                _position.Y -= (int)Speed;
+                CurrentDirection = Move.top;
+            }
         }
 
         public void Update()
@@ -60,7 +78,6 @@ namespace TrumpTower.LibraryTrumpTower
             if (!IsStarting) TimerBeforeStarting--;
             else
             {
-                
                  UpdateAttackWall();
                  UpdateMove();
             } 
