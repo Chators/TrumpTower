@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using TrumpTower.Draw;
+using TrumpTower.Drawing;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
@@ -36,7 +36,7 @@ namespace TrumpTower
         SpriteFont _imgDollars;
         SpriteFont _imgNextWave;
         Texture2D _imgMissile;
-        WaveIsCommingImg _waveSprite;
+        WaveIsComingImg _waveSprite;
         Texture2D _imgMissile1;
 
         MouseState lastStateMouse;
@@ -83,7 +83,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
             graphics.ApplyChanges();
 
-            _waveSprite = new WaveIsCommingImg(_map, Map.WaveIsComming);
+            _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
 
             base.Initialize();
         }
@@ -131,7 +131,7 @@ namespace TrumpTower
             _imgNextWave = Content.Load<SpriteFont>("next_wave");
 
             // TEXTURE KOREA
-            WaveIsCommingImg.LoadContent(Content);
+            WaveIsComingImg.LoadContent(Content);
 
             //SELECTOR
             _imgSelector = Content.Load<Texture2D>("selector");

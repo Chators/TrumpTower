@@ -8,6 +8,8 @@ namespace TrumpTower.LibraryTrumpTower
 {
     public class Map
     {
+        public static int TimerNextWave;
+
         public int[,] MapArray { get; private set; }
         public List<Spawn> SpawnsEnemies { get; private set; }
         public Wall Wall { get; private set; }
