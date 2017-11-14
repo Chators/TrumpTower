@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LibraryTrumpTower.Constants;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,16 @@ namespace TrumpTower.LibraryTrumpTower
     public class Missile
     {
         Map _map;
-        readonly string _name;
+        readonly Tower _tower;
         readonly int _damage;
         public double Speed { get; private set; }
         public Enemy Target { get; private set; }
         Vector2 _position;
 
-        public Missile(Map map, string name, int damage, Vector2 position, Enemy target)
+        public Missile(Map map, Tower tower, int damage, Vector2 position, Enemy target)
         {
             _map = map;
-            _name = name;
+            _tower = tower;
             _damage = damage;
             Speed = 10;
             Target = target;
@@ -45,6 +46,8 @@ namespace TrumpTower.LibraryTrumpTower
                 Die();
             }
         }
+
+        public TowerType Tower => _tower.Type;
 
         public void Update()
         {
