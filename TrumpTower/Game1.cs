@@ -210,7 +210,9 @@ namespace TrumpTower
             List<Enemy> _enemies = _map.GetAllEnemies();
             foreach (Enemy enemy in _enemies)
             {
-                spriteBatch.Draw(_imgEnemy1, enemy.Position, null, Color.White);
+                Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy1.Width, _imgEnemy1.Height);
+                Vector2 origin = new Vector2(_imgEnemy1.Width / 2, _imgEnemy1.Height / 2);
+                spriteBatch.Draw(_imgEnemy1, enemy.Position, sourceRectangle, Color.White, Constant.PI, origin, 1.0f, SpriteEffects.None, 1);
                 HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp);
                 enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy1);
             }
