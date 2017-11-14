@@ -32,7 +32,7 @@ namespace TrumpTower.LibraryTrumpTower
             _name = name;
             CurrentHp = 100;
             MaxHp = 100;
-            _damage = 50;
+            _damage = 10;
             Speed = 3;
             Bounty = 100;
             _position = wave.Position;
@@ -60,9 +60,24 @@ namespace TrumpTower.LibraryTrumpTower
             if (!IsStarting) TimerBeforeStarting--;
             else
             {
-                if (!WithinReach(Position, Wall.Position, Speed)) UpdateMove();
+                
+                 UpdateAttackWall();
+                 UpdateMove();
+            } 
+                
+            
+        }
+
+        private void UpdateAttackWall()
+        {
+            if (WithinReach(Position, Wall.Position, Speed))
+            {
+                Wall.TakeHp(_damage);
+                Die(true);
             }
         }
+
+        
 
         public Vector2 Position => _position;
         public bool IsStarting => TimerBeforeStarting <= 0;
@@ -84,6 +99,17 @@ namespace TrumpTower.LibraryTrumpTower
         {
             ManagerSound.ManDie.Play();
             _map.Dollars += Bounty;
+            _wave.Enemies.RemoveAt(_wave.Enemies.IndexOf(this));
+        }
+
+        public void Die(bool Passedthebase)
+        // Overload. If the ennemny unit passes the base, it dies but does not gives gold.
+        {
+            ManagerSound.ManDie.Play();
+            if (Passedthebase == false)
+            {
+                _map.Dollars += Bounty;
+            }
             _wave.Enemies.RemoveAt(_wave.Enemies.IndexOf(this));
         }
     }

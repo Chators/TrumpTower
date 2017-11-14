@@ -42,7 +42,11 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             }
             else
             {
-                foreach (Enemy enemy in Enemies) enemy.Update();
+                for (int i = 0; i < Enemies.Count; i++)
+                {
+                    Enemy enemy = Enemies[i];
+                    enemy.Update();
+                }
             }
         }
 
