@@ -40,6 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Draw\HealthBar.cs" />
+    <Compile Include="Draw\ButtonUI.cs" />
     <Compile Include="Draw\WaveIsCommingImg.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
