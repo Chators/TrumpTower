@@ -26,5 +26,9 @@ namespace TrumpTower.Draw
         {
             spriteBatch.Draw(_img, _position, Color.White);
         }
+
+        public string Name => _name;
+        public Texture2D Texture => _img;
+        public Vector2 Position => _position;
     }
 }

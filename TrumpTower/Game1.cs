@@ -51,6 +51,7 @@ namespace TrumpTower
         Texture2D _pauseButton;
         Texture2D _normalButton;
         Texture2D _fastButton;
+        static int speedGame;
 
         // PAUSE
         bool isPaused = false;
@@ -100,6 +101,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
             graphics.ApplyChanges();
 
+            speedGame = 1;
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
             _buttonsUI = new Dictionary<string, ButtonUI>();
 
@@ -152,15 +154,15 @@ namespace TrumpTower
             // TIMER BUTTON
             _fastButton = Content.Load<Texture2D>("ManagerTime/fastButton");
             Vector2 _positionFastButton = new Vector2(_mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
-            _buttonsUI["fastTimer"] = new ButtonUI("fast", _positionFastButton, _fastButton);
+            _buttonsUI["fastTimer"] = new ButtonUI("fastTimer", _positionFastButton, _fastButton);
             
             _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
             Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
-            _buttonsUI["normalTimer"] = new ButtonUI("normal", _positionNormalButton, _normalButton);
+            _buttonsUI["normalTimer"] = new ButtonUI("normalTimer", _positionNormalButton, _normalButton);
 
             _pauseButton = Content.Load<Texture2D>("ManagerTime/pauseButton");
             Vector2 _positionPauseButton = new Vector2(_positionNormalButton.X - 50, 10);
-            _buttonsUI["pauseTimer"] = new ButtonUI("pause", _positionPauseButton, _pauseButton);
+            _buttonsUI["pauseTimer"] = new ButtonUI("pauseTimer", _positionPauseButton, _pauseButton);
 
             // WAVE
             _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
@@ -209,6 +211,45 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse)
         {
+            foreach (ButtonUI button in _buttonsUI.Values)
+            {
+                if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                lastStateMouse.LeftButton == ButtonState.Released)
+                {
+                    if (newStateMouse.X > button.Position.X  &&
+                        newStateMouse.X < button.Position.X + button.Texture.Width &&
+                        newStateMouse.Y > button.Position.Y  &&
+                        newStateMouse.Y < button.Position.Y + button.Texture.Height)
+                    {
+                        if (button.Name == "pauseTimer")
+                        {
+                            if (isPaused == false)
+                            {
+                                speedGame = 0;
+                                isPaused = true;
+                            }
+                            else
+                            {
+                                TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
+                                speedGame = 1;
+                                isPaused = false;
+                            }
+                        }
+                        else if (button.Name == "normalTimer")
+                        {
+                            speedGame = 1;
+                            TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
+                            isPaused = false;
+                        }
+                        else if (button.Name == "fastTimer")
+                        {
+                            speedGame = 2;
+                            TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 120.0f);
+                            isPaused = false;
+                        }
+                    }
+                }
+            }
             // Buy Tower
             List<Vector2> emptyTowers = _map.SearchEmptyTowers();
             if (newStateMouse.LeftButton == ButtonState.Pressed &&
@@ -278,6 +319,7 @@ namespace TrumpTower
                     _verif = false;
                 }
             }
+            
         }
 
         /// <summary>
@@ -290,7 +332,6 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-
             // MAPS
             for (int y = 0; y < _map.HeightArrayMap; y++)
             {
