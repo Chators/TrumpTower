@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using TrumpTower.Draw;
 using TrumpTower.Drawing;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
@@ -44,10 +45,15 @@ namespace TrumpTower
         Texture2D _imgDollars;
         Texture2D _backgroundDollars;
 
+        Dictionary<string,ButtonUI> _buttonsUI;
+
         // TIMER BUTTON
         Texture2D _pauseButton;
         Texture2D _normalButton;
         Texture2D _fastButton;
+
+        // PAUSE
+        bool isPaused = false;
 
         MouseState lastStateMouse;
         
@@ -95,6 +101,7 @@ namespace TrumpTower
             graphics.ApplyChanges();
 
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
+            _buttonsUI = new Dictionary<string, ButtonUI>();
 
             base.Initialize();
         }
@@ -143,9 +150,17 @@ namespace TrumpTower
             _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
 
             // TIMER BUTTON
-            _pauseButton = Content.Load<Texture2D>("ManagerTime/pauseButton");
-            _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
             _fastButton = Content.Load<Texture2D>("ManagerTime/fastButton");
+            Vector2 _positionFastButton = new Vector2(_mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
+            _buttonsUI["fastTimer"] = new ButtonUI("fast", _positionFastButton, _fastButton);
+            
+            _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
+            Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
+            _buttonsUI["normalTimer"] = new ButtonUI("normal", _positionNormalButton, _normalButton);
+
+            _pauseButton = Content.Load<Texture2D>("ManagerTime/pauseButton");
+            Vector2 _positionPauseButton = new Vector2(_positionNormalButton.X - 50, 10);
+            _buttonsUI["pauseTimer"] = new ButtonUI("pause", _positionPauseButton, _pauseButton);
 
             // WAVE
             _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
@@ -178,13 +193,16 @@ namespace TrumpTower
                 Exit();
 
             // TODO: Add your update logic here
-            if (_map.Wall.IsDead()) Exit(); // If base loses hp, game will exit.
-            _map.Update();
-
             MouseState newStateMouse = Mouse.GetState();
             HandleInput(newStateMouse, lastStateMouse);
             lastStateMouse = newStateMouse;
-            _waveSprite.Update(Map.WaveIsComming);
+            
+            if (!isPaused)
+            {
+                if (_map.Wall.IsDead()) Exit(); // If base loses hp, game will exit.
+                _map.Update();
+                _waveSprite.Update(Map.WaveIsComming);
+            }
 
             base.Update(gameTime);
         }
@@ -203,12 +221,12 @@ namespace TrumpTower
                         newStateMouse.Y > position.Y * Constant.imgSizeMap &&
                         newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
                     {
-                        _towerSelector = new Vector2(position.X * Constant.imgSizeMap , position.Y * Constant.imgSizeMap);
+                        _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
                         _verif = true;
                     }
                 }
             }
-            
+
             if (newStateMouse.LeftButton == ButtonState.Pressed &&
             lastStateMouse.LeftButton == ButtonState.Released)
             {
@@ -259,7 +277,6 @@ namespace TrumpTower
                     }
                     _verif = false;
                 }
-
             }
         }
 
@@ -365,12 +382,9 @@ namespace TrumpTower
             spriteBatch.DrawString(_spriteDollars, _map.Dollars+"", new Vector2(50, 17), Color.White);
 
             // TIMER BUTTON
-            Vector2 _positionFastButton = new Vector2(_mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
-            spriteBatch.Draw(_fastButton, _positionFastButton, Color.White);
-            Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
-            spriteBatch.Draw(_normalButton, _positionNormalButton, Color.White);
-            Vector2 _positionPauseButton = new Vector2(_positionNormalButton.X - 50, 10);
-            spriteBatch.Draw(_pauseButton, _positionPauseButton, Color.White);
+            _buttonsUI["pauseTimer"].Draw(spriteBatch);
+            _buttonsUI["normalTimer"].Draw(spriteBatch);
+            _buttonsUI["fastTimer"].Draw(spriteBatch);            
 
             // IMG IS COMMING NORTH KOREA MDR
             Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
