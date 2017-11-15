@@ -13,10 +13,10 @@ namespace TrumpTower.LibraryTrumpTower
     {
         Map _map;
         readonly TowerType _type;
-        readonly int _lvl;
+        int _lvl;
         int _price;
         public double Scope { get; private set; }
-        public int Damage { get; private set; }
+        public int Damage { get;  set; }
         readonly double _attackSpeed;
         double _reload;
         public Vector2 Position { get; private set; }
@@ -31,9 +31,24 @@ namespace TrumpTower.LibraryTrumpTower
 
             if(type == TowerType.simple)
             {
-                Damage = 6;
-                Scope = 5;
-                _attackSpeed = 0.8;
+                if (lvl == 1)
+                {
+                    Damage = 6;
+                    Scope = 5;
+                    _attackSpeed = 0.8;
+                }
+                else if (lvl == 2)
+                {
+                    Damage = 36;
+                    Scope = 5;
+                    _attackSpeed = 0.8;
+                }
+                else if (lvl == 3)
+                {
+                    Damage = 26;
+                    Scope = 5;
+                    _attackSpeed = 0.8;
+                }
                 
             }
             else if(type == TowerType.slow)
@@ -81,7 +96,27 @@ namespace TrumpTower.LibraryTrumpTower
         internal void Reloading() => _reload--;
 
         public TowerType Type => _type;
-        
+
+        public int TowerLvl
+        {
+            get { return _lvl; }
+            set
+            {
+                if (value <= 3)
+                {
+                    _lvl = value;
+                }
+                else
+                {
+                    _lvl = 3;
+                }
+            }
+        }
+
+        public void Upgrade()
+        {
+
+        }
 
         static public int TowerPrice(TowerType type)
         {
@@ -117,5 +152,6 @@ namespace TrumpTower.LibraryTrumpTower
             _reload = _attackSpeed * 60;
             _map.CreateMissile(new Missile(_map, this, Damage, Position, myEnemy));
         }
+
     }
 }
