@@ -44,6 +44,11 @@ namespace TrumpTower
         Texture2D _imgDollars;
         Texture2D _backgroundDollars;
 
+        // TIMER BUTTON
+        Texture2D _pauseButton;
+        Texture2D _normalButton;
+        Texture2D _fastButton;
+
         MouseState lastStateMouse;
         
         public Game1()
@@ -136,6 +141,11 @@ namespace TrumpTower
             _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
             _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
             _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
+
+            // TIMER BUTTON
+            _pauseButton = Content.Load<Texture2D>("ManagerTime/pauseButton");
+            _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
+            _fastButton = Content.Load<Texture2D>("ManagerTime/fastButton");
 
             // WAVE
             _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
@@ -346,12 +356,21 @@ namespace TrumpTower
                     spriteBatch.Draw(_imgMissile1, missile.Position, null, Color.White);
                 }
             }
+
             //TEXT DOLLARS
             Vector2 _positionDollars = new Vector2(10, 10);
             Rectangle sourceRectangl = new Rectangle(0, 0, 150, 33);
             spriteBatch.Draw(_backgroundDollars, new Vector2(5, 10), sourceRectangl, Color.Black*0.6f);
             spriteBatch.Draw(_imgDollars, _positionDollars, Color.White);
             spriteBatch.DrawString(_spriteDollars, _map.Dollars+"", new Vector2(50, 17), Color.White);
+
+            // TIMER BUTTON
+            Vector2 _positionFastButton = new Vector2(_mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
+            spriteBatch.Draw(_fastButton, _positionFastButton, Color.White);
+            Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
+            spriteBatch.Draw(_normalButton, _positionNormalButton, Color.White);
+            Vector2 _positionPauseButton = new Vector2(_positionNormalButton.X - 50, 10);
+            spriteBatch.Draw(_pauseButton, _positionPauseButton, Color.White);
 
             // IMG IS COMMING NORTH KOREA MDR
             Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
