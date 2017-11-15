@@ -9,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace TrumpTower.Draw
 {
-    class ButtonUI
+    public class ButtonUI
     {
+        Game1 _ctx;
         readonly string _name;
         Vector2 _position;
         Texture2D _img;
 
-        public ButtonUI(string name, Vector2 position, Texture2D img)
+        public ButtonUI(Game1 ctx, string name, Vector2 position, Texture2D img)
         {
+            _ctx = ctx;
             _name = name;
             _position = position;
             _img = img;
@@ -24,7 +26,10 @@ namespace TrumpTower.Draw
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_img, _position, Color.White);
+            Color color = Color.White;
+            if (_ctx.ButtonIsHover == this) color = Color.Red;
+            if (_ctx.ButtonIsActivated == this) color = Color.Red;
+            spriteBatch.Draw(_img, _position, color);
         }
 
         public string Name => _name;
