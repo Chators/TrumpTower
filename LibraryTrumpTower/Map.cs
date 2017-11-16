@@ -13,7 +13,7 @@ namespace TrumpTower.LibraryTrumpTower
         public int[,] MapArray { get; private set; }
         public List<Spawn> SpawnsEnemies { get; private set; }
         public Wall Wall { get; private set; }
-        public int Dollars { get; set; }
+        public double Dollars { get; set; }
         public int WidthArrayMap { get; private set; }
         public int HeightArrayMap { get; private set; }
         public List<Tower> Towers { get; private set; }

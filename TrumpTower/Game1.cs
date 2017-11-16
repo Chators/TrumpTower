@@ -297,10 +297,11 @@ namespace TrumpTower
                             {
                                 Console.WriteLine("lvl : " + t.TowerLvl);
                                 Console.WriteLine("type : " + t.Type);
-
-                                t.Upgrade(t);
-
-                                
+                                if (_map.Dollars >= Tower.TowerPrice(t.Type) * 1.5)
+                                {
+                                    _map.Dollars -= Tower.TowerPrice(t.Type) * 1.5;
+                                    t.Upgrade(t);
+                                }
                             }
                         }
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
