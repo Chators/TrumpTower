@@ -26,12 +26,20 @@ namespace TrumpTower
         Vector2 _towerSelector;
         Vector2 _towerSelectorUpgrade;
         Texture2D _imgWall;
+        Texture2D _imgUpgrade;
+        Texture2D _imgSell;
         Texture2D _imgEnemy1;
         Texture2D _imgTower1;
         Texture2D _imgTower2;
+        Texture2D _imgTower3;
+        Texture2D _imgTower1_2;
+        Texture2D _imgTower2_2;
+        Texture2D _imgTower3_2;
+        Texture2D _imgTower1_3;
+        Texture2D _imgTower2_3;
+        Texture2D _imgTower3_3;
         bool _verif;
         bool _verif2;
-        Texture2D _imgTower3;
         Texture2D _imgSelector;
         SoundEffect _explosion;
         SoundEffect _manDie;
@@ -123,7 +131,15 @@ namespace TrumpTower
             _imgTower1 = Content.Load<Texture2D>("tower1");
             _imgTower2 = Content.Load<Texture2D>("tower2");
             _imgTower3 = Content.Load<Texture2D>("tower3");
+            _imgTower1_2 = Content.Load<Texture2D>("tower1_2");
+            _imgTower2_2 = Content.Load<Texture2D>("tower2_2");
+            _imgTower3_2 = Content.Load<Texture2D>("tower3_2");
+            _imgTower1_3 = Content.Load<Texture2D>("tower1_3");
+            _imgTower2_3 = Content.Load<Texture2D>("tower2_3");
+            _imgTower3_3 = Content.Load<Texture2D>("tower3_3");
             _explosion = Content.Load<SoundEffect>("songExplosion");
+            _imgUpgrade = Content.Load<Texture2D>("upgrade");
+            _imgSell = Content.Load<Texture2D>("sell");
 
             // MISSILE 
             _imgMissile = Content.Load<Texture2D>("missile2");
@@ -244,6 +260,8 @@ namespace TrumpTower
                 }
 
             }
+
+            //Update or sell towers
             List<Vector2> ExistingTowers = _map.SearchPositionTextureInArray(MapTexture.notEmptyTower);
             if (newStateMouse.LeftButton == ButtonState.Pressed &&
             lastStateMouse.LeftButton == ButtonState.Released)
@@ -279,7 +297,10 @@ namespace TrumpTower
                             {
                                 Console.WriteLine("lvl : " + t.TowerLvl);
                                 Console.WriteLine("type : " + t.Type);
-                                t.TowerLvl += 1;
+
+                                t.Upgrade(t);
+
+                                
                             }
                         }
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
@@ -349,15 +370,48 @@ namespace TrumpTower
             {
                 if (tower.Type == TowerType.simple)
                 {
-                    spriteBatch.Draw(_imgTower1, tower.Position, null, Color.White);
+                    if (tower.TowerLvl == 1)
+                    {
+                        spriteBatch.Draw(_imgTower1, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 2)
+                    {
+                        spriteBatch.Draw(_imgTower1_2, tower.Position, null, Color.White);
+                    }
+                    else if(tower.TowerLvl == 3)
+                    {
+                        spriteBatch.Draw(_imgTower1_3, tower.Position, null, Color.White);
+                    }
                 }
                 else if (tower.Type == TowerType.slow)
                 {
-                    spriteBatch.Draw(_imgTower2, tower.Position, null, Color.White);
+                    if (tower.TowerLvl == 1)
+                    {
+                        spriteBatch.Draw(_imgTower2, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 2)
+                    {
+                        spriteBatch.Draw(_imgTower2_2, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 3)
+                    {
+                        spriteBatch.Draw(_imgTower2_3, tower.Position, null, Color.White);
+                    }
                 }
                 else if (tower.Type == TowerType.area)
                 {
-                    spriteBatch.Draw(_imgTower3, tower.Position, null, Color.White);
+                    if (tower.TowerLvl == 1)
+                    {
+                        spriteBatch.Draw(_imgTower3, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 2)
+                    {
+                        spriteBatch.Draw(_imgTower3_2, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 3)
+                    {
+                        spriteBatch.Draw(_imgTower3_3, tower.Position, null, Color.White);
+                    }
                 }
             }
 
@@ -376,9 +430,9 @@ namespace TrumpTower
             {
 
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap +5)), null, Color.White);
-                spriteBatch.Draw(_imgTower1, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap +5)), null, Color.White);
+                spriteBatch.Draw(_imgUpgrade, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap +5)), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
-                spriteBatch.Draw(_imgTower2, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
+                spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
             }
 
             //MISSILES

@@ -31,39 +31,21 @@ namespace TrumpTower.LibraryTrumpTower
 
             if(type == TowerType.simple)
             {
-                if (lvl == 1)
-                {
-                    Damage = 6;
-                    Scope = 5;
-                    _attackSpeed = 0.8;
-                }
-                else if (lvl == 2)
-                {
-                    Damage = 36;
-                    Scope = 5;
-                    _attackSpeed = 0.8;
-                }
-                else if (lvl == 3)
-                {
-                    Damage = 26;
-                    Scope = 5;
-                    _attackSpeed = 0.8;
-                }
-                
+                Damage = 6;
+                Scope = 5;
+                _attackSpeed = 0.8;  
             }
             else if(type == TowerType.slow)
             {
                 Damage = 19;
                 Scope = 3.5;
-                _attackSpeed = 1.8;
-               
+                _attackSpeed = 1.8;  
             }
             else if(type == TowerType.area)
             {
-                Damage = 15;
+                Damage = 13;
                 Scope = 6.5;
                 _attackSpeed = 1.2;
-               
             }
         }
 
@@ -113,12 +95,50 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
-        public void Upgrade()
+        public void Upgrade(Tower upgradedTower)
         {
+            upgradedTower.TowerLvl++;
+            if (upgradedTower.Type == TowerType.simple)
+            {
+                if (upgradedTower.TowerLvl == 2)
+                {
+                    upgradedTower.Damage = 13;
+                }
+                else if (upgradedTower.TowerLvl == 3)
+                {
+                    upgradedTower.Damage = 20;
+                }
+            }
+            else if (upgradedTower.Type == TowerType.slow)
+            {
+                if (upgradedTower.TowerLvl == 2)
+                {
+                    upgradedTower.Damage = 25;
 
+                }
+                else if (upgradedTower.TowerLvl == 3)
+                {
+                    upgradedTower.Damage = 32;
+
+                }
+            }
+            else if (upgradedTower.Type == TowerType.area)
+            {
+                if (upgradedTower.TowerLvl == 2)
+                {
+                    upgradedTower.Damage = 19;
+
+                }
+                else if (upgradedTower.TowerLvl == 3)
+                {
+                    upgradedTower.Damage = 25;
+
+                }
+            }
+            Console.WriteLine("Upgrade tower successfull !");
         }
 
-        static public int TowerPrice(TowerType type)
+            static public int TowerPrice(TowerType type)
         {
             if(type == TowerType.simple)
             {
