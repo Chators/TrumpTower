@@ -428,10 +428,12 @@ namespace TrumpTower
                     {
                         for(int j = 0; j < _map.Towers.Count; j++)
                         {
-                            Tower tower = _map.Towers[j];
-                            _map.Towers.Remove(tower);
-                            _map.ChangeLocation((int)tower.Position.X/Constant.imgSizeMap ,(int)tower.Position.Y/Constant.imgSizeMap ,(int)MapTexture.emptyTower);
-                            tower.Sell(tower);
+                            if (_map.Towers[j].Position == _towerSelectorUpgrade ) {
+                                Tower tower = _map.Towers[j];
+                                _map.Towers.Remove(tower);
+                                _map.ChangeLocation((int)tower.Position.X / Constant.imgSizeMap, (int)tower.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
+                                tower.Sell(tower);
+                            }
                         }
                       
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
