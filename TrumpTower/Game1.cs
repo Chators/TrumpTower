@@ -261,19 +261,19 @@ namespace TrumpTower
 
             }
 
-            //Update or sell towers
-            List<Vector2> ExistingTowers = _map.SearchPositionTextureInArray(MapTexture.notEmptyTower);
+            //Upgrade or sell towers
+            
             if (newStateMouse.LeftButton == ButtonState.Pressed &&
             lastStateMouse.LeftButton == ButtonState.Released)
             {
-                foreach (Vector2 position in ExistingTowers)
+                foreach (Tower tow in _map.Towers)
                 {
-                    if (newStateMouse.X > position.X * Constant.imgSizeMap &&
-                        newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[5].Width &&
-                        newStateMouse.Y > position.Y * Constant.imgSizeMap &&
-                        newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
+                    if (newStateMouse.X > tow.Position.X &&
+                        newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
+                        newStateMouse.Y > tow.Position.Y &&
+                        newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
                     {
-                        _towerSelectorUpgrade = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
+                        _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
                         _verif2 = true;
                     }
                 }
@@ -314,10 +314,8 @@ namespace TrumpTower
                         {
                             Tower tower = _map.Towers[j];
                             _map.Towers.Remove(tower);
-                            Vector2 tower2 = ExistingTowers[j];
-                            _map.ChangeLocation((int)tower2.X,(int)tower2.Y,(int)MapTexture.emptyTower);
-
-                        
+                            _map.ChangeLocation((int)tower.Position.X/Constant.imgSizeMap ,(int)tower.Position.Y/Constant.imgSizeMap ,(int)MapTexture.emptyTower);
+                            tower.Sell(tower);
                         }
                       
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);

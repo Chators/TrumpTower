@@ -95,6 +95,57 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
+        public void Sell(Tower tower)
+        {
+            if (tower.Type == TowerType.simple)
+            {
+                double initialPrice = Tower.TowerPrice(TowerType.simple)/2;
+                if (tower.TowerLvl == 1)
+                {
+                    _map.Dollars += initialPrice;
+                }
+                else if (tower.TowerLvl == 2)
+                {
+                    _map.Dollars += 1.5*initialPrice + initialPrice;
+                }
+                else if (tower.TowerLvl == 3)
+                {
+                    _map.Dollars += 3 * initialPrice + initialPrice;
+                }
+            }
+            else if (tower.Type == TowerType.slow)
+            {
+                double initialPrice = Tower.TowerPrice(TowerType.slow)/2;
+                if (tower.TowerLvl == 1)
+                {
+                    _map.Dollars += initialPrice;
+                }
+                else if (tower.TowerLvl == 2)
+                {
+                    _map.Dollars += 1.5 * initialPrice + initialPrice;
+                }
+                else if (tower.TowerLvl == 3)
+                {
+                    _map.Dollars += 3 * initialPrice + initialPrice;
+                }
+            }
+            else if (tower.Type == TowerType.area)
+            {
+                double initialPrice = Tower.TowerPrice(TowerType.area)/2;
+                if (tower.TowerLvl == 1)
+                {
+                   _map.Dollars += initialPrice;
+                }
+                else if (tower.TowerLvl == 2)
+                {
+                    _map.Dollars += 1.5 * initialPrice + initialPrice;
+                }
+                else if (tower.TowerLvl == 3)
+                {
+                    _map.Dollars += 3 * initialPrice + initialPrice;
+                }
+            }
+        }
         public void Upgrade(Tower upgradedTower)
         {
             if (upgradedTower.TowerLvl != 3)
