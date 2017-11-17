@@ -99,7 +99,7 @@ namespace TrumpTower.LibraryTrumpTower
         public Vector2 Position => _position;
         public bool IsStarting => TimerBeforeStarting <= 0;
         public bool IsDead => CurrentHp <= 0;
-        public void TakeHp(int damage) => CurrentHp -= damage;
+        public void TakeHp(double damage) => CurrentHp -= damage;
         public List<Vector2> ShortestWay => _wave.ShortestWay;
         private bool WithinReach(Vector2 myPosition, Vector2 target, double speed)
         {

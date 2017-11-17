@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
 using Microsoft.Xna.Framework;
+using LibraryTrumpTower.SpecialAbilities;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -24,6 +25,9 @@ namespace TrumpTower.LibraryTrumpTower
         public static int WavesTotals { get; set; }
         public static Wave WaveIsComming { get; set; }
 
+        // SPECIAL ABILITIES
+        public Explosion Explosion { get; set; }
+
         public Map(int[,] map)
         {
             MapArray = map;
@@ -34,6 +38,7 @@ namespace TrumpTower.LibraryTrumpTower
             Dollars = 3000;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
+            Explosion = new Explosion(this);
 
             WavesCounter = 0;
             WavesTotals = 0;
@@ -97,6 +102,8 @@ namespace TrumpTower.LibraryTrumpTower
                 Missile myMissile = Missiles[i];
                 myMissile.Update();
             }
+
+            Explosion.Update();
 
         }
 

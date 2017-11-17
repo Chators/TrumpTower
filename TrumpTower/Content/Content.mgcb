@@ -448,7 +448,7 @@
 /processorParam:TextureFormat=Color
 /build:ManagerTime/pauseButton.png
 
-#begin SpecialCapacity/specialAbility.png
+#begin SpecialAbilities/explosion.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -458,5 +458,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpecialCapacity/specialAbility.png
+/build:SpecialAbilities/explosion.png
 

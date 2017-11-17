@@ -6,17 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrumpTower.Draw.ButtonsUI;
 
 namespace TrumpTower.Draw
 {
-    public class ButtonUI
+    public class ButtonUITimer
     {
-        Game1 _ctx;
+        GroupOfButtonsUITimer _ctx;
         readonly string _name;
         Vector2 _position;
         Texture2D _img;
 
-        public ButtonUI(Game1 ctx, string name, Vector2 position, Texture2D img)
+        public ButtonUITimer(GroupOfButtonsUITimer ctx, string name, Vector2 position, Texture2D img)
         {
             _ctx = ctx;
             _name = name;
@@ -27,8 +28,8 @@ namespace TrumpTower.Draw
         public void Draw(SpriteBatch spriteBatch)
         {
             Color color = Color.White;
-            if (_ctx.ButtonIsHover == this) color = Color.Red;
-            if (_ctx.ButtonIsActivated == this) color = Color.Red;
+            if (_ctx.ButtonHover == this) color = Color.Red;
+            if (_ctx.ButtonActivated == this) color = Color.Red;
             spriteBatch.Draw(_img, _position, color);
         }
 
