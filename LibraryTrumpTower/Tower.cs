@@ -172,11 +172,13 @@ namespace TrumpTower.LibraryTrumpTower
                     if (upgradedTower.TowerLvl == 2)
                     {
                         upgradedTower.Damage = 25;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
 
                     }
                     else if (upgradedTower.TowerLvl == 3)
                     {
                         upgradedTower.Damage = 32;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
 
                     }
                 }
@@ -185,11 +187,13 @@ namespace TrumpTower.LibraryTrumpTower
                     if (upgradedTower.TowerLvl == 2)
                     {
                         upgradedTower.Damage = 19;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
 
                     }
                     else if (upgradedTower.TowerLvl == 3)
                     {
                         upgradedTower.Damage = 25;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
 
                     }
                 }
