@@ -35,8 +35,8 @@ namespace TrumpTower.Drawing
 
         public static void LoadContent(ContentManager Content)
         {
-            _imgNorthKoreaIsComing = Content.Load<Texture2D>("north_korea_is_comming");
-            _imgTimer = Content.Load<SpriteFont>("timerIsComming");
+            _imgNorthKoreaIsComing = Content.Load<Texture2D>("NextWave/north_korea_is_comming");
+            _imgTimer = Content.Load<SpriteFont>("NextWave/timerIsComming");
         }
 
         public void Update(Wave wave)

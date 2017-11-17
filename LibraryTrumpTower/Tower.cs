@@ -14,7 +14,6 @@ namespace TrumpTower.LibraryTrumpTower
         Map _map;
         readonly TowerType _type;
         int _lvl;
-        int _price;
         public double Scope { get; private set; }
         public int Damage { get;  set; }
         readonly double _attackSpeed;
