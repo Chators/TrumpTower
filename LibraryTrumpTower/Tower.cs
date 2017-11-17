@@ -13,10 +13,10 @@ namespace TrumpTower.LibraryTrumpTower
     {
         Map _map;
         readonly TowerType _type;
-        readonly int _lvl;
+        int _lvl;
         int _price;
         public double Scope { get; private set; }
-        public int Damage { get; private set; }
+        public int Damage { get;  set; }
         readonly double _attackSpeed;
         double _reload;
         public Vector2 Position { get; private set; }
@@ -33,22 +33,19 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 Damage = 6;
                 Scope = 5;
-                _attackSpeed = 0.8;
-                
+                _attackSpeed = 0.8;  
             }
             else if(type == TowerType.slow)
             {
                 Damage = 19;
                 Scope = 3.5;
-                _attackSpeed = 1.8;
-               
+                _attackSpeed = 1.8;  
             }
             else if(type == TowerType.area)
             {
-                Damage = 15;
+                Damage = 13;
                 Scope = 6.5;
                 _attackSpeed = 1.2;
-               
             }
         }
 
@@ -81,9 +78,128 @@ namespace TrumpTower.LibraryTrumpTower
         internal void Reloading() => _reload--;
 
         public TowerType Type => _type;
-        
 
-        static public int TowerPrice(TowerType type)
+        public int TowerLvl
+        {
+            get { return _lvl; }
+            set
+            {
+                if (value <= 3)
+                {
+                    _lvl = value;
+                }
+                else
+                {
+                    _lvl = 3;
+                }
+            }
+        }
+
+        public void Sell(Tower tower)
+        {
+            if (tower.Type == TowerType.simple)
+            {
+                double initialPrice = Tower.TowerPrice(TowerType.simple)/2;
+                if (tower.TowerLvl == 1)
+                {
+                    _map.Dollars += initialPrice;
+                }
+                else if (tower.TowerLvl == 2)
+                {
+                    _map.Dollars += 1.5*initialPrice + initialPrice;
+                }
+                else if (tower.TowerLvl == 3)
+                {
+                    _map.Dollars += 3 * initialPrice + initialPrice;
+                }
+            }
+            else if (tower.Type == TowerType.slow)
+            {
+                double initialPrice = Tower.TowerPrice(TowerType.slow)/2;
+                if (tower.TowerLvl == 1)
+                {
+                    _map.Dollars += initialPrice;
+                }
+                else if (tower.TowerLvl == 2)
+                {
+                    _map.Dollars += 1.5 * initialPrice + initialPrice;
+                }
+                else if (tower.TowerLvl == 3)
+                {
+                    _map.Dollars += 3 * initialPrice + initialPrice;
+                }
+            }
+            else if (tower.Type == TowerType.area)
+            {
+                double initialPrice = Tower.TowerPrice(TowerType.area)/2;
+                if (tower.TowerLvl == 1)
+                {
+                   _map.Dollars += initialPrice;
+                }
+                else if (tower.TowerLvl == 2)
+                {
+                    _map.Dollars += 1.5 * initialPrice + initialPrice;
+                }
+                else if (tower.TowerLvl == 3)
+                {
+                    _map.Dollars += 3 * initialPrice + initialPrice;
+                }
+            }
+        }
+        public void Upgrade(Tower upgradedTower)
+        {
+            if (upgradedTower.TowerLvl != 3)
+            {
+
+                upgradedTower.TowerLvl++;
+                if (upgradedTower.Type == TowerType.simple)
+                {
+                    if (upgradedTower.TowerLvl == 2)
+                    {
+                        upgradedTower.Damage = 13;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
+
+                    }
+                    else if (upgradedTower.TowerLvl == 3)
+                    {
+                        upgradedTower.Damage = 20;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
+
+                    }
+
+                }
+                else if (upgradedTower.Type == TowerType.slow)
+                {
+                    if (upgradedTower.TowerLvl == 2)
+                    {
+                        upgradedTower.Damage = 25;
+
+                    }
+                    else if (upgradedTower.TowerLvl == 3)
+                    {
+                        upgradedTower.Damage = 32;
+
+                    }
+                }
+                else if (upgradedTower.Type == TowerType.area)
+                {
+                    if (upgradedTower.TowerLvl == 2)
+                    {
+                        upgradedTower.Damage = 19;
+
+                    }
+                    else if (upgradedTower.TowerLvl == 3)
+                    {
+                        upgradedTower.Damage = 25;
+
+                    }
+                }
+            }
+            
+            Console.WriteLine("Upgrade tower successfull !");
+        }
+
+            static public int TowerPrice(TowerType type)
         {
             if(type == TowerType.simple)
             {
@@ -117,5 +233,6 @@ namespace TrumpTower.LibraryTrumpTower
             _reload = _attackSpeed * 60;
             _map.CreateMissile(new Missile(_map, this, Damage, Position, myEnemy));
         }
+
     }
 }

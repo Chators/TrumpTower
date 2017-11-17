@@ -13,7 +13,7 @@ namespace TrumpTower.LibraryTrumpTower
         public int[,] MapArray { get; private set; }
         public List<Spawn> SpawnsEnemies { get; private set; }
         public Wall Wall { get; private set; }
-        public int Dollars { get; set; }
+        public double Dollars { get; set; }
         public int WidthArrayMap { get; private set; }
         public int HeightArrayMap { get; private set; }
         public List<Tower> Towers { get; private set; }
@@ -118,14 +118,14 @@ namespace TrumpTower.LibraryTrumpTower
             return allEnemies;
         }
 
-        public List<Vector2> SearchEmptyTowers()
+        public List<Vector2> SearchPositionTextureInArray(MapTexture nameTexture)
         {
             List<Vector2> arrayEmptyTower = new List<Vector2>();
             for (int y = 0; y < HeightArrayMap; y++)
             {
                 for (int x = 0; x < WidthArrayMap; x++)
                 {
-                    if (MapArray[y, x] == (int)MapTexture.emptyTower) arrayEmptyTower.Add(new Vector2(x, y));
+                    if (MapArray[y, x] == (int)nameTexture) arrayEmptyTower.Add(new Vector2(x, y));
                 }
             }
             return arrayEmptyTower;

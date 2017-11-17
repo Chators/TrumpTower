@@ -32,9 +32,12 @@ namespace TrumpTower
         Texture2D _imgSelector;
 
         // WALL
+        Vector2 _towerSelectorUpgrade;
         Texture2D _imgWall;
 
         // ENEMIES
+        Texture2D _imgUpgrade;
+        Texture2D _imgSell;
         Texture2D _imgEnemy1;
         
         // TOWERS
@@ -43,10 +46,21 @@ namespace TrumpTower
         Texture2D _imgTower3;
         
         // SOUND
+        Texture2D _imgTower3;
+        Texture2D _imgTower1_2;
+        Texture2D _imgTower2_2;
+        Texture2D _imgTower3_2;
+        Texture2D _imgTower1_3;
+        Texture2D _imgTower2_3;
+        Texture2D _imgTower3_3;
+        bool _verif;
+        bool _verif2;
+        Texture2D _imgSelector;
         SoundEffect _explosion;
         SoundEffect _manDie;
 
         // WAVES
+        SpriteFont _imgDollars;
         SpriteFont _imgNextWave;
         WaveIsComingImg _waveSprite;
         Texture2D _flagNorthKorea;
@@ -113,7 +127,7 @@ namespace TrumpTower
             };
             _map = new Map(_mapPoint);
             _towerSelector = new Vector2(-1000, -1000);
-
+            _towerSelectorUpgrade = new Vector2(-1000, -1000);
             graphics.PreferredBackBufferWidth = _mapPoint.GetLength(1) * Constant.imgSizeMap;
             graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
             graphics.ApplyChanges();
@@ -126,7 +140,7 @@ namespace TrumpTower
 
             base.Initialize();
         }
-
+        
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -142,7 +156,7 @@ namespace TrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                _imgMaps.Add(Content.Load<Texture2D>("Map/"+name));
+                _imgMaps.Add(Content.Load<Texture2D>(name));
             }
 
             // HEALTH BAR
@@ -152,23 +166,30 @@ namespace TrumpTower
             _imgWall = Content.Load<Texture2D>("wall");
 
             // ENEMY 
-            _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
-            _manDie = Content.Load<SoundEffect>("Sound/songManDie");
+            _imgEnemy1 = Content.Load<Texture2D>("enemy1");
+            _manDie = Content.Load<SoundEffect>("songManDie");
 
             // TOWER
-            _imgTower1 = Content.Load<Texture2D>("Towers/tower1");
-            _imgTower2 = Content.Load<Texture2D>("Towers/tower2");
-            _imgTower3 = Content.Load<Texture2D>("Towers/tower3");
-            _explosion = Content.Load<SoundEffect>("Sound/songExplosion");
+            _imgTower1 = Content.Load<Texture2D>("tower1");
+            _imgTower2 = Content.Load<Texture2D>("tower2");
+            _imgTower3 = Content.Load<Texture2D>("tower3");
+            _imgTower1_2 = Content.Load<Texture2D>("tower1_2");
+            _imgTower2_2 = Content.Load<Texture2D>("tower2_2");
+            _imgTower3_2 = Content.Load<Texture2D>("tower3_2");
+            _imgTower1_3 = Content.Load<Texture2D>("tower1_3");
+            _imgTower2_3 = Content.Load<Texture2D>("tower2_3");
+            _imgTower3_3 = Content.Load<Texture2D>("tower3_3");
+            _explosion = Content.Load<SoundEffect>("songExplosion");
+            _imgUpgrade = Content.Load<Texture2D>("upgrade");
+            _imgSell = Content.Load<Texture2D>("sell");
 
             // MISSILE 
-            _imgMissile = Content.Load<Texture2D>("Missiles/missile2");
-            _imgMissile1 = Content.Load<Texture2D>("Missiles/missile1");
+            _imgMissile = Content.Load<Texture2D>("missile2");
+            _imgMissile1 = Content.Load<Texture2D>("missile1");
 
-            // DOLLARS
-            _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
-            _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
-            _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
+            // TEXT
+            _imgDollars = Content.Load<SpriteFont>("dollars");
+            _imgNextWave = Content.Load<SpriteFont>("next_wave");
 
             // TIMER BUTTON
             _fastButton = Content.Load<Texture2D>("ManagerTime/fastButton");
@@ -185,8 +206,8 @@ namespace TrumpTower
 
             // WAVE
             _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
+            // TEXTURE KOREA
             WaveIsComingImg.LoadContent(Content);
-            _flagNorthKorea = Content.Load<Texture2D>("NextWave/flagNorthKorea");
 
             //SELECTOR
             _imgSelector = Content.Load<Texture2D>("selector");
@@ -282,7 +303,7 @@ namespace TrumpTower
                 }
             }
             // Buy Tower
-            List<Vector2> emptyTowers = _map.SearchEmptyTowers();
+            List<Vector2> emptyTowers = _map.SearchPositionTextureInArray(MapTexture.emptyTower);
             if (newStateMouse.LeftButton == ButtonState.Pressed &&
                 lastStateMouse.LeftButton == ButtonState.Released)
             {
@@ -301,7 +322,7 @@ namespace TrumpTower
 
             if (newStateMouse.LeftButton == ButtonState.Pressed &&
             lastStateMouse.LeftButton == ButtonState.Released)
-            {
+            {   
                 if (_towerSelector != new Vector2(-1000, -1000))
                 {
                     if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
@@ -351,8 +372,75 @@ namespace TrumpTower
                 }
             }
             
-        }
 
+            //Upgrade or sell towers
+            
+            if (newStateMouse.LeftButton == ButtonState.Pressed &&
+            lastStateMouse.LeftButton == ButtonState.Released)
+            {
+                foreach (Tower tow in _map.Towers)
+                {
+                    if (newStateMouse.X > tow.Position.X &&
+                        newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
+                        newStateMouse.Y > tow.Position.Y &&
+                        newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                    {
+                        _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
+                        _verif2 = true;
+                    }
+                }
+            }
+            if (newStateMouse.LeftButton == ButtonState.Pressed &&
+            lastStateMouse.LeftButton == ButtonState.Released)
+            {
+                if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
+                {
+                    if (newStateMouse.X > _towerSelectorUpgrade.X &&
+                    newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
+                    newStateMouse.Y > _towerSelectorUpgrade.Y - Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                    {
+                        foreach(Tower t in _map.Towers)
+                        {
+                            if (newStateMouse.X > t.Position.X &&
+                            newStateMouse.X < (t.Position.X + Constant.imgSizeMap) &&
+                            newStateMouse.Y > t.Position.Y - Constant.imgSizeMap &&
+                            newStateMouse.Y < (t.Position.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                            {
+                                Console.WriteLine("lvl : " + t.TowerLvl);
+                                Console.WriteLine("type : " + t.Type);
+                                if (_map.Dollars >= Tower.TowerPrice(t.Type) * 1.5)
+                                {
+                                    t.Upgrade(t);
+                                }
+                            }
+                        }
+                        _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                    }
+                    else if (newStateMouse.X > _towerSelectorUpgrade.X &&
+                    newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
+                    newStateMouse.Y > _towerSelectorUpgrade.Y + Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                    {
+                        for(int j = 0; j < _map.Towers.Count; j++)
+                        {
+                            Tower tower = _map.Towers[j];
+                            _map.Towers.Remove(tower);
+                            _map.ChangeLocation((int)tower.Position.X/Constant.imgSizeMap ,(int)tower.Position.Y/Constant.imgSizeMap ,(int)MapTexture.emptyTower);
+                            tower.Sell(tower);
+                        }
+                      
+                        _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                    }
+                    else if (_verif2 == false)
+                    {
+                        _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                    }
+                    _verif2 = false;
+                }
+            }
+        }
+        
         /// <summary>
         /// This is called when the game should draw itself.elector
         /// </summary>
@@ -396,34 +484,74 @@ namespace TrumpTower
             }
 
             //TOWERS
-            List<Tower> _towers = _map.Towers;
-
-            foreach (Tower tower in _towers)
+            
+            foreach (Tower tower in _map.Towers)
             {
                 if (tower.Type == TowerType.simple)
                 {
-                    spriteBatch.Draw(_imgTower1, tower.Position, null, Color.White);
+                    if (tower.TowerLvl == 1)
+                    {
+                        spriteBatch.Draw(_imgTower1, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 2)
+                    {
+                        spriteBatch.Draw(_imgTower1_2, tower.Position, null, Color.White);
+                    }
+                    else if(tower.TowerLvl == 3)
+                    {
+                        spriteBatch.Draw(_imgTower1_3, tower.Position, null, Color.White);
+                    }
                 }
                 else if (tower.Type == TowerType.slow)
                 {
-                    spriteBatch.Draw(_imgTower2, tower.Position, null, Color.White);
+                    if (tower.TowerLvl == 1)
+                    {
+                        spriteBatch.Draw(_imgTower2, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 2)
+                    {
+                        spriteBatch.Draw(_imgTower2_2, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 3)
+                    {
+                        spriteBatch.Draw(_imgTower2_3, tower.Position, null, Color.White);
+                    }
                 }
                 else if (tower.Type == TowerType.area)
                 {
-                    spriteBatch.Draw(_imgTower3, tower.Position, null, Color.White);
+                    if (tower.TowerLvl == 1)
+                    {
+                        spriteBatch.Draw(_imgTower3, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 2)
+                    {
+                        spriteBatch.Draw(_imgTower3_2, tower.Position, null, Color.White);
+                    }
+                    else if (tower.TowerLvl == 3)
+                    {
+                        spriteBatch.Draw(_imgTower3_3, tower.Position, null, Color.White);
+                    }
                 }
             }
 
             if (_towerSelector != new Vector2(-1000, -1000))
             {
 
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, -64), null, Color.White);
-                spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-64, -64), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, -64), null, Color.White);
-                spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(64, -64), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, 64), null, Color.White);
-                spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-64, 64), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, 64), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+            }
+            if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
+            {
+
+                spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap +5)), null, Color.White);
+                spriteBatch.Draw(_imgUpgrade, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap +5)), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
+                spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
             }
 
             //MISSILES
@@ -460,13 +588,15 @@ namespace TrumpTower
             _buttonsUI["pauseTimer"].Draw(spriteBatch);
             _buttonsUI["normalTimer"].Draw(spriteBatch);
             _buttonsUI["fastTimer"].Draw(spriteBatch);            
+            //TEXT
+            spriteBatch.DrawString(_imgDollars, "Dollars : " + _map.Dollars, new Vector2(1620, 10), Color.White);
 
             // IMG IS COMMING NORTH KOREA MDR
-            Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 50), sourceRectanglee, Color.Black * 0.6f);
-            spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 50), Color.White);
-            spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
+            spriteBatch.DrawString(_imgNextWave, "Vague : " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(10, 10), Color.White);
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
+              
+
+            spriteBatch.DrawString(_imgNextWave, "Prochaine vague dans : " + Map.TimerNextWave / 60, new Vector2(10, 40), Color.White);
 
             spriteBatch.End();
             
