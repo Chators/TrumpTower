@@ -299,7 +299,6 @@ namespace TrumpTower
                                 Console.WriteLine("type : " + t.Type);
                                 if (_map.Dollars >= Tower.TowerPrice(t.Type) * 1.5)
                                 {
-                                    _map.Dollars -= Tower.TowerPrice(t.Type) * 1.5;
                                     t.Upgrade(t);
                                 }
                             }
@@ -311,7 +310,16 @@ namespace TrumpTower
                     newStateMouse.Y > _towerSelectorUpgrade.Y + Constant.imgSizeMap &&
                     newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
                     {
-                        Console.WriteLine("sell");
+                        for(int j = 0; j < _map.Towers.Count; j++)
+                        {
+                            Tower tower = _map.Towers[j];
+                            _map.Towers.Remove(tower);
+                            Vector2 tower2 = ExistingTowers[j];
+                            _map.ChangeLocation((int)tower2.X,(int)tower2.Y,(int)MapTexture.emptyTower);
+
+                        
+                        }
+                      
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
                     }
                     else if (_verif2 == false)
