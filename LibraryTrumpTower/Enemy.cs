@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -114,15 +115,21 @@ namespace TrumpTower.LibraryTrumpTower
 
         public void Die()
         {
-            ManagerSound.ManDie.Play();
+            SoundEffectInstance InstanceManDie = ManagerSound.ManDie.CreateInstance();
+            InstanceManDie.Volume = 0.8f;
+            InstanceManDie.Play();
             _map.Dollars += Bounty;
-            _wave.Enemies.RemoveAt(_wave.Enemies.IndexOf(this));
+            //_wave.Enemies.RemoveAt(_wave.Enemies.IndexOf(this));
+            _wave.Enemies.Remove(this);
+            _map.DeadEnemies.Add(this);
         }
 
         public void Die(bool Passedthebase)
         // Overload. If the ennemny unit passes the base, it dies but does not gives gold.
         {
-            ManagerSound.ManDie.Play();
+            SoundEffectInstance InstanceManDie = ManagerSound.ManDie.CreateInstance();
+            InstanceManDie.Volume = 0.8f;
+            InstanceManDie.Play();
             if (Passedthebase == false)
             {
                 _map.Dollars += Bounty;

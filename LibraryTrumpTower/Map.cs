@@ -19,6 +19,7 @@ namespace TrumpTower.LibraryTrumpTower
         public int HeightArrayMap { get; private set; }
         public List<Tower> Towers { get; private set; }
         public List<Missile> Missiles { get; set; }
+        public List<Enemy> DeadEnemies { get; set; }
 
         // WAVE
         public static int WavesCounter { get; set; }
@@ -39,6 +40,7 @@ namespace TrumpTower.LibraryTrumpTower
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
+            DeadEnemies = new List<Enemy>();
 
             WavesCounter = 0;
             WavesTotals = 0;
@@ -165,6 +167,11 @@ namespace TrumpTower.LibraryTrumpTower
         {
             Missiles.Add(missile);
             return missile;
+        }
+
+        public void UseExplosionAbility(Vector2 position)
+        {
+            Explosion.AttackOn(position);
         }
     }
 }

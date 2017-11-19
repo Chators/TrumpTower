@@ -1,49 +1,74 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using LibraryTrumpTower.SpecialAbilities;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrumpTower.Draw.Animations;
+using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
 {
     class GroupOfButtonsUIAbilities
     {
-        Game1 _ctx;
+        public Game1 Ctx { get; private set; }
+        public SpriteFont CooldownSprite{ get; private set; }
+        public Explosion Explosion { get; private set; }
         public Dictionary<string, ButtonUIAbility> ButtonsUIArray { get; private set; }
         public ButtonUIAbility ButtonHover { get; set; }
         public ButtonUIAbility ButtonActivated { get; set; }
 
-        public GroupOfButtonsUIAbilities(Game1 ctx)
+        public GroupOfButtonsUIAbilities(Game1 ctx, Explosion explosion, SpriteFont cooldownSprite)
         {
-            _ctx = ctx;
+            Ctx = ctx;
+            Explosion = explosion;
+            CooldownSprite = cooldownSprite;
             ButtonsUIArray = new Dictionary<string, ButtonUIAbility>();
         }
 
-        public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse)
+        public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            foreach (ButtonUIAbility button in ButtonsUIArray.Values)
-            {
-                ButtonHover = null;
+            ButtonHover = null;
+            if (newStateMouse.RightButton == ButtonState.Pressed && lastStateMouse.RightButton == ButtonState.Released) ButtonActivated = null;
 
-                if (newStateMouse.X > button.Position.X &&
-                    newStateMouse.X < button.Position.X + button.Texture.Width &&
-                    newStateMouse.Y > button.Position.Y &&
-                    newStateMouse.Y < button.Position.Y + button.Texture.Height)
+            // First Selection
+            if (ButtonActivated == null)
+            {
+                foreach (ButtonUIAbility button in ButtonsUIArray.Values)
                 {
-                    if (button.Name == "explosionAbility")
+                    if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width && 
+                        newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
+                        newStateKeyboard.IsKeyDown(Keys.A))
                     {
-                        if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                            lastStateMouse.LeftButton == ButtonState.Released)
+                        if (button.Name == "explosionAbility" && Ctx.Map.Explosion.IsReloaded)
                         {
-                            ButtonActivated = button;
+                            if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released || 
+                                newStateKeyboard.IsKeyDown(Keys.A) && lastStateKeyboard.IsKeyDown(Keys.A))
+                            {
+                                ManagerSound.buttonExplosionSound.Play();
+                                ButtonActivated = button;
+                            }
+                            ButtonHover = button;
                         }
-                        ButtonHover = button;
                     }
                 }
-
             }
+            // Second Selection
+            else if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
+            {
+                if (ButtonActivated.Name == "explosionAbility")
+                {
+                    Ctx.Map.UseExplosionAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
+                    Ctx.AnimSprites[0].AnimatedSprite.Add(new SimpleAnimationSprite(Ctx.AnimSprites[0], newStateMouse.X - 32, newStateMouse.Y - 32));
+                    ManagerSound.ExplosionAbility.Play();
+                }
+
+                ButtonActivated = null;
+            }
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)

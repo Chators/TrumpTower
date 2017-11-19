@@ -16,14 +16,14 @@ namespace LibraryTrumpTower.SpecialAbilities
         public int CurrentTimer { get; private set; }
         public double Radius { get; private set; }
         public double Damage { get; private set; }
-        public Vector2 Position { get; private set; }
+        private Vector2 Position { get; set; }
 
         public Explosion (Map ctx)
         {
             _ctx = ctx;
-            Cooldown = 90 * 60;
+            Cooldown = 60 * 60;
             CurrentTimer = 0;
-            Radius = 5;
+            Radius = 800;
             Damage = 30;
             Position = new Vector2(-1000, -1000);
         }
@@ -36,13 +36,16 @@ namespace LibraryTrumpTower.SpecialAbilities
                 if (enemy.IsDead) enemy.Die();
             }
             CurrentTimer = Cooldown;
+            Position = new Vector2(-1000, -1000);
         }
 
         public void Update()
         {
-            if (IsActivate) UpdateAttackEnemies(GetEnemies(Position, Radius));
+            if (IsActivate && IsReloaded) UpdateAttackEnemies(GetEnemies(Position, Radius));
             if (!IsReloaded) CurrentTimer--;
         }
+
+        public void AttackOn(Vector2 position) => Position = position;
 
         private List<Enemy> GetEnemies(Vector2 position, double radius)
         {

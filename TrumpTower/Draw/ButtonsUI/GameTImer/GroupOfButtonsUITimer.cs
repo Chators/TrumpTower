@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace TrumpTower.Draw.ButtonsUI
 {
@@ -21,62 +22,68 @@ namespace TrumpTower.Draw.ButtonsUI
             ButtonsUIArray = new Dictionary<string, ButtonUITimer>();
         }
 
-        public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse)
+        public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            foreach (ButtonUITimer button in ButtonsUIArray.Values)
-            {
-                ButtonHover = null;
+            ButtonHover = null;
 
-                if (newStateMouse.X > button.Position.X &&
-                    newStateMouse.X < button.Position.X + button.Texture.Width &&
-                    newStateMouse.Y > button.Position.Y &&
-                    newStateMouse.Y < button.Position.Y + button.Texture.Height)
+            // PAUSE
+            ButtonUITimer button = ButtonsUIArray["pauseTimer"];
+            if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
+                newStateKeyboard.IsKeyDown(Keys.Space) && lastStateKeyboard.IsKeyUp(Keys.Space))
+            {
+                if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
+                            newStateKeyboard.IsKeyDown(Keys.Space) && lastStateKeyboard.IsKeyUp(Keys.Space))
                 {
-                    // GAME TIMER
-                    if (button.Name == "pauseTimer")
+                    if (_ctx.GameIsPaused == false)
                     {
-                        if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                            lastStateMouse.LeftButton == ButtonState.Released)
-                        {
-                            if (_ctx.GameIsPaused == false)
-                            {
-                                ButtonActivated = button;
-                                _ctx.GameIsPaused = true;
-                            }
-                            else
-                            {
-                                ButtonActivated = ButtonsUIArray["normalTimer"];
-                                _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
-                                _ctx.GameIsPaused = false;
-                            }
-                        }
-                        ButtonHover = button;
+                        ButtonActivated = button;
+                        _ctx.GameIsPaused = true;
+                        ManagerSound.SoundPauseIn.Play();
                     }
-                    else if (button.Name == "normalTimer")
+                    else
                     {
-                        if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                            lastStateMouse.LeftButton == ButtonState.Released)
-                        {
-                            ButtonActivated = button;
-                            _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
-                            _ctx.GameIsPaused = false;
-                        }
-                        ButtonHover = button;
-                    }
-                    else if (button.Name == "fastTimer")
-                    {
-                        if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                            lastStateMouse.LeftButton == ButtonState.Released)
-                        {
-                            ButtonActivated = button;
-                            _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 120.0f);
-                            _ctx.GameIsPaused = false;
-                        }
-                        ButtonHover = button;
+                        ButtonActivated = ButtonsUIArray["normalTimer"];
+                        _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
+                        _ctx.GameIsPaused = false;
+                        ManagerSound.SoundPauseOut.Play();
                     }
                 }
-
+                ButtonHover = button;
             }
+
+            // START
+            button = ButtonsUIArray["normalTimer"];
+            if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height)
+            {
+                if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
+                {
+                    ButtonActivated = button;
+                    _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
+                    _ctx.GameIsPaused = false;
+                    ManagerSound.SoundPauseOut.Play();
+                }
+                ButtonHover = button;
+            }
+
+            // FAST
+            button = ButtonsUIArray["fastTimer"];
+            if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
+                newStateKeyboard.IsKeyDown(Keys.OemPlus) && lastStateKeyboard.IsKeyUp(Keys.OemPlus))
+            {
+                if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
+                    newStateKeyboard.IsKeyDown(Keys.OemPlus) && lastStateKeyboard.IsKeyUp(Keys.OemPlus))
+                {
+                    ButtonActivated = button;
+                    _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 120.0f);
+                    _ctx.GameIsPaused = false;
+                    ManagerSound.SoundPauseOut.Play();
+                }
+                ButtonHover = button;
+            }
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
