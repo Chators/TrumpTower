@@ -15,6 +15,7 @@ using TrumpTower.Drawing;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
+using TrumpTower.Sprites;
 
 namespace TrumpTower
 {
@@ -26,6 +27,8 @@ namespace TrumpTower
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        SpriteWall _spriteWall;
+
         // MAPS
         int[,] _mapPoint;
         Map _map;
@@ -33,12 +36,8 @@ namespace TrumpTower
 
         // TOWER SELECTOR
         Vector2 _towerSelector;
-        
         Texture2D _imgSelector;
-
-        // WALL
         Vector2 _towerSelectorUpgrade;
-        Texture2D _imgWall;
 
         // ENEMIES
         Texture2D _imgUpgrade;
@@ -187,7 +186,8 @@ namespace TrumpTower
             HealthBar.LoadContent(Content);
 
             // WALL
-            _imgWall = Content.Load<Texture2D>("wall");
+            Texture2D _imgWall = Content.Load<Texture2D>("wall");
+            _spriteWall = new SpriteWall(_map.Wall, _imgWall, spriteBatch);
 
             // ENEMY 
             _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
@@ -492,10 +492,7 @@ namespace TrumpTower
             }
 
             //WALL
-            Wall _wall = _map.Wall;
-            spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
-            HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f);
-            wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);
+            _spriteWall.Draw();
 
             //ENEMIES
             List<Enemy> _enemies = _map.GetAllEnemies();
