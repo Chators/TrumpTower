@@ -48,7 +48,8 @@
     <Compile Include="Sprites\ButtonsUI\SpecialAbilities\GroupOfButtonsUIAbilities.cs" />
     <Compile Include="Draw\HealthBar.cs" />
     <Compile Include="Sprites\ButtonsUI\GameTImer\ButtonUITimer.cs" />
-    <Compile Include="Draw\WaveIsCommingImg.cs" />
+    <Compile Include="Sprites\SpriteWave.cs" />
+    <Compile Include="Sprites\SpriteWaveIsComming.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

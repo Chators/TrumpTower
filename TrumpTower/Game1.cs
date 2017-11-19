@@ -66,9 +66,8 @@ namespace TrumpTower
         SoundEffect _manDie;
 
         // WAVES
-        SpriteFont _imgNextWave;
-        WaveIsComingImg _waveSprite;
-        Texture2D _flagNorthKorea;
+        SpriteWave _spriteWave;
+        SpriteWaveIsComming _waveSprite;
 
         // MISSILES
         Texture2D _imgMissile;
@@ -141,7 +140,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
             graphics.ApplyChanges();
 
-            _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
+            _waveSprite = new SpriteWaveIsComming(_map, Map.WaveIsComming);
 
             // ANIMATION EXPLOSION ABILITY
             AnimSprites = new SimpleAnimationDefinition[2];
@@ -222,10 +221,13 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this, _buttonsTimerTexture);
 
             // WAVE
-            _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
-            // TEXTURE KOREA
-            WaveIsComingImg.LoadContent(Content);
-            _flagNorthKorea = Content.Load<Texture2D>("NextWave/flagNorthKorea");
+            SpriteFont _spriteFontWave = Content.Load<SpriteFont>("NextWave/next_wave");
+            Dictionary <string, Texture2D> _texturesWave = new Dictionary<string, Texture2D>();
+            _texturesWave["flagNorthKorea"] = Content.Load<Texture2D>("NextWave/flagNorthKorea");
+            _texturesWave["overlayWave"] = Content.Load<Texture2D>("NextWave/overlayWave");
+            _spriteWave = new SpriteWave(this, _texturesWave, _spriteFontWave, spriteBatch);
+
+            SpriteWaveIsComming.LoadContent(Content);
 
             // SPECIAL ABILITIES
             _cooldownSprite = Content.Load<SpriteFont>("cooldownText");
@@ -601,13 +603,10 @@ namespace TrumpTower
             AnimationsDollars.Draw();
 
             // TIMER BUTTON
-            _groupOfButtonsUITimer.Draw(spriteBatch); 
+            _groupOfButtonsUITimer.Draw(spriteBatch);
 
             // IMG IS COMMING NORTH KOREA MDR
-            Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
-            //spriteBatch.Draw(_backgroundDollars, new Vector2(5, 50), sourceRectanglee, Color.Black * 0.6f);
-            spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 50), Color.White);
-            spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
+            _spriteWave.Draw();
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
 
             // SPECIAL ABILITIES 
