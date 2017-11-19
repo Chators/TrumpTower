@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,23 @@ namespace TrumpTower.Draw.ButtonsUI
         public Dictionary<string, ButtonUITimer> ButtonsUIArray { get; private set; }
         public ButtonUITimer ButtonHover { get; set; }
         public ButtonUITimer ButtonActivated { get; set; }
+        public Dictionary<string, Texture2D> Textures { get; set; }
 
-        public GroupOfButtonsUITimer(Game1 ctx)
+        public GroupOfButtonsUITimer(Game1 ctx, Dictionary<string, Texture2D> textures)
         {
             _ctx = ctx;
+            Textures = textures;
             ButtonsUIArray = new Dictionary<string, ButtonUITimer>();
+
+            // Creates buttons
+            Vector2 _positionFastButton = new Vector2(_ctx._mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
+            CreateButtonUI(new ButtonUITimer(this, "fastTimer", _positionFastButton, Textures["fastButton"]));
+
+            Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
+            CreateButtonUI(new ButtonUITimer(this, "normalTimer", _positionNormalButton, Textures["normalButton"]));
+
+            Vector2 _positionPauseButton = new Vector2(_positionNormalButton.X - 50, 10);
+            CreateButtonUI(new ButtonUITimer(this, "pauseTimer", _positionPauseButton, Textures["pauseButton"])); 
         }
 
         public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
@@ -88,6 +101,9 @@ namespace TrumpTower.Draw.ButtonsUI
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            Vector2 _overlayManageTimePosition = new Vector2(ButtonsUIArray["pauseTimer"].Position.X - 5, ButtonsUIArray["pauseTimer"].Position.Y - 5);
+            Rectangle _overlayManageTime = new Rectangle(0, 0, 143, 42);
+            spriteBatch.Draw(Textures["overlayButtons"], _overlayManageTimePosition, _overlayManageTime, Color.Black * 0.6f);
             foreach (ButtonUITimer button in ButtonsUIArray.Values) button.Draw(spriteBatch);
         }
 

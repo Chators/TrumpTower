@@ -28,9 +28,11 @@ namespace TrumpTower
         SpriteBatch spriteBatch;
 
         SpriteWall _spriteWall;
+        GroupOfButtonsUITimer _groupOfButtonsUITimer;
+
 
         // MAPS
-        int[,] _mapPoint;
+        public int[,] _mapPoint;
         Map _map;
         List<Texture2D> _imgMaps;
 
@@ -78,16 +80,10 @@ namespace TrumpTower
 
         Texture2D _backgroundDollars;
         DollarsAnimationsDefinition AnimationsDollars;
-
+        
         // BUTTONS
-        GroupOfButtonsUITimer _groupOfButtonsUITimer;
         GroupOfButtonsUIAbilities _groupOfButtonsUIAbilities;
         SpriteFont _cooldownSprite;
-
-        // TIMER BUTTON
-        Texture2D _pauseButton;
-        Texture2D _normalButton;
-        Texture2D _fastButton;
 
         // SPECIAL ABILITIES
         public Texture2D ImgExplosionButton { get; private set; }
@@ -149,7 +145,6 @@ namespace TrumpTower
             graphics.ApplyChanges();
 
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
-            _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
 
             // ANIMATION EXPLOSION ABILITY
             AnimSprites = new SimpleAnimationDefinition[2];
@@ -217,22 +212,15 @@ namespace TrumpTower
             _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
             AnimationsDollars = new DollarsAnimationsDefinition(new Vector2(50, 17), _spriteDollars, spriteBatch, (int)_map.Dollars);
 
-            
+
 
             // TIMER BUTTON
-            _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
-
-            _fastButton = Content.Load<Texture2D>("ManagerTime/fastButton");
-            Vector2 _positionFastButton = new Vector2(_mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
-            _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "fastTimer", _positionFastButton, _fastButton));
-
-            _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
-            Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
-            _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "normalTimer", _positionNormalButton, _normalButton));
-
-            _pauseButton = Content.Load<Texture2D>("ManagerTime/pauseButton");
-            Vector2 _positionPauseButton = new Vector2(_positionNormalButton.X - 50, 10);
-            _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "pauseTimer", _positionPauseButton, _pauseButton));
+            Dictionary<string, Texture2D> _buttonsTimerTexture = new Dictionary<string, Texture2D>();
+            _buttonsTimerTexture["fastButton"] = Content.Load<Texture2D>("ManagerTime/fastButton");
+            _buttonsTimerTexture["normalButton"] = Content.Load<Texture2D>("ManagerTime/normalButton");
+            _buttonsTimerTexture["pauseButton"] = Content.Load<Texture2D>("ManagerTime/pauseButton");
+            _buttonsTimerTexture["overlayButtons"] = Content.Load<Texture2D>("ManagerTime/overlayButtons");
+            _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this, _buttonsTimerTexture);
 
             // WAVE
             _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
@@ -618,9 +606,6 @@ namespace TrumpTower
             AnimationsDollars.Draw();
 
             // TIMER BUTTON
-            Vector2 _overlayManageTimePosition = new Vector2(_groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"].Position.X - 5, _groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"].Position.Y - 5);
-            Rectangle _overlayManageTime = new Rectangle(0, 0, 143, 42);
-            spriteBatch.Draw(_backgroundDollars, _overlayManageTimePosition, _overlayManageTime, Color.Black * 0.6f);
             _groupOfButtonsUITimer.Draw(spriteBatch); 
 
             // IMG IS COMMING NORTH KOREA MDR
