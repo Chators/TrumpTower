@@ -66,7 +66,6 @@ namespace TrumpTower
         SoundEffect _manDie;
 
         // WAVES
-        Texture2D _imgDollars;
         SpriteFont _imgNextWave;
         WaveIsComingImg _waveSprite;
         Texture2D _flagNorthKorea;
@@ -76,9 +75,7 @@ namespace TrumpTower
         Texture2D _imgMissile1;
 
         // DOLLARS
-        SpriteFont _spriteDollars;
-
-        Texture2D _backgroundDollars;
+        SpriteDollars _spriteDollars;
         DollarsAnimationsDefinition AnimationsDollars;
         
         // BUTTONS
@@ -207,10 +204,12 @@ namespace TrumpTower
             _imgMissile1 = Content.Load<Texture2D>("Missiles/missile1");
 
             // DOLLARS
-            _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
-            _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
-            _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
-            AnimationsDollars = new DollarsAnimationsDefinition(new Vector2(50, 17), _spriteDollars, spriteBatch, (int)_map.Dollars);
+            Dictionary<string, Texture2D> _texturesDollars = new Dictionary<string, Texture2D>();
+            _texturesDollars["dollarsImg"] = Content.Load<Texture2D>("Dollars/dollarsImg");
+            _texturesDollars["spriteDollars"] = Content.Load<Texture2D>("Dollars/backgroundDollars");
+            SpriteFont _spriteFontDollars = Content.Load<SpriteFont>("Dollars/dollars");
+            _spriteDollars = new SpriteDollars(_map, _texturesDollars, _spriteFontDollars, spriteBatch);
+            AnimationsDollars = new DollarsAnimationsDefinition(new Vector2(50, 17), _spriteFontDollars, spriteBatch, (int)_map.Dollars);
 
 
 
@@ -598,11 +597,7 @@ namespace TrumpTower
             }
 
             //TEXT DOLLARS
-            Vector2 _positionDollars = new Vector2(10, 10);
-            Rectangle _overlayDollars = new Rectangle(0, 0, 150, 33);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 10), _overlayDollars, Color.Black * 0.6f);
-            spriteBatch.Draw(_imgDollars, _positionDollars, Color.White);
-            spriteBatch.DrawString(_spriteDollars, _map.Dollars + "", new Vector2(50, 17), Color.White);
+            _spriteDollars.Draw();
             AnimationsDollars.Draw();
 
             // TIMER BUTTON
@@ -610,7 +605,7 @@ namespace TrumpTower
 
             // IMG IS COMMING NORTH KOREA MDR
             Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 50), sourceRectanglee, Color.Black * 0.6f);
+            //spriteBatch.Draw(_backgroundDollars, new Vector2(5, 50), sourceRectanglee, Color.Black * 0.6f);
             spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 50), Color.White);
             spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
