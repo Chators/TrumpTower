@@ -55,8 +55,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spawns\Spawn.cs" />
     <Compile Include="Spawns\Wave.cs" />
+    <Compile Include="SpecialAbilities\Explosion.cs" />
     <Compile Include="Tower.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

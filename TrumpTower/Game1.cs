@@ -3,9 +3,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using TrumpTower.Draw;
+using TrumpTower.Draw.Animations;
+using TrumpTower.Draw.ButtonsUI;
+using TrumpTower.Draw.ButtonsUI.SpecialAbilities;
+using TrumpTower.Draw.DollarsAnimations;
 using TrumpTower.Drawing;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
@@ -39,12 +44,12 @@ namespace TrumpTower
         Texture2D _imgUpgrade;
         Texture2D _imgSell;
         Texture2D _imgEnemy1;
-        
+
         // TOWERS
         Texture2D _imgTower1;
         Texture2D _imgTower2;
         Texture2D _imgTower3;
-        
+
         // SOUND
        
         Texture2D _imgTower1_2;
@@ -73,22 +78,34 @@ namespace TrumpTower
         SpriteFont _spriteDollars;
 
         Texture2D _backgroundDollars;
+        DollarsAnimationsDefinition AnimationsDollars;
 
         // BUTTONS
-        Dictionary<string,ButtonUI> _buttonsUI;
-        public ButtonUI ButtonIsHover { get; private set; }
-        public ButtonUI ButtonIsActivated { get; private set; }
+        GroupOfButtonsUITimer _groupOfButtonsUITimer;
+        GroupOfButtonsUIAbilities _groupOfButtonsUIAbilities;
+        SpriteFont _cooldownSprite;
 
         // TIMER BUTTON
         Texture2D _pauseButton;
         Texture2D _normalButton;
         Texture2D _fastButton;
 
+        // SPECIAL ABILITIES
+        public Texture2D ImgExplosionButton { get; private set; }
+
         // PAUSE
-        bool gameIsPaused;
+        public bool GameIsPaused { get; set; }
+
+        // ANIMATION SPRITE
+        public SimpleAnimationDefinition[] AnimSprites { get; private set; }
+
+        // CURSOS 
+        public Texture2D ImgCursor { get; set; }
+        Texture2D _imgCursorBomb;
 
         MouseState lastStateMouse;
-        
+        KeyboardState lastStateKeyboard;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -108,7 +125,7 @@ namespace TrumpTower
             _verif = false;
             _mapPoint = new int[,]
             {
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,10,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
+                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,7 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,10,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,13,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 },
@@ -133,10 +150,17 @@ namespace TrumpTower
             graphics.ApplyChanges();
 
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
-            _buttonsUI = new Dictionary<string, ButtonUI>();
+            _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
 
-            
-            gameIsPaused = false;
+            // ANIMATION EXPLOSION ABILITY
+            AnimSprites = new SimpleAnimationDefinition[2];
+            // EXPLOS 3D
+            AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(96, 96), new Point(5, 3), 40, false);
+            //AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
+            AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
+            foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
+
+            GameIsPaused = false;
 
             base.Initialize();
         }
@@ -191,21 +215,24 @@ namespace TrumpTower
             _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
             _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
             _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
+            AnimationsDollars = new DollarsAnimationsDefinition(new Vector2(50, 17), _spriteDollars, spriteBatch, (int)_map.Dollars);
 
             
 
             // TIMER BUTTON
+            _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
+
             _fastButton = Content.Load<Texture2D>("ManagerTime/fastButton");
             Vector2 _positionFastButton = new Vector2(_mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
-            _buttonsUI["fastTimer"] = new ButtonUI(this, "fastTimer", _positionFastButton, _fastButton);
-            
+            _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "fastTimer", _positionFastButton, _fastButton));
+
             _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
             Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
-            _buttonsUI["normalTimer"] = new ButtonUI(this, "normalTimer", _positionNormalButton, _normalButton);
+            _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "normalTimer", _positionNormalButton, _normalButton));
 
             _pauseButton = Content.Load<Texture2D>("ManagerTime/pauseButton");
             Vector2 _positionPauseButton = new Vector2(_positionNormalButton.X - 50, 10);
-            _buttonsUI["pauseTimer"] = new ButtonUI(this, "pauseTimer", _positionPauseButton, _pauseButton);
+            _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "pauseTimer", _positionPauseButton, _pauseButton));
 
             // WAVE
             _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
@@ -213,10 +240,26 @@ namespace TrumpTower
             WaveIsComingImg.LoadContent(Content);
             _flagNorthKorea = Content.Load<Texture2D>("NextWave/flagNorthKorea");
 
+            // SPECIAL ABILITIES
+            _cooldownSprite = Content.Load<SpriteFont>("cooldownText");
+            _groupOfButtonsUIAbilities = new GroupOfButtonsUIAbilities(this, _map.Explosion, _cooldownSprite);
+            ImgExplosionButton = Content.Load<Texture2D>("SpecialAbilities/explosion");
+            Vector2 _positionExplosionAbilityButton = new Vector2(15, _mapPoint.GetLength(0) * Constant.imgSizeMap - 80);
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "explosionAbility", _positionExplosionAbilityButton, ImgExplosionButton));
+            // ANIMATION EXPLOSION ABILITY
+            foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
+
             //SELECTOR
             _imgSelector = Content.Load<Texture2D>("selector");
 
+            // CURSOR BOMB
+            _imgCursorBomb = Content.Load<Texture2D>("cursorBomb");
+
             ManagerSound.LoadContent(Content);
+            // Song
+            MediaPlayer.Play(ManagerSound.Song1);
+            MediaPlayer.Volume = 0.4f;
+            MediaPlayer.IsRepeating = true;
         }
 
         /// <summary>
@@ -240,72 +283,50 @@ namespace TrumpTower
 
             // TODO: Add your update logic here
             MouseState newStateMouse = Mouse.GetState();
-            HandleInput(newStateMouse, lastStateMouse);
+            KeyboardState newStateKeyboard = Keyboard.GetState();
+            HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
             lastStateMouse = newStateMouse;
-            
-            if (!gameIsPaused)
+            lastStateKeyboard = newStateKeyboard;
+
+            if (!GameIsPaused)
             {
                 if (_map.Wall.IsDead()) Exit(); // If base loses hp, game will exit.
                 _map.Update();
                 _waveSprite.Update(Map.WaveIsComming);
+
+                // ANIM Sprite
+                foreach (SimpleAnimationDefinition def in AnimSprites)
+                {
+                    for (int j = 0; j < def.AnimatedSprite.Count; j++)
+                    {
+                        SimpleAnimationSprite animatedSprite = def.AnimatedSprite[j];
+                        animatedSprite.Update(gameTime);
+                    }
+                }
+
+                // ENEMIES BLOOD
+                for (int i = 0; i < _map.DeadEnemies.Count; i++)
+                {
+                    Enemy deadEnemy = _map.DeadEnemies[i];
+                    AnimSprites[1].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[1], (int)deadEnemy.Position.X, (int)deadEnemy.Position.Y));
+                    _map.DeadEnemies.Remove(deadEnemy);
+                }
+
+                AnimationsDollars.Update((int)_map.Dollars);
             }
 
             base.Update(gameTime);
         }
 
-        protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse)
+        protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            ButtonIsHover = null;
-            foreach (ButtonUI button in _buttonsUI.Values)
-            {
-                if (newStateMouse.X > button.Position.X  &&
-                    newStateMouse.X < button.Position.X + button.Texture.Width &&
-                    newStateMouse.Y > button.Position.Y  &&
-                    newStateMouse.Y < button.Position.Y + button.Texture.Height)
-                {
-                    if (button.Name == "pauseTimer")
-                    {
-                        if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                            lastStateMouse.LeftButton == ButtonState.Released)
-                        {
-                            if (gameIsPaused == false)
-                            {
-                                ButtonIsActivated = button;
-                                gameIsPaused = true;
-                            }
-                            else
-                            {
-                                ButtonIsActivated = _buttonsUI["normalTimer"];
-                                TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
-                                gameIsPaused = false;
-                            }
-                        }
-                        ButtonIsHover = button;
-                    }
-                    else if (button.Name == "normalTimer")
-                    {
-                        if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                            lastStateMouse.LeftButton == ButtonState.Released)
-                        {
-                            ButtonIsActivated = button;
-                            TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
-                            gameIsPaused = false;
-                        }
-                        ButtonIsHover = button;
-                    }
-                    else if (button.Name == "fastTimer")
-                    {
-                        if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                            lastStateMouse.LeftButton == ButtonState.Released)
-                        {
-                            ButtonIsActivated = button;
-                            TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 120.0f);
-                            gameIsPaused = false;
-                        }
-                        ButtonIsHover = button;
-                    }
-                }
-            }
+
+            // GAME TIMER
+            _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
+            // EXPLOSION ABILITY
+            _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
             // Buy Tower
             List<Vector2> emptyTowers = _map.SearchPositionTextureInArray(MapTexture.emptyTower);
             if (newStateMouse.LeftButton == ButtonState.Pressed &&
@@ -375,6 +396,7 @@ namespace TrumpTower
                     _verif = false;
                 }
             }
+
             
 
             //Upgrade or sell towers
@@ -457,7 +479,9 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            
+
+            IsMouseVisible = true;
+
             // MAPS
             for (int y = 0; y < _map.HeightArrayMap; y++)
             {
@@ -466,11 +490,11 @@ namespace TrumpTower
                     spriteBatch.Draw(_imgMaps[_map.GetTypeArray(x, y)], new Vector2(x * Constant.imgSizeMap, y * Constant.imgSizeMap), null, Color.White);
                 }
             }
-            
+
             //WALL
             Wall _wall = _map.Wall;
             spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
-            HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp);
+            HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f);
             wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);
 
             //ENEMIES
@@ -485,7 +509,7 @@ namespace TrumpTower
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy1.Width, _imgEnemy1.Height);
                 Vector2 origin = new Vector2(_imgEnemy1.Width / 2, _imgEnemy1.Height / 2);
                 spriteBatch.Draw(_imgEnemy1, new Vector2(enemy.Position.X + (_imgEnemy1.Width / 2), enemy.Position.Y + (_imgEnemy1.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
-                HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp);
+                HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f);
                 enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy1);
             }
 
@@ -542,6 +566,13 @@ namespace TrumpTower
 
             if (_towerSelector != new Vector2(-1000, -1000))
             {
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, -64), null, Color.White);
+                spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-64, -64), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, -64), null, Color.White);
+                spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(64, -64), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, 64), null, Color.White);
+                spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-64, 64), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, 64), null, Color.White);
 
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
@@ -563,11 +594,11 @@ namespace TrumpTower
             //MISSILES
             List<Missile> _missiles = _map.Missiles;
             foreach (Missile missile in _missiles) spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
-            
+
 
             foreach (Missile missile in _missiles)
             {
-                if(missile.Tower == TowerType.simple)
+                if (missile.Tower == TowerType.simple)
                 {
                     spriteBatch.Draw(_imgMissile, missile.Position, null, Color.White);
                 }
@@ -584,18 +615,16 @@ namespace TrumpTower
             //TEXT DOLLARS
             Vector2 _positionDollars = new Vector2(10, 10);
             Rectangle _overlayDollars = new Rectangle(0, 0, 150, 33);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 10), _overlayDollars, Color.Black*0.6f);
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 10), _overlayDollars, Color.Black * 0.6f);
             spriteBatch.Draw(_imgDollars, _positionDollars, Color.White);
-            spriteBatch.DrawString(_spriteDollars, _map.Dollars+"", new Vector2(50, 17), Color.White);
+            spriteBatch.DrawString(_spriteDollars, _map.Dollars + "", new Vector2(50, 17), Color.White);
+            AnimationsDollars.Draw();
+
             // TIMER BUTTON
-            Vector2 _overlayManageTimePosition = new Vector2(_buttonsUI["pauseTimer"].Position.X - 5, _buttonsUI["pauseTimer"].Position.Y-5);
+            Vector2 _overlayManageTimePosition = new Vector2(_groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"].Position.X - 5, _groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"].Position.Y - 5);
             Rectangle _overlayManageTime = new Rectangle(0, 0, 143, 42);
             spriteBatch.Draw(_backgroundDollars, _overlayManageTimePosition, _overlayManageTime, Color.Black * 0.6f);
-            _buttonsUI["pauseTimer"].Draw(spriteBatch);
-            _buttonsUI["normalTimer"].Draw(spriteBatch);
-            _buttonsUI["fastTimer"].Draw(spriteBatch);            
-            //TEXT
-            //spriteBatch.Draw(_imgDollars, "Dollars : " + _map.Dollars, new Vector2(1620, 10), Color.White);
+            _groupOfButtonsUITimer.Draw(spriteBatch); 
 
             // IMG IS COMMING NORTH KOREA MDR
             Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
@@ -604,8 +633,29 @@ namespace TrumpTower
             spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
 
+            // SPECIAL ABILITIES 
+            _groupOfButtonsUIAbilities.ButtonsUIArray["explosionAbility"].Draw(spriteBatch);
+
+            // ANIM EXPLOSION ABILITY
+            foreach (SimpleAnimationDefinition def in AnimSprites)
+            {
+                foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
+            }
+
+            // CURSOR
+            MouseState newStateMouse = Mouse.GetState();
+            if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
+            {
+                spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
+                IsMouseVisible = false;
+            }
+
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
+
+        public Map Map => _map;
+        public SpriteBatch SpriteBatch => spriteBatch;
     }
 }

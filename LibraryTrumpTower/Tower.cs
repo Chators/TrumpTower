@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower.Constants;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,9 @@ namespace TrumpTower.LibraryTrumpTower
             bool canShoot = WithinReachOf(myEnemy.Position) && IsReload;
             if (canShoot)
             {
-                ManagerSound.Explosion.Play();
+                SoundEffectInstance InstanceExplosion = ManagerSound.Explosion.CreateInstance();
+                InstanceExplosion.Volume = 0.4f;
+                InstanceExplosion.Play();
                 ShootOn(myEnemy);
             }
             return canShoot;
