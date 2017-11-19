@@ -155,7 +155,7 @@ namespace TrumpTower
             // ANIMATION EXPLOSION ABILITY
             AnimSprites = new SimpleAnimationDefinition[2];
             // EXPLOS 3D
-            AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(96, 96), new Point(5, 3), 40, false);
+            AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(96, 96), new Point(5, 3), 35, false);
             //AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
