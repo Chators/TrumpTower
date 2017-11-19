@@ -71,7 +71,7 @@ namespace TrumpTower.Drawing
                     Rectangle sourceRectangle = new Rectangle(0, 0, _imgNorthKoreaIsComing.Width, _imgNorthKoreaIsComing.Height);
                     Vector2 origin = new Vector2(_imgNorthKoreaIsComing.Width / 2, _imgNorthKoreaIsComing.Height / 2);
                     spriteBatch.Draw(_imgNorthKoreaIsComing, _position, null, Color.White * compteur, angle, origin, 1.0f, SpriteEffects.None, 1);
-                    spriteBatch.DrawString(_imgTimer, WaveIsComing.TimerBeforeStarting/60+"", new Vector2(_position.X-4, _position.Y-10), Color.White * (compteur + 0.2f));
+                    spriteBatch.DrawString(_imgTimer, WaveIsComing.TimerBeforeStarting/60+"", new Vector2(_position.X-4, _position.Y-7), Color.White * (compteur + 0.2f));
                 }
             }
         }
