@@ -19,7 +19,7 @@ namespace TrumpTower.LibraryTrumpTower
         Vector2 _position;
         string _name;
         int _moveToState;
-        readonly EnemyType _type;
+        public readonly EnemyType _type;
         public Move CurrentDirection { get; private set; }
         public double CurrentHp { get; private set; }
         public double MaxHp { get; private set; }
@@ -47,8 +47,8 @@ namespace TrumpTower.LibraryTrumpTower
                 Bounty = 100;
             } else if (type == EnemyType.kamikaze)
             {
-                CurrentHp = 75;
-                MaxHp = 75;
+                CurrentHp = 200;
+                MaxHp = 200;
                 _damage = Wall.MaxHp;
                 Speed = 2.2;
                 Bounty = 200;

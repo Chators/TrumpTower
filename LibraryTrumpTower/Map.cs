@@ -36,7 +36,7 @@ namespace TrumpTower.LibraryTrumpTower
             WidthArrayMap = map.GetLength(1);
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
-            Wall = new Wall(this, 100, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
+            Wall = new Wall(this, 2000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
             Dollars = 3000;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
@@ -100,62 +100,6 @@ namespace TrumpTower.LibraryTrumpTower
             // WAVE 4
             SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 54 * 60));
             for (int i = 0; i < 10; i++) SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall, EnemyType.defaultSoldier));
-            
-
-
-            //SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 2 * 60));
-            //SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 30 * 60));
-
-            /*Random random = new Random();
-            int PositionInwave = random.Next(0, 10); // Position of special units is random in the wave.
-
-            for (int i = 0; i < 10; i++)
-            {
-                if (i == PositionInwave)
-                {
-                    SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.kamikaze));
-                }
-                else
-                {
-                    SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-                }
-            }
-
-            Random random1 = new Random();
-            int PositionInwave1 = random.Next(0, 10); // Position of special units is random in the wave.
-
-
-            for (int i = 0; i < 10; i++)
-            {
-                if (i == PositionInwave1)
-                {
-                    SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.kamikaze));
-                }
-                else
-                {
-                    SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
-                }
-            }
-            //
-            //
-            // VAGUE SUR LA DEUXIEME ROUTE
-            CreateSpawn(new Spawn(this, new Vector2(28 * Constant.imgSizeMap, 6 * Constant.imgSizeMap), new List<Wave>()));
-            SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 8 * 60));
-            //SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 10 * 90));
-
-            for (int i = 0; i < 5; i++)
-            {
-                SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-            }
-
-            /*for (int i = 0; i < 100; i++)
-            {
-                SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall));
-            }*/
-            //
-            // FIN
-            //
-
         }
 
         public void Update()

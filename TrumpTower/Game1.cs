@@ -44,6 +44,7 @@ namespace TrumpTower
         Texture2D _imgUpgrade;
         Texture2D _imgSell;
         Texture2D _imgEnemy1;
+        Texture2D _imgKamikaze;
 
         // TOWERS
         Texture2D _imgTower1;
@@ -191,6 +192,7 @@ namespace TrumpTower
 
             // ENEMY 
             _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
+            _imgKamikaze = Content.Load <Texture2D>("Enemies/kamikaze");
             _manDie = Content.Load<SoundEffect>("Sound/songManDie");
 
             // TOWER
@@ -506,11 +508,15 @@ namespace TrumpTower
                 else if (enemy.CurrentDirection == Move.down) angle = Constant.PI / 2;
                 else if (enemy.CurrentDirection == Move.left) angle = Constant.PI;
                 else if (enemy.CurrentDirection == Move.top) angle = 3 * Constant.PI / 2;
-                Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy1.Width, _imgEnemy1.Height);
-                Vector2 origin = new Vector2(_imgEnemy1.Width / 2, _imgEnemy1.Height / 2);
-                spriteBatch.Draw(_imgEnemy1, new Vector2(enemy.Position.X + (_imgEnemy1.Width / 2), enemy.Position.Y + (_imgEnemy1.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
+                // CHANGE TEXTURE ENEMY
+                Texture2D _imgEnemy = null;
+                if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
+                Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
+                Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
+                spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
                 HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f);
-                enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy1);
+                enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy);
             }
 
             //TOWERS
