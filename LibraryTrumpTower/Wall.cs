@@ -22,7 +22,7 @@ namespace TrumpTower.LibraryTrumpTower
             Position = position;
         }
 
-        public void TakeHp(int dammage)
+        public void TakeHp(double dammage)
         {
             CurrentHp -= dammage;
         }

@@ -4,6 +4,7 @@ using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
 using Microsoft.Xna.Framework;
 using LibraryTrumpTower.SpecialAbilities;
+using LibraryTrumpTower.Constants;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -52,13 +53,36 @@ namespace TrumpTower.LibraryTrumpTower
             CreateSpawn(new Spawn(this, new Vector2(28 * Constant.imgSizeMap, 2 * Constant.imgSizeMap), new List<Wave>()));
             SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 2 * 60));
             SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 30 * 60));
-            for (int i = 0; i < 20; i++)
+
+            Random random = new Random();
+            int PositionInwave = random.Next(0, 10); // Position of special units is random in the wave.
+
+            for (int i = 0; i < 10; i++)
             {
-                SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall));
+                if (i == PositionInwave)
+                {
+                    SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.kamikaze));
+                }
+                else
+                {
+                    SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+                }
             }
-            for (int i = 0; i < 20; i++)
+
+            Random random1 = new Random();
+            int PositionInwave1 = random.Next(0, 10); // Position of special units is random in the wave.
+
+
+            for (int i = 0; i < 10; i++)
             {
-                SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall));
+                if (i == PositionInwave1)
+                {
+                    SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.kamikaze));
+                }
+                else
+                {
+                    SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+                }
             }
             //
             //
@@ -67,9 +91,9 @@ namespace TrumpTower.LibraryTrumpTower
             SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 8 * 60));
             //SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 10 * 90));
 
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 5; i++)
             {
-                SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall));
+                SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
             }
 
             /*for (int i = 0; i < 100; i++)
