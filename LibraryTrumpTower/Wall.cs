@@ -21,5 +21,16 @@ namespace TrumpTower.LibraryTrumpTower
             MaxHp = hp;
             Position = position;
         }
+
+        public void TakeHp(double dammage)
+        {
+            CurrentHp -= dammage;
+        }
+
+        public bool IsDead()
+        {
+            return (CurrentHp <= 0);
+
+        }
     }
 }

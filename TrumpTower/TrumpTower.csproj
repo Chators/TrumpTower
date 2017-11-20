@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{41DAC42C-2D2C-4795-BA18-4F31535CEB6E}</ProjectGuid>
@@ -15,8 +15,7 @@
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,8 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
@@ -41,7 +39,16 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Draw\DollarsAnimations\DollarsAnimationsSprite.cs" />
+    <Compile Include="Draw\DollarsAnimations\DollarsAnimationsDefinition.cs" />
+    <Compile Include="Draw\Animations\SimpleAnimationDefinition.cs" />
+    <Compile Include="Draw\Animations\SimpleAnimationSprite.cs" />
+    <Compile Include="Draw\ButtonsUI\GameTImer\GroupOfButtonsUITimer.cs" />
+    <Compile Include="Draw\ButtonsUI\SpecialAbilities\ButtonUIAbility.cs" />
+    <Compile Include="Draw\ButtonsUI\SpecialAbilities\GroupOfButtonsUIAbilities.cs" />
     <Compile Include="Draw\HealthBar.cs" />
+    <Compile Include="Draw\ButtonsUI\GameTImer\ButtonUITimer.cs" />
+    <Compile Include="Draw\WaveIsCommingImg.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

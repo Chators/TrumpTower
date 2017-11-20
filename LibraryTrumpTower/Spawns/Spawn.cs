@@ -32,16 +32,6 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             foreach (Wave wave in Waves) wave.Update();
         }
 
-        public int SeekSmallerTimer()
-        {
-            int _smallerTimer = 0;
-            foreach (Wave wave in Waves)
-            {
-                if (_smallerTimer <= 0 || wave.TimerBeforeStarting < _smallerTimer) _smallerTimer = wave.TimerBeforeStarting;
-            }
-            return _smallerTimer;
-        }
-        
         public void CreateWave(Wave wave)
         {
             Waves.Add(wave);

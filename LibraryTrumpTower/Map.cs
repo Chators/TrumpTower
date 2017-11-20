@@ -3,24 +3,32 @@ using System.Collections.Generic;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
 using Microsoft.Xna.Framework;
+using LibraryTrumpTower.SpecialAbilities;
+using LibraryTrumpTower.Constants;
 
 namespace TrumpTower.LibraryTrumpTower
 {
     public class Map
     {
+        public static int TimerNextWave;
+
         public int[,] MapArray { get; private set; }
         public List<Spawn> SpawnsEnemies { get; private set; }
         public Wall Wall { get; private set; }
-        public int Dollars { get; set; }
+        public double Dollars { get; set; }
         public int WidthArrayMap { get; private set; }
         public int HeightArrayMap { get; private set; }
         public List<Tower> Towers { get; private set; }
         public List<Missile> Missiles { get; set; }
+        public List<Enemy> DeadEnemies { get; set; }
 
         // WAVE
         public static int WavesCounter { get; set; }
         public static int WavesTotals { get; set; }
-        public static int TimerNextWave { get; set; }
+        public static Wave WaveIsComming { get; set; }
+
+        // SPECIAL ABILITIES
+        public Explosion Explosion { get; set; }
 
         public Map(int[,] map)
         {
@@ -28,59 +36,83 @@ namespace TrumpTower.LibraryTrumpTower
             WidthArrayMap = map.GetLength(1);
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
-            Wall = new Wall(this, 100, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
-            Dollars = 3000;
+            Wall = new Wall(this, 500000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
+            Dollars = 200;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
+            Explosion = new Explosion(this);
+            DeadEnemies = new List<Enemy>();
 
             WavesCounter = 0;
             WavesTotals = 0;
-            TimerNextWave = 0;
 
             //
             // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
             //
             // VAGUE SUR LA PREMIERE ROUTE 
+
+            // CREATE 2 SPAWN
             CreateSpawn(new Spawn(this, new Vector2(28 * Constant.imgSizeMap, 2 * Constant.imgSizeMap), new List<Wave>()));
-            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 2 * 60));
-            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 30 * 60));
-            for (int i = 0; i < 20; i++)
-            {
-                SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall));
-            }
-            for (int i = 0; i < 20; i++)
-            {
-                SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall));
-            }
-            //
-            //
-            // VAGUE SUR LA DEUXIEME ROUTE
             CreateSpawn(new Spawn(this, new Vector2(28 * Constant.imgSizeMap, 6 * Constant.imgSizeMap), new List<Wave>()));
-            SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 8 * 60));
-            //SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 10 * 90));
 
-            for (int i = 0; i < 30; i++)
-            {
-                SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall));
-            }
+            // WAVE 1 FOR TOWER GREEN
+            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 6 * 60));
+            SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
 
-            /*for (int i = 0; i < 100; i++)
-            {
-                SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall));
-            }*/
-            //
-            // FIN
-            //
+            // WAVE 2 FOR TOWER YELLOW
+            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 15 * 60));
+            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+
+            // WAVE 3 FOR EXPLOSION
+            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 24 * 60));
+            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
+
+            // WAVE REAL GAME
+            // WAVE 1
+            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 40 * 60));
+            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.kamikaze));
+            for (int i = 0; i < 10; i++) SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
+            // WAVE 2
+            SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 43 * 60));
+            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.kamikaze));
+            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.kamikaze));
+            for (int i = 0; i < 4; i++) SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+            // WAVE 3
+            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 50 * 60));
+            for (int i = 0; i < 30; i++) SpawnsEnemies[0].Waves[4].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[4], "base", Wall, EnemyType.kamikaze));
+            // WAVE 4
+            SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 54 * 60));
+            for (int i = 0; i < 10; i++) SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall, EnemyType.defaultSoldier));
         }
 
         public void Update()
         {
-            TimerNextWave = -1;
+            List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
             {
                 spawn.Update();
-                int timerSmallerSpawn = spawn.SeekSmallerTimer();
-                if (TimerNextWave == -1 || timerSmallerSpawn < TimerNextWave && (timerSmallerSpawn > 0)) TimerNextWave = timerSmallerSpawn;
+                _waves.AddRange(spawn.Waves);
+            }
+
+            WaveIsComming = null;
+            for (int i = 0; i < _waves.Count; i++)
+            {
+                if (WaveIsComming == null) WaveIsComming = _waves[i];
+                else if (WaveIsComming.TimerBeforeStarting == 0 || _waves[i].TimerBeforeStarting < WaveIsComming.TimerBeforeStarting  && _waves[i].TimerBeforeStarting > 0) WaveIsComming = _waves[i];
             }
 
             foreach (Tower tower in Towers) tower.Update(GetAllEnemies());
@@ -90,6 +122,8 @@ namespace TrumpTower.LibraryTrumpTower
                 Missile myMissile = Missiles[i];
                 myMissile.Update();
             }
+
+            Explosion.Update();
 
         }
 
@@ -111,14 +145,14 @@ namespace TrumpTower.LibraryTrumpTower
             return allEnemies;
         }
 
-        public List<Vector2> SearchEmptyTowers()
+        public List<Vector2> SearchPositionTextureInArray(MapTexture nameTexture)
         {
             List<Vector2> arrayEmptyTower = new List<Vector2>();
             for (int y = 0; y < HeightArrayMap; y++)
             {
                 for (int x = 0; x < WidthArrayMap; x++)
                 {
-                    if (MapArray[y, x] == (int)MapTexture.emptyTower) arrayEmptyTower.Add(new Vector2(x, y));
+                    if (MapArray[y, x] == (int)nameTexture) arrayEmptyTower.Add(new Vector2(x, y));
                 }
             }
             return arrayEmptyTower;
@@ -151,6 +185,11 @@ namespace TrumpTower.LibraryTrumpTower
         {
             Missiles.Add(missile);
             return missile;
+        }
+
+        public void UseExplosionAbility(Vector2 position)
+        {
+            Explosion.AttackOn(position);
         }
     }
 }
