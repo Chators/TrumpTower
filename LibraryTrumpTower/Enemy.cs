@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using LibraryTrumpTower.Constants;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -18,28 +19,42 @@ namespace TrumpTower.LibraryTrumpTower
         Vector2 _position;
         string _name;
         int _moveToState;
+        readonly EnemyType _type;
         public Move CurrentDirection { get; private set; }
         public double CurrentHp { get; private set; }
         public double MaxHp { get; private set; }
-        readonly int _damage;
+        readonly double _damage;
         public double Speed { get; private set; }
         public int Bounty { get; private set; }
         public int TimerBeforeStarting { get; set; }
 
-        public Enemy(Map map, Wave wave, string name, Wall wall)
+        public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
         {
+            _type = type;
             _map = map;
             _wave = wave;
             Wall = wall;
             _name = name;
-            CurrentHp = 30;
-            MaxHp = 30;
-            _damage = 10;
-            Speed = 3;
-            Bounty = 100;
             _position = wave.Position;
             _moveToState = 0;
+
+            if (type == EnemyType.defaultSoldier)
+            {
+                CurrentHp = 30;
+                MaxHp = 30;
+                _damage = 10;
+                Speed = 3;
+                Bounty = 100;
+            } else if (type == EnemyType.kamikaze)
+            {
+                CurrentHp = 75;
+                MaxHp = 75;
+                _damage = Wall.MaxHp;
+                Speed = 2.2;
+                Bounty = 200;
+            }
         }
+
 
         private void UpdateMove()
         {
