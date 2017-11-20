@@ -40,8 +40,8 @@ namespace TrumpTower.LibraryTrumpTower
 
             if (type == EnemyType.defaultSoldier)
             {
-                CurrentHp = 30;
-                MaxHp = 30;
+                CurrentHp = 18;
+                MaxHp = 18;
                 _damage = 10;
                 Speed = 3;
                 Bounty = 100;
@@ -149,7 +149,8 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 _map.Dollars += Bounty;
             }
-            _wave.Enemies.RemoveAt(_wave.Enemies.IndexOf(this));
+            _wave.Enemies.Remove(this);
+            _map.DeadEnemies.Add(this);
         }
     }
 }
