@@ -50,15 +50,16 @@ namespace TrumpTower
         Texture2D _imgTower1;
         Texture2D _imgTower2;
         Texture2D _imgTower3;
-
-        // SOUND
-       
         Texture2D _imgTower1_2;
         Texture2D _imgTower2_2;
         Texture2D _imgTower3_2;
         Texture2D _imgTower1_3;
         Texture2D _imgTower2_3;
         Texture2D _imgTower3_3;
+        Texture2D _imgWrong;
+        // SOUND
+
+
         bool _verif;
         bool _verif2;
         
@@ -208,6 +209,7 @@ namespace TrumpTower
             _imgTower3_3 = Content.Load<Texture2D>("Towers/tower3_3");
             _imgUpgrade = Content.Load<Texture2D>("Towers/upgrade");
             _imgSell = Content.Load<Texture2D>("Towers/sell");
+            _imgWrong = Content.Load<Texture2D>("Towers/wrong");
 
             // MISSILE 
             _imgMissile = Content.Load<Texture2D>("Missiles/missile2");
@@ -570,13 +572,13 @@ namespace TrumpTower
 
             if (_towerSelector != new Vector2(-1000, -1000))
             {
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, -64), null, Color.White);
-                spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-64, -64), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, -64), null, Color.White);
-                spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(64, -64), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-64, 64), null, Color.White);
-                spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-64, 64), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(64, 64), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap,Constant.imgSizeMap ), null, Color.White);
+                spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap,Constant.imgSizeMap ), null, Color.White);
 
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
@@ -585,6 +587,18 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                if (_map.Dollars < Tower.TowerPrice(TowerType.simple))
+                {
+                    spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                }
+                if (_map.Dollars < Tower.TowerPrice(TowerType.slow))
+                {
+                    spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
+                }
+                if (_map.Dollars < Tower.TowerPrice(TowerType.area))
+                {
+                    spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                }
             }
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
