@@ -30,6 +30,9 @@ namespace TrumpTower
         int[,] _mapPoint;
         Map _map;
         List<Texture2D> _imgMaps;
+        public float VirtualWidth { get; set; }
+        public float VirtualHeight { get; set; }
+        Matrix scale;
 
         // TOWER SELECTOR
         Vector2 _towerSelector;
@@ -104,6 +107,7 @@ namespace TrumpTower
         // CURSOS 
         public Texture2D ImgCursor { get; set; }
         Texture2D _imgCursorBomb;
+        Texture2D _imgCursorDefault;
 
         MouseState lastStateMouse;
         KeyboardState lastStateKeyboard;
@@ -147,9 +151,18 @@ namespace TrumpTower
             _map = new Map(_mapPoint);
             _towerSelector = new Vector2(-1000, -1000);
             _towerSelectorUpgrade = new Vector2(-1000, -1000);
-            graphics.PreferredBackBufferWidth = _mapPoint.GetLength(1) * Constant.imgSizeMap;
-            graphics.PreferredBackBufferHeight = _mapPoint.GetLength(0) * Constant.imgSizeMap;
+            graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
+            // Résolution d'écran
+            VirtualWidth = _map.WidthArrayMap * Constant.imgSizeMap;
+            VirtualHeight = _map.HeightArrayMap * Constant.imgSizeMap;
+            scale = Matrix.CreateScale(
+                            (float)GraphicsDevice.Viewport.Width / VirtualWidth,
+                            (float)GraphicsDevice.Viewport.Height / VirtualHeight,
+                            1f);
 
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
@@ -227,7 +240,7 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
 
             _fastButton = Content.Load<Texture2D>("ManagerTime/fastButton");
-            Vector2 _positionFastButton = new Vector2(_mapPoint.GetLength(1) * Constant.imgSizeMap - 50, 10);
+            Vector2 _positionFastButton = new Vector2(VirtualWidth - 50, 10);
             _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "fastTimer", _positionFastButton, _fastButton));
 
             _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
@@ -258,7 +271,7 @@ namespace TrumpTower
 
             // CURSOR BOMB
             _imgCursorBomb = Content.Load<Texture2D>("cursorBomb");
-
+            _imgCursorDefault = Content.Load<Texture2D>("cursor");
             ManagerSound.LoadContent(Content);
             // Song
             MediaPlayer.Play(ManagerSound.Song1);
@@ -324,7 +337,7 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-
+            
             // GAME TIMER
             _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
@@ -480,7 +493,7 @@ namespace TrumpTower
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
 
             IsMouseVisible = true;
 
@@ -665,6 +678,11 @@ namespace TrumpTower
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
             {
                 spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
+                IsMouseVisible = false;
+            }
+            else
+            {
+                spriteBatch.Draw(_imgCursorDefault, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
                 IsMouseVisible = false;
             }
 

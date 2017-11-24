@@ -39,6 +39,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Draw\ButtonsUI\IButton.cs" />
     <Compile Include="Draw\DollarsAnimations\DollarsAnimationsSprite.cs" />
     <Compile Include="Draw\DollarsAnimations\DollarsAnimationsDefinition.cs" />
     <Compile Include="Draw\Animations\SimpleAnimationDefinition.cs" />
