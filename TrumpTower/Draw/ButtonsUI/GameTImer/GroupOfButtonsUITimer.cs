@@ -54,7 +54,6 @@ namespace TrumpTower.Draw.ButtonsUI
 
             // START
             button = ButtonsUIArray["normalTimer"];
-            
             if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                 newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height)
             {
