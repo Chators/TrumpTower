@@ -144,10 +144,12 @@ namespace TrumpTower
 
         #endregion
 
+        MouseState newStateMouse;
         MouseState lastStateMouse;
         KeyboardState lastStateKeyboard;
         public bool GameIsPaused { get; set; }
         public SimpleAnimationDefinition[] AnimSprites { get; private set; }
+
         #endregion
 
         public Game1()
@@ -165,7 +167,6 @@ namespace TrumpTower
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             #region Map INIT
 
             _mapPoint = new int[,]
@@ -192,19 +193,25 @@ namespace TrumpTower
             #endregion
 
             #region Graphics Device 
+            
+            Window.Position = new Point(800, 600);
+            Console.WriteLine(Window.Position.X);
 
+            Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            //graphics.IsFullScreen = true;
+
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             // Résolution d'écran
             VirtualWidth = _map.WidthArrayMap * Constant.imgSizeMap;
             VirtualHeight = _map.HeightArrayMap * Constant.imgSizeMap;
             scale = Matrix.CreateScale(
-                            (float)GraphicsDevice.Viewport.Width / VirtualWidth,
-                            (float)GraphicsDevice.Viewport.Height / VirtualHeight,
+                            GraphicsDevice.Viewport.Width / VirtualWidth,
+                            GraphicsDevice.Viewport.Height / VirtualHeight,
                             1f);
+            graphics.ApplyChanges();
 
             #endregion
 
@@ -338,6 +345,7 @@ namespace TrumpTower
             _normalButton = Content.Load<Texture2D>("ManagerTime/normalButton");
             Vector2 _positionNormalButton = new Vector2(_positionFastButton.X - 50, 10);
             _groupOfButtonsUITimer.CreateButtonUI(new ButtonUITimer(_groupOfButtonsUITimer, "normalTimer", _positionNormalButton, _normalButton));
+            _groupOfButtonsUITimer.ButtonActivated = _groupOfButtonsUITimer.ButtonsUIArray["normalTimer"];
 
             #endregion
 
@@ -419,9 +427,17 @@ namespace TrumpTower
 
             #region Prepare and Execut HandleInput
 
-            MouseState newStateMouse = Mouse.GetState();
-            KeyboardState newStateKeyboard = Keyboard.GetState();
+            newStateMouse = Mouse.GetState();
+            newStateMouse = new MouseState( (int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)),
+                                            (int)(newStateMouse.Y * (VirtualHeight / GraphicsDevice.Viewport.Height)),
+                                            newStateMouse.ScrollWheelValue,
+                                            newStateMouse.LeftButton,
+                                            newStateMouse.MiddleButton,
+                                            newStateMouse.RightButton,
+                                            newStateMouse.XButton1,
+                                            newStateMouse.XButton2);
 
+            KeyboardState newStateKeyboard = Keyboard.GetState();
             HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
             lastStateMouse = newStateMouse;
@@ -626,8 +642,6 @@ namespace TrumpTower
         }
 
 
-
-
         /// <summary>
         /// This is called when the game should draw itself.elector
         /// </summary>
@@ -635,7 +649,7 @@ namespace TrumpTower
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            
+
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
 
@@ -842,7 +856,6 @@ namespace TrumpTower
 
             #region Cursor
 
-            MouseState newStateMouse = Mouse.GetState();
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
                 spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
             else
@@ -851,10 +864,22 @@ namespace TrumpTower
             #endregion
 
             #region HELP DEBOGAGE
-
+            
+            /*
             spriteBatch.DrawString(_spriteDollars, "Mouse X : " + newStateMouse.X, new Vector2(50, 107), Color.DarkRed);
             spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 127), Color.DarkRed);
             spriteBatch.DrawString(_spriteDollars, (float)GraphicsDevice.Viewport.Width / VirtualWidth+"", new Vector2(50, 147), Color.DarkRed);
+            spriteBatch.DrawString(_spriteDollars, "Viewport : " + (float)GraphicsDevice.Viewport.Width, new Vector2(50, 147), Color.DarkRed);
+            spriteBatch.DrawString(_spriteDollars, "DislayMode : " + (float)GraphicsDevice.DisplayMode.Width, new Vector2(50, 167), Color.DarkRed);
+            spriteBatch.DrawString(_spriteDollars, "DislayMode TitleSafeArea : " + GraphicsDevice.DisplayMode.TitleSafeArea, new Vector2(50, 187), Color.DarkRed);
+
+            spriteBatch.DrawString(_spriteDollars, "Mouse X : " + (int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)), new Vector2(50, 250), Color.DarkRed);
+            spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + (int)(newStateMouse.Y * (VirtualHeight / GraphicsDevice.Viewport.Height)), new Vector2(50, 270), Color.DarkRed);
+            spriteBatch.DrawString(_spriteDollars, "Window : " + Mouse.WindowHandle, new Vector2(50, 290), Color.DarkRed);
+            spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 310), Color.DarkRed);
+            */
+
+
 
             #endregion
 
@@ -865,8 +890,6 @@ namespace TrumpTower
             }
 
             spriteBatch.End();
-
-            IsMouseVisible = true;
 
             base.Draw(gameTime);
         }
