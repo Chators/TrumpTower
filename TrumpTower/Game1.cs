@@ -41,7 +41,8 @@ namespace TrumpTower
         #endregion
 
         #region Towers
-
+        SpriteFont _upgradeFont;
+        TowerType _myTow;
             #region Image Tower
 
             Texture2D _imgTower1;
@@ -290,9 +291,9 @@ namespace TrumpTower
             _imgTower3_3 = Content.Load<Texture2D>("Towers/tower3_3");
 
             #endregion
-
+            _upgradeFont = Content.Load<SpriteFont>("Towers/dollars");
             #region Towers Selection
-
+            
             _imgSelector = Content.Load<Texture2D>("selector");
             _imgUpgrade = Content.Load<Texture2D>("Towers/upgrade");
             _imgSell = Content.Load<Texture2D>("Towers/sell");
@@ -582,6 +583,7 @@ namespace TrumpTower
                     {
                         _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
                         _verif2 = true;
+                        _myTow = tow.Type;
                     }
                 }
             }
@@ -759,11 +761,15 @@ namespace TrumpTower
             }
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
-
-                spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap +5)), null, Color.White);
-                spriteBatch.Draw(_imgUpgrade, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap +5)), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
-                spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
+                spriteBatch.Draw(_imgUpgrade, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
+                spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
+                spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
+                spriteBatch.DrawString(_upgradeFont, Tower.TowerPrice(_myTow)*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.White);
+                if(_map.Dollars < (double)Tower.TowerPrice(_myTow)* 1.5)
+                {
+                    spriteBatch.Draw(_imgWrong, _towerSelectorUpgrade +new Vector2(0,-(Constant.imgSizeMap +5)) , null, Color.White);
+                }
             }
 
 

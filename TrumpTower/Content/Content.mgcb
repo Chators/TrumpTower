@@ -767,3 +767,10 @@
 /processorParam:TextureFormat=Color
 /build:cursor.png
 
+#begin Towers/dollars.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Towers/dollars.spritefont
+
