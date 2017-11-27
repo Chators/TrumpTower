@@ -51,9 +51,13 @@ namespace LibraryTrumpTower.AirUnits
 
         public void Update ()
         {
-            UpdateTryAttack();
-            UpdateMove(Wall.Position);
-            SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(Wall.Position.X + 32, Wall.Position.Y + 32));
+            if (IsStarting)
+            {
+                SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(Wall.Position.X + 32, Wall.Position.Y + 32));
+                UpdateTryAttack();
+                UpdateMove(Wall.Position);
+            }
+            TimerBeforeStarting--;
         }
 
         private bool WithinReach(Vector2 target, double speed)

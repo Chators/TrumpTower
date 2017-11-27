@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AirUnits\AirUnit.cs" />
     <Compile Include="AirUnits\AirUnitsCollection.cs" />
+    <Compile Include="AirUnits\PlaneType.cs" />
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="Constants\EnemyType.cs" />
     <Compile Include="Constants\ManagerSound.cs" />

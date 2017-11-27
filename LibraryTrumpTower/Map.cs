@@ -40,7 +40,7 @@ namespace TrumpTower.LibraryTrumpTower
             WidthArrayMap = map.GetLength(1);
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
-            Wall = new Wall(this, 500000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
+            Wall = new Wall(this, 5000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
             Dollars = 200;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
@@ -54,7 +54,7 @@ namespace TrumpTower.LibraryTrumpTower
             //
             // Create AIR UNITS
             //
-            AirUnits.Add(new AirUnitsCollection(this, 15, 10));
+            AirUnits.Add(new AirUnitsCollection(this, 2*60, 10));
 
             //
             // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
