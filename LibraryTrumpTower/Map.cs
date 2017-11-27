@@ -5,6 +5,7 @@ using TrumpTower.LibraryTrumpTower.Spawns;
 using Microsoft.Xna.Framework;
 using LibraryTrumpTower.SpecialAbilities;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.AirUnits;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -21,11 +22,14 @@ namespace TrumpTower.LibraryTrumpTower
         public List<Tower> Towers { get; private set; }
         public List<Missile> Missiles { get; set; }
         public List<Enemy> DeadEnemies { get; set; }
+        public List<AirUnitsCollection> AirUnits { get; set; }
 
         // WAVE
         public static int WavesCounter { get; set; }
         public static int WavesTotals { get; set; }
         public static Wave WaveIsComming { get; set; }
+
+
 
         // SPECIAL ABILITIES
         public Explosion Explosion { get; set; }
@@ -42,9 +46,15 @@ namespace TrumpTower.LibraryTrumpTower
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
             DeadEnemies = new List<Enemy>();
+            AirUnits = new List<AirUnitsCollection>();
 
             WavesCounter = 0;
             WavesTotals = 0;
+
+            //
+            // Create AIR UNITS
+            //
+            AirUnits.Add(new AirUnitsCollection(this, 15, 10));
 
             //
             // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
@@ -117,6 +127,8 @@ namespace TrumpTower.LibraryTrumpTower
 
             foreach (Tower tower in Towers) tower.Update(GetAllEnemies());
 
+            foreach (AirUnitsCollection unitsCollection in AirUnits) unitsCollection.Update();
+
             for (int i = 0; i < Missiles.Count; i++)
             {
                 Missile myMissile = Missiles[i];
@@ -143,6 +155,19 @@ namespace TrumpTower.LibraryTrumpTower
                 }
             }
             return allEnemies;
+        }
+
+        public List<AirUnit> GetAllAirEnemies()
+        {
+            List<AirUnit> allAirUnits = new List<AirUnit>();
+            foreach (AirUnitsCollection airUnitsCollection in AirUnits)
+            {
+                foreach (AirUnit unit in airUnitsCollection.Array)
+                {
+                    if (unit.IsStarting) allAirUnits.Add(unit);
+                }
+            }
+            return allAirUnits;
         }
 
         public List<Vector2> SearchPositionTextureInArray(MapTexture nameTexture)
