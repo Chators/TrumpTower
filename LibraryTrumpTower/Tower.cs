@@ -66,12 +66,14 @@ namespace TrumpTower.LibraryTrumpTower
         {
             foreach (Enemy myEnemy in _enemies)
             {
+                /* Algo de visée */
                 double hpEnemy = myEnemy.CurrentHp;
                 foreach (Missile missile in _map.Missiles)
                 {
                     if (missile.Target == myEnemy) hpEnemy -= missile.Damage;
                 }
                 
+
                 if (WithinReachOf(myEnemy.Position) && hpEnemy > 0)
                 {
                     SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(myEnemy.Position.X + 32, myEnemy.Position.Y + 32));
