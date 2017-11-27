@@ -134,7 +134,6 @@ namespace TrumpTower.LibraryTrumpTower
             InstanceManDie.Volume = 0.8f;
             InstanceManDie.Play();
             _map.Dollars += Bounty;
-            //_wave.Enemies.RemoveAt(_wave.Enemies.IndexOf(this));
             _wave.Enemies.Remove(this);
             _map.DeadEnemies.Add(this);
         }

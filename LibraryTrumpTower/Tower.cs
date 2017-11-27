@@ -14,6 +14,7 @@ namespace TrumpTower.LibraryTrumpTower
     {
         Map _map;
         readonly TowerType _type;
+        float _rotate;
         int _lvl;
         public double Scope { get; private set; }
         public int Damage { get;  set; }
@@ -28,6 +29,7 @@ namespace TrumpTower.LibraryTrumpTower
             _lvl = lvl;
             _reload = 0;
             Position = position;
+            _rotate = 0;
 
             if(type == TowerType.simple)
             {
@@ -49,17 +51,12 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
-        private bool UpdateShoot(Enemy myEnemy)
+        private void UpdateShoot(Enemy myEnemy)
         {
-            bool canShoot = WithinReachOf(myEnemy.Position) && IsReload;
-            if (canShoot)
-            {
-                SoundEffectInstance InstanceExplosion = ManagerSound.Explosion.CreateInstance();
-                InstanceExplosion.Volume = 0.4f;
-                InstanceExplosion.Play();
-                ShootOn(myEnemy);
-            }
-            return canShoot;
+            SoundEffectInstance InstanceExplosion = ManagerSound.Explosion.CreateInstance();
+            InstanceExplosion.Volume = 0.4f;
+            InstanceExplosion.Play();
+            ShootOn(myEnemy);
         }
 
         //
@@ -67,13 +64,31 @@ namespace TrumpTower.LibraryTrumpTower
         //
         public void Update(List<Enemy> _enemies)
         {
-            bool alreadyShoot = false;
             foreach (Enemy myEnemy in _enemies)
             {
-                alreadyShoot = UpdateShoot(myEnemy);
-                if (alreadyShoot) break;
+                if (WithinReachOf(myEnemy.Position))
+                {
+                    SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(myEnemy.Position.X + 32, myEnemy.Position.Y + 32));
+                    if (IsReload) UpdateShoot(myEnemy); 
+                    break;
+                }
+                /*
+                canShoot = WithinReachOf(myEnemy.Position) && IsReload;
+                if (canShoot)
+                {
+                    UpdateShoot(myEnemy);
+                    break;
+                }
+                */
             }
             Reloading();
+        }
+        
+        public void SetRotate (Vector2 _position, Vector2 _targetPosition)
+        {
+            Vector2 direction = _position - _targetPosition;
+            direction.Normalize();
+            _rotate = (float)Math.Atan2(-direction.X, direction.Y);
         }
 
         internal bool IsReload => _reload <= 0;
@@ -86,14 +101,8 @@ namespace TrumpTower.LibraryTrumpTower
             get { return _lvl; }
             set
             {
-                if (value <= 3)
-                {
-                    _lvl = value;
-                }
-                else
-                {
-                    _lvl = 3;
-                }
+                if (value <= 3) _lvl = value;
+                else _lvl = 3;
             }
         }
 
@@ -102,50 +111,23 @@ namespace TrumpTower.LibraryTrumpTower
             if (tower.Type == TowerType.simple)
             {
                 double initialPrice = Tower.TowerPrice(TowerType.simple)/2;
-                if (tower.TowerLvl == 1)
-                {
-                    _map.Dollars += initialPrice;
-                }
-                else if (tower.TowerLvl == 2)
-                {
-                    _map.Dollars += 1.5*initialPrice + initialPrice;
-                }
-                else if (tower.TowerLvl == 3)
-                {
-                    _map.Dollars += 3 * initialPrice + initialPrice;
-                }
+                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
+                else if (tower.TowerLvl == 2) _map.Dollars += 1.5*initialPrice + initialPrice;
+                else if (tower.TowerLvl == 3) _map.Dollars += 3 * initialPrice + initialPrice;
             }
             else if (tower.Type == TowerType.slow)
             {
                 double initialPrice = Tower.TowerPrice(TowerType.slow)/2;
-                if (tower.TowerLvl == 1)
-                {
-                    _map.Dollars += initialPrice;
-                }
-                else if (tower.TowerLvl == 2)
-                {
-                    _map.Dollars += 1.5 * initialPrice + initialPrice;
-                }
-                else if (tower.TowerLvl == 3)
-                {
-                    _map.Dollars += 3 * initialPrice + initialPrice;
-                }
+                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
+                else if (tower.TowerLvl == 2) _map.Dollars += 1.5 * initialPrice + initialPrice;
+                else if (tower.TowerLvl == 3) _map.Dollars += 3 * initialPrice + initialPrice;
             }
             else if (tower.Type == TowerType.area)
             {
                 double initialPrice = Tower.TowerPrice(TowerType.area)/2;
-                if (tower.TowerLvl == 1)
-                {
-                   _map.Dollars += initialPrice;
-                }
-                else if (tower.TowerLvl == 2)
-                {
-                    _map.Dollars += 1.5 * initialPrice + initialPrice;
-                }
-                else if (tower.TowerLvl == 3)
-                {
-                    _map.Dollars += 3 * initialPrice + initialPrice;
-                }
+                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
+                else if (tower.TowerLvl == 2) _map.Dollars += 1.5 * initialPrice + initialPrice;
+                else if (tower.TowerLvl == 3) _map.Dollars += 3 * initialPrice + initialPrice;
             }
         }
         public void Upgrade(Tower upgradedTower)
@@ -207,18 +189,9 @@ namespace TrumpTower.LibraryTrumpTower
 
             static public int TowerPrice(TowerType type)
         {
-            if(type == TowerType.simple)
-            {
-                return 200;
-            }
-            else if(type == TowerType.slow)
-            {
-                return 300;
-            }
-            else if(type == TowerType.area)
-            {
-                return 400;
-            }
+            if(type == TowerType.simple) return 200;
+            else if(type == TowerType.slow) return 300;
+            else if(type == TowerType.area) return 400;
             return 0;
         }
 
@@ -239,6 +212,8 @@ namespace TrumpTower.LibraryTrumpTower
             _reload = _attackSpeed * 60;
             _map.CreateMissile(new Missile(_map, this, Damage, Position, myEnemy));
         }
+
+        public float Angle => _rotate;
 
     }
 }

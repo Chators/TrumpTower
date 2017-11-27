@@ -702,51 +702,29 @@ namespace TrumpTower
 
             foreach (Tower tower in _map.Towers)
             {
+                Texture2D _imgTower = null;
                 if (tower.Type == TowerType.simple)
                 {
-                    if (tower.TowerLvl == 1)
-                    {
-                        spriteBatch.Draw(_imgTower1, tower.Position, null, Color.White);
-                    }
-                    else if (tower.TowerLvl == 2)
-                    {
-                        spriteBatch.Draw(_imgTower1_2, tower.Position, null, Color.White);
-                    }
-                    else if(tower.TowerLvl == 3)
-                    {
-                        spriteBatch.Draw(_imgTower1_3, tower.Position, null, Color.White);
-                    }
+                    if (tower.TowerLvl == 1) _imgTower = _imgTower1;
+                    else if (tower.TowerLvl == 2) _imgTower = _imgTower1_2;
+                    else if (tower.TowerLvl == 3) _imgTower = _imgTower1_3;
                 }
                 else if (tower.Type == TowerType.slow)
                 {
-                    if (tower.TowerLvl == 1)
-                    {
-                        spriteBatch.Draw(_imgTower2, tower.Position, null, Color.White);
-                    }
-                    else if (tower.TowerLvl == 2)
-                    {
-                        spriteBatch.Draw(_imgTower2_2, tower.Position, null, Color.White);
-                    }
-                    else if (tower.TowerLvl == 3)
-                    {
-                        spriteBatch.Draw(_imgTower2_3, tower.Position, null, Color.White);
-                    }
+                    if (tower.TowerLvl == 1) _imgTower = _imgTower2;
+                    else if (tower.TowerLvl == 2) _imgTower = _imgTower2_2;
+                    else if (tower.TowerLvl == 3) _imgTower = _imgTower2_3;
                 }
                 else if (tower.Type == TowerType.area)
                 {
-                    if (tower.TowerLvl == 1)
-                    {
-                        spriteBatch.Draw(_imgTower3, tower.Position, null, Color.White);
-                    }
-                    else if (tower.TowerLvl == 2)
-                    {
-                        spriteBatch.Draw(_imgTower3_2, tower.Position, null, Color.White);
-                    }
-                    else if (tower.TowerLvl == 3)
-                    {
-                        spriteBatch.Draw(_imgTower3_3, tower.Position, null, Color.White);
-                    }
+                    if (tower.TowerLvl == 1) _imgTower = _imgTower3;
+                    else if (tower.TowerLvl == 2) _imgTower = _imgTower3_2;
+                    else if (tower.TowerLvl == 3) _imgTower = _imgTower3_3;
                 }
+
+                Rectangle sourceRectangle = new Rectangle(0, 0, _imgTower.Width, _imgTower.Height);
+                Vector2 origin = new Vector2(_imgTower.Width / 2, _imgTower.Height / 2);
+                spriteBatch.Draw(_imgTower, new Vector2(tower.Position.X + (_imgTower.Width / 2), tower.Position.Y + (_imgTower.Height / 2)), null, Color.White, tower.Angle, origin, 1.0f, SpriteEffects.None, 1);
             }
 
             if (_towerSelector != new Vector2(-1000, -1000))
@@ -787,6 +765,7 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
                 spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap +5)), null, Color.White);
             }
+
 
             #endregion
 
@@ -864,22 +843,13 @@ namespace TrumpTower
             #endregion
 
             #region HELP DEBOGAGE
-            
+
             /*
             spriteBatch.DrawString(_spriteDollars, "Mouse X : " + newStateMouse.X, new Vector2(50, 107), Color.DarkRed);
             spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 127), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, (float)GraphicsDevice.Viewport.Width / VirtualWidth+"", new Vector2(50, 147), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, "Viewport : " + (float)GraphicsDevice.Viewport.Width, new Vector2(50, 147), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, "DislayMode : " + (float)GraphicsDevice.DisplayMode.Width, new Vector2(50, 167), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, "DislayMode TitleSafeArea : " + GraphicsDevice.DisplayMode.TitleSafeArea, new Vector2(50, 187), Color.DarkRed);
-
-            spriteBatch.DrawString(_spriteDollars, "Mouse X : " + (int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)), new Vector2(50, 250), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + (int)(newStateMouse.Y * (VirtualHeight / GraphicsDevice.Viewport.Height)), new Vector2(50, 270), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, "Window : " + Mouse.WindowHandle, new Vector2(50, 290), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 310), Color.DarkRed);
+            
+            spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 147), Color.DarkRed);
             */
-
-
 
             #endregion
 
