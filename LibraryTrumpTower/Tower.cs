@@ -72,14 +72,6 @@ namespace TrumpTower.LibraryTrumpTower
                     if (IsReload) UpdateShoot(myEnemy); 
                     break;
                 }
-                /*
-                canShoot = WithinReachOf(myEnemy.Position) && IsReload;
-                if (canShoot)
-                {
-                    UpdateShoot(myEnemy);
-                    break;
-                }
-                */
             }
             Reloading();
         }
