@@ -13,6 +13,7 @@ namespace TrumpTower.LibraryTrumpTower
     {
         Map _map;
         readonly Tower _tower;
+        float _rotate;
         readonly int _damage;
         public double Speed { get; private set; }
         public Enemy Target { get; private set; }
@@ -26,6 +27,7 @@ namespace TrumpTower.LibraryTrumpTower
             Speed = 10;
             Target = target;
             _position = position;
+            _rotate = 0;
         }
 
         private void UpdateMove()
@@ -53,6 +55,7 @@ namespace TrumpTower.LibraryTrumpTower
         {
             UpdateTryAttack();
             UpdateMove();
+            SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(Target.Position.X + 32,Target.Position.Y + 32));
         }
 
         public Vector2 Position => _position;
@@ -71,5 +74,14 @@ namespace TrumpTower.LibraryTrumpTower
         {
             _map.Missiles.RemoveAt(_map.Missiles.IndexOf(this));
         }
+
+        public void SetRotate(Vector2 _position, Vector2 _targetPosition)
+        {
+            Vector2 direction = _position - _targetPosition;
+            direction.Normalize();
+            _rotate = (float)Math.Atan2(-direction.X, direction.Y);
+        }
+
+        public float Angle => _rotate;
     }
 }
