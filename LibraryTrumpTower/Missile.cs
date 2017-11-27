@@ -39,10 +39,29 @@ namespace TrumpTower.LibraryTrumpTower
         private void UpdateTryAttack()
         {
             if (Target.IsDead) Die();
-            else if (WithinReach(Target.Position, Speed))
+            else if (WithinReach(_tower.Position, Target.Position, Speed))
             {
-                Target.TakeHp(_damage);
-                if (Target.IsDead) Target.Die();
+                if (_tower.Type == TowerType.simple || _tower.Type == TowerType.slow)
+                {
+                    Target.TakeHp(_damage);
+                    if (Target.IsDead) Target.Die();
+                   
+                }
+                else if(_tower.Type == TowerType.area)
+                {
+                    List<Enemy> _enemies = new List<Enemy>();
+                    List<Enemy> _currentEnemies = _map.GetAllEnemies();
+
+                    foreach (Enemy enemy in _currentEnemies)
+                    {
+                        if (WithinReach(Target.Position, enemy.Position, 400))
+                        {
+                            enemy.TakeHp(_damage);
+                            if (enemy.IsDead) enemy.Die();
+                            
+                        }
+                    }
+                }
                 Die();
             }
         }
@@ -57,12 +76,12 @@ namespace TrumpTower.LibraryTrumpTower
 
         public Vector2 Position => _position;
 
-        private bool WithinReach(Vector2 target, double speed)
+        private bool WithinReach(Vector2 myPosition, Vector2 target, double radius)
         {
-            double distanceEnemy = DistanceOf(target);
-            return distanceEnemy < speed * Constant.imgSizeMap;
+            double distanceEnemy = DistanceOf(myPosition, target);
+            return distanceEnemy < radius * Constant.imgSizeMap;
         }
-        private double DistanceOf(Vector2 positionTarget)
+        private double DistanceOf(Vector2 myPosition, Vector2 positionTarget)
         {
             return (positionTarget.X - Position.X) * (positionTarget.X - Position.X) + (positionTarget.Y - Position.Y) * (positionTarget.Y - Position.Y);
         }

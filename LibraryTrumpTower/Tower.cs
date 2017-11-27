@@ -228,7 +228,6 @@ namespace TrumpTower.LibraryTrumpTower
             return distanceTower < Scope * Constant.imgSizeMap * Scope * Constant.imgSizeMap;
 
         }
-        
 
         private double DistanceOf(Vector2 positionTarget)
         {
