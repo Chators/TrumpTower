@@ -37,7 +37,7 @@ namespace TrumpTower.LibraryTrumpTower
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
             Wall = new Wall(this, 500000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
-            Dollars = 200;
+            Dollars = 8888888200;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
@@ -63,7 +63,7 @@ namespace TrumpTower.LibraryTrumpTower
             // WAVE 2 FOR TOWER YELLOW
             SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 15 * 60));
             SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.doctor));
             SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
 
             // WAVE 3 FOR EXPLOSION

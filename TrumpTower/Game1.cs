@@ -82,6 +82,8 @@ namespace TrumpTower
 
         Texture2D _imgEnemy1;
         Texture2D _imgKamikaze;
+        Texture2D _imgDoctor;
+    
 
         #endregion
 
@@ -272,6 +274,7 @@ namespace TrumpTower
 
             _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
             _imgKamikaze = Content.Load <Texture2D>("Enemies/kamikaze");
+            _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
 
             #endregion
 
@@ -689,6 +692,7 @@ namespace TrumpTower
                 Texture2D _imgEnemy = null;
                 if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
+                else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
                 Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
                 spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
