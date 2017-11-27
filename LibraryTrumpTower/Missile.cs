@@ -40,8 +40,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateTryAttack()
         {
-            if (Target.IsDead) Die();
-            else if (WithinReach(Target.Position, Speed))
+            if (WithinReach(Target.Position, Speed))
             {
                 Target.TakeHp(_damage);
                 if (Target.IsDead) Target.Die();
@@ -82,6 +81,7 @@ namespace TrumpTower.LibraryTrumpTower
             _rotate = (float)Math.Atan2(-direction.X, direction.Y);
         }
 
+        public double Damage => _damage;
         public float Angle => _rotate;
     }
 }
