@@ -715,11 +715,15 @@ namespace TrumpTower
 
                 #region Air Enemies
                 List<AirUnit> _airUnits = _map.GetAllAirEnemies();
+                
                 foreach (AirUnit unit in _airUnits)
                 {
-                    Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
-                    Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
-                    spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
+                    if (unit.IsStarting)
+                    {
+                        Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
+                        Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
+                        spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
+                    }
                 }
                 #endregion
 
