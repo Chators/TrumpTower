@@ -55,6 +55,9 @@ namespace TrumpTower
             Texture2D _imgTower2_3;
             Texture2D _imgTower3_3;
             Texture2D _imgWrong;
+            Texture2D _imgTower4;
+            Texture2D _imgTower4_empty;
+       
 
             #endregion
 
@@ -62,6 +65,7 @@ namespace TrumpTower
 
             Texture2D _imgSelector;
             Vector2 _towerSelector;
+            Texture2D _imgCoin;
             Vector2 _towerSelectorUpgrade;
             Texture2D _imgUpgrade;
             Texture2D _imgSell;
@@ -196,7 +200,7 @@ namespace TrumpTower
             #region Graphics Device 
             
             Window.Position = new Point(800, 600);
-            Console.WriteLine(Window.Position.X);
+            
 
             Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
@@ -289,12 +293,15 @@ namespace TrumpTower
             _imgTower1_3 = Content.Load<Texture2D>("Towers/tower1_3");
             _imgTower2_3 = Content.Load<Texture2D>("Towers/tower2_3");
             _imgTower3_3 = Content.Load<Texture2D>("Towers/tower3_3");
+            _imgTower4 = Content.Load<Texture2D>("Towers/bank");
+            _imgTower4_empty = Content.Load<Texture2D>("Towers/bank_empty");
 
             #endregion
             _upgradeFont = Content.Load<SpriteFont>("Towers/dollars");
             #region Towers Selection
             
             _imgSelector = Content.Load<Texture2D>("selector");
+            _imgCoin = Content.Load<Texture2D>("Towers/coin");
             _imgUpgrade = Content.Load<Texture2D>("Towers/upgrade");
             _imgSell = Content.Load<Texture2D>("Towers/sell");
             _imgWrong = Content.Load<Texture2D>("Towers/wrong");
@@ -559,6 +566,19 @@ namespace TrumpTower
                             _towerSelector = new Vector2(-1000, -1000);
                         }
                     }
+                    else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
+                    newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                    newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                    {
+                        if (_map.Dollars >= Tower.TowerPrice(TowerType.bank))
+                        {
+                            _map.CreateTower(new Tower(_map, TowerType.bank, 1, _towerSelector));
+                            _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                            _map.Dollars -= Tower.TowerPrice(TowerType.bank);
+                            _towerSelector = new Vector2(-1000, -1000);
+                        }
+                    }
                     else if (_verif == false)
                     {
                         _towerSelector = new Vector2(-1000, -1000);
@@ -634,6 +654,33 @@ namespace TrumpTower
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
                     }
                     _verif2 = false;
+                }
+            }
+            if (newStateMouse.RightButton == ButtonState.Pressed &&
+                    lastStateMouse.RightButton == ButtonState.Released)
+            {
+                foreach (Tower tower in _map.Towers)
+                {
+                    if (newStateMouse.X > tower.Position.X &&
+                newStateMouse.X < (tower.Position.X + Constant.imgSizeMap) &&
+                newStateMouse.Y > tower.Position.Y &&
+                newStateMouse.Y < (tower.Position.Y + Constant.imgSizeMap)
+                && tower.Type == TowerType.bank)
+                    {
+                        for (int j = 0; j < _map.Towers.Count; j++)
+                        {
+                            if (_map.Towers[j].Position == tower.Position)
+                            {
+                                Tower tower2 = _map.Towers[j];
+                                if (tower2.Reload <= 0)
+                                {
+                                    _map.Dollars += tower2.Earnings;
+                                    tower2.Reload = Constant.BankReloading;
+                                }
+
+                            }
+                        }
+                    }
                 }
             }
 
@@ -723,6 +770,22 @@ namespace TrumpTower
                     else if (tower.TowerLvl == 2) _imgTower = _imgTower3_2;
                     else if (tower.TowerLvl == 3) _imgTower = _imgTower3_3;
                 }
+                else if(tower.Type == TowerType.bank)
+                {
+                    if (tower.Reload > 0)
+                    {
+                        if (tower.TowerLvl == 1) _imgTower = _imgTower4_empty;
+                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4_empty;
+                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4_empty;
+                    }
+                    else if(tower.Reload <= 0)
+                    {
+                        
+                        if (tower.TowerLvl == 1) _imgTower = _imgTower4;
+                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4;
+                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4;
+                    }
+                }
 
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgTower.Width, _imgTower.Height);
                 Vector2 origin = new Vector2(_imgTower.Width / 2, _imgTower.Height / 2);
@@ -735,17 +798,12 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap,Constant.imgSizeMap ), null, Color.White);
-                spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap,Constant.imgSizeMap ), null, Color.White);
-
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower4, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+
+
                 if (_map.Dollars < Tower.TowerPrice(TowerType.simple))
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
@@ -758,7 +816,12 @@ namespace TrumpTower
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 }
+                if (_map.Dollars < Tower.TowerPrice(TowerType.bank))
+                {
+                    spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                }
             }
+            
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
@@ -766,6 +829,7 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
                 spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
                 spriteBatch.DrawString(_upgradeFont, Tower.TowerPrice(_myTow)*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.White);
+
                 if(_map.Dollars < (double)Tower.TowerPrice(_myTow)* 1.5)
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelectorUpgrade +new Vector2(0,-(Constant.imgSizeMap +5)) , null, Color.White);

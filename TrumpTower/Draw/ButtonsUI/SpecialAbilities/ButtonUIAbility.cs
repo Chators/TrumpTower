@@ -43,7 +43,6 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 spriteBatch.Draw(_img, reloadedRect, color);
                 if (_currentTimer > 0)
                 {
-                    Console.WriteLine(_ctx.CooldownSprite.Texture.Width);
                     Vector2 _positionText = new Vector2(reloadedRect.Location.X + (_img.Width / 2) - 19, reloadedRect.Location.Y + (_img.Height / 2) - 8);
                     spriteBatch.DrawString(_ctx.CooldownSprite, _ctx.Explosion.CurrentTimer / 60 + "", _positionText, Color.YellowGreen);
                 }
