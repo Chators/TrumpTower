@@ -109,12 +109,10 @@ namespace LibraryTrumpTower.AirUnits
                 }
             }
             #endregion
-
-
             AirUnit unit = null;
-            if (type == PlaneType.PlaneSlow) unit = new AirUnit(Array, Ctx.Wall, 100, 1000, positionPlane, 3, 0, timer);
-            else if (type == PlaneType.PlaneNormal) unit = new AirUnit(Array, Ctx.Wall, 100, 500, positionPlane, 5, 0, timer);
-            else if (type == PlaneType.PlaneFast) unit = new AirUnit(Array, Ctx.Wall, 100, 200, positionPlane, 8, 0, timer);
+            if (type == PlaneType.PlaneSlow) unit = new AirUnit(Array, Ctx.Wall, 100, 1000, positionPlane, 2, 0, timer);
+            else if (type == PlaneType.PlaneNormal) unit = new AirUnit(Array, Ctx.Wall, 100, 500, positionPlane, 4, 0, timer);
+            else if (type == PlaneType.PlaneFast) unit = new AirUnit(Array, Ctx.Wall, 100, 200, positionPlane, 6, 0, timer);
             Array.Add(unit);
             return unit;
         }
