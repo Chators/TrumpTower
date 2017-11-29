@@ -49,6 +49,9 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitImpactUnitAir;
         private static SoundEffectInstance ImpactUnitAir;
 
+        private static SoundEffect InitTrumpGetOutOfHere;
+        private static SoundEffectInstance TrumpGetOutOfHere;
+
         static public void LoadContent(ContentManager Content)
         {
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
@@ -63,6 +66,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitDestroyUnitAir = Content.Load<SoundEffect>("Sound/DestroyUnitAir");
             InitAlertRaidUnitsAir = Content.Load<SoundEffect>("Sound/AlertRaidUnitsAir");
             InitImpactUnitAir = Content.Load<SoundEffect>("Sound/ImpactUnitAir");
+            InitTrumpGetOutOfHere = Content.Load<SoundEffect>("Sound/trumpGetOutOfHere");
         }
 
         public static void PlayPauseIn()
@@ -82,7 +86,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static void PlayTowerShoot()
         {
             TowerShoot = InitTowerShoot.CreateInstance();
-            TowerShoot.Volume = 0.2f;
+            TowerShoot.Volume = 0.3f;
             TowerShoot.Play();
         }
 
@@ -140,6 +144,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             ImpactUnitAir = InitImpactUnitAir.CreateInstance();
             ImpactUnitAir.Volume = 0.85f;
             ImpactUnitAir.Play();
+        }
+
+        public static void PlayTrumpGetOutOfHere()
+        {
+            TrumpGetOutOfHere = InitTrumpGetOutOfHere.CreateInstance();
+            TrumpGetOutOfHere.Volume = 0.85f;
+            TrumpGetOutOfHere.Play();
         }
     }
 }

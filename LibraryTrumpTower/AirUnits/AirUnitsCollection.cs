@@ -16,14 +16,14 @@ namespace LibraryTrumpTower.AirUnits
         public int TimerBeforeStarting { get; private set; }
         public Random Random { get; private set; }
 
-        public AirUnitsCollection (Map ctx, int timerBeforeStarting, int numbersPlane)
+        public AirUnitsCollection (Map ctx, int timerBeforeStarting, int numbersPlane, PlaneType type)
         {
             Ctx = ctx;
             Array = new List<AirUnit>();
             TimerBeforeStarting = timerBeforeStarting;
 
             Random = new Random();
-            for (int i = 1; i < numbersPlane+1; i++) CreatePlane(PlaneType.PlaneFast, i*60, Random);
+            for (int i = 1; i < numbersPlane+1; i++) CreatePlane(type, i*60, Random);
         }
 
         public void Update()

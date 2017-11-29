@@ -58,7 +58,8 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                     newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
                     newStateKeyboard.IsKeyDown(Keys.Z) &&
-                    Ctx.Map.Dollars >= Ctx.Map.Sniper.Cost)
+                    Ctx.Map.Dollars >= Ctx.Map.Sniper.Cost &&
+                    Ctx.Map.Sniper.IsReload)
                 {
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
                         newStateKeyboard.IsKeyDown(Keys.Z) && lastStateKeyboard.IsKeyDown(Keys.Z))
@@ -72,14 +73,14 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
             // Second Selection
             else if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
             {
-                if (ButtonActivated.Name == "explosionAbility")
+                if (ButtonActivated.Name == "explosionAbility" && !Ctx.GameIsPaused)
                 {
                     Ctx.Map.UseExplosionAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
                     Ctx.AnimSprites[0].AnimatedSprite.Add(new SimpleAnimationSprite(Ctx.AnimSprites[0], newStateMouse.X - 32, newStateMouse.Y - 32));
                     ManagerSound.PlayExplosionAbility();
                 }
 
-                if (ButtonActivated.Name == "sniperAbility")
+                if (ButtonActivated.Name == "sniperAbility" && !Ctx.GameIsPaused)
                 {
                     Ctx.Map.UseSniperAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
                     ManagerSound.PlaySniperShoot();

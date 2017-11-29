@@ -47,7 +47,7 @@ namespace TrumpTower.LibraryTrumpTower
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
-            Sniper = new Sniper(this, 20, 50);
+            Sniper = new Sniper(this);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
             DeadUnitsAir = new List<AirUnit>();
@@ -58,7 +58,9 @@ namespace TrumpTower.LibraryTrumpTower
             //
             // Create AIR UNITS
             //
-            AirUnits.Add(new AirUnitsCollection(this, 7*60, 10));
+            AirUnits.Add(new AirUnitsCollection(this, 7*60, 8, PlaneType.PlaneSlow));
+            AirUnits.Add(new AirUnitsCollection(this, 32*60, 10, PlaneType.PlaneNormal));
+            AirUnits.Add(new AirUnitsCollection(this, 48*60, 5, PlaneType.PlaneFast));
 
             //
             // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
@@ -169,6 +171,7 @@ namespace TrumpTower.LibraryTrumpTower
             }
 
             Explosion.Update();
+            Sniper.Update();
 
         }
 

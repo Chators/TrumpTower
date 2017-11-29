@@ -17,11 +17,11 @@ namespace LibraryTrumpTower.SpecialAbilities
         public double Damage { get; private set; }
         public int Reload { get; private set; }
 
-        public Sniper (Map map, int cost, int damage)
+        public Sniper (Map map)
         {
             Ctx = map;
-            Cost = cost;
-            Damage = damage;
+            Cost = 25;
+            Damage = 50;
             Reload = 0;
         }
 
@@ -85,30 +85,26 @@ namespace LibraryTrumpTower.SpecialAbilities
                         _candidateEnemy = _candidateEnemies[i];
                 }
             }
+
             /* On regarde lequelle est le plus près entre ennemi Air et ennemi Sol */
-            if (_candidateEnemy != null && _candidateUnit != null)
-            {
-               
-            }
+            if (_candidateEnemy != null && _candidateUnit != null) AttackAir(_candidateUnit);
             else if (_candidateEnemy == null && _candidateUnit != null) AttackAir(_candidateUnit);
             else if (_candidateUnit == null && _candidateEnemy != null) AttackEarthly(_candidateEnemy);
 
-                /*
-                * FAIRE ATTENTION A LA TAILLE DES IMAGES
-                * BRUIT D'AVION QUAND DETRUIT
-                * BRUIT DE SNIPER
-                */
-                Ctx.Dollars -= Cost;
+            // On retire les dollars
+            Ctx.Dollars -= Cost;
         }
 
         public void AttackAir(AirUnit enemy)
         {
+            Reload = 1 * 0;
             enemy.TakeHp(Damage);
             if (enemy.IsDead) enemy.Die();
         }
 
         public void AttackEarthly(Enemy enemy)
         {
+            Reload = 1 * 60;
             enemy.TakeHp(Damage);
             if (enemy.IsDead) enemy.Die(); 
         }

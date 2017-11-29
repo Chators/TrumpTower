@@ -48,7 +48,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
 
             if(_name == "sniperAbility")
             {
-                if (_ctx.Ctx.Map.Dollars < _ctx.Ctx.Map.Sniper.Cost) color = Color.Gray * 0.6f;
+                if (_ctx.Ctx.Map.Dollars < _ctx.Ctx.Map.Sniper.Cost || !_ctx.Ctx.Map.Sniper.IsReload) color = Color.Gray * 0.6f;
                 reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
                 spriteBatch.Draw(_img, reloadedRect, color);
             }

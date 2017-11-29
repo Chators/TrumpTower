@@ -151,6 +151,14 @@ namespace TrumpTower
 
         #endregion
 
+        // RAID AIR
+        Texture2D _imgWarning;
+        SpriteFont _raidAirIsComming;
+        int _timerRaidAirClose;
+        float _shadowRaidAirClose;
+        float _shadowVar;
+
+
         MouseState newStateMouse;
         MouseState lastStateMouse;
         KeyboardState lastStateKeyboard;
@@ -407,13 +415,19 @@ namespace TrumpTower
             #region Sound
 
             ManagerSound.LoadContent(Content);
-
             // MUSIQUE 
-            /*MediaPlayer.Play(ManagerSound.Song1);
+            MediaPlayer.Play(ManagerSound.Song1);
             MediaPlayer.Volume = 0.4f;
-            MediaPlayer.IsRepeating = true;*/
+            MediaPlayer.IsRepeating = true;
 
             #endregion
+
+            // RAID AIR
+            _imgWarning = Content.Load<Texture2D>("warning");
+            _raidAirIsComming = Content.Load<SpriteFont>("Enemies/air/RaidAirIsComming");
+            _timerRaidAirClose = 0;
+            _shadowRaidAirClose = 0.5f;
+            _shadowVar = 0.1f;
 
             // ANIMATION EXPLOSION ABILITY
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
@@ -474,6 +488,18 @@ namespace TrumpTower
                 _waveSprite.Update(Map.WaveIsComming);
 
                 AnimationsDollars.Update((int)_map.Dollars);
+
+                #region Air Raid Is Comming
+                foreach (AirUnitsCollection _collection in _map.AirUnits)
+                {
+                    if (_collection.TimerBeforeStarting == 5 * 60)
+                    {
+                        ManagerSound.PlayAlertRaidUnitsAir();
+                        _timerRaidAirClose = 5 * 60;
+                        break;
+                    }
+                }
+                #endregion
 
                 #region Anim Sprite
 
@@ -877,19 +903,15 @@ namespace TrumpTower
             #endregion
 
             #region Raid Units Air is Comming
-
-            bool RaidAirIsClose = false;
-            foreach(AirUnitsCollection _collection in _map.AirUnits)
+            if (_timerRaidAirClose > 0)
             {
-                if (_collection.TimerBeforeStarting == 5*60)
-                {
-                    RaidAirIsClose = true;
-                    break;
-                }
-            }
-            if (RaidAirIsClose)
-            {
-                ManagerSound.PlayAlertRaidUnitsAir();
+                _shadowRaidAirClose += _shadowVar;
+                Vector2 positionWarning = new Vector2((VirtualWidth / 2) - (_imgWarning.Width/2), (VirtualHeight / 2) - (_imgWarning.Height / 2));
+                spriteBatch.Draw(_imgWarning, positionWarning, Color.White*_shadowRaidAirClose);
+                spriteBatch.DrawString(_raidAirIsComming, "Raid aerien imminent !", new Vector2(positionWarning.X-110, positionWarning.Y+_imgWarning.Height), Color.White * _shadowRaidAirClose);
+                if (_shadowRaidAirClose >= 0.6) _shadowVar = -0.005f;
+                else if (_shadowRaidAirClose <= 0.3) _shadowVar = 0.005f;
+                _timerRaidAirClose--;
             }
             #endregion
 
