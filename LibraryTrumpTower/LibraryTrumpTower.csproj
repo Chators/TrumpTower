@@ -60,6 +60,7 @@
     <Compile Include="Spawns\Spawn.cs" />
     <Compile Include="Spawns\Wave.cs" />
     <Compile Include="SpecialAbilities\Explosion.cs" />
+    <Compile Include="SpecialAbilities\Sniper.cs" />
     <Compile Include="Tower.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>

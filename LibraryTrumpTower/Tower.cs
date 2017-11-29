@@ -53,9 +53,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateShoot(Enemy myEnemy)
         {
-            SoundEffectInstance InstanceExplosion = ManagerSound.Explosion.CreateInstance();
-            InstanceExplosion.Volume = 0.4f;
-            InstanceExplosion.Play();
+            ManagerSound.PlayTowerShoot();
             ShootOn(myEnemy);
         }
 

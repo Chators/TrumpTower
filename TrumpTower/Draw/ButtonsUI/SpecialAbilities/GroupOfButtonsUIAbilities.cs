@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower.SpecialAbilities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -15,7 +16,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
     class GroupOfButtonsUIAbilities
     {
         public Game1 Ctx { get; private set; }
-        public SpriteFont CooldownSprite{ get; private set; }
+        public SpriteFont CooldownSprite { get; private set; }
         public Explosion Explosion { get; private set; }
         public Dictionary<string, ButtonUIAbility> ButtonsUIArray { get; private set; }
         public ButtonUIAbility ButtonHover { get; set; }
@@ -37,33 +38,52 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
             // First Selection
             if (ButtonActivated == null)
             {
-                foreach (ButtonUIAbility button in ButtonsUIArray.Values)
+                ButtonUIAbility button = null;
+                button = ButtonsUIArray["explosionAbility"];
+                if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                    newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
+                    newStateKeyboard.IsKeyDown(Keys.A) &&
+                    Ctx.Map.Explosion.IsReloaded)
                 {
-                    if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width && 
-                        newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
-                        newStateKeyboard.IsKeyDown(Keys.A))
+                    if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
+                        newStateKeyboard.IsKeyDown(Keys.A) && lastStateKeyboard.IsKeyDown(Keys.A))
                     {
-                        if (button.Name == "explosionAbility" && Ctx.Map.Explosion.IsReloaded)
-                        {
-                            if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released || 
-                                newStateKeyboard.IsKeyDown(Keys.A) && lastStateKeyboard.IsKeyDown(Keys.A))
-                            {
-                                ManagerSound.buttonExplosionSound.Play();
-                                ButtonActivated = button;
-                            }
-                            ButtonHover = button;
-                        }
+                        ManagerSound.PlayButtonExplosionAbility();
+                        ButtonActivated = button;
                     }
+                    ButtonHover = button;
+                }
+
+                button = ButtonsUIArray["sniperAbility"];
+                if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                    newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
+                    newStateKeyboard.IsKeyDown(Keys.Z) &&
+                    Ctx.Map.Dollars >= Ctx.Map.Sniper.Cost &&
+                    Ctx.Map.Sniper.IsReload)
+                {
+                    if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
+                        newStateKeyboard.IsKeyDown(Keys.Z) && lastStateKeyboard.IsKeyDown(Keys.Z))
+                    {
+                        ManagerSound.PlayReloadSniper();
+                        ButtonActivated = button;
+                    }
+                    ButtonHover = button;
                 }
             }
             // Second Selection
             else if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
             {
-                if (ButtonActivated.Name == "explosionAbility")
+                if (ButtonActivated.Name == "explosionAbility" && !Ctx.GameIsPaused)
                 {
                     Ctx.Map.UseExplosionAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
                     Ctx.AnimSprites[0].AnimatedSprite.Add(new SimpleAnimationSprite(Ctx.AnimSprites[0], newStateMouse.X - 32, newStateMouse.Y - 32));
-                    ManagerSound.ExplosionAbility.Play();
+                    ManagerSound.PlayExplosionAbility();
+                }
+
+                if (ButtonActivated.Name == "sniperAbility" && !Ctx.GameIsPaused)
+                {
+                    Ctx.Map.UseSniperAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
+                    ManagerSound.PlaySniperShoot();
                 }
 
                 ButtonActivated = null;

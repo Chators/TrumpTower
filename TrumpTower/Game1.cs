@@ -100,13 +100,6 @@ namespace TrumpTower
 
         #endregion
 
-        #region Sound
-
-        SoundEffect _explosion;
-        SoundEffect _manDie;
-
-        #endregion
-
         #region Waves
 
         SpriteFont _imgNextWave;
@@ -137,9 +130,14 @@ namespace TrumpTower
 
             #region Abilities Buttons
 
+            
             GroupOfButtonsUIAbilities _groupOfButtonsUIAbilities;
             SpriteFont _cooldownSprite;
             public Texture2D ImgExplosionButton { get; private set; }
+
+            Texture2D _buttonSniper;
+            Texture2D _ammoSniper;
+            Texture2D _cursorTarget;
 
             #endregion
 
@@ -152,6 +150,14 @@ namespace TrumpTower
         Texture2D _imgCursorDefault;
 
         #endregion
+
+        // RAID AIR
+        Texture2D _imgWarning;
+        SpriteFont _raidAirIsComming;
+        int _timerRaidAirClose;
+        float _shadowRaidAirClose;
+        float _shadowVar;
+
 
         MouseState newStateMouse;
         MouseState lastStateMouse;
@@ -228,9 +234,10 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
 
             // Animations
-            AnimSprites = new SimpleAnimationDefinition[2];
+            AnimSprites = new SimpleAnimationDefinition[3];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
+            AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 20, false);
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
             
             GameIsPaused = false;
@@ -387,6 +394,13 @@ namespace TrumpTower
 
             #endregion
 
+            #region Sniper Button
+            _buttonSniper = Content.Load<Texture2D>("SpecialAbilities/Sniper/buttonSniper");
+            _ammoSniper = Content.Load<Texture2D>("SpecialAbilities/Sniper/ammo");
+            _cursorTarget = Content.Load<Texture2D>("SpecialAbilities/Sniper/cursorTarget");
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "sniperAbility", new Vector2(_positionExplosionAbilityButton.X + 80, _positionExplosionAbilityButton.Y), _buttonSniper));
+            #endregion
+
             #endregion
 
             #endregion
@@ -401,15 +415,19 @@ namespace TrumpTower
             #region Sound
 
             ManagerSound.LoadContent(Content);
+            // MUSIQUE 
             MediaPlayer.Play(ManagerSound.Song1);
             MediaPlayer.Volume = 0.4f;
             MediaPlayer.IsRepeating = true;
-            // When Ability Explosion Start
-            _explosion = Content.Load<SoundEffect>("Sound/songExplosion");
-            // When Enemies Die
-            _manDie = Content.Load<SoundEffect>("Sound/songManDie");
 
             #endregion
+
+            // RAID AIR
+            _imgWarning = Content.Load<Texture2D>("warning");
+            _raidAirIsComming = Content.Load<SpriteFont>("Enemies/air/RaidAirIsComming");
+            _timerRaidAirClose = 0;
+            _shadowRaidAirClose = 0.5f;
+            _shadowVar = 0.1f;
 
             // ANIMATION EXPLOSION ABILITY
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
@@ -471,6 +489,18 @@ namespace TrumpTower
 
                 AnimationsDollars.Update((int)_map.Dollars);
 
+                #region Air Raid Is Comming
+                foreach (AirUnitsCollection _collection in _map.AirUnits)
+                {
+                    if (_collection.TimerBeforeStarting == 5 * 60)
+                    {
+                        ManagerSound.PlayAlertRaidUnitsAir();
+                        _timerRaidAirClose = 5 * 60;
+                        break;
+                    }
+                }
+                #endregion
+
                 #region Anim Sprite
 
                 foreach (SimpleAnimationDefinition def in AnimSprites)
@@ -491,6 +521,15 @@ namespace TrumpTower
                     _map.DeadEnemies.Remove(deadEnemy);
                 }
 
+                #endregion
+
+                #region Anim Explosion Plane
+                for (int i = 0; i < _map.DeadUnitsAir.Count; i++)
+                {
+                    AirUnit deadUnit = _map.DeadUnitsAir[i];
+                    AnimSprites[2].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[2], (int)deadUnit.Position.X-30, (int)deadUnit.Position.Y-30));
+                    _map.DeadUnitsAir.Remove(deadUnit);
+                }
                 #endregion
 
                 #endregion
@@ -725,7 +764,9 @@ namespace TrumpTower
                         Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
                         Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
                         spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
-                    }
+                        HealthBar enemyHealthBar = new HealthBar(unit.CurrentHp, unit.MaxHp, 1f);
+                        enemyHealthBar.Draw(spriteBatch, unit.Position, _imgPlane1);
+                }
                 }
                 #endregion
 
@@ -846,9 +887,7 @@ namespace TrumpTower
             #endregion
 
             #region Abilities Buttons
-
-            _groupOfButtonsUIAbilities.ButtonsUIArray["explosionAbility"].Draw(spriteBatch);
-
+            _groupOfButtonsUIAbilities.Draw(spriteBatch);
             #endregion
 
             #endregion
@@ -863,10 +902,25 @@ namespace TrumpTower
 
             #endregion
 
+            #region Raid Units Air is Comming
+            if (_timerRaidAirClose > 0)
+            {
+                _shadowRaidAirClose += _shadowVar;
+                Vector2 positionWarning = new Vector2((VirtualWidth / 2) - (_imgWarning.Width/2), (VirtualHeight / 2) - (_imgWarning.Height / 2));
+                spriteBatch.Draw(_imgWarning, positionWarning, Color.White*_shadowRaidAirClose);
+                spriteBatch.DrawString(_raidAirIsComming, "Raid aerien imminent !", new Vector2(positionWarning.X-110, positionWarning.Y+_imgWarning.Height), Color.White * _shadowRaidAirClose);
+                if (_shadowRaidAirClose >= 0.6) _shadowVar = -0.005f;
+                else if (_shadowRaidAirClose <= 0.3) _shadowVar = 0.005f;
+                _timerRaidAirClose--;
+            }
+            #endregion
+
             #region Cursor
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
                 spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
+            else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "sniperAbility")
+                spriteBatch.Draw(_cursorTarget, new Vector2(newStateMouse.X-_cursorTarget.Width/2, newStateMouse.Y-_cursorTarget.Height/2), Color.White);
             else
                 spriteBatch.Draw(_imgCursorDefault, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
 

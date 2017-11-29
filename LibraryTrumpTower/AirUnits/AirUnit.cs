@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +12,25 @@ namespace LibraryTrumpTower.AirUnits
 {
     public class AirUnit
     {
-        public List<AirUnit> Ctx { get; private set; }
+        public AirUnitsCollection Ctx { get; private set; }
         public Wall Wall { get; private set; }
-        public double Life { get; private set; }
+        public double CurrentHp { get; private set; }
+        public double MaxHp { get; private set; }
         public double Damage { get; private set; }
+        public int Bounty { get; private set; }
         public Vector2 _position;
         public double Speed { get; private set; }
         public float Rotate { get; private set; }
         public int TimerBeforeStarting { get; set; }
 
-        public AirUnit (List<AirUnit> ctx, Wall wall, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting)
+        public AirUnit (AirUnitsCollection ctx, Wall wall, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting)
         {
             Ctx = ctx;
             Wall = wall;
-            Life = life;
+            CurrentHp = life;
+            MaxHp = life;
             Damage = damage;
+            Bounty = 100;
             _position = position;
             Speed = speed;
             Rotate = rotate;
@@ -37,7 +42,7 @@ namespace LibraryTrumpTower.AirUnits
             if (WithinReach(Wall.Position, Speed))
             {
                 Wall.TakeHp(Damage);
-                Die();
+                Die(true);
             }
         }
 
@@ -78,7 +83,28 @@ namespace LibraryTrumpTower.AirUnits
             Rotate = (float)Math.Atan2(-direction.X, direction.Y);
         }
 
-        public void Die() => Ctx.Remove(this);
+        public void TakeHp(double damage)
+        {
+            CurrentHp -= damage;
+            ManagerSound.PlayImpactUnitAir();
+        }
+        public bool IsDead => CurrentHp <= 0;
+        public void Die()
+        {
+            ManagerSound.PlayDestroyUnitAir();
+            Ctx.Ctx.Dollars += Bounty;
+            Ctx.Array.Remove(this);
+            Ctx.Ctx.DeadUnitsAir.Add(this);
+        }
+
+        public void Die(bool PassedTheBase)
+        {
+            ManagerSound.PlayDestroyUnitAir();
+            if (!PassedTheBase) Ctx.Ctx.Dollars += Bounty;
+            Ctx.Array.Remove(this);
+            Ctx.Ctx.DeadUnitsAir.Add(this);
+        }
+
         public bool IsStarting => TimerBeforeStarting <= 0;
         public Vector2 Position => _position;
     }
