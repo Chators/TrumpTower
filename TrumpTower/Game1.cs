@@ -83,7 +83,9 @@ namespace TrumpTower
         Texture2D _imgEnemy1;
         Texture2D _imgKamikaze;
         Texture2D _imgDoctor;
-    
+        Texture2D _imgSaboteur;
+        Texture2D _imgSaboteur1;
+
 
         #endregion
 
@@ -203,7 +205,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true ;
             graphics.ApplyChanges();
 
             // Résolution d'écran
@@ -275,6 +277,9 @@ namespace TrumpTower
             _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
             _imgKamikaze = Content.Load <Texture2D>("Enemies/kamikaze");
             _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
+            _imgSaboteur = Content.Load<Texture2D>("Enemies/saboteur");
+            _imgSaboteur1 = Content.Load<Texture2D>("Enemies/saboteur1");
+
 
             #endregion
 
@@ -693,6 +698,8 @@ namespace TrumpTower
                 if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
                 else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
+                else if (enemy._type == EnemyType.saboteur && enemy._hasCast == false) _imgEnemy = _imgSaboteur1;
+                else if (enemy._type == EnemyType.saboteur && enemy._hasCast) _imgEnemy = _imgSaboteur; // When the saboteur used his charge.
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
                 Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
                 spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);

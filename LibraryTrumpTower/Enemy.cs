@@ -31,6 +31,8 @@ namespace TrumpTower.LibraryTrumpTower
         public double ActionRadius { get; private set; } // doc & mech units
         public double _reload; // doc & mech units
         public double _healCooldown; // doc only
+        public bool _hasCast;
+        public bool _isCasting;
         
 
         public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
@@ -42,11 +44,12 @@ namespace TrumpTower.LibraryTrumpTower
             _name = name;
             _position = wave.Position;
             _moveToState = 0;
+            _isCasting = false;
 
             if (type == EnemyType.defaultSoldier)
             {
                 CurrentHp = 45;
-                MaxHp = 45;
+                MaxHp = 85;
                 _damage = 10;
                 Speed = 3;
                 Bounty = 100;
@@ -60,7 +63,7 @@ namespace TrumpTower.LibraryTrumpTower
             } else if (type == EnemyType.doctor)
             {
                 CurrentHp = 60;
-                MaxHp = 60;
+                MaxHp = 120;
                 _damage = 5;
                 Speed = 3;
                 Bounty = 150;
@@ -68,6 +71,16 @@ namespace TrumpTower.LibraryTrumpTower
                 ActionRadius = 400;
                 _reload = 0;
                 _healCooldown = 3;
+            } else if(type == EnemyType.saboteur)
+            {
+                CurrentHp = 250;
+                MaxHp = 250;
+                _damage = 5;
+                Speed = 4;
+                Bounty = 150;
+                ActionRadius = 500;
+                _reload = 180;
+                _hasCast = false;
             }
         }
 
@@ -75,6 +88,7 @@ namespace TrumpTower.LibraryTrumpTower
         private void UpdateMove()
         {
             if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = Wall.Position;
+            
 
             Vector2 _moveToPosition = ShortestWay[_moveToState];
             if (WithinReach(Position, _moveToPosition, Speed))
@@ -105,13 +119,16 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
+       
+
         public void Update()
         {
             if (!IsStarting) TimerBeforeStarting--;
             else
             {
                  UpdateAttackWall();
-                 UpdateMove();
+                 UpdateSaboteur(GetTowers(_position, ActionRadius));
+                if (_isCasting == false) UpdateMove(); // for the saboteur, is false by default.
                  UpdateHeal(GetEnemies(_position, ActionRadius));
             } 
                 
@@ -146,6 +163,48 @@ namespace TrumpTower.LibraryTrumpTower
             }
             
         }
+
+        public void UpdateSaboteur(List<Tower> _towersToDisable)
+        {
+
+            if (_type == EnemyType.saboteur)
+            {
+                if (_hasCast == false)
+                {
+                    foreach (Tower tower in _towersToDisable)
+                    {
+                        if (!tower.IsDisabled || !tower.IsCasted)
+                        _isCasting = true; 
+                        StartCasting(tower);
+                        tower.IsCasted = true;
+                        
+                    }
+                }
+            }
+            /*
+            
+             * La tour est disable pendant un certain temps puis revient à la normale.
+             */
+        }
+        
+        public void StartCasting(Tower tower)
+        {
+            if (_reload <= 0) {
+
+                tower._reload = 600;
+                _hasCast = true; // this minion cannot disable turrets anymore 
+                _isCasting = false; // Resumes moving
+                tower.IsDisabled = true;
+
+            }  else {
+                _reload--;
+            }
+            
+        }
+
+        
+      
+
         internal bool IsReload => _reload <= 0;
         internal void Reloading() => _reload--;
 
@@ -160,6 +219,19 @@ namespace TrumpTower.LibraryTrumpTower
             }
 
             return _enemiesToHeal;
+        }
+
+        private List<Tower> GetTowers(Vector2 position, double radius)
+        {
+            List<Tower> _towersToDisable = new List<Tower>();
+            
+
+            foreach (Tower tower in _map.Towers)
+            {
+                if (WithinReach(position, tower.Position, radius)) _towersToDisable.Add(tower);
+            }
+
+            return _towersToDisable;
         }
 
 
