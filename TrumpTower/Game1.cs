@@ -226,9 +226,10 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
 
             // Animations
-            AnimSprites = new SimpleAnimationDefinition[2];
+            AnimSprites = new SimpleAnimationDefinition[3];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
+            AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 15, false);
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
             
             GameIsPaused = false;
@@ -406,9 +407,11 @@ namespace TrumpTower
             #region Sound
 
             ManagerSound.LoadContent(Content);
-            MediaPlayer.Play(ManagerSound.Song1);
+
+            // MUSIQUE 
+            /*MediaPlayer.Play(ManagerSound.Song1);
             MediaPlayer.Volume = 0.4f;
-            MediaPlayer.IsRepeating = true;
+            MediaPlayer.IsRepeating = true;*/
 
             #endregion
 
@@ -492,6 +495,15 @@ namespace TrumpTower
                     _map.DeadEnemies.Remove(deadEnemy);
                 }
 
+                #endregion
+
+                #region Anim Explosion Plane
+                for (int i = 0; i < _map.DeadUnitsAir.Count; i++)
+                {
+                    AirUnit deadUnit = _map.DeadUnitsAir[i];
+                    AnimSprites[2].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[2], (int)deadUnit.Position.X-30, (int)deadUnit.Position.Y-30));
+                    _map.DeadUnitsAir.Remove(deadUnit);
+                }
                 #endregion
 
                 #endregion
@@ -726,7 +738,9 @@ namespace TrumpTower
                         Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
                         Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
                         spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
-                    }
+                        HealthBar enemyHealthBar = new HealthBar(unit.CurrentHp, unit.MaxHp, 1f);
+                        enemyHealthBar.Draw(spriteBatch, unit.Position, _imgPlane1);
+                }
                 }
                 #endregion
 
@@ -860,6 +874,23 @@ namespace TrumpTower
             spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
 
+            #endregion
+
+            #region Raid Units Air is Comming
+
+            bool RaidAirIsClose = false;
+            foreach(AirUnitsCollection _collection in _map.AirUnits)
+            {
+                if (_collection.TimerBeforeStarting == 5*60)
+                {
+                    RaidAirIsClose = true;
+                    break;
+                }
+            }
+            if (RaidAirIsClose)
+            {
+                ManagerSound.PlayAlertRaidUnitsAir();
+            }
             #endregion
 
             #region Cursor

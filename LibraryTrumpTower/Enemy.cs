@@ -130,9 +130,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         public void Die()
         {
-            SoundEffectInstance InstanceManDie = ManagerSound.ManDie.CreateInstance();
-            InstanceManDie.Volume = 0.8f;
-            InstanceManDie.Play();
+            ManagerSound.PlayManDie();
             _map.Dollars += Bounty;
             _wave.Enemies.Remove(this);
             _map.DeadEnemies.Add(this);
@@ -141,9 +139,7 @@ namespace TrumpTower.LibraryTrumpTower
         public void Die(bool Passedthebase)
         // Overload. If the ennemny unit passes the base, it dies but does not gives gold.
         {
-            SoundEffectInstance InstanceManDie = ManagerSound.ManDie.CreateInstance();
-            InstanceManDie.Volume = 0.8f;
-            InstanceManDie.Play();
+            ManagerSound.PlayManDie();
             if (Passedthebase == false)
             {
                 _map.Dollars += Bounty;

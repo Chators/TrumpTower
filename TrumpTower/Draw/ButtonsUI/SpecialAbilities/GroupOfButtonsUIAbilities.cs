@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower.SpecialAbilities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -81,7 +82,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 if (ButtonActivated.Name == "sniperAbility")
                 {
                     Ctx.Map.UseSniperAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
-                    ManagerSound.SniperShoot.Play();
+                    ManagerSound.PlaySniperShoot();
                 }
 
                 ButtonActivated = null;

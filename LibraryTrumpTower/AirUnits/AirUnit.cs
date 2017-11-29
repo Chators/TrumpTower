@@ -83,24 +83,26 @@ namespace LibraryTrumpTower.AirUnits
             Rotate = (float)Math.Atan2(-direction.X, direction.Y);
         }
 
-        public void TakeHp(double damage) => CurrentHp -= damage;
+        public void TakeHp(double damage)
+        {
+            CurrentHp -= damage;
+            ManagerSound.PlayImpactUnitAir();
+        }
         public bool IsDead => CurrentHp <= 0;
         public void Die()
         {
-            SoundEffectInstance InstanceManDie = ManagerSound.ManDie.CreateInstance();
-            InstanceManDie.Volume = 0.8f;
-            InstanceManDie.Play();
+            ManagerSound.PlayDestroyUnitAir();
             Ctx.Ctx.Dollars += Bounty;
             Ctx.Array.Remove(this);
+            Ctx.Ctx.DeadUnitsAir.Add(this);
         }
 
         public void Die(bool PassedTheBase)
         {
-            SoundEffectInstance InstanceManDie = ManagerSound.ManDie.CreateInstance();
-            InstanceManDie.Volume = 0.8f;
-            InstanceManDie.Play();
+            ManagerSound.PlayDestroyUnitAir();
             if (!PassedTheBase) Ctx.Ctx.Dollars += Bounty;
             Ctx.Array.Remove(this);
+            Ctx.Ctx.DeadUnitsAir.Add(this);
         }
 
         public bool IsStarting => TimerBeforeStarting <= 0;

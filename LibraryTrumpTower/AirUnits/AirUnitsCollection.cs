@@ -13,7 +13,7 @@ namespace LibraryTrumpTower.AirUnits
     {
         public Map Ctx { get; private set; }
         public List<AirUnit> Array { get; private set; }
-        private int TimerBeforeStarting { get; set; }
+        public int TimerBeforeStarting { get; private set; }
         public Random Random { get; private set; }
 
         public AirUnitsCollection (Map ctx, int timerBeforeStarting, int numbersPlane)
