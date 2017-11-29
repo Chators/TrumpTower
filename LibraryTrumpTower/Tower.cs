@@ -32,6 +32,7 @@ namespace TrumpTower.LibraryTrumpTower
             Position = position;
             _rotate = 0;
             Earnings = 0;
+            ManagerSound.Build.Play();
 
             if(type == TowerType.simple)
             {

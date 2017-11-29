@@ -828,3 +828,9 @@
 /processorParam:Quality=Best
 /build:Sound/sell.wav
 
+#begin Sound/build.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/build.wav
+
