@@ -33,6 +33,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         // SPECIAL ABILITIES
         public Explosion Explosion { get; set; }
+        public Sniper Sniper { get; set; }
 
         public Map(int[,] map)
         {
@@ -45,6 +46,7 @@ namespace TrumpTower.LibraryTrumpTower
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
+            Sniper = new Sniper(this, 20, 50);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
 
@@ -215,6 +217,11 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseExplosionAbility(Vector2 position)
         {
             Explosion.AttackOn(position);
+        }
+
+        public void UseSniperAbility(Vector2 position)
+        {
+            Sniper.AttackOn(position);
         }
     }
 }

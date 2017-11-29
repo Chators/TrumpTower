@@ -100,13 +100,6 @@ namespace TrumpTower
 
         #endregion
 
-        #region Sound
-
-        SoundEffect _explosion;
-        SoundEffect _manDie;
-
-        #endregion
-
         #region Waves
 
         SpriteFont _imgNextWave;
@@ -137,9 +130,14 @@ namespace TrumpTower
 
             #region Abilities Buttons
 
+            
             GroupOfButtonsUIAbilities _groupOfButtonsUIAbilities;
             SpriteFont _cooldownSprite;
             public Texture2D ImgExplosionButton { get; private set; }
+
+            Texture2D _buttonSniper;
+            Texture2D _ammoSniper;
+            Texture2D _cursorTarget;
 
             #endregion
 
@@ -387,6 +385,13 @@ namespace TrumpTower
 
             #endregion
 
+            #region Sniper Button
+            _buttonSniper = Content.Load<Texture2D>("SpecialAbilities/Sniper/buttonSniper");
+            _ammoSniper = Content.Load<Texture2D>("SpecialAbilities/Sniper/ammo");
+            _cursorTarget = Content.Load<Texture2D>("SpecialAbilities/Sniper/cursorTarget");
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "sniperAbility", new Vector2(_positionExplosionAbilityButton.X + 80, _positionExplosionAbilityButton.Y), _buttonSniper));
+            #endregion
+
             #endregion
 
             #endregion
@@ -404,10 +409,6 @@ namespace TrumpTower
             MediaPlayer.Play(ManagerSound.Song1);
             MediaPlayer.Volume = 0.4f;
             MediaPlayer.IsRepeating = true;
-            // When Ability Explosion Start
-            _explosion = Content.Load<SoundEffect>("Sound/songExplosion");
-            // When Enemies Die
-            _manDie = Content.Load<SoundEffect>("Sound/songManDie");
 
             #endregion
 
@@ -846,9 +847,7 @@ namespace TrumpTower
             #endregion
 
             #region Abilities Buttons
-
-            _groupOfButtonsUIAbilities.ButtonsUIArray["explosionAbility"].Draw(spriteBatch);
-
+            _groupOfButtonsUIAbilities.Draw(spriteBatch);
             #endregion
 
             #endregion
@@ -867,6 +866,8 @@ namespace TrumpTower
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
                 spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
+            else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "sniperAbility")
+                spriteBatch.Draw(_cursorTarget, new Vector2(newStateMouse.X-_cursorTarget.Width/2, newStateMouse.Y-_cursorTarget.Height/2), Color.White);
             else
                 spriteBatch.Draw(_imgCursorDefault, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
 

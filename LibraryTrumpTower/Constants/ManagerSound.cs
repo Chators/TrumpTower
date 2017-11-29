@@ -23,6 +23,8 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static SoundEffect SoundButton1;
         public static SoundEffect SoundPauseIn;
         public static SoundEffect SoundPauseOut;
+        public static SoundEffect ReloadSniper;
+        public static SoundEffect SniperShoot;
 
         static public void LoadContent(ContentManager Content)
         {
@@ -34,6 +36,8 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             SoundPauseIn = Content.Load<SoundEffect>("ManagerTime/soundPauseIn");
             SoundPauseOut = Content.Load<SoundEffect>("ManagerTime/soundPauseOut");
             Song1 = Content.Load<Song>("Sound/song1");
+            ReloadSniper = Content.Load<SoundEffect>("SpecialAbilities/Sniper/reloadSniper");
+            SniperShoot = Content.Load<SoundEffect>("SpecialAbilities/Sniper/sniperShoot");
         }
     }
 }
