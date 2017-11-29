@@ -394,7 +394,7 @@ namespace TrumpTower
 
             ManagerSound.LoadContent(Content);
             MediaPlayer.Play(ManagerSound.Song1);
-            MediaPlayer.Volume = 0.4f;
+            MediaPlayer.Volume = 0.3f;
             MediaPlayer.IsRepeating = true;
             // When Ability Explosion Start
             _explosion = Content.Load<SoundEffect>("Sound/songExplosion");
@@ -627,6 +627,7 @@ namespace TrumpTower
                                 if (_map.Dollars >= Tower.TowerPrice(t.Type) * 1.5)
                                 {
                                     t.Upgrade(t);
+                                    ManagerSound.PowerUp.Play();
                                 }
                             }
                         }
@@ -644,6 +645,7 @@ namespace TrumpTower
                                 _map.Towers.Remove(tower);
                                 _map.ChangeLocation((int)tower.Position.X / Constant.imgSizeMap, (int)tower.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
                                 tower.Sell(tower);
+                                ManagerSound.Sell.Play();
                             }
                         }
                       
@@ -784,6 +786,10 @@ namespace TrumpTower
                         if (tower.TowerLvl == 1) _imgTower = _imgTower4;
                         else if (tower.TowerLvl == 2) _imgTower = _imgTower4;
                         else if (tower.TowerLvl == 3) _imgTower = _imgTower4;
+                    }
+                    if(tower.Reload == 0)
+                    {
+                        ManagerSound.CoinUp.Play();
                     }
                 }
 

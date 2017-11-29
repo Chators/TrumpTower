@@ -816,3 +816,15 @@
 /processorParam:Quality=Best
 /build:Sound/coinUp.wav
 
+#begin Sound/powerUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/powerUp.wav
+
+#begin Sound/sell.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/sell.wav
+

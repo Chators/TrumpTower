@@ -24,6 +24,8 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static SoundEffect SoundPauseIn;
         public static SoundEffect SoundPauseOut;
         public static SoundEffect CoinUp;
+        public static SoundEffect PowerUp;
+        public static SoundEffect Sell;
 
         static public void LoadContent(ContentManager Content)
         {
@@ -36,7 +38,8 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             SoundPauseOut = Content.Load<SoundEffect>("ManagerTime/soundPauseOut");
             Song1 = Content.Load<Song>("Sound/song1");
             CoinUp = Content.Load<SoundEffect>("Sound/coinUp");
-
+            PowerUp = Content.Load<SoundEffect>("Sound/powerUp");
+            Sell = Content.Load<SoundEffect>("Sound/sell");
         }
     }
 }
