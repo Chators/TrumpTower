@@ -39,14 +39,14 @@ namespace TrumpTower.Draw.ButtonsUI
                     {
                         ButtonActivated = button;
                         _ctx.GameIsPaused = true;
-                        ManagerSound.SoundPauseIn.Play();
+                        ManagerSound.PlayPauseIn();
                     }
                     else
                     {
                         ButtonActivated = ButtonsUIArray["normalTimer"];
                         _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
                         _ctx.GameIsPaused = false;
-                        ManagerSound.SoundPauseOut.Play();
+                        ManagerSound.PlayPauseOut();
                     }
                 }
                 ButtonHover = button;
@@ -62,7 +62,7 @@ namespace TrumpTower.Draw.ButtonsUI
                     ButtonActivated = button;
                     _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
                     _ctx.GameIsPaused = false;
-                    ManagerSound.SoundPauseOut.Play();
+                    ManagerSound.PlayPauseOut();
                 }
                 ButtonHover = button;
             }
@@ -79,7 +79,7 @@ namespace TrumpTower.Draw.ButtonsUI
                     ButtonActivated = button;
                     _ctx.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 120.0f);
                     _ctx.GameIsPaused = false;
-                    ManagerSound.SoundPauseOut.Play();
+                    ManagerSound.PlayPauseOut();
                 }
                 ButtonHover = button;
             }

@@ -229,7 +229,7 @@ namespace TrumpTower
             AnimSprites = new SimpleAnimationDefinition[3];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
-            AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 15, false);
+            AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 20, false);
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
             
             GameIsPaused = false;

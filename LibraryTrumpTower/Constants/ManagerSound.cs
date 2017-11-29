@@ -19,13 +19,23 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitManDie;
         private static SoundEffectInstance ManDie;
 
-        public static SoundEffect Explosion;
-        public static SoundEffect ExplosionAbility;
-        public static SoundEffect buttonExplosionSound;
-        public static SoundEffect SoundButton1;
-        public static SoundEffect SoundPauseIn;
-        public static SoundEffect SoundPauseOut;
-        public static SoundEffect ReloadSniper;
+        private static SoundEffect InitTowerShoot;
+        private static SoundEffectInstance TowerShoot;
+
+        private static SoundEffect InitExplosionAbility;
+        private static SoundEffectInstance ExplosionAbility;
+
+        private static SoundEffect InitButtonExplosionAbility;
+        private static SoundEffectInstance ButtonExplosionAbility;
+
+        private static SoundEffect InitPauseIn;
+        private static SoundEffectInstance PauseIn;
+
+        private static SoundEffect InitPauseOut;
+        private static SoundEffectInstance PauseOut;
+
+        private static SoundEffect InitReloadSniper;
+        private static SoundEffectInstance ReloadSniper;
 
         private static SoundEffect InitSniperShoot;
         private static SoundEffectInstance SniperShoot;
@@ -42,18 +52,59 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         static public void LoadContent(ContentManager Content)
         {
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
-            Explosion = Content.Load<SoundEffect>("Sound/songExplosion");
-            ExplosionAbility = Content.Load<SoundEffect>("SpecialAbilities/explosionSound");
-            buttonExplosionSound = Content.Load<SoundEffect>("SpecialAbilities/buttonExplosionSound");
-            SoundButton1 = Content.Load<SoundEffect>("Buttons/soundButton1");
-            SoundPauseIn = Content.Load<SoundEffect>("ManagerTime/soundPauseIn");
-            SoundPauseOut = Content.Load<SoundEffect>("ManagerTime/soundPauseOut");
+            InitTowerShoot = Content.Load<SoundEffect>("Sound/songExplosion");
+            InitExplosionAbility = Content.Load<SoundEffect>("SpecialAbilities/explosionSound");
+            InitButtonExplosionAbility = Content.Load<SoundEffect>("SpecialAbilities/buttonExplosionSound");
+            InitPauseIn = Content.Load<SoundEffect>("ManagerTime/soundPauseIn");
+            InitPauseOut = Content.Load<SoundEffect>("ManagerTime/soundPauseOut");
             Song1 = Content.Load<Song>("Sound/song1");
-            ReloadSniper = Content.Load<SoundEffect>("SpecialAbilities/Sniper/reloadSniper");
+            InitReloadSniper = Content.Load<SoundEffect>("SpecialAbilities/Sniper/reloadSniper");
             InitSniperShoot = Content.Load<SoundEffect>("SpecialAbilities/Sniper/sniperShoot");
             InitDestroyUnitAir = Content.Load<SoundEffect>("Sound/DestroyUnitAir");
             InitAlertRaidUnitsAir = Content.Load<SoundEffect>("Sound/AlertRaidUnitsAir");
             InitImpactUnitAir = Content.Load<SoundEffect>("Sound/ImpactUnitAir");
+        }
+
+        public static void PlayPauseIn()
+        {
+            PauseIn = InitPauseIn.CreateInstance();
+            PauseIn.Volume = 0.4f;
+            PauseIn.Play();
+        }
+
+        public static void PlayPauseOut()
+        {
+            PauseOut = InitPauseOut.CreateInstance();
+            PauseOut.Volume = 0.4f;
+            PauseOut.Play();
+        }
+
+        public static void PlayTowerShoot()
+        {
+            TowerShoot = InitTowerShoot.CreateInstance();
+            TowerShoot.Volume = 0.2f;
+            TowerShoot.Play();
+        }
+
+        public static void PlayExplosionAbility()
+        {
+            ExplosionAbility = InitExplosionAbility.CreateInstance();
+            ExplosionAbility.Volume = 0.8f;
+            ExplosionAbility.Play();
+        }
+
+        public static void PlayButtonExplosionAbility()
+        {
+            ButtonExplosionAbility = InitButtonExplosionAbility.CreateInstance();
+            ButtonExplosionAbility.Volume = 0.4f;
+            ButtonExplosionAbility.Play();
+        }
+
+        public static void PlayReloadSniper()
+        {
+            ReloadSniper = InitReloadSniper.CreateInstance();
+            ReloadSniper.Volume = 0.4f;
+            ReloadSniper.Play();
         }
 
         public static void PlayManDie()

@@ -48,7 +48,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
                         newStateKeyboard.IsKeyDown(Keys.A) && lastStateKeyboard.IsKeyDown(Keys.A))
                     {
-                        ManagerSound.buttonExplosionSound.Play();
+                        ManagerSound.PlayButtonExplosionAbility();
                         ButtonActivated = button;
                     }
                     ButtonHover = button;
@@ -63,7 +63,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
                         newStateKeyboard.IsKeyDown(Keys.Z) && lastStateKeyboard.IsKeyDown(Keys.Z))
                     {
-                        ManagerSound.ReloadSniper.Play();
+                        ManagerSound.PlayReloadSniper();
                         ButtonActivated = button;
                     }
                     ButtonHover = button;
@@ -76,7 +76,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 {
                     Ctx.Map.UseExplosionAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
                     Ctx.AnimSprites[0].AnimatedSprite.Add(new SimpleAnimationSprite(Ctx.AnimSprites[0], newStateMouse.X - 32, newStateMouse.Y - 32));
-                    ManagerSound.ExplosionAbility.Play();
+                    ManagerSound.PlayExplosionAbility();
                 }
 
                 if (ButtonActivated.Name == "sniperAbility")
