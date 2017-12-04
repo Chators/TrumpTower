@@ -86,10 +86,14 @@ namespace TrumpTower
         Texture2D _imgEnemy1;
         Texture2D _imgKamikaze;
         #endregion
+        Texture2D _imgDoctor;
+        Texture2D _imgSaboteur;
+        Texture2D _imgSaboteur1;
 
         #region Air Units
         Texture2D _imgPlane1;
         Texture2D _imgPlane2;
+
         #endregion
 
         #endregion
@@ -216,7 +220,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true ;
             graphics.ApplyChanges();
 
             // Résolution d'écran
@@ -290,10 +294,14 @@ namespace TrumpTower
             _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
             _imgKamikaze = Content.Load <Texture2D>("Enemies/kamikaze");
             #endregion
+            _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
+            _imgSaboteur = Content.Load<Texture2D>("Enemies/saboteur");
+            _imgSaboteur1 = Content.Load<Texture2D>("Enemies/saboteur1");
 
             #region Air Enemies
             _imgPlane1 = Content.Load<Texture2D>("Enemies/Air/plane1");
             _imgPlane2 = Content.Load<Texture2D>("Enemies/Air/plane2");
+
             #endregion
 
             #endregion
@@ -733,29 +741,33 @@ namespace TrumpTower
 
             #region Enemies
 
-                #region Earthly Enemies 
-                List<Enemy> _enemies = _map.GetAllEnemies();
-                foreach (Enemy enemy in _enemies)
-                {
-                    float angle = 0;
-                    if (enemy.CurrentDirection == Move.right) angle = 0;
-                    else if (enemy.CurrentDirection == Move.down) angle = Constant.PI / 2;
-                    else if (enemy.CurrentDirection == Move.left) angle = Constant.PI;
-                    else if (enemy.CurrentDirection == Move.top) angle = 3 * Constant.PI / 2;
-                    // CHANGE TEXTURE ENEMY
-                    Texture2D _imgEnemy = null;
-                    if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
-                    else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
-                    Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
-                    Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
-                    spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
-                    HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f);
-                    enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy);
-                }
+            #region Earthly Enemies 
+            List<Enemy> _enemies = _map.GetAllEnemies();
+            foreach (Enemy enemy in _enemies)
+            {
+                float angle = 0;
+                if (enemy.CurrentDirection == Move.right) angle = 0;
+                else if (enemy.CurrentDirection == Move.down) angle = Constant.PI / 2;
+                else if (enemy.CurrentDirection == Move.left) angle = Constant.PI;
+                else if (enemy.CurrentDirection == Move.top) angle = 3 * Constant.PI / 2;
+                // CHANGE TEXTURE ENEMY
+                Texture2D _imgEnemy = null;
+                if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
+                else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
+                else if (enemy._type == EnemyType.saboteur && enemy._hasCast == false) _imgEnemy = _imgSaboteur1;
+                else if (enemy._type == EnemyType.saboteur && enemy._hasCast) _imgEnemy = _imgSaboteur; // When the saboteur used his charge.
+                Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
+                Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
+                spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
+                HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f);
+                enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy);
+            }
+
             #endregion
 
-                #region Air Enemies
-                List<AirUnit> _airUnits = _map.GetAllAirEnemies();
+            #region Air Enemies
+            List<AirUnit> _airUnits = _map.GetAllAirEnemies();
                 
                 foreach (AirUnit unit in _airUnits)
                 {

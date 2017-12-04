@@ -16,11 +16,13 @@ namespace TrumpTower.LibraryTrumpTower
         readonly TowerType _type;
         float _rotate;
         int _lvl;
-        public double Scope { get; private set; }
+        public double Scope { get; set; }
         public int Damage { get;  set; }
         readonly double _attackSpeed;
-        double _reload;
+        public double _reload;
         public Vector2 Position { get; private set; }
+        public bool _isDisabled { get; set; }
+        public bool _isCasted { get; set; }
 
         public Tower(Map map, TowerType type, int lvl, Vector2 position)
         {
@@ -30,6 +32,7 @@ namespace TrumpTower.LibraryTrumpTower
             _reload = 0;
             Position = position;
             _rotate = 0;
+            _isDisabled = false;
 
             if(type == TowerType.simple)
             {
@@ -213,5 +216,19 @@ namespace TrumpTower.LibraryTrumpTower
 
         public float Angle => _rotate;
 
+        public bool IsDisabled
+        {
+            get{ return _isDisabled; }
+            set{ _isDisabled = value; }
+        }
+
+        public bool IsCasted
+        {
+            get { return _isCasted; }
+            set { _isCasted = value; }
+        }
+       
     }
+
+       
 }

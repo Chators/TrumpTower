@@ -24,9 +24,16 @@ namespace TrumpTower.LibraryTrumpTower
         public double CurrentHp { get; private set; }
         public double MaxHp { get; private set; }
         readonly double _damage;
+        readonly double _heal; // for the doc
         public double Speed { get; private set; }
         public int Bounty { get; private set; }
         public int TimerBeforeStarting { get; set; }
+        public double ActionRadius { get; private set; } // doc & mech units
+        public double _reload; // doc & mech units
+        public double _healCooldown; // doc only
+        public bool _hasCast;
+        public bool _isCasting;
+        
 
         public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
         {
@@ -37,11 +44,12 @@ namespace TrumpTower.LibraryTrumpTower
             _name = name;
             _position = wave.Position;
             _moveToState = 0;
+            _isCasting = false;
 
             if (type == EnemyType.defaultSoldier)
             {
-                CurrentHp = 18;
-                MaxHp = 18;
+                CurrentHp = 45;
+                MaxHp = 85;
                 _damage = 10;
                 Speed = 3;
                 Bounty = 100;
@@ -52,6 +60,27 @@ namespace TrumpTower.LibraryTrumpTower
                 _damage = Wall.MaxHp;
                 Speed = 2.2;
                 Bounty = 200;
+            } else if (type == EnemyType.doctor)
+            {
+                CurrentHp = 60;
+                MaxHp = 120;
+                _damage = 5;
+                Speed = 3;
+                Bounty = 150;
+                _heal = 20;
+                ActionRadius = 400;
+                _reload = 0;
+                _healCooldown = 3;
+            } else if(type == EnemyType.saboteur)
+            {
+                CurrentHp = 50;
+                MaxHp = 50;
+                _damage = 5;
+                Speed = 4;
+                Bounty = 150;
+                ActionRadius = 500;
+                _reload = 180;
+                _hasCast = false;
             }
         }
 
@@ -59,6 +88,7 @@ namespace TrumpTower.LibraryTrumpTower
         private void UpdateMove()
         {
             if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = Wall.Position;
+            
 
             Vector2 _moveToPosition = ShortestWay[_moveToState];
             if (WithinReach(Position, _moveToPosition, Speed))
@@ -89,13 +119,17 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
+       
+
         public void Update()
         {
             if (!IsStarting) TimerBeforeStarting--;
             else
             {
                  UpdateAttackWall();
-                 UpdateMove();
+                 UpdateSaboteur(GetTowers(_position, ActionRadius));
+                if (_isCasting == false) UpdateMove(); // for the saboteur, is false by default.
+                 UpdateHeal(GetEnemies(_position, ActionRadius));
             } 
                 
             
@@ -110,7 +144,96 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
+        private void UpdateHeal(List<Enemy> _enemiesToHeal)
+        {
+            if (_type == EnemyType.doctor)
+            {
+                if (!IsReload) Reloading();
+                if (IsReload)
+                {
+                    foreach (Enemy enemy in _enemiesToHeal)
+                    {
+
+                        if (enemy.CurrentHp + _heal > enemy.MaxHp) enemy.CurrentHp = enemy.MaxHp;
+                        else enemy.CurrentHp += _heal;
+                        _reload = _healCooldown * 60;
+
+                    }
+                }
+            }
+            
+        }
+
+        public void UpdateSaboteur(List<Tower> _towersToDisable)
+        {
+
+            if (_type == EnemyType.saboteur)
+            {
+                if (_hasCast == false)
+                {
+                    foreach (Tower tower in _towersToDisable)
+                    {
+                        if (!tower.IsDisabled || !tower.IsCasted)
+                        _isCasting = true; 
+                        StartCasting(tower);
+                        tower.IsCasted = true;
+                        
+                    }
+                }
+            }
+            /*
+            
+             * La tour est disable pendant un certain temps puis revient à la normale.
+             */
+        }
         
+        public void StartCasting(Tower tower)
+        {
+            if (_reload <= 0) {
+
+                tower._reload = 5*60;
+                _hasCast = true; // this minion cannot disable turrets anymore 
+                _isCasting = false; // Resumes moving
+                tower.IsDisabled = true;
+
+            }  else {
+                _reload--;
+            }
+            
+        }
+
+        
+      
+
+        internal bool IsReload => _reload <= 0;
+        internal void Reloading() => _reload--;
+
+        private List<Enemy> GetEnemies(Vector2 position, double radius)
+        {
+            List<Enemy> _enemiesToHeal = new List<Enemy>();
+            List<Enemy> _currentEnemies = _map.GetAllEnemies();
+
+            foreach (Enemy enemy in _currentEnemies)
+            {
+                if (WithinReach(position, enemy.Position, radius)) _enemiesToHeal.Add(enemy);
+            }
+
+            return _enemiesToHeal;
+        }
+
+        private List<Tower> GetTowers(Vector2 position, double radius)
+        {
+            List<Tower> _towersToDisable = new List<Tower>();
+            
+
+            foreach (Tower tower in _map.Towers)
+            {
+                if (WithinReach(position, tower.Position, radius)) _towersToDisable.Add(tower);
+            }
+
+            return _towersToDisable;
+        }
+
 
         public Vector2 Position => _position;
         public bool IsStarting => TimerBeforeStarting <= 0;
