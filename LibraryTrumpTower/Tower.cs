@@ -59,12 +59,17 @@ namespace TrumpTower.LibraryTrumpTower
             ManagerSound.PlayTowerShoot();
             ShootOn(myEnemy);
         }
+        
 
         //
         // List enemy for tower shoot
         //
         public void Update(List<Enemy> _enemies)
         {
+            foreach (Tower tower in _map.Towers)
+            {
+                if (_reload == 0) tower._isDisabled = false;
+            }
             foreach (Enemy myEnemy in _enemies)
             {
                 /* Algo de visée */
@@ -222,6 +227,7 @@ namespace TrumpTower.LibraryTrumpTower
             set{ _isDisabled = value; }
         }
 
+        
         public bool IsCasted
         {
             get { return _isCasted; }
