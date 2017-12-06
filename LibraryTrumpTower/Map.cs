@@ -42,7 +42,7 @@ namespace TrumpTower.LibraryTrumpTower
             WidthArrayMap = map.GetLength(1);
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
-            Wall = new Wall(this, 5000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
+            //Wall = new Wall(this, 5000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
             Dollars = 200;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
@@ -58,7 +58,7 @@ namespace TrumpTower.LibraryTrumpTower
             //
             // Create AIR UNITS
             //
-            AirUnits.Add(new AirUnitsCollection(this, 7*60, 8, PlaneType.PlaneSlow));
+            /*AirUnits.Add(new AirUnitsCollection(this, 7*60, 8, PlaneType.PlaneSlow));
             AirUnits.Add(new AirUnitsCollection(this, 32*60, 10, PlaneType.PlaneNormal));
             AirUnits.Add(new AirUnitsCollection(this, 48*60, 5, PlaneType.PlaneFast));
 
@@ -143,7 +143,7 @@ namespace TrumpTower.LibraryTrumpTower
 
             // WAVE 4
             SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 54 * 60));
-            for (int i = 0; i < 10; i++) SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+            for (int i = 0; i < 10; i++) SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall, EnemyType.defaultSoldier));*/
         }
 
         public void Update()
