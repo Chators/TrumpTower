@@ -190,8 +190,14 @@ namespace TrumpTower.LibraryTrumpTower
         public void StartCasting(Tower tower)
         {
             if (_reload <= 0) {
-
-                tower._reload = 5*60;
+                if (tower.Type == TowerType.bank)
+                {
+                    tower._reload = 15 * 60;
+                }
+                else
+                {
+                    tower._reload = 5 * 60;
+                }
                 _hasCast = true; // this minion cannot disable turrets anymore 
                 _isCasting = false; // Resumes moving
                 tower.IsDisabled = true;

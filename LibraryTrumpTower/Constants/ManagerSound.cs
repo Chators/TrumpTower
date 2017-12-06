@@ -52,6 +52,18 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitTrumpGetOutOfHere;
         private static SoundEffectInstance TrumpGetOutOfHere;
 
+        private static SoundEffect InitCoinUp;
+        private static SoundEffectInstance CoinUp;
+
+        private static SoundEffect InitPowerUp;
+        private static SoundEffectInstance PowerUp;
+
+        private static SoundEffect InitSell;
+        private static SoundEffectInstance Sell;
+
+        private static SoundEffect InitBuild;
+        private static SoundEffectInstance Build;
+
         static public void LoadContent(ContentManager Content)
         {
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
@@ -67,6 +79,38 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitAlertRaidUnitsAir = Content.Load<SoundEffect>("Sound/AlertRaidUnitsAir");
             InitImpactUnitAir = Content.Load<SoundEffect>("Sound/ImpactUnitAir");
             InitTrumpGetOutOfHere = Content.Load<SoundEffect>("Sound/trumpGetOutOfHere");
+            InitCoinUp = Content.Load<SoundEffect>("Sound/coinUp");
+            InitPowerUp = Content.Load<SoundEffect>("Sound/powerUp");
+            InitSell = Content.Load<SoundEffect>("Sound/sell");
+            InitBuild = Content.Load<SoundEffect>("Sound/build");
+        }
+
+        public static void PlayCoinUp()
+        {
+            CoinUp = InitCoinUp.CreateInstance();
+            CoinUp.Volume = 0.5f;
+            CoinUp.Play();
+        }
+
+        public static void PlayPowerUp()
+        {
+            PowerUp = InitPowerUp.CreateInstance();
+            PowerUp.Volume = 0.7f;
+            PowerUp.Play();
+        }
+
+        public static void PlaySell()
+        {
+            Sell = InitSell.CreateInstance();
+            Sell.Volume = 0.5f;
+            Sell.Play();
+        }
+
+        public static void PlayBuild()
+        {
+            Build = InitBuild.CreateInstance();
+            Build.Volume = 1f;
+            Build.Play();
         }
 
         public static void PlayPauseIn()

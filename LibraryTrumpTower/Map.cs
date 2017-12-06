@@ -43,7 +43,7 @@ namespace TrumpTower.LibraryTrumpTower
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
             Wall = new Wall(this, 5000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
-            Dollars = 200;
+            Dollars = 2000;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);

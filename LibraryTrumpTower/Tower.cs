@@ -16,7 +16,8 @@ namespace TrumpTower.LibraryTrumpTower
         readonly TowerType _type;
         float _rotate;
         int _lvl;
-        public double Scope { get; set; }
+        public double Earnings { get; set; }
+        public double Scope { get; private set; }
         public int Damage { get;  set; }
         readonly double _attackSpeed;
         public double _reload;
@@ -32,6 +33,8 @@ namespace TrumpTower.LibraryTrumpTower
             _reload = 0;
             Position = position;
             _rotate = 0;
+            Earnings = 0;
+            ManagerSound.PlayBuild();
             _isDisabled = false;
 
             if(type == TowerType.simple)
@@ -51,6 +54,15 @@ namespace TrumpTower.LibraryTrumpTower
                 Damage = 13;
                 Scope = 6.5;
                 _attackSpeed = 1.2;
+                
+            }
+            else if(type == TowerType.bank)
+            {
+                Damage = 0;
+                _reload = Constant.BankReloading;
+                Scope = 0;
+                _attackSpeed = 0;
+                Earnings = 200;
             }
         }
 
@@ -102,6 +114,12 @@ namespace TrumpTower.LibraryTrumpTower
 
         public TowerType Type => _type;
 
+        public double Reload
+        {
+            get { return _reload; }
+            set { _reload = value; }
+        }
+
         public int TowerLvl
         {
             get { return _lvl; }
@@ -134,6 +152,11 @@ namespace TrumpTower.LibraryTrumpTower
                 if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
                 else if (tower.TowerLvl == 2) _map.Dollars += 1.5 * initialPrice + initialPrice;
                 else if (tower.TowerLvl == 3) _map.Dollars += 3 * initialPrice + initialPrice;
+            }
+            else if (tower.Type == TowerType.bank)
+            {
+                double initialPrice = Tower.TowerPrice(TowerType.bank) / 2;
+                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
             }
         }
         public void Upgrade(Tower upgradedTower)
@@ -188,6 +211,19 @@ namespace TrumpTower.LibraryTrumpTower
 
                     }
                 }
+                else if (upgradedTower.Type == TowerType.bank)
+                {
+                    if(upgradedTower.TowerLvl == 2)
+                    {
+                        upgradedTower.Earnings = 300;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
+                    }
+                    else if(upgradedTower.TowerLvl == 3)
+                    {
+                        upgradedTower.Earnings = 400;
+                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
+                    }
+                }
             }
             
             Console.WriteLine("Upgrade tower successfull !");
@@ -195,9 +231,10 @@ namespace TrumpTower.LibraryTrumpTower
 
             static public int TowerPrice(TowerType type)
         {
-            if(type == TowerType.simple) return 200;
-            else if(type == TowerType.slow) return 300;
-            else if(type == TowerType.area) return 400;
+            if (type == TowerType.simple) return 200;
+            else if (type == TowerType.slow) return 300;
+            else if (type == TowerType.area) return 400;
+            else if (type == TowerType.bank) return 400;
             return 0;
         }
 

@@ -10,6 +10,7 @@ namespace LibraryTrumpTower.Constants
     {
         simple,
         slow,
-        area
+        area,
+        bank
     }
 }

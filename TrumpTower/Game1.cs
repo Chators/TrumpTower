@@ -44,32 +44,36 @@ namespace TrumpTower
         #region Towers
         SpriteFont _upgradeFont;
         TowerType _myTow;
-            #region Image Tower
+        #region Image Tower
 
-            Texture2D _imgTower1;
-            Texture2D _imgTower2;
-            Texture2D _imgTower3;
-            Texture2D _imgTower1_2;
-            Texture2D _imgTower2_2;
-            Texture2D _imgTower3_2;
-            Texture2D _imgTower1_3;
-            Texture2D _imgTower2_3;
-            Texture2D _imgTower3_3;
-            Texture2D _imgWrong;
+        Texture2D _imgTower1;
+        Texture2D _imgTower2;
+        Texture2D _imgTower3;
+        Texture2D _imgTower1_2;
+        Texture2D _imgTower2_2;
+        Texture2D _imgTower3_2;
+        Texture2D _imgTower1_3;
+        Texture2D _imgTower2_3;
+        Texture2D _imgTower3_3;
+        Texture2D _imgWrong;
+        Texture2D _imgTower4;
+        Texture2D _imgTower4_empty;
 
-            #endregion
 
-            #region Towers Selection
+        #endregion
 
-            Texture2D _imgSelector;
-            Vector2 _towerSelector;
-            Vector2 _towerSelectorUpgrade;
-            Texture2D _imgUpgrade;
-            Texture2D _imgSell;
-            bool _verif;
-            bool _verif2;
+        #region Towers Selection
 
-            #endregion
+        Texture2D _imgSelector;
+        Vector2 _towerSelector;
+        Texture2D _imgCoin;
+        Vector2 _towerSelectorUpgrade;
+        Texture2D _imgUpgrade;
+        Texture2D _imgSell;
+        bool _verif;
+        bool _verif2;
+
+        #endregion
 
         #endregion
 
@@ -123,27 +127,27 @@ namespace TrumpTower
 
         #region Buttons
 
-            #region Timer Buttons
+        #region Timer Buttons
 
-            GroupOfButtonsUITimer _groupOfButtonsUITimer;
-            Texture2D _pauseButton;
-            Texture2D _normalButton;
-            Texture2D _fastButton;
+        GroupOfButtonsUITimer _groupOfButtonsUITimer;
+        Texture2D _pauseButton;
+        Texture2D _normalButton;
+        Texture2D _fastButton;
 
-            #endregion
+        #endregion
 
-            #region Abilities Buttons
+        #region Abilities Buttons
 
-            
-            GroupOfButtonsUIAbilities _groupOfButtonsUIAbilities;
-            SpriteFont _cooldownSprite;
-            public Texture2D ImgExplosionButton { get; private set; }
 
-            Texture2D _buttonSniper;
-            Texture2D _ammoSniper;
-            Texture2D _cursorTarget;
+        GroupOfButtonsUIAbilities _groupOfButtonsUIAbilities;
+        SpriteFont _cooldownSprite;
+        public Texture2D ImgExplosionButton { get; private set; }
 
-            #endregion
+        Texture2D _buttonSniper;
+        Texture2D _ammoSniper;
+        Texture2D _cursorTarget;
+
+        #endregion
 
         #endregion
 
@@ -212,15 +216,15 @@ namespace TrumpTower
             #endregion
 
             #region Graphics Device 
-            
+
             Window.Position = new Point(800, 600);
-            Console.WriteLine(Window.Position.X);
+
 
             Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true ;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             // Résolution d'écran
@@ -243,7 +247,7 @@ namespace TrumpTower
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
             AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 20, false);
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
-            
+
             GameIsPaused = false;
 
             #region Tower Selector
@@ -256,7 +260,7 @@ namespace TrumpTower
 
             base.Initialize();
         }
-        
+
 
 
 
@@ -292,7 +296,7 @@ namespace TrumpTower
 
             #region Earthly Enemies
             _imgEnemy1 = Content.Load<Texture2D>("Enemies/enemy1");
-            _imgKamikaze = Content.Load <Texture2D>("Enemies/kamikaze");
+            _imgKamikaze = Content.Load<Texture2D>("Enemies/kamikaze");
             #endregion
             _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
             _imgSaboteur = Content.Load<Texture2D>("Enemies/saboteur");
@@ -319,12 +323,15 @@ namespace TrumpTower
             _imgTower1_3 = Content.Load<Texture2D>("Towers/tower1_3");
             _imgTower2_3 = Content.Load<Texture2D>("Towers/tower2_3");
             _imgTower3_3 = Content.Load<Texture2D>("Towers/tower3_3");
+            _imgTower4 = Content.Load<Texture2D>("Towers/bank");
+            _imgTower4_empty = Content.Load<Texture2D>("Towers/bank_empty");
 
             #endregion
             _upgradeFont = Content.Load<SpriteFont>("Towers/dollars");
             #region Towers Selection
-            
+
             _imgSelector = Content.Load<Texture2D>("selector");
+            _imgCoin = Content.Load<Texture2D>("Towers/coin");
             _imgUpgrade = Content.Load<Texture2D>("Towers/upgrade");
             _imgSell = Content.Load<Texture2D>("Towers/sell");
             _imgWrong = Content.Load<Texture2D>("Towers/wrong");
@@ -425,7 +432,7 @@ namespace TrumpTower
             ManagerSound.LoadContent(Content);
             // MUSIQUE 
             MediaPlayer.Play(ManagerSound.Song1);
-            MediaPlayer.Volume = 0.4f;
+            MediaPlayer.Volume = 0.15f;
             MediaPlayer.IsRepeating = true;
 
             #endregion
@@ -470,7 +477,7 @@ namespace TrumpTower
             #region Prepare and Execut HandleInput
 
             newStateMouse = Mouse.GetState();
-            newStateMouse = new MouseState( (int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)),
+            newStateMouse = new MouseState((int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)),
                                             (int)(newStateMouse.Y * (VirtualHeight / GraphicsDevice.Viewport.Height)),
                                             newStateMouse.ScrollWheelValue,
                                             newStateMouse.LeftButton,
@@ -535,7 +542,7 @@ namespace TrumpTower
                 for (int i = 0; i < _map.DeadUnitsAir.Count; i++)
                 {
                     AirUnit deadUnit = _map.DeadUnitsAir[i];
-                    AnimSprites[2].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[2], (int)deadUnit.Position.X-30, (int)deadUnit.Position.Y-30));
+                    AnimSprites[2].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[2], (int)deadUnit.Position.X - 30, (int)deadUnit.Position.Y - 30));
                     _map.DeadUnitsAir.Remove(deadUnit);
                 }
                 #endregion
@@ -551,156 +558,213 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            
+
             _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
             _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
             #region Towers
 
-                #region Buy Tower
+            #region Buy Tower
 
-                List<Vector2> emptyTowers = _map.SearchPositionTextureInArray(MapTexture.emptyTower);
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                    lastStateMouse.LeftButton == ButtonState.Released)
+            List<Vector2> emptyTowers = _map.SearchPositionTextureInArray(MapTexture.emptyTower);
+            if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                lastStateMouse.LeftButton == ButtonState.Released)
+            {
+                foreach (Vector2 position in emptyTowers)
                 {
-                    foreach (Vector2 position in emptyTowers)
+                    if (newStateMouse.X > position.X * Constant.imgSizeMap &&
+                        newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[5].Width &&
+                        newStateMouse.Y > position.Y * Constant.imgSizeMap &&
+                        newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
                     {
-                        if (newStateMouse.X > position.X * Constant.imgSizeMap &&
-                            newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[5].Width &&
-                            newStateMouse.Y > position.Y * Constant.imgSizeMap &&
-                            newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
-                        {
-                            _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
-                            _verif = true;
-                        }
+                        _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
+                        _verif = true;
                     }
                 }
+            }
 
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                lastStateMouse.LeftButton == ButtonState.Released)
+            if (newStateMouse.LeftButton == ButtonState.Pressed &&
+            lastStateMouse.LeftButton == ButtonState.Released)
+            {
+                if (_towerSelector != new Vector2(-1000, -1000))
                 {
-                    if (_towerSelector != new Vector2(-1000, -1000))
+                    if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
+                    newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
+                    newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
                     {
-                        if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
-                        newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
-                        newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                        if (_map.Dollars >= Tower.TowerPrice(TowerType.simple))
                         {
-                            if (_map.Dollars >= Tower.TowerPrice(TowerType.simple))
-                            {
-                                _map.CreateTower(new Tower(_map, TowerType.simple, 1, _towerSelector));
-                                _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                                _map.Dollars -= Tower.TowerPrice(TowerType.simple);
-                                _towerSelector = new Vector2(-1000, -1000);
-                            }
-                        }
-                        else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
-                        newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
-                        newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
-                        {
-                            if (_map.Dollars >= Tower.TowerPrice(TowerType.slow))
-                            {
-                                _map.CreateTower(new Tower(_map, TowerType.slow, 1, _towerSelector));
-                                _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                                _map.Dollars -= Tower.TowerPrice(TowerType.slow);
-                                _towerSelector = new Vector2(-1000, -1000);
-                            }
-                        }
-                        else if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
-                        newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
-                        newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
-                        {
-                            if (_map.Dollars >= Tower.TowerPrice(TowerType.area))
-                            {
-                                _map.CreateTower(new Tower(_map, TowerType.area, 1, _towerSelector));
-                                _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                                _map.Dollars -= Tower.TowerPrice(TowerType.area);
-                                _towerSelector = new Vector2(-1000, -1000);
-                            }
-                        }
-                        else if (_verif == false)
-                        {
+                            _map.CreateTower(new Tower(_map, TowerType.simple, 1, _towerSelector));
+                            _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                            _map.Dollars -= Tower.TowerPrice(TowerType.simple);
                             _towerSelector = new Vector2(-1000, -1000);
                         }
-                        _verif = false;
                     }
-                }
-
-                #endregion
-
-                #region Upgrade or sell Towers
-
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                lastStateMouse.LeftButton == ButtonState.Released)
-                {
-                    foreach (Tower tow in _map.Towers)
+                    else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
+                    newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                    newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
                     {
-                        if (newStateMouse.X > tow.Position.X &&
-                            newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
-                            newStateMouse.Y > tow.Position.Y &&
-                            newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                        if (_map.Dollars >= Tower.TowerPrice(TowerType.slow))
                         {
-                            _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
-                            _verif2 = true;
-                            _myTow = tow.Type;
+                            _map.CreateTower(new Tower(_map, TowerType.slow, 1, _towerSelector));
+                            _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                            _map.Dollars -= Tower.TowerPrice(TowerType.slow);
+                            _towerSelector = new Vector2(-1000, -1000);
                         }
                     }
-                }
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                lastStateMouse.LeftButton == ButtonState.Released)
-                {
-                    if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
+                    else if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
+                    newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
+                    newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
                     {
-                        if (newStateMouse.X > _towerSelectorUpgrade.X &&
-                        newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
-                        newStateMouse.Y > _towerSelectorUpgrade.Y - Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                        if (_map.Dollars >= Tower.TowerPrice(TowerType.area))
                         {
-                            foreach (Tower t in _map.Towers)
+                            _map.CreateTower(new Tower(_map, TowerType.area, 1, _towerSelector));
+                            _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                            _map.Dollars -= Tower.TowerPrice(TowerType.area);
+                            _towerSelector = new Vector2(-1000, -1000);
+                        }
+                    }
+                    else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
+                    newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                    newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                    {
+                        if (_map.Dollars >= Tower.TowerPrice(TowerType.bank))
+                        {
+                            _map.CreateTower(new Tower(_map, TowerType.bank, 1, _towerSelector));
+                            _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                            _map.Dollars -= Tower.TowerPrice(TowerType.bank);
+                            _towerSelector = new Vector2(-1000, -1000);
+                        }
+                    }
+                    else if (_verif == false)
+                    {
+                        _towerSelector = new Vector2(-1000, -1000);
+                    }
+                    _verif = false;
+                }
+                else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
+                newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
+                newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                {
+                    if (_map.Dollars >= Tower.TowerPrice(TowerType.bank))
+                    {
+                        _map.CreateTower(new Tower(_map, TowerType.bank, 1, _towerSelector));
+                        _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                        _map.Dollars -= Tower.TowerPrice(TowerType.bank);
+                        _towerSelector = new Vector2(-1000, -1000);
+                    }
+                }
+                else if (_verif == false)
+                {
+                    _towerSelector = new Vector2(-1000, -1000);
+                }
+                _verif = false;
+            }
+
+            #endregion
+
+            #region Upgrade or sell Towers
+
+            if (newStateMouse.LeftButton == ButtonState.Pressed &&
+            lastStateMouse.LeftButton == ButtonState.Released)
+            {
+                foreach (Tower tow in _map.Towers)
+                {
+                    if (newStateMouse.X > tow.Position.X &&
+                        newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
+                        newStateMouse.Y > tow.Position.Y &&
+                        newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                    {
+                        _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
+                        _verif2 = true;
+                        _myTow = tow.Type;
+                    }
+                }
+            }
+            if (newStateMouse.LeftButton == ButtonState.Pressed &&
+            lastStateMouse.LeftButton == ButtonState.Released)
+            {
+                if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
+                {
+                    if (newStateMouse.X > _towerSelectorUpgrade.X &&
+                    newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
+                    newStateMouse.Y > _towerSelectorUpgrade.Y - Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                    {
+                        foreach (Tower t in _map.Towers)
+                        {
+                            if (newStateMouse.X > t.Position.X &&
+                            newStateMouse.X < (t.Position.X + Constant.imgSizeMap) &&
+                            newStateMouse.Y > t.Position.Y - Constant.imgSizeMap &&
+                            newStateMouse.Y < (t.Position.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
                             {
-                                if (newStateMouse.X > t.Position.X &&
-                                newStateMouse.X < (t.Position.X + Constant.imgSizeMap) &&
-                                newStateMouse.Y > t.Position.Y - Constant.imgSizeMap &&
-                                newStateMouse.Y < (t.Position.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                                t.Upgrade(t);
+                                ManagerSound.PlayPowerUp();
+                            }
+                        }
+                        _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                    }
+                    else if (newStateMouse.X > _towerSelectorUpgrade.X &&
+                    newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
+                    newStateMouse.Y > _towerSelectorUpgrade.Y + Constant.imgSizeMap &&
+                    newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                    {
+                        for (int j = 0; j < _map.Towers.Count; j++)
+                        {
+                            if (_map.Towers[j].Position == _towerSelectorUpgrade)
+                            {
+                                Tower tower = _map.Towers[j];
+                                _map.Towers.Remove(tower);
+                                _map.ChangeLocation((int)tower.Position.X / Constant.imgSizeMap, (int)tower.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
+                                tower.Sell(tower);
+                                ManagerSound.PlaySell();
+                            }
+
+                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                        }
+                    }
+                    else if (_verif2 == false)
+                    {
+                        _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                    }
+                    _verif2 = false;
+                }
+            }
+            if (newStateMouse.RightButton == ButtonState.Pressed &&
+                    lastStateMouse.RightButton == ButtonState.Released)
+            {
+                foreach (Tower tower in _map.Towers)
+                {
+                    if (newStateMouse.X > tower.Position.X &&
+                newStateMouse.X < (tower.Position.X + Constant.imgSizeMap) &&
+                newStateMouse.Y > tower.Position.Y &&
+                newStateMouse.Y < (tower.Position.Y + Constant.imgSizeMap)
+                && tower.Type == TowerType.bank)
+                    {
+                        for (int j = 0; j < _map.Towers.Count; j++)
+                        {
+                            if (_map.Towers[j].Position == tower.Position)
+                            {
+                                Tower tower2 = _map.Towers[j];
+                                if (tower2.Reload <= 0)
                                 {
-                                    if (_map.Dollars >= Tower.TowerPrice(t.Type) * 1.5)
-                                    {
-                                        t.Upgrade(t);
-                                    }
+                                    _map.Dollars += tower2.Earnings;
+                                    tower2.Reload = Constant.BankReloading;
+                                    ManagerSound.PlaySell();
                                 }
                             }
-                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
                         }
-                        else if (newStateMouse.X > _towerSelectorUpgrade.X &&
-                        newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
-                        newStateMouse.Y > _towerSelectorUpgrade.Y + Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
-                        {
-                            for (int j = 0; j < _map.Towers.Count; j++)
-                            {
-                                if (_map.Towers[j].Position == _towerSelectorUpgrade)
-                                {
-                                    Tower tower = _map.Towers[j];
-                                    _map.Towers.Remove(tower);
-                                    _map.ChangeLocation((int)tower.Position.X / Constant.imgSizeMap, (int)tower.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
-                                    tower.Sell(tower);
-                                }
-                            }
-
-                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
-                        }
-                        else if (_verif2 == false)
-                        {
-                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
-                        }
-                        _verif2 = false;
                     }
                 }
+            }
 
-                #endregion
+            #endregion
 
                 #endregion
         }
@@ -807,6 +871,26 @@ namespace TrumpTower
                     else if (tower.TowerLvl == 2) _imgTower = _imgTower3_2;
                     else if (tower.TowerLvl == 3) _imgTower = _imgTower3_3;
                 }
+                else if(tower.Type == TowerType.bank)
+                {
+                    if (tower.Reload > 0)
+                    {
+                        if (tower.TowerLvl == 1) _imgTower = _imgTower4_empty;
+                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4_empty;
+                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4_empty;
+                    }
+                    else if(tower.Reload <= 0)
+                    {
+                        
+                        if (tower.TowerLvl == 1) _imgTower = _imgTower4;
+                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4;
+                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4;
+                    }
+                    if(tower.Reload == 0)
+                    {
+                        ManagerSound.PlayCoinUp();
+                    }
+                }
 
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgTower.Width, _imgTower.Height);
                 Vector2 origin = new Vector2(_imgTower.Width / 2, _imgTower.Height / 2);
@@ -819,17 +903,12 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap,Constant.imgSizeMap ), null, Color.White);
-                spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap,Constant.imgSizeMap ), null, Color.White);
-
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgTower1, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgTower2, _towerSelector + new Vector2(Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower4, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+
+
                 if (_map.Dollars < Tower.TowerPrice(TowerType.simple))
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(-Constant.imgSizeMap, -Constant.imgSizeMap), null, Color.White);
@@ -842,7 +921,12 @@ namespace TrumpTower
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 }
+                if (_map.Dollars < Tower.TowerPrice(TowerType.bank))
+                {
+                    spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                }
             }
+            
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
@@ -850,6 +934,7 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
                 spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
                 spriteBatch.DrawString(_upgradeFont, Tower.TowerPrice(_myTow)*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.White);
+
                 if(_map.Dollars < (double)Tower.TowerPrice(_myTow)* 1.5)
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelectorUpgrade +new Vector2(0,-(Constant.imgSizeMap +5)) , null, Color.White);
