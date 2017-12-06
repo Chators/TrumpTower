@@ -704,8 +704,11 @@ namespace TrumpTower
                             newStateMouse.Y > t.Position.Y - Constant.imgSizeMap &&
                             newStateMouse.Y < (t.Position.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
                             {
-                                t.Upgrade(t);
-                                ManagerSound.PlayPowerUp();
+                                if (_map.Dollars > Tower.TowerPrice(t.Type))
+                                {
+                                    t.Upgrade(t);
+                                    ManagerSound.PlayPowerUp();
+                                }
                             }
                         }
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
