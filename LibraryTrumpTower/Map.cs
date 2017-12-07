@@ -30,6 +30,8 @@ namespace TrumpTower.LibraryTrumpTower
         public static int WavesTotals { get; set; }
         public static Wave WaveIsComming { get; set; }
 
+        public List<Tower> TowerDisabled;
+
         // SPECIAL ABILITIES
         public Explosion Explosion { get; set; }
         public Sniper Sniper { get; set; }
@@ -49,6 +51,7 @@ namespace TrumpTower.LibraryTrumpTower
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
             DeadUnitsAir = new List<AirUnit>();
+            TowerDisabled = new List<Tower>();
 
             WavesCounter = 0;
             WavesTotals = 0;

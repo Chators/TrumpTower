@@ -79,7 +79,7 @@ namespace TrumpTower.LibraryTrumpTower
                 Speed = 4;
                 Bounty = 150;
                 ActionRadius = 500;
-                _reload = 180;
+                _reload = Constant.DisabledTower*60;
                 _hasCast = false;
             }
         }
@@ -196,11 +196,12 @@ namespace TrumpTower.LibraryTrumpTower
                 }
                 else
                 {
-                    tower._reload = 5 * 60;
+                    tower._reload = Constant.DisabledTower * 60;
                 }
                 _hasCast = true; // this minion cannot disable turrets anymore 
                 _isCasting = false; // Resumes moving
                 tower.IsDisabled = true;
+                _map.TowerDisabled.Add(tower);
 
             }  else {
                 _reload--;

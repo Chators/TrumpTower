@@ -18,8 +18,9 @@ namespace TrumpTower.Draw.Animations
         protected bool FinishedAnimation = false;
         protected double TimeBetweenFrame; // 60 fps 
         protected double lastFrameUpdatedTime = 0;
+        public int Time;
 
-        public SimpleAnimationSprite(SimpleAnimationDefinition definition, int X, int Y)
+        public SimpleAnimationSprite(SimpleAnimationDefinition definition, int X, int Y, int time = 0)
         {
             /* Constructeur */
             Definition = definition;
@@ -29,6 +30,7 @@ namespace TrumpTower.Draw.Animations
             Position.X = X;
             Position.Y = Y;
             TimeBetweenFrame = definition.TimeBetweenFrame;
+            if (time != 0) Time = time*60;
             StartAnimation();
         }
 
@@ -42,6 +44,7 @@ namespace TrumpTower.Draw.Animations
 
         public void Update(GameTime time)
         {
+            Time--;
             /* Mise a jour des donnees en vue de l'affichage */
             if (FinishedAnimation) return;
             this.lastFrameUpdatedTime += time.ElapsedGameTime.Milliseconds;
@@ -57,6 +60,11 @@ namespace TrumpTower.Draw.Animations
                         this.CurrentFrame.Y++;
                         if (this.CurrentFrame.Y >= this.Definition.NbFrames.Y)
                             this.CurrentFrame.Y = 0;
+                    }
+                    if (Time <= 0)
+                    {
+                        this.FinishedAnimation = true;
+                        Definition.AnimatedSprite.Remove(this);
                     }
                 }
                 else
