@@ -225,8 +225,7 @@ namespace TrumpTower.LibraryTrumpTower
                     }
                 }
             }
-            
-            Console.WriteLine("Upgrade tower successfull !");
+           
         }
 
             static public int TowerPrice(TowerType type)

@@ -242,14 +242,16 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
 
             // Animations
-            AnimSprites = new SimpleAnimationDefinition[3];
+            AnimSprites = new SimpleAnimationDefinition[4];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
             AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 20, false);
+            AnimSprites[3] = new SimpleAnimationDefinition(this, this, "Enemies/animThunderSaboteur", new Point(350, 105), new Point(5, 2), 20, false);
+
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
             GameIsPaused = false;
-
+            
             #region Tower Selector
 
             _towerSelector = new Vector2(-1000, -1000);
@@ -545,6 +547,14 @@ namespace TrumpTower
                     AnimSprites[2].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[2], (int)deadUnit.Position.X - 30, (int)deadUnit.Position.Y - 30));
                     _map.DeadUnitsAir.Remove(deadUnit);
                 }
+                #endregion
+
+                #region Anim Saboteur
+                for (int i = 0; i < _map.Towers.Count; i++)
+                {
+                    /*Tower tower = _map.Towers[i];
+                    if (tower.IsDisabled) AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X-148, (int)tower.Position.Y-30));
+                */}
                 #endregion
 
                 #endregion

@@ -128,7 +128,7 @@ namespace TrumpTower.LibraryTrumpTower
             {
                  UpdateAttackWall();
                  UpdateSaboteur(GetTowers(_position, ActionRadius));
-                if (_isCasting == false) UpdateMove(); // for the saboteur, is false by default.
+                 if (_isCasting == false) UpdateMove(); // for the saboteur, is false by default.
                  UpdateHeal(GetEnemies(_position, ActionRadius));
             } 
                 
@@ -177,7 +177,6 @@ namespace TrumpTower.LibraryTrumpTower
                         _isCasting = true; 
                         StartCasting(tower);
                         tower.IsCasted = true;
-                        
                     }
                 }
             }
@@ -189,7 +188,8 @@ namespace TrumpTower.LibraryTrumpTower
         
         public void StartCasting(Tower tower)
         {
-            if (_reload <= 0) {
+            if (_reload <= 0)
+            {
                 if (tower.Type == TowerType.bank)
                 {
                     tower._reload = 15 * 60;

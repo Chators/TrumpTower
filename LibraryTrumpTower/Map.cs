@@ -30,8 +30,6 @@ namespace TrumpTower.LibraryTrumpTower
         public static int WavesTotals { get; set; }
         public static Wave WaveIsComming { get; set; }
 
-
-
         // SPECIAL ABILITIES
         public Explosion Explosion { get; set; }
         public Sniper Sniper { get; set; }
@@ -42,7 +40,7 @@ namespace TrumpTower.LibraryTrumpTower
             WidthArrayMap = map.GetLength(1);
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
-            Wall = new Wall(this, 5000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
+            Wall = new Wall(this, 500000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
             Dollars = 2000;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();

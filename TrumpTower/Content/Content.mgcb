@@ -778,6 +778,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemies/doctor.png
+
 #begin Towers/dollars.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -796,6 +797,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemies/saboteur.png
+
 #begin Towers/bank.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -819,7 +821,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemies/saboteur1.png
-
 
 #begin Enemies/air/plane1.png
 /importer:TextureImporter
@@ -948,7 +949,6 @@
 /processorParam:Quality=Best
 /build:Sound/trumpGetOutOfHere.wav
 
-
 #begin Towers/bank_empty.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -996,4 +996,16 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/build.wav
+
+#begin Enemies/animThunderSaboteur.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/animThunderSaboteur.png
 
