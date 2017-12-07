@@ -5,6 +5,7 @@ using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.NuclexGui;
 using MonoGame.Extended.NuclexGui.Controls.Desktop;
 using System;
+using System.Collections.Generic;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
 
@@ -21,6 +22,7 @@ namespace MapEditorTrumpTower
         private readonly InputListenerComponent _inputManager;
         private readonly GuiManager _gui;
 
+        private List<Texture2D> _imgMaps;
         public Map _map;
 
         public Game1()
@@ -47,9 +49,9 @@ namespace MapEditorTrumpTower
         {
             // TODO: Add your initialization logic here
             Window.Title = "TT Map Editor";
-            /*graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;*/
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             _gui.Screen = new GuiScreen(800, 400);
@@ -59,7 +61,7 @@ namespace MapEditorTrumpTower
 
             // POUR AJOUTER UN BOUTON
             // Create few controls.
-            /*var button = new GuiButtonControl
+            var button = new GuiButtonControl
             {
                 Name = "button",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 20), new UniScalar(0.0f, 20), new UniScalar(0f, 120), new UniScalar(0f, 50)),
@@ -70,8 +72,8 @@ namespace MapEditorTrumpTower
             button.Pressed += Button2_Pressed;
 
 
-            _gui.Screen.Desktop.Children.Add(button);*/
-            Button2_Pressed;
+            _gui.Screen.Desktop.Children.Add(button);
+            //Button2_Pressed();
             base.Initialize();
         }
 
@@ -86,7 +88,6 @@ namespace MapEditorTrumpTower
                 Title = "Taille de la map",
                 EnableDragging = true
             };
-
             var choiceX = new GuiInputControl
             {
                 Name = "choiceX",
@@ -94,7 +95,6 @@ namespace MapEditorTrumpTower
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25)),
                 Text = "20"
             };
-
             var choiceY = new GuiInputControl
             {
                 Name = "choiceY",
@@ -158,6 +158,12 @@ namespace MapEditorTrumpTower
             _map = new Map(_mapPoint);
 
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            GuiButtonControl deleteButton = null;
+            foreach (GuiButtonControl button in _gui.Screen.Desktop.Children)
+            {
+                if (button.Name == "button") deleteButton = button; 
+            }
+            _gui.Screen.Desktop.Children.Remove(deleteButton);
         }
         #endregion
 
@@ -171,6 +177,14 @@ namespace MapEditorTrumpTower
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            #region Load Map
+            _imgMaps = new List<Texture2D>();
+            foreach (string name in Enum.GetNames(typeof(MapTexture)))
+            {
+                _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+            }
+            #endregion
         }
 
         /// <summary>
@@ -211,6 +225,22 @@ namespace MapEditorTrumpTower
             // TODO: Add your drawing code here
             _gui.Draw(gameTime);
 
+            spriteBatch.Begin();
+
+            #region Draw Map
+            if (_map != null)
+            {
+                for (int y = 0; y < _map.HeightArrayMap; y++)
+                {
+                    for (int x = 0; x < _map.WidthArrayMap; x++)
+                    {
+                        spriteBatch.Draw(_imgMaps[_map.GetTypeArray(x, y)], new Vector2(x * Constant.imgSizeMap, y * Constant.imgSizeMap), null, Color.White);
+                    }
+                }
+            }
+            #endregion
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
