@@ -78,10 +78,8 @@ namespace TrumpTower.LibraryTrumpTower
         //
         public void Update(List<Enemy> _enemies)
         {
-            foreach (Tower tower in _map.Towers)
-            {
-                if (_reload == 0) tower._isDisabled = false;
-            }
+            if (_reload == 0) _isDisabled = false;
+
             foreach (Enemy myEnemy in _enemies)
             {
                 /* Algo de visée */
@@ -93,7 +91,8 @@ namespace TrumpTower.LibraryTrumpTower
                 
 
                 if (WithinReachOf(myEnemy.Position) && hpEnemy > 0)
-                {
+                { 
+                    if (!IsDisabled)
                     SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(myEnemy.Position.X + 32, myEnemy.Position.Y + 32));
                     if (IsReload) UpdateShoot(myEnemy); 
                     break;
@@ -228,7 +227,7 @@ namespace TrumpTower.LibraryTrumpTower
            
         }
 
-            static public int TowerPrice(TowerType type)
+        static public int TowerPrice(TowerType type)
         {
             if (type == TowerType.simple) return 200;
             else if (type == TowerType.slow) return 300;

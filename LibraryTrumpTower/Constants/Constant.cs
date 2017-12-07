@@ -13,6 +13,6 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static int ImgSizeEnemy = 64;
         public static float PI = 3.14159265359f;
         public static double BankReloading = 10 * 60;
-        public static int DisabledTower = 3;
+        public static int DisabledTower = 5;
     }
 }
