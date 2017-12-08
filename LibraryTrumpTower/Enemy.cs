@@ -23,16 +23,19 @@ namespace TrumpTower.LibraryTrumpTower
         public Move CurrentDirection { get; private set; }
         public double CurrentHp { get; private set; }
         public double MaxHp { get; private set; }
-        readonly double _damage;
+        public double _damage;
         readonly double _heal; // for the doc
         public double Speed { get; private set; }
         public int Bounty { get; private set; }
         public int TimerBeforeStarting { get; set; }
         public double ActionRadius { get; private set; } // doc & mech units
-        public double _reload; // doc & mech units
+        public double _reload; // doc & mech & boss units
         public double _healCooldown; // doc only
         public bool _hasCast;
         public bool _isCasting;
+        public bool _isCharging; // For boss1
+        public bool _hasCharged; // For boss1
+        public double _timeBeforeCharging; // For boss1
         
 
         public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
@@ -81,6 +84,16 @@ namespace TrumpTower.LibraryTrumpTower
                 ActionRadius = 500;
                 _reload = 180;
                 _hasCast = false;
+            } else if (type == EnemyType.boss1) // Che Guevarra
+            {
+                CurrentHp = 500;
+                MaxHp = 500;
+                _damage = Wall.MaxHp / 4;
+                Speed = 1.5;
+                _reload = 2 * 60; // attacks every two seconds
+                _isCharging = false;
+                _hasCharged = false;
+                _timeBeforeCharging = 6 * 60; // When it comes to 0, boss1 starts charging, doubling his speed and dammage, build a wall to stop him
             }
         }
 
@@ -124,15 +137,53 @@ namespace TrumpTower.LibraryTrumpTower
         public void Update()
         {
             if (!IsStarting) TimerBeforeStarting--;
-            else
+            else if (_type != EnemyType.boss1 && _type != EnemyType.boss2 && _type != EnemyType.boss3)
             {
                  UpdateAttackWall();
                  UpdateSaboteur(GetTowers(_position, ActionRadius));
                 if (_isCasting == false) UpdateMove(); // for the saboteur, is false by default.
                  UpdateHeal(GetEnemies(_position, ActionRadius));
-            } 
-                
-            
+            } else if (_type == EnemyType.boss1)
+            {
+               if (_position != Wall.Position) UpdateMove();
+                UpdateBoss1();
+            }  
+        }
+
+        private void UpdateBoss1()
+        {
+            if (_timeBeforeCharging > 0) _timeBeforeCharging--;
+            else if (_timeBeforeCharging == 0 && _hasCharged == false && _isCharging == false) ChargeBoss1();
+            UpdateAttackWallBoss1();
+        }
+        
+        private void ChargeBoss1()
+        {
+            _hasCharged = true;
+            _isCharging = true;
+            _damage = _damage * 2;
+            Speed = Speed * 5;
+        }
+
+        private void EncounterWallCreated() // Boss1
+        {
+            // If boss is charging and encounters a wall created, the wall breaks.
+            //Then _isCharging goes false.
+            // Boss resumes normal speed and dmg after a few seconds. 
+            // Keeps _hasCharged = true so he doesnt resume charging 
+        }
+
+        private void UpdateAttackWallBoss1()
+        {
+            if (WithinReach(Position, Wall.Position, Speed))
+            {
+                if (_reload != 0) _reload --;
+                else
+                {
+                    Wall.TakeHp(_damage);
+                    _reload = 2 * 60;
+                }
+            }
         }
 
         private void UpdateAttackWall()

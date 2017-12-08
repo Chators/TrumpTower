@@ -821,6 +821,7 @@ namespace TrumpTower
                 else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
                 else if (enemy._type == EnemyType.saboteur && enemy._hasCast == false) _imgEnemy = _imgSaboteur1;
                 else if (enemy._type == EnemyType.saboteur && enemy._hasCast) _imgEnemy = _imgSaboteur; // When the saboteur used his charge.
+                else if (enemy._type == EnemyType.boss1) _imgEnemy = _imgEnemy1;
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
                 Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
                 spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
