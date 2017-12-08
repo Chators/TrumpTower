@@ -220,7 +220,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true ;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             // Résolution d'écran

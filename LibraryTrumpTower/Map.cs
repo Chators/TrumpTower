@@ -229,6 +229,23 @@ namespace TrumpTower.LibraryTrumpTower
         /// <param name="number">number of texture (example dirt = 0)</param>
         public void ChangeLocation(int x, int y, int number) => MapArray[y, x] = number;
 
+        public Vector2 SearchCase (int mouseX, int mouseY, int SizePixelMap)
+        {
+            for (int y = 0; y < WidthArrayMap; y++)
+            {
+                for (int x = 0; x < WidthArrayMap; x++)
+                {
+                    // Si on a la souris qui pointe sur un élèment
+                    if (mouseX > x * Constant.imgSizeMap && mouseX < x * Constant.imgSizeMap + Constant.imgSizeMap &&
+                        mouseY > y * Constant.imgSizeMap && mouseY < y * Constant.imgSizeMap + Constant.imgSizeMap)
+                    {
+                        return new Vector2(x, y);
+                    }
+                }
+            }
+            return Vector2.Zero;
+        }
+
         private void CreateSpawn(Spawn spawn)
         {
             foreach (Spawn _spawn in SpawnsEnemies)

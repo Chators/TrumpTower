@@ -22,8 +22,19 @@ namespace MapEditorTrumpTower
         private readonly InputListenerComponent _inputManager;
         private readonly GuiManager _gui;
 
-        private List<Texture2D> _imgMaps;
+        public float VirtualWidth { get; set; }
+        public float VirtualHeight { get; set; }
+        private Matrix scale;
+        MouseState newStateMouse;
+        MouseState lastStateMouse;
+        KeyboardState lastStateKeyboard;
+
+        public List<Texture2D> _imgMaps;
         public Map _map;
+
+        private SelectorTexture _selectTexture;
+
+        private SpriteFont _debug;
 
         public Game1()
         {
@@ -37,6 +48,7 @@ namespace MapEditorTrumpTower
             // Then, we create GUI.
             var guiInputService = new GuiInputService(_inputManager);
             _gui = new GuiManager(Services, guiInputService);
+
         }
 
         /// <summary>
@@ -51,7 +63,7 @@ namespace MapEditorTrumpTower
             Window.Title = "TT Map Editor";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             _gui.Screen = new GuiScreen(800, 400);
@@ -71,9 +83,8 @@ namespace MapEditorTrumpTower
             // Si on press le bouton
             button.Pressed += Button2_Pressed;
 
-
             _gui.Screen.Desktop.Children.Add(button);
-            //Button2_Pressed();
+
             base.Initialize();
         }
 
@@ -151,17 +162,30 @@ namespace MapEditorTrumpTower
             {
                 for (int x = 0; x < _mapPoint.GetLength(1); x++)
                 {
-                    _mapPoint[y,x] = (int)MapTexture.grass;
+                    _mapPoint[y, x] = (int)MapTexture.grass;
                 }
             }
 
             _map = new Map(_mapPoint);
 
+            _selectTexture = new SelectorTexture(this, _map);
+
+            VirtualWidth = _map.WidthArrayMap * Constant.imgSizeMap;
+            VirtualHeight = _map.HeightArrayMap * Constant.imgSizeMap;
+            scale = Matrix.CreateScale(
+                            GraphicsDevice.Viewport.Width / VirtualWidth,
+                            GraphicsDevice.Viewport.Height / VirtualHeight,
+                            1f);
+            /*scale = Matrix.CreateScale(
+                            (GraphicsDevice.Viewport.Width * 85 / 100) / VirtualWidth,
+                            GraphicsDevice.Viewport.Height / VirtualHeight,
+                            1f);*/
+
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
             GuiButtonControl deleteButton = null;
             foreach (GuiButtonControl button in _gui.Screen.Desktop.Children)
             {
-                if (button.Name == "button") deleteButton = button; 
+                if (button.Name == "button") deleteButton = button;
             }
             _gui.Screen.Desktop.Children.Remove(deleteButton);
         }
@@ -182,9 +206,11 @@ namespace MapEditorTrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
             }
             #endregion
+
+            _debug = Content.Load<SpriteFont>("DefaultFont");
         }
 
         /// <summary>
@@ -211,7 +237,33 @@ namespace MapEditorTrumpTower
             _inputManager.Update(gameTime);
             _gui.Update(gameTime);
 
+            if (_map != null)
+            {
+                #region Update HandleInput
+                newStateMouse = Mouse.GetState();
+                newStateMouse = new MouseState((int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)),
+                                               (int)(newStateMouse.Y * (VirtualHeight / GraphicsDevice.Viewport.Height)),
+                                                newStateMouse.ScrollWheelValue,
+                                                newStateMouse.LeftButton,
+                                                newStateMouse.MiddleButton,
+                                                newStateMouse.RightButton,
+                                                newStateMouse.XButton1,
+                                                newStateMouse.XButton2);
+
+                KeyboardState newStateKeyboard = Keyboard.GetState();
+                HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
+                lastStateMouse = newStateMouse;
+                lastStateKeyboard = newStateKeyboard;
+                #endregion
+            }
+
             base.Update(gameTime);
+        }
+
+        protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
+        {
+            _selectTexture.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
         }
 
         /// <summary>
@@ -225,7 +277,7 @@ namespace MapEditorTrumpTower
             // TODO: Add your drawing code here
             _gui.Draw(gameTime);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
 
             #region Draw Map
             if (_map != null)
@@ -237,12 +289,24 @@ namespace MapEditorTrumpTower
                         spriteBatch.Draw(_imgMaps[_map.GetTypeArray(x, y)], new Vector2(x * Constant.imgSizeMap, y * Constant.imgSizeMap), null, Color.White);
                     }
                 }
+
+
+                #region Draw Debug
+                spriteBatch.DrawString(_debug, _selectTexture.Texture + "", new Vector2(150, 150), Color.Red);
+                #endregion
+
+                #region Draw SelectorTexture
+                _selectTexture.Draw(spriteBatch);
+                #endregion
             }
             #endregion
+
 
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+        public List<Texture2D> ImgMaps => _imgMaps;
     }
 }
