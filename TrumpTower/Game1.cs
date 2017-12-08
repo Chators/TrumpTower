@@ -166,6 +166,8 @@ namespace TrumpTower
         float _shadowRaidAirClose;
         float _shadowVar;
 
+        public int stratPause { get; set; }
+
 
         MouseState newStateMouse;
         MouseState lastStateMouse;
@@ -218,8 +220,7 @@ namespace TrumpTower
             #region Graphics Device 
 
             Window.Position = new Point(800, 600);
-
-
+        
             Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
@@ -495,7 +496,13 @@ namespace TrumpTower
             lastStateKeyboard = newStateKeyboard;
 
             #endregion
+            Console.WriteLine(stratPause);
 
+            if(stratPause >= 5)
+            {
+                GameIsPaused = false;
+                
+            }
             if (!GameIsPaused)
             {
                 if (_map.Wall.IsDead()) Exit(); // If base loses hp, game will exit.
@@ -563,6 +570,7 @@ namespace TrumpTower
 
             base.Update(gameTime);
         }
+
 
 
 
@@ -1042,6 +1050,15 @@ namespace TrumpTower
             foreach (SimpleAnimationDefinition def in AnimSprites)
             {
                 foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
+            }
+
+            if (stratPause < 5)
+            {
+                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(0, 100), Color.White);
+            }
+            else if (stratPause >= 5)
+            {
+                spriteBatch.DrawString(_spriteDollars, "Nombres de pauses strategiques max atteint ! ", new Vector2(0, 100), Color.Red);
             }
 
             spriteBatch.End();
