@@ -44,7 +44,6 @@ namespace TrumpTower
         #region Towers
         SpriteFont _upgradeFont;
         Tower _myTow;
-        Vector2 _myTowPos;
         #region Image Tower
 
         Texture2D _imgTower1;
@@ -697,8 +696,7 @@ namespace TrumpTower
                         _verif2 = true;
                         _myTow = tow;
                         
-                        Console.WriteLine(_towerSelectorUpgrade);
-                        Console.WriteLine(_myTowPos);
+                        Console.WriteLine("selecteur : "+_towerSelectorUpgrade+"   Tower : "+_myTow.Position);
                     }
                 }
             }
@@ -712,20 +710,13 @@ namespace TrumpTower
                     newStateMouse.Y > _towerSelectorUpgrade.Y - Constant.imgSizeMap &&
                     newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
                     {
-                        foreach (Tower t in _map.Towers)
-                        {
-                            if (newStateMouse.X > t.Position.X &&
-                            newStateMouse.X < (t.Position.X + Constant.imgSizeMap) &&
-                            newStateMouse.Y > t.Position.Y - Constant.imgSizeMap &&
-                            newStateMouse.Y < (t.Position.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                        if (_myTow.Position == _towerSelectorUpgrade) { 
+                            if (_map.Dollars > Tower.TowerPrice(_myTow.Type) * 1.5)
                             {
-                                if (_map.Dollars > Tower.TowerPrice(t.Type) * 1.5)
-                                {
-                                    t.Upgrade(t);
-                                    ManagerSound.PlayPowerUp();
-                                }
+                                _myTow.Upgrade(_myTow);
+                                ManagerSound.PlayPowerUp();
                             }
-                        }
+                    }
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
                     }
                     else if (newStateMouse.X > _towerSelectorUpgrade.X &&
@@ -741,7 +732,6 @@ namespace TrumpTower
                             ManagerSound.PlaySell();
                         }
                         _towerSelectorUpgrade = new Vector2(-1000, -1000);
-
                     }
                     else if (_verif2 == false)
                     {
