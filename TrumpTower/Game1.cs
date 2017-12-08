@@ -43,7 +43,8 @@ namespace TrumpTower
 
         #region Towers
         SpriteFont _upgradeFont;
-        TowerType _myTow;
+        Tower _myTow;
+        Vector2 _myTowPos;
         #region Image Tower
 
         Texture2D _imgTower1;
@@ -224,7 +225,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             // Résolution d'écran
@@ -694,7 +695,10 @@ namespace TrumpTower
                     {
                         _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
                         _verif2 = true;
-                        _myTow = tow.Type;
+                        _myTow = tow;
+                        
+                        Console.WriteLine(_towerSelectorUpgrade);
+                        Console.WriteLine(_myTowPos);
                     }
                 }
             }
@@ -715,7 +719,7 @@ namespace TrumpTower
                             newStateMouse.Y > t.Position.Y - Constant.imgSizeMap &&
                             newStateMouse.Y < (t.Position.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
                             {
-                                if (_map.Dollars > Tower.TowerPrice(t.Type))
+                                if (_map.Dollars > Tower.TowerPrice(t.Type) * 1.5)
                                 {
                                     t.Upgrade(t);
                                     ManagerSound.PlayPowerUp();
@@ -729,19 +733,15 @@ namespace TrumpTower
                     newStateMouse.Y > _towerSelectorUpgrade.Y + Constant.imgSizeMap &&
                     newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
                     {
-                        for (int j = 0; j < _map.Towers.Count; j++)
+                        if (_myTow.Position == _towerSelectorUpgrade)
                         {
-                            if (_map.Towers[j].Position == _towerSelectorUpgrade)
-                            {
-                                Tower tower = _map.Towers[j];
-                                _map.Towers.Remove(tower);
-                                _map.ChangeLocation((int)tower.Position.X / Constant.imgSizeMap, (int)tower.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
-                                tower.Sell(tower);
-                                ManagerSound.PlaySell();
-                            }
-
-                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                            _map.Towers.Remove(_myTow);
+                            _map.ChangeLocation((int)_myTow.Position.X / Constant.imgSizeMap, (int)_myTow.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
+                            _myTow.Sell(_myTow);
+                            ManagerSound.PlaySell();
                         }
+                        _towerSelectorUpgrade = new Vector2(-1000, -1000);
+
                     }
                     else if (_verif2 == false)
                     {
@@ -947,9 +947,9 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgUpgrade, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
                 spriteBatch.Draw(_imgSell, _towerSelectorUpgrade + new Vector2(0, (Constant.imgSizeMap + 5)), null, Color.White);
-                spriteBatch.DrawString(_upgradeFont, Tower.TowerPrice(_myTow)*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.White);
+                spriteBatch.DrawString(_upgradeFont, Tower.TowerPrice(_myTow.Type)*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.White);
 
-                if(_map.Dollars < (double)Tower.TowerPrice(_myTow)* 1.5)
+                if(_map.Dollars < (double)Tower.TowerPrice(_myTow.Type)* 1.5)
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelectorUpgrade +new Vector2(0,-(Constant.imgSizeMap +5)) , null, Color.White);
                 }
