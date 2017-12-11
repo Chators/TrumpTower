@@ -268,6 +268,11 @@ namespace TrumpTower.LibraryTrumpTower
             SpawnsEnemies.Remove(spawn);
         }
 
+        public void DeleteAirWave(AirUnitsCollection unitsCollection)
+        {
+            AirUnits.Remove(unitsCollection);
+        }
+
         public Tower CreateTower(Tower tower)
         {
             Towers.Add(tower);
