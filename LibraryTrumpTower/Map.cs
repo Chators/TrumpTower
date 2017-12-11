@@ -42,7 +42,7 @@ namespace TrumpTower.LibraryTrumpTower
             WidthArrayMap = map.GetLength(1);
             HeightArrayMap = map.GetLength(0);
             SpawnsEnemies = new List<Spawn>();
-            //Wall = new Wall(this, 5000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
+            Wall = null;
             Dollars = 200;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
@@ -246,13 +246,23 @@ namespace TrumpTower.LibraryTrumpTower
             return Vector2.Zero;
         }
 
-        private void CreateSpawn(Spawn spawn)
+        public void CreateBase(Wall wall)
+        {
+            Wall = wall;
+        }
+
+        public void CreateSpawn(Spawn spawn)
         {
             foreach (Spawn _spawn in SpawnsEnemies)
             {
                 if (spawn.Position == _spawn.Position) throw new ArgumentException("Spawn already existing");
             }
             SpawnsEnemies.Add(spawn);
+        }
+
+        public void DeleteSpawn(Spawn spawn)
+        {
+            SpawnsEnemies.Remove(spawn);
         }
 
         public Tower CreateTower(Tower tower)

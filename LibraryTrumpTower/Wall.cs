@@ -16,9 +16,10 @@ namespace TrumpTower.LibraryTrumpTower
 
         public Wall(Map ctx, double hp, Vector2 position)
         {
+            if (hp < 0) throw new ArgumentException("Parameter cannot < 0", "hp must be > 0");
             _ctx = ctx;
-            CurrentHp = hp;
             MaxHp = hp;
+            CurrentHp = hp;
             Position = position;
         }
 
@@ -31,6 +32,13 @@ namespace TrumpTower.LibraryTrumpTower
         {
             return (CurrentHp <= 0);
 
+        }
+
+        public void ChangeHp(int hp)
+        {
+            if (hp < 0) throw new ArgumentException("Parameter cannot < 0", "hp must be > 0");
+            MaxHp = hp;
+            CurrentHp = hp;
         }
     }
 }

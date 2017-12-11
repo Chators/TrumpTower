@@ -24,7 +24,8 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             if (waves == null) Waves = new List<Wave>();
             else Waves = waves;
 
-            ShortestWay = SeekShortestWay(_ctx.MapArray, _ctx.Wall, Position);
+            //ShortestWay = SeekShortestWay(_ctx.MapArray, _ctx.Wall, Position);
+            ShortestWay = new List<Vector2>();
         }
 
         public void Update()
@@ -38,8 +39,13 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             Map.WavesTotals++;
         }
 
+        public void DeleteWave(int nb)
+        {
+            Waves.RemoveAt(nb);
+        }
+
         #region pathFinding
-        private List<Vector2> SeekShortestWay(int[,] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
+        /*private List<Vector2> SeekShortestWay(int[,] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
         {
             List<Vector2> _shortestWay = new List<Vector2>();
 
@@ -105,7 +111,7 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             if (X - 1 >= 0 && mapArray[Y, X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);
 
             return possiblesDirections;
-        }
+        }*/
 
         #endregion
     }
