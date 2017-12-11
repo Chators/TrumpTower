@@ -1,4 +1,5 @@
-﻿using MapEditorTrumpTower.Button;
+﻿using LibraryTrumpTower.AirUnits;
+using MapEditorTrumpTower.Button;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -44,6 +45,18 @@ namespace MapEditorTrumpTower
         private Texture2D _imgNoSelect;
         private Texture2D _imgCloakTexture;
         private Texture2D _imgNextWaveIsComming;
+        private Texture2D _imgClipBoards;
+        private Texture2D _imgPlane1;
+        #region Init Dollars
+        private Texture2D _imgDollars;
+        private SpriteFont _spriteDollars;
+        private Texture2D _backgroundDollars;
+        #endregion
+
+        #region Text Wave
+        SpriteFont _imgNextWave;
+        Texture2D _flagNorthKorea;
+        #endregion
 
         private List<ButtonTexture> _buttonsTexture;
         private List<ButtonCreatePath> _buttonsCreatePath;
@@ -137,6 +150,19 @@ namespace MapEditorTrumpTower
             _imgCloakTexture = Content.Load<Texture2D>("cloakImgMap");
             _debug = Content.Load<SpriteFont>("DefaultFont");
             _imgNextWaveIsComming = Content.Load<Texture2D>("north_korea_is_comming");
+            _imgClipBoards = Content.Load<Texture2D>("clipboards");
+
+            _imgPlane1 = Content.Load<Texture2D>("Enemies/plane1");
+            #region Load Dollars
+            _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
+            _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
+            _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
+            #endregion
+
+            #region Load Text Wave
+            _imgNextWave = Content.Load<SpriteFont>("NextWave/next_wave");
+            _flagNorthKorea = Content.Load<Texture2D>("NextWave/flagNorthKorea");
+            #endregion
 
             #region Load Cursor
             _imgCursor = Content.Load<Texture2D>("cursor");
@@ -226,6 +252,12 @@ namespace MapEditorTrumpTower
                     ButtonTexture _buttonTexture = _buttonsTexture[i];
                     _buttonTexture.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
                 }
+
+                if (newStateKeyboard.IsKeyDown(Keys.I) && !lastStateKeyboard.IsKeyDown(Keys.I))
+                    MapSetting_Pressed();
+                else if (newStateKeyboard.IsKeyDown(Keys.P) && !lastStateKeyboard.IsKeyDown(Keys.P))
+                    ManagerAirPlane_Pressed();
+
             }
             else if (State.ActualState == StateType.CreatePathForSpawn)
             {
@@ -321,6 +353,21 @@ namespace MapEditorTrumpTower
                     Spawn spawn = _map.SpawnsEnemies[i];
                     spriteBatch.Draw(_imgNextWaveIsComming, spawn.Position, Color.White);
                 }
+                #endregion
+
+                #region Draw Dollars
+                Vector2 _positionDollars = new Vector2(10, 10);
+                Rectangle _overlayDollars = new Rectangle(0, 0, 150, 33);
+                spriteBatch.Draw(_backgroundDollars, new Vector2(5, 10), _overlayDollars, Color.Black * 0.6f);
+                spriteBatch.Draw(_imgDollars, _positionDollars, Color.White);
+                spriteBatch.DrawString(_spriteDollars, _map.Dollars + "", new Vector2(50, 17), Color.White);
+                #endregion
+
+                #region Draw Number Of Wave
+                Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
+                spriteBatch.Draw(_backgroundDollars, new Vector2(5, 50), sourceRectanglee, Color.Black * 0.6f);
+                spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 50), Color.White);
+                spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
                 #endregion
 
                 spriteBatch.End();
@@ -433,44 +480,50 @@ namespace MapEditorTrumpTower
             SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
 
             #region Button Left Menu Default
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, 100), "&",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, 100), "1",
                 new List<Keys>(new Keys[] { Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, 100), "é",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, 100), "2",
                 new List<Keys>(new Keys[] { Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, 100), "\"",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, 100), "3",
                 new List<Keys>(new Keys[] { Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, 100), "'",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, 100), "4",
                 new List<Keys>(new Keys[] { Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 270), "CTRL+&",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 270), "CTRL+1",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 270), "CTRL+\"",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 270), "CTRL+2",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtUpGrassDown], _debug, MapTexture.dirtUpGrassDown, new Vector2(posMenuRight + 150, 270), "CTRL+'",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtUpGrassDown], _debug, MapTexture.dirtUpGrassDown, new Vector2(posMenuRight + 150, 270), "CTRL+3",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtLeftGrassRight], _debug, MapTexture.dirtLeftGrassRight, new Vector2(posMenuRight + 220, 270), "CTRL+é",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtLeftGrassRight], _debug, MapTexture.dirtLeftGrassRight, new Vector2(posMenuRight + 220, 270), "CTRL+4",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftDown], _debug, MapTexture.bigDirtCornerLeftDown, new Vector2(posMenuRight + 10, 380), "ALT+&",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftDown], _debug, MapTexture.bigDirtCornerLeftDown, new Vector2(posMenuRight + 10, 380), "ALT+1",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightDown], _debug, MapTexture.bigDirtCornerRightDown, new Vector2(posMenuRight + 80, 380), "ALT+é",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightDown], _debug, MapTexture.bigDirtCornerRightDown, new Vector2(posMenuRight + 80, 380), "ALT+2",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightUp], _debug, MapTexture.bigDirtCornerRightUp, new Vector2(posMenuRight + 150, 380), "ALT+\"",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightUp], _debug, MapTexture.bigDirtCornerRightUp, new Vector2(posMenuRight + 150, 380), "ALT+3",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftUp], _debug, MapTexture.bigDirtCornerLeftUp, new Vector2(posMenuRight + 220, 380), "ALT+'",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftUp], _debug, MapTexture.bigDirtCornerLeftUp, new Vector2(posMenuRight + 220, 380), "ALT+4",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftDown], _debug, MapTexture.dirtCornerLeftDown, new Vector2(posMenuRight + 10, 490), "SHIFT+&",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftDown], _debug, MapTexture.dirtCornerLeftDown, new Vector2(posMenuRight + 10, 490), "SHIFT+1",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightDown], _debug, MapTexture.dirtCornerRightDown, new Vector2(posMenuRight + 80, 490), "SHIFT+é",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightDown], _debug, MapTexture.dirtCornerRightDown, new Vector2(posMenuRight + 80, 490), "SHIFT+2",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightUp], _debug, MapTexture.dirtCornerRightUp, new Vector2(posMenuRight + 150, 490), "SHIFT+\"",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightUp], _debug, MapTexture.dirtCornerRightUp, new Vector2(posMenuRight + 150, 490), "SHIFT+3",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 490), "SHIFT+'",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 490), "SHIFT+4",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D4 })));
 
             _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 660), "A",
                 new List<Keys>(new Keys[] { Keys.A })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 760), "I",
+                new List<Keys>(new Keys[] { Keys.I })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 860), "P",
+               new List<Keys>(new Keys[] { Keys.P })));
             #endregion
 
             #region Button Left Menu CreatePath
@@ -668,14 +721,9 @@ namespace MapEditorTrumpTower
                 if (spawn.Position == new Vector2(positionRoad.X, positionRoad.Y))
                 {
                     _spawn = spawn;
-                    Console.WriteLine(_spawn.Waves.Count);
                     break;
                 }
             }
-            // Créer un chemin
-            // Supprimer une vague
-            // Voir les vagues
-            // Retour
             var posX = new GuiInputControl
             {
                 Name = "posX",
@@ -695,12 +743,6 @@ namespace MapEditorTrumpTower
                 Title = "Spawn",
                 EnableDragging = true
             };
-
-            /*var labelCreateSpawn = new GuiButtonControl()
-            {
-                Text = "Voulez-vous creer un spawn ?",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
-            };*/
 
             var wavesList = new GuiListControl()
             {
@@ -809,6 +851,7 @@ namespace MapEditorTrumpTower
                 if (_spawn.Position == new Vector2(_posX, _posY))
                 {
                     _map.DeleteSpawn(_spawn);
+                    Map.WavesTotals -= _spawn.Waves.Count;
                     break;
                 }     
             }
@@ -911,6 +954,321 @@ namespace MapEditorTrumpTower
 
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
             Spawn_Pressed(new Vector2(_posX, _posY));*/
+        }
+        #endregion
+
+        #region Window Map Setting
+        public void MapSetting_Pressed()
+        {
+
+            var window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(300), new UniScalar(200))),
+                Title = "Option Map",
+                EnableDragging = true
+            };
+
+            var labelNameMap = new GuiLabelControl()
+            {
+                Text = "Nom de la map",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var nameMap = new GuiInputControl
+            {
+                Name = "nameMap",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25)),
+                Text = _map.Name
+            };
+
+            var labelDollarsMap = new GuiLabelControl()
+            {
+                Text = "Dollars initial de la map",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 85), new UniScalar(100), new UniScalar(25))
+            };
+
+            var dollarsMap = new GuiInputControl
+            {
+                Name = "dollarsMap",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 105), new UniScalar(100), new UniScalar(25)),
+                Text = "500"
+            };
+
+            var button1 = new GuiButtonControl
+            {
+                Name = "confirm",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Confirmer"
+            };
+            var button2 = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Retour"
+            };
+
+            button1.Pressed += MapSettingConfirm_Pressed;
+            button2.Pressed += MapSettingCancel_Pressed;
+
+            window.Children.Add(labelNameMap);
+            window.Children.Add(nameMap);
+            window.Children.Add(labelDollarsMap);
+            window.Children.Add(dollarsMap);
+            window.Children.Add(button1);
+            window.Children.Add(button2);
+
+            _gui.Screen.Desktop.Children.Add(window);
+        }
+
+        private void MapSettingCancel_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+
+        private void MapSettingConfirm_Pressed(object sender, System.EventArgs e)
+        {
+            string _nameMap = "";
+            int _dollarsMap = 0;
+            foreach (var control in ((GuiButtonControl)sender).Parent.Children)
+            {
+                if (control.GetType() == typeof(GuiInputControl))
+                {
+                    GuiInputControl inputSize = (GuiInputControl)control;
+                    if (control.Name == "nameMap") _nameMap = inputSize.Text;
+                    if (control.Name == "dollarsMap") _dollarsMap = Convert.ToInt32(inputSize.Text);
+                }
+            }
+
+            _map.SettingTheMap(_nameMap, _dollarsMap);
+
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+        #endregion
+
+        #region Window Manager Air Plane
+        public void ManagerAirPlane_Pressed()
+        {
+            var window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
+                Title = "Air plane",
+                EnableDragging = true
+            };
+
+            var wavesListAir = new GuiListControl()
+            {
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(1.0f, -20), new UniScalar(0f, 80)),
+            };
+
+            var addWaveAir = new GuiButtonControl
+            {
+                Name = "AddWaveAir",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 120), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Ajouter une vague"
+            };
+
+            var modifyWaveAir = new GuiButtonControl
+            {
+                Name = "ModifyWaveAir",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -250), new UniScalar(0.0f, 120), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Modifier vague"
+            };
+
+            var deleteWaveAir = new GuiButtonControl
+            {
+                Name = "DeleteWave",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(0.0f, 120), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Suppr vague"
+            };
+
+            var button2 = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Retour"
+            };
+
+            addWaveAir.Pressed += ManagerAirUnitAdd_Pressed;
+            modifyWaveAir.Pressed += ManagerAirUnitModify_Pressed;
+            deleteWaveAir.Pressed += ManagerAirUnitDelete_Pressed;
+            button2.Pressed += ManagerAirUnitCancel_Pressed;
+
+            window.Children.Add(wavesListAir);
+            
+            for (int i = 0; i < _map.AirUnits.Count; i++)
+            {
+                AirUnitsCollection collectionUnit  = _map.AirUnits[i];
+                wavesListAir.Items.Add("Vague aerienne " + (i + 1) + " partira a " + collectionUnit.TimerBeforeStarting/60 + " secondes");
+            }
+            wavesListAir.SelectionMode = ListSelectionMode.Single;
+            if (_map.AirUnits.Count > 0)
+            {
+                window.Children.Add(modifyWaveAir);
+                window.Children.Add(deleteWaveAir);
+            }
+
+            window.Children.Add(addWaveAir);
+            window.Children.Add(button2);
+            _gui.Screen.Desktop.Children.Add(window);
+
+        }
+
+        private void ManagerAirUnitCancel_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+
+        private void ManagerAirUnitAdd_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            AddAirPlane_Pressed();
+        }
+
+        private void ManagerAirUnitModify_Pressed(object sender, System.EventArgs e)
+        {
+            AirUnitsCollection _unitsCollection = null;
+            foreach (var control in ((GuiButtonControl)sender).Parent.Children)
+            {
+                if (control.GetType() == typeof(GuiListControl))
+                {
+                    GuiListControl input = (GuiListControl)control;
+                    _unitsCollection = _map.AirUnits[input.SelectedItems[0]];
+                }
+            }
+            if (_unitsCollection != null)
+            {
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+                AddAirPlane_Pressed();
+            }
+        }
+
+        private void ManagerAirUnitDelete_Pressed(object sender, System.EventArgs e)
+        {
+            
+        }
+        #endregion
+
+        #region Window Add Air Plane
+        public void AddAirPlane_Pressed(AirUnitsCollection unitsCollection = null)
+        {
+            var window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
+                Title = "Ajouter Air plane",
+                EnableDragging = true
+            };
+
+            var labelTimerAir = new GuiLabelControl()
+            {
+                Text = "Temps d'arrivage en secondes",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var timerAir = new GuiInputControl
+            {
+                Name = "timerAir",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25)),
+            };
+            if (unitsCollection != null) timerAir.Text = unitsCollection.TimerBeforeStarting+"";
+            else timerAir.Text = "25";
+
+            var labelNumberPlane = new GuiLabelControl()
+            {
+                Text = "Nombres d'avions",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 80), new UniScalar(100), new UniScalar(25))
+            };
+
+            var numberPlane = new GuiInputControl
+            {
+                Name = "numberPlane",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 105), new UniScalar(100), new UniScalar(25)),
+            };
+            if (unitsCollection != null) timerAir.Text = unitsCollection.Array.Count + "";
+            else timerAir.Text = "10";
+
+            var labelTypeAir = new GuiLabelControl()
+            {
+                Text = "Type d'avions",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 130), new UniScalar(100), new UniScalar(25))
+            };
+
+            var typeAir = new GuiListControl()
+            {
+                Name = "typeAir",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 155), new UniScalar(1.0f, -20), new UniScalar(0f, 80)),
+            };
+
+            #region TypePlane
+            Array planeType = Enum.GetValues(typeof(PlaneType));
+            for (int i = 0; i < planeType.Length; i++)
+                typeAir.Items.Add("Avion " + planeType.GetValue(i));
+            typeAir.SelectionMode = ListSelectionMode.Single;
+            #endregion
+
+            var button1 = new GuiButtonControl
+            {
+                Name = "confirm",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Confirmer"
+            };
+            var button2 = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Retour"
+            };
+
+            button1.Pressed += AddAirUnitConfirm_Pressed;
+            button2.Pressed += AddAirUnitCancel_Pressed;
+
+            window.Children.Add(labelNumberPlane);
+            window.Children.Add(numberPlane);
+            window.Children.Add(labelTimerAir);
+            window.Children.Add(timerAir);
+            window.Children.Add(labelTypeAir);
+            window.Children.Add(typeAir);
+
+            window.Children.Add(button1);
+            window.Children.Add(button2);
+
+            _gui.Screen.Desktop.Children.Add(window);
+
+        }
+
+        private void AddAirUnitCancel_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            ManagerAirPlane_Pressed();
+        }
+
+        private void AddAirUnitConfirm_Pressed(object sender, System.EventArgs e)
+        {
+            int _nbPlane = 0;
+            int _timer = 0;
+            PlaneType _type = PlaneType.PlaneSlow;
+
+            
+            foreach (var control in ((GuiButtonControl)sender).Parent.Children)
+            {
+                if (control.GetType() == typeof(GuiListControl))
+                {
+                    GuiListControl input = (GuiListControl)control;
+                    _type = (PlaneType)input.SelectedItems[0];
+                }
+
+                if (control.GetType() == typeof(GuiInputControl))
+                {
+                    GuiInputControl inputSize = (GuiInputControl)control;
+                    if (control.Name == "numberPlane") _nbPlane = Convert.ToInt32(inputSize.Text);
+                    if (control.Name == "timerAir") _timer = Convert.ToInt32(inputSize.Text);
+                }
+            }
+            _map.AirUnits.Add(new AirUnitsCollection(_map, _timer*60, _nbPlane, _type));
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            ManagerAirPlane_Pressed();
         }
         #endregion
 

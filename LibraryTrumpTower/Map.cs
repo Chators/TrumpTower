@@ -13,6 +13,7 @@ namespace TrumpTower.LibraryTrumpTower
     {
         public static int TimerNextWave;
 
+        public string Name { get; set; }
         public int[,] MapArray { get; private set; }
         public List<Spawn> SpawnsEnemies { get; private set; }
         public List<Enemy> DeadEnemies { get; set; }
@@ -58,10 +59,12 @@ namespace TrumpTower.LibraryTrumpTower
             //
             // Create AIR UNITS
             //
-            /*AirUnits.Add(new AirUnitsCollection(this, 7*60, 8, PlaneType.PlaneSlow));
+            /*
+            AirUnits.Add(new AirUnitsCollection(this, 7*60, 8, PlaneType.PlaneSlow));
             AirUnits.Add(new AirUnitsCollection(this, 32*60, 10, PlaneType.PlaneNormal));
             AirUnits.Add(new AirUnitsCollection(this, 48*60, 5, PlaneType.PlaneFast));
-
+            */
+            /*
             //
             // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
             //
@@ -285,6 +288,12 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseSniperAbility(Vector2 position)
         {
             Sniper.AttackOn(position);
+        }
+
+        public void SettingTheMap (string name, int dollars)
+        {
+            Name = name;
+            Dollars = dollars;
         }
     }
 }

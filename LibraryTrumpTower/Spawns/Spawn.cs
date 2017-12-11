@@ -42,6 +42,7 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
         public void DeleteWave(int nb)
         {
             Waves.RemoveAt(nb);
+            Map.WavesTotals--;
         }
 
         #region pathFinding
