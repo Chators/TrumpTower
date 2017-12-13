@@ -88,7 +88,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static void PlayCoinUp()
         {
             CoinUp = InitCoinUp.CreateInstance();
-            CoinUp.Volume = 0.5f;
+            CoinUp.Volume = 1f;
             CoinUp.Play();
         }
 
@@ -130,7 +130,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static void PlayTowerShoot()
         {
             TowerShoot = InitTowerShoot.CreateInstance();
-            TowerShoot.Volume = 0.3f;
+            TowerShoot.Volume = 0.1f;
             TowerShoot.Play();
         }
 
