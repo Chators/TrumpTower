@@ -1,4 +1,5 @@
-﻿using LibraryTrumpTower.AirUnits;
+﻿using LibraryTrumpTower;
+using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower.Constants;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -210,13 +211,12 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
             //_map = new Map(_mapPoint);
-            _map = LoadMap<Map>("data.bin");
+            _map = LoadMap<Map>("aaaa/map1.bin");
             #endregion
 
             #region Graphics Device 
             
             Window.Position = new Point(800, 600);
-            Console.WriteLine(Window.Position.X);
 
             Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;

@@ -1,4 +1,5 @@
-﻿using LibraryTrumpTower.Constants;
+﻿using LibraryTrumpTower;
+using LibraryTrumpTower.Constants;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
@@ -189,8 +190,6 @@ namespace TrumpTower.LibraryTrumpTower
                     }
                 }
             }
-            
-            Console.WriteLine("Upgrade tower successfull !");
         }
 
             static public int TowerPrice(TowerType type)

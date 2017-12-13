@@ -1,20 +1,30 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LibraryTrumpTower;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace TrumpTower.LibraryTrumpTower.Spawns
 {
+    [DataContract(IsReference = true)]
     public class Spawn
     {
+        #region Fields
+        [DataMember]
         Map _ctx;
+        [DataMember]
         public Vector2 Position { get; private set; }
+        [DataMember]
         public List<Wave> Waves { get; private set; }
+        [DataMember]
         public List<Vector2> ShortestWay { get; private set; }
+        [DataMember]
         public int[,] MapArray { get { return _ctx.MapArray; } }
+        #endregion
 
         public Spawn(Map ctx, Vector2 position, List<Wave> waves)
         {
@@ -105,6 +115,24 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             int X = (int)currentPosition.X / Constant.imgSizeMap;
             int Y = (int)currentPosition.Y / Constant.imgSizeMap;
             List<Move> possiblesDirections = new List<Move>();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             if (Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1, X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
             if (Y - 1 >= 0 && mapArray[Y - 1, X] == (int)MapTexture.dirt && lastPosition != Move.down) possiblesDirections.Add(Move.top);

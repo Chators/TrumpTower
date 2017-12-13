@@ -2,17 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TrumpTower.LibraryTrumpTower.Spawns
 {
+    [DataContract(IsReference = true)]
     public class Wave
     {
+        #region Fields
+        [DataMember]
         Spawn _spawn;
+        [DataMember]
         public List<Enemy> Enemies { get; set; }
+        [DataMember]
         public int TimerBeforeStarting { get; private set; }
+        [DataMember]
         public bool IsStarting { get; private set; }
+        #endregion
 
         public Wave(Spawn spawn, List<Enemy> enemies, int timerBeforeStarting)
         {

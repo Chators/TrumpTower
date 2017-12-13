@@ -6,37 +6,54 @@ using Microsoft.Xna.Framework;
 using LibraryTrumpTower.SpecialAbilities;
 using LibraryTrumpTower.Constants;
 using LibraryTrumpTower.AirUnits;
+using LibraryTrumpTower;
+using System.Runtime.Serialization;
 
 namespace TrumpTower.LibraryTrumpTower
 {
-    [Serializable()]
+    [DataContract]
     public class Map
     {
+        #region Fields
+
         public static int TimerNextWave;
-
-        public string Name { get; set; }
-        public int[,] MapArray { get; private set; }
-        public List<Spawn> SpawnsEnemies { get; private set; }
-        public List<Enemy> DeadEnemies { get; set; }
-        public Wall Wall { get; private set; }
-        public double Dollars { get; set; }
-        public int WidthArrayMap { get; private set; }
-        public int HeightArrayMap { get; private set; }
-        public List<Tower> Towers { get; private set; }
-        public List<Missile> Missiles { get; set; }
-        public List<AirUnitsCollection> AirUnits { get; set; }
-        public List<AirUnit> DeadUnitsAir { get; set; }
-
         // WAVE
         public static int WavesCounter { get; set; }
         public static int WavesTotals { get; set; }
         public static Wave WaveIsComming { get; set; }
 
-
+        [DataMember]
+        public string Name { get; set; }
+        [DataMember]
+        public int[,] MapArray { get; private set; }
+        [DataMember]
+        public List<Spawn> SpawnsEnemies { get; private set; }
+        [DataMember]
+        public List<Enemy> DeadEnemies { get; set; }
+        [DataMember]
+        public Wall Wall { get; private set; }
+        [DataMember]
+        public double Dollars { get; set; }
+        [DataMember]
+        public int WidthArrayMap { get; private set; }
+        [DataMember]
+        public int HeightArrayMap { get; private set; }
+        [DataMember]
+        public List<Tower> Towers { get; private set; }
+        [DataMember]
+        public List<Missile> Missiles { get; set; }
+        [DataMember]
+        public List<AirUnitsCollection> AirUnits { get; set; }
+        [DataMember]
+        public List<AirUnit> DeadUnitsAir { get; set; }
 
         // SPECIAL ABILITIES
+        [DataMember]
         public Explosion Explosion { get; set; }
+        [DataMember]
         public Sniper Sniper { get; set; }
+
+        #endregion
 
         public Map(int[,] map)
         {

@@ -1,4 +1,5 @@
-﻿using LibraryTrumpTower.AirUnits;
+﻿using LibraryTrumpTower;
+using LibraryTrumpTower.AirUnits;
 using MapEditorTrumpTower.Button;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,8 +10,11 @@ using MonoGame.Extended.NuclexGui.Controls;
 using MonoGame.Extended.NuclexGui.Controls.Desktop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
@@ -272,8 +276,31 @@ namespace MapEditorTrumpTower
                     ManagerAirPlane_Pressed();
                 else if (newStateKeyboard.IsKeyDown(Keys.Enter) && !lastStateKeyboard.IsKeyDown(Keys.Enter))
                 {
-                    SaveMap(_map, "data.bin");
-                    Exit();
+
+
+
+
+
+
+
+                    byte[] data = BinarySerializer.Serialize(_map);
+                    Map newMap = BinarySerializer.Deserialize<Map>(data);
+
+                    /*_map.Wall. = 4000;
+
+                    Console.WriteLine(newMap.Wall.CurrentHp);
+                    Console.WriteLine(_map.Wall.CurrentHp);*/
+                    //Seria(_map, "map1.bin");
+                    //Exit();
+
+
+
+
+
+
+
+
+
                 }
 
             }
@@ -360,7 +387,6 @@ namespace MapEditorTrumpTower
                 {
                     
                     Wall _wall = _map.Wall;
-                    Console.WriteLine(_wall.CurrentHp);
                     spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
                 }
                 #endregion
@@ -495,7 +521,38 @@ namespace MapEditorTrumpTower
                 }
             }
 
-            _map = new Map(_mapPoint);
+
+
+
+
+
+
+
+
+
+
+            /*_map = null;
+            _map = LoadMap<Map>("map1.bin");
+            if (_map == null)*/
+                _map = new Map(_mapPoint);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
 
@@ -1483,7 +1540,34 @@ namespace MapEditorTrumpTower
         public List<Texture2D> ImgMaps => _imgMaps;
         public Texture2D ImgWall => _imgWall;
 
-        private static void SaveMap(object toSave, string path)
+        public static class BinarySerializer
+        {
+            public static byte[] Serialize<T>(T obj)
+            {
+                var serializer = new DataContractSerializer(typeof(T));
+                var stream = new MemoryStream();
+                using (var writer =
+                    XmlDictionaryWriter.CreateBinaryWriter(stream))
+                {
+                    serializer.WriteObject(writer, obj);
+                }
+                return stream.ToArray();
+            }
+
+            public static T Deserialize<T>(byte[] data)
+            {
+                var serializer = new DataContractSerializer(typeof(T));
+                using (var stream = new MemoryStream(data))
+                using (var reader =
+                    XmlDictionaryReader.CreateBinaryReader(
+                        stream, XmlDictionaryReaderQuotas.Max))
+                {
+                    return (T)serializer.ReadObject(reader);
+                }
+            }
+        }
+
+        /*private static void SaveMap(object toSave, string path)
         {
             //On utilise la classe BinaryFormatter dans le namespace System.Runtime.Serialization.Formatters.Binary.
             BinaryFormatter formatter = new BinaryFormatter();
@@ -1501,7 +1585,6 @@ namespace MapEditorTrumpTower
                 //On s'assure que le tout soit écrit dans le fichier.
                 flux.Flush();
             }
-            catch { }
             finally
             {
                 //Et on ferme le flux.
@@ -1513,27 +1596,22 @@ namespace MapEditorTrumpTower
         private static T LoadMap<T>(string path)
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream flux = null;
             try
             {
                 //On ouvre le fichier en mode lecture seule. De plus, puisqu'on a sélectionné le mode Open,
                 //si le fichier n'existe pas, une exception sera levée.
-                flux = new FileStream(path, FileMode.Open, FileAccess.Read);
-
-                return (T)formatter.Deserialize(flux);
+                using (FileStream flux = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    return (T)formatter.Deserialize(flux);
+                }
             }
-            catch
+            catch(Exception ex)
             {
                 //On retourne la valeur par défaut du type T.
                 return default(T);
             }
-            finally
-            {
-                if (flux != null)
-                    flux.Close();
-            }
 
-        }
+        }*/
     }
 }
 

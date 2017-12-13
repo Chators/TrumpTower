@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower;
@@ -9,14 +10,23 @@ using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace LibraryTrumpTower.SpecialAbilities
 {
+    [DataContract(IsReference = true)]
     public class Explosion
     {
+        #region Fields
+        [DataMember]
         Map _ctx;
+        [DataMember]
         public int Cooldown { get; private set; }
+        [DataMember]
         public int CurrentTimer { get; private set; }
+        [DataMember]
         public double Radius { get; private set; }
+        [DataMember]
         public double Damage { get; private set; }
+        [DataMember]
         private Vector2 Position { get; set; }
+        #endregion
 
         public Explosion (Map ctx)
         {

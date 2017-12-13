@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower;
@@ -10,12 +11,19 @@ using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace LibraryTrumpTower.SpecialAbilities
 {
+    [DataContract(IsReference = true)]
     public class Sniper
     {
+        #region Fields
+        [DataMember]
         public Map Ctx { get; private set; }
+        [DataMember]
         public int Cost { get; private set; }
+        [DataMember]
         public double Damage { get; private set; }
+        [DataMember]
         public int Reload { get; private set; }
+        #endregion
 
         public Sniper (Map map)
         {

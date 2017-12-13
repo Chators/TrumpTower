@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower;
@@ -9,12 +10,19 @@ using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace LibraryTrumpTower.AirUnits
 {
+    [DataContract(IsReference = true)]
     public class AirUnitsCollection
     {
+        #region Fields
+        [DataMember]
         public Map Ctx { get; private set; }
+        [DataMember]
         public List<AirUnit> Array { get; private set; }
+        [DataMember]
         public int TimerBeforeStarting { get; private set; }
+        [DataMember]
         public Random Random { get; private set; }
+        #endregion
 
         public AirUnitsCollection (Map ctx, int timerBeforeStarting, int numbersPlane, PlaneType type)
         {

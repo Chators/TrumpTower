@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -33,7 +34,6 @@ namespace TrumpTower.LibraryTrumpTower
         public double _healCooldown; // doc only
         public bool _hasCast;
         public bool _isCasting;
-        
 
         public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
         {
