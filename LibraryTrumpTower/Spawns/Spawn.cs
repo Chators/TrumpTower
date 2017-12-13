@@ -23,7 +23,8 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
         [DataMember]
         public List<Vector2> ShortestWay { get; private set; }
         [DataMember]
-        public int[,] MapArray { get { return _ctx.MapArray; } }
+        //public int[,] MapArray { get { return _ctx.MapArray; } }
+        public int[][] MapArray { get { return _ctx.MapArray; } }
         #endregion
 
         public Spawn(Map ctx, Vector2 position, List<Wave> waves)
@@ -56,7 +57,8 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
         }
 
         #region pathFinding
-        private List<Vector2> SeekShortestWay(int[,] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
+        private List<Vector2> SeekShortestWay(int[][] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
+        //private List<Vector2> SeekShortestWay(int[,] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
         {
             List<Vector2> _shortestWay = new List<Vector2>();
 
@@ -110,34 +112,22 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             return _shortestWay;
         }
 
-        private List<Move> SeekClosePossiblesDirections(int[,] mapArray, Vector2 currentPosition, Move lastPosition)
+        //private List<Move> SeekClosePossiblesDirections(int[,] mapArray, Vector2 currentPosition, Move lastPosition)
+        private List<Move> SeekClosePossiblesDirections(int[][] mapArray, Vector2 currentPosition, Move lastPosition)
         {
             int X = (int)currentPosition.X / Constant.imgSizeMap;
             int Y = (int)currentPosition.Y / Constant.imgSizeMap;
             List<Move> possiblesDirections = new List<Move>();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            if (Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1, X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
+            /*if (Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1, X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
             if (Y - 1 >= 0 && mapArray[Y - 1, X] == (int)MapTexture.dirt && lastPosition != Move.down) possiblesDirections.Add(Move.top);
             if (X + 1 < mapArray.GetLength(1) && mapArray[Y, X + 1] == (int)MapTexture.dirt && lastPosition != Move.left) possiblesDirections.Add(Move.right);
-            if (X - 1 >= 0 && mapArray[Y, X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);
+            if (X - 1 >= 0 && mapArray[Y, X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);*/
+
+            if (Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1][X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
+            if (Y - 1 >= 0 && mapArray[Y - 1][X] == (int)MapTexture.dirt && lastPosition != Move.down) possiblesDirections.Add(Move.top);
+            if (X + 1 < mapArray.GetLength(1) && mapArray[Y][X + 1] == (int)MapTexture.dirt && lastPosition != Move.left) possiblesDirections.Add(Move.right);
+            if (X - 1 >= 0 && mapArray[Y][X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);
 
             return possiblesDirections;
         }

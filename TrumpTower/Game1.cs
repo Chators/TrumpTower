@@ -191,7 +191,7 @@ namespace TrumpTower
             // TODO: Add your initialization logic here
             #region Map INIT
 
-            _mapPoint = new int[,]
+            /*_mapPoint = new int[,]
             {
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,7 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
@@ -210,8 +210,8 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
-            //_map = new Map(_mapPoint);
-            _map = LoadMap<Map>("aaaa/map1.bin");
+            _map = new Map(_mapPoint);*/
+            _map = BinarySerializer.Deserialize<Map>("../../../../../MapEditorTrumpTower/bin/Windows/x86/Debug/map1.xml");
             #endregion
 
             #region Graphics Device 
@@ -279,7 +279,7 @@ namespace TrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                if(name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
             }
 
             #endregion
@@ -399,7 +399,7 @@ namespace TrumpTower
             _cooldownSprite = Content.Load<SpriteFont>("cooldownText");
             _groupOfButtonsUIAbilities = new GroupOfButtonsUIAbilities(this, _map.Explosion, _cooldownSprite);
             ImgExplosionButton = Content.Load<Texture2D>("SpecialAbilities/explosion");
-            Vector2 _positionExplosionAbilityButton = new Vector2(15, _mapPoint.GetLength(0) * Constant.imgSizeMap - 80);
+            Vector2 _positionExplosionAbilityButton = new Vector2(15, _map.MapArray.GetLength(0) * Constant.imgSizeMap - 80);
             _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "explosionAbility", _positionExplosionAbilityButton, ImgExplosionButton));
 
             #endregion
@@ -968,29 +968,5 @@ namespace TrumpTower
         public Map Map => _map;
         public SpriteBatch SpriteBatch => spriteBatch;
 
-        private static T LoadMap<T>(string path)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream flux = null;
-            try
-            {
-                //On ouvre le fichier en mode lecture seule. De plus, puisqu'on a sélectionné le mode Open,
-                //si le fichier n'existe pas, une exception sera levée.
-                flux = new FileStream(path, FileMode.Open, FileAccess.Read);
-
-                return (T)formatter.Deserialize(flux);
-            }
-            catch
-            {
-                //On retourne la valeur par défaut du type T.
-                return default(T);
-            }
-            finally
-            {
-                if (flux != null)
-                    flux.Close();
-            }
-
-        }
     }
 }

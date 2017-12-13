@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower;
 using LibraryTrumpTower.AirUnits;
+using LibraryTrumpTower.Constants;
 using MapEditorTrumpTower.Button;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +15,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Xml;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
@@ -277,30 +279,8 @@ namespace MapEditorTrumpTower
                 else if (newStateKeyboard.IsKeyDown(Keys.Enter) && !lastStateKeyboard.IsKeyDown(Keys.Enter))
                 {
 
-
-
-
-
-
-
-                    byte[] data = BinarySerializer.Serialize(_map);
-                    Map newMap = BinarySerializer.Deserialize<Map>(data);
-
-                    /*_map.Wall. = 4000;
-
-                    Console.WriteLine(newMap.Wall.CurrentHp);
-                    Console.WriteLine(_map.Wall.CurrentHp);*/
-                    //Seria(_map, "map1.bin");
-                    //Exit();
-
-
-
-
-
-
-
-
-
+                    BinarySerializer.Serialize(_map, "map1.xml");
+                    Exit();
                 }
 
             }
@@ -512,47 +492,27 @@ namespace MapEditorTrumpTower
                 }
             }
 
-            int[,] _mapPoint = new int[_width, _height];
-            for (int y = 0; y < _mapPoint.GetLength(0); y++)
+            int[,] _mapPoint2D = new int[_height, _width];
+            for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
             {
-                for (int x = 0; x < _mapPoint.GetLength(1); x++)
+                for (int x = 0; x < _mapPoint2D.GetLength(1); x++)
                 {
-                    _mapPoint[y, x] = (int)MapTexture.grass;
+                    _mapPoint2D[y, x] = (int)MapTexture.grass;
                 }
             }
 
+            int[][] _mapPointJagged = new int[_height][];
 
+            for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
+            {
+                _mapPointJagged[y] = new int[_mapPoint2D.GetLength(1)];
+                for (int x = 0; x < _mapPoint2D.GetLength(1); x++)
+                {
+                    _mapPointJagged[y][x] = _mapPoint2D[y, x];
+                }
+            }
 
-
-
-
-
-
-
-
-
-            /*_map = null;
-            _map = LoadMap<Map>("map1.bin");
-            if (_map == null)*/
-                _map = new Map(_mapPoint);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            _map = new Map(_mapPointJagged);
 
             SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
 
@@ -1540,78 +1500,6 @@ namespace MapEditorTrumpTower
         public List<Texture2D> ImgMaps => _imgMaps;
         public Texture2D ImgWall => _imgWall;
 
-        public static class BinarySerializer
-        {
-            public static byte[] Serialize<T>(T obj)
-            {
-                var serializer = new DataContractSerializer(typeof(T));
-                var stream = new MemoryStream();
-                using (var writer =
-                    XmlDictionaryWriter.CreateBinaryWriter(stream))
-                {
-                    serializer.WriteObject(writer, obj);
-                }
-                return stream.ToArray();
-            }
-
-            public static T Deserialize<T>(byte[] data)
-            {
-                var serializer = new DataContractSerializer(typeof(T));
-                using (var stream = new MemoryStream(data))
-                using (var reader =
-                    XmlDictionaryReader.CreateBinaryReader(
-                        stream, XmlDictionaryReaderQuotas.Max))
-                {
-                    return (T)serializer.ReadObject(reader);
-                }
-            }
-        }
-
-        /*private static void SaveMap(object toSave, string path)
-        {
-            //On utilise la classe BinaryFormatter dans le namespace System.Runtime.Serialization.Formatters.Binary.
-            BinaryFormatter formatter = new BinaryFormatter();
-            //La classe BinaryFormatter ne fonctionne qu'avec un flux, et non pas un TextWriter.
-            //Nous allons donc utiliser un FileStream. Remarquez que n'importe quel flux est
-            //compatible.
-            FileStream flux = null;
-            try
-            {
-                //On ouvre le flux en mode création / écrasement de fichier et on
-                //donne au flux le droit en écriture seulement.
-                flux = new FileStream(path, FileMode.Create, FileAccess.Write);
-                //Et hop ! On sérialise !
-                formatter.Serialize(flux, toSave);
-                //On s'assure que le tout soit écrit dans le fichier.
-                flux.Flush();
-            }
-            finally
-            {
-                //Et on ferme le flux.
-                if (flux != null)
-                    flux.Close();
-            }
-        }
-
-        private static T LoadMap<T>(string path)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            try
-            {
-                //On ouvre le fichier en mode lecture seule. De plus, puisqu'on a sélectionné le mode Open,
-                //si le fichier n'existe pas, une exception sera levée.
-                using (FileStream flux = new FileStream(path, FileMode.Open, FileAccess.Read))
-                {
-                    return (T)formatter.Deserialize(flux);
-                }
-            }
-            catch(Exception ex)
-            {
-                //On retourne la valeur par défaut du type T.
-                return default(T);
-            }
-
-        }*/
     }
 }
 
