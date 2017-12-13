@@ -36,7 +36,6 @@ namespace MapEditorTrumpTower.Button
 
         public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            
             Keys[] StatePressedKeys = newStateKeyboard.GetPressedKeys();
 
             bool hasShortCut = (StatePressedKeys.Length == KeysShortCut.Count) ? true : false;

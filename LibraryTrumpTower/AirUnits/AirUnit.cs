@@ -18,6 +18,8 @@ namespace LibraryTrumpTower.AirUnits
         [DataMember]
         public AirUnitsCollection Ctx { get; private set; }
         [DataMember]
+        public string Name { get; private set; }
+        [DataMember]
         public Wall Wall { get; private set; }
         [DataMember]
         public double CurrentHp { get; private set; }
@@ -35,11 +37,14 @@ namespace LibraryTrumpTower.AirUnits
         public float Rotate { get; private set; }
         [DataMember]
         public int TimerBeforeStarting { get; set; }
+        [DataMember]
+        public PlaneType TypeOfPlane { get; set; }
         #endregion
 
-        public AirUnit (AirUnitsCollection ctx, Wall wall, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting)
+        public AirUnit (AirUnitsCollection ctx, string name, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting, PlaneType type, Wall wall)
         {
             Ctx = ctx;
+            Name = name;
             Wall = wall;
             CurrentHp = life;
             MaxHp = life;
@@ -49,6 +54,7 @@ namespace LibraryTrumpTower.AirUnits
             Speed = speed;
             Rotate = rotate;
             TimerBeforeStarting = timerBeforeStarting;
+            TypeOfPlane = type;
         }
 
         private void UpdateTryAttack()
