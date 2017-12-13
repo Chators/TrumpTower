@@ -9,6 +9,7 @@ using LibraryTrumpTower.AirUnits;
 
 namespace TrumpTower.LibraryTrumpTower
 {
+    [Serializable()]
     public class Map
     {
         public static int TimerNextWave;

@@ -9,6 +9,8 @@ using MonoGame.Extended.NuclexGui.Controls;
 using MonoGame.Extended.NuclexGui.Controls.Desktop;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
@@ -40,6 +42,7 @@ namespace MapEditorTrumpTower
 
         private SpriteFont _debug;
 
+        private Texture2D _imgAccept;
         private Texture2D _imgWall;
         private Texture2D _imgCursor;
         private Texture2D _imgNoSelect;
@@ -149,6 +152,7 @@ namespace MapEditorTrumpTower
             }
             #endregion
 
+            _imgAccept = Content.Load<Texture2D>("accept");
             _imgWall = Content.Load<Texture2D>("Wall");
             _imgNoSelect = Content.Load <Texture2D>("select");
             _imgCloakTexture = Content.Load<Texture2D>("cloakImgMap");
@@ -266,6 +270,11 @@ namespace MapEditorTrumpTower
                     MapSetting_Pressed();
                 else if (newStateKeyboard.IsKeyDown(Keys.P) && !lastStateKeyboard.IsKeyDown(Keys.P))
                     ManagerAirPlane_Pressed();
+                else if (newStateKeyboard.IsKeyDown(Keys.Enter) && !lastStateKeyboard.IsKeyDown(Keys.Enter))
+                {
+                    SaveMap(_map, "data.bin");
+                    Exit();
+                }
 
             }
             else if (State.ActualState == StateType.CreatePathForSpawn)
@@ -391,6 +400,8 @@ namespace MapEditorTrumpTower
             spriteBatch.End();
             base.Draw(gameTime);
         }
+
+        #region WINDOW
 
         #region Window Map Size
         private void Button2_Pressed(object sender, System.EventArgs e)
@@ -533,6 +544,9 @@ namespace MapEditorTrumpTower
 
             _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 860), "P",
                new List<Keys>(new Keys[] { Keys.P })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 960), "Entrer",
+               new List<Keys>(new Keys[] { Keys.Enter })));
             #endregion
 
             #region Button Left Menu CreatePath
@@ -1464,8 +1478,62 @@ namespace MapEditorTrumpTower
         }
         #endregion
 
+        #endregion
+
         public List<Texture2D> ImgMaps => _imgMaps;
         public Texture2D ImgWall => _imgWall;
+
+        private static void SaveMap(object toSave, string path)
+        {
+            //On utilise la classe BinaryFormatter dans le namespace System.Runtime.Serialization.Formatters.Binary.
+            BinaryFormatter formatter = new BinaryFormatter();
+            //La classe BinaryFormatter ne fonctionne qu'avec un flux, et non pas un TextWriter.
+            //Nous allons donc utiliser un FileStream. Remarquez que n'importe quel flux est
+            //compatible.
+            FileStream flux = null;
+            try
+            {
+                //On ouvre le flux en mode création / écrasement de fichier et on
+                //donne au flux le droit en écriture seulement.
+                flux = new FileStream(path, FileMode.Create, FileAccess.Write);
+                //Et hop ! On sérialise !
+                formatter.Serialize(flux, toSave);
+                //On s'assure que le tout soit écrit dans le fichier.
+                flux.Flush();
+            }
+            catch { }
+            finally
+            {
+                //Et on ferme le flux.
+                if (flux != null)
+                    flux.Close();
+            }
+        }
+
+        private static T LoadMap<T>(string path)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream flux = null;
+            try
+            {
+                //On ouvre le fichier en mode lecture seule. De plus, puisqu'on a sélectionné le mode Open,
+                //si le fichier n'existe pas, une exception sera levée.
+                flux = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+                return (T)formatter.Deserialize(flux);
+            }
+            catch
+            {
+                //On retourne la valeur par défaut du type T.
+                return default(T);
+            }
+            finally
+            {
+                if (flux != null)
+                    flux.Close();
+            }
+
+        }
     }
 }
 

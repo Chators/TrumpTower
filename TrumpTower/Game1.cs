@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using TrumpTower.Draw;
 using TrumpTower.Draw.Animations;
 using TrumpTower.Draw.ButtonsUI;
@@ -207,8 +209,8 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
-            _map = new Map(_mapPoint);
-
+            //_map = new Map(_mapPoint);
+            _map = LoadMap<Map>("data.bin");
             #endregion
 
             #region Graphics Device 
@@ -965,5 +967,30 @@ namespace TrumpTower
 
         public Map Map => _map;
         public SpriteBatch SpriteBatch => spriteBatch;
+
+        private static T LoadMap<T>(string path)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream flux = null;
+            try
+            {
+                //On ouvre le fichier en mode lecture seule. De plus, puisqu'on a sélectionné le mode Open,
+                //si le fichier n'existe pas, une exception sera levée.
+                flux = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+                return (T)formatter.Deserialize(flux);
+            }
+            catch
+            {
+                //On retourne la valeur par défaut du type T.
+                return default(T);
+            }
+            finally
+            {
+                if (flux != null)
+                    flux.Close();
+            }
+
+        }
     }
 }
