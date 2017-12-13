@@ -36,7 +36,13 @@ namespace TrumpTower.LibraryTrumpTower
         public bool _isCharging; // For boss1
         public bool _hasCharged; // For boss1
         public double _timeBeforeCharging; // For boss1
-        
+        public double _timeBeforeEndofCastingCharge; // for boss1
+        public bool _isVulnerable; // for boss1 after breaching wall
+        public bool _isCastingBoss1;
+        public bool _canChargeBoss1;
+
+
+
 
         public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
         {
@@ -93,7 +99,11 @@ namespace TrumpTower.LibraryTrumpTower
                 _reload = 2 * 60; // attacks every two seconds
                 _isCharging = false;
                 _hasCharged = false;
-                _timeBeforeCharging = 6 * 60; // When it comes to 0, boss1 starts charging, doubling his speed and dammage, build a wall to stop him
+                _timeBeforeCharging = 6 * 60; // When it comes to 0, boss1 starts casting charge 
+                _isVulnerable = false;
+                _isCastingBoss1 = false;
+                _timeBeforeEndofCastingCharge = 3 * 60; // When it comes to 0, boss1 charges, doubling his speed and dammage, build a wall to stop him
+                
             }
         }
 
@@ -145,7 +155,7 @@ namespace TrumpTower.LibraryTrumpTower
                  UpdateHeal(GetEnemies(_position, ActionRadius));
             } else if (_type == EnemyType.boss1)
             {
-               if (_position != Wall.Position) UpdateMove();
+                if (_position != Wall.Position && _isCastingBoss1 == false) UpdateMove();
                 UpdateBoss1();
             }  
         }
@@ -156,11 +166,20 @@ namespace TrumpTower.LibraryTrumpTower
             else if (_timeBeforeCharging == 0 && _hasCharged == false && _isCharging == false) ChargeBoss1();
             UpdateAttackWallBoss1();
         }
+
+        private void ChargeBoss1() // Stops moving for couple of secs, before truly charging
+        {
+            _isCastingBoss1 = true;
+
+            if (_timeBeforeEndofCastingCharge == 0) ChargingBoss1();
+            else  if (_timeBeforeEndofCastingCharge > 0) _timeBeforeEndofCastingCharge--;
+        }
         
-        private void ChargeBoss1()
+        private void ChargingBoss1() // Is charging
         {
             _hasCharged = true;
             _isCharging = true;
+            _isCastingBoss1 = false;
             _damage = _damage * 2;
             Speed = Speed * 5;
         }
@@ -169,7 +188,7 @@ namespace TrumpTower.LibraryTrumpTower
         {
             // If boss is charging and encounters a wall created, the wall breaks.
             //Then _isCharging goes false.
-            // Boss resumes normal speed and dmg after a few seconds. 
+            // Boss resumes normal speed and dmg after a few seconds of stun where he takes double dmg.
             // Keeps _hasCharged = true so he doesnt resume charging 
         }
 
