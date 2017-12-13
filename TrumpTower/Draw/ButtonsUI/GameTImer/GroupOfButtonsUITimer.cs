@@ -40,6 +40,11 @@ namespace TrumpTower.Draw.ButtonsUI
                         ButtonActivated = button;
                         _ctx.GameIsPaused = true;
                         _ctx.stratPause++;
+                        if (_ctx.stratPause >= 5 )
+                        {
+                            ManagerSound.PlayNoAvailable();
+                            _ctx.stratPause = 5;
+                        }
                         ManagerSound.PlayPauseIn();
                     }
                     else

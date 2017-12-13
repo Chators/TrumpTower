@@ -210,6 +210,9 @@ namespace TrumpTower
         public bool GameIsPaused { get; set; }
         public SimpleAnimationDefinition[] AnimSprites { get; private set; }
 
+        public bool warning;
+        Texture2D _imgWarning2;
+
         #endregion
 
         public Game1()
@@ -287,6 +290,7 @@ namespace TrumpTower
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
             GameIsPaused = false;
+
             
             #region Tower Selector
 
@@ -318,6 +322,8 @@ namespace TrumpTower
 
 
             #endregion
+
+            warning = false;
             base.Initialize();
         }
 
@@ -510,6 +516,7 @@ namespace TrumpTower
             #endregion
 
             grey = Content.Load<Texture2D>("grey");
+            _imgWarning2 = Content.Load<Texture2D>("Warning2");
             // RAID AIR
             _imgWarning = Content.Load<Texture2D>("warning");
             _raidAirIsComming = Content.Load<SpriteFont>("Enemies/air/RaidAirIsComming");
@@ -985,6 +992,18 @@ namespace TrumpTower
                 }
 
             }
+            if (newStateKeyboard.IsKeyDown(Keys.Space) && lastStateKeyboard.IsKeyUp(Keys.Space))
+            {
+                if ( warning== false)
+                {
+                    warning = true;
+                }
+                else if (warning)
+                {
+                    warning = false;
+                }
+
+            }
         }
 
 
@@ -1244,18 +1263,24 @@ namespace TrumpTower
             #endregion
 
             // ANIM EXPLOSION ABILITY
-            foreach (SimpleAnimationDefinition def in AnimSprites)
+            foreach (SimpleAnimationDefinition def in AnimSprites )
             {
                 foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
             }
 
             if (stratPause < 5)
             {
-                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(0, 100), Color.White);
+                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 100), Color.White);
             }
             else if (stratPause >= 5)
             {
-                spriteBatch.DrawString(_spriteDollars, "Nombres de pauses strategiques max atteint ! ", new Vector2(0, 100), Color.Red);
+                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 100), Color.Red);
+                if (warning == true)
+                {
+                    spriteBatch.Draw(_imgWarning2, new Vector2(250, 88), Color.White);
+                   
+                }
+
             }
 
             if (realPause == true)

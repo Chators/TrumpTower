@@ -64,6 +64,9 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitBuild;
         private static SoundEffectInstance Build;
 
+        private static SoundEffect InitnoAvailable;
+        private static SoundEffectInstance noAvailable;
+
         static public void LoadContent(ContentManager Content)
         {
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
@@ -83,8 +86,15 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitPowerUp = Content.Load<SoundEffect>("Sound/powerUp");
             InitSell = Content.Load<SoundEffect>("Sound/sell");
             InitBuild = Content.Load<SoundEffect>("Sound/build");
+            InitnoAvailable = Content.Load<SoundEffect>("Sound/no_available");
         }
 
+        public static void PlayNoAvailable()
+        {
+            CoinUp = InitnoAvailable.CreateInstance();
+            CoinUp.Volume = 1f;
+            CoinUp.Play();
+        }
         public static void PlayCoinUp()
         {
             CoinUp = InitCoinUp.CreateInstance();
