@@ -41,11 +41,26 @@ namespace MapEditorTrumpTower
                 if (positionCase != Vector2.Zero)
                 {
                     // Si les Textures ne sont pas pareils rien
-                    //if ((int)Texture != Map.MapArray[(int)positionCase.Y, (int)positionCase.X])
                     if ((int)Texture != Map.MapArray[(int)positionCase.Y][(int)positionCase.X])
                     {
                         // Si click on change
-                        if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released) Map.ChangeLocation((int)positionCase.X, (int)positionCase.Y, (int)Texture);
+                        if (newStateMouse.LeftButton == ButtonState.Pressed)
+                        {
+                            // On verifie si on est entrain de delete une route avec un spawn
+                            bool deleteRoadWithSpawn = false;
+                            foreach (Spawn spawn in Map.SpawnsEnemies)
+                            {
+                                if (spawn.Position.X/Constant.imgSizeMap == (int)positionCase.X && spawn.Position.Y/Constant.imgSizeMap == (int)positionCase.Y)
+                                    deleteRoadWithSpawn = true;
+                            }
+                            // On vérifie également si il n'y a pas une base sur la route
+                            if (Map.Wall != null && Map.Wall.Position.X / Constant.imgSizeMap == (int)positionCase.X && Map.Wall.Position.Y / Constant.imgSizeMap == (int)positionCase.Y)
+                                deleteRoadWithSpawn = true;
+
+                            // On ne peut pas delete une route avec un spawn ou la base
+                            if (!deleteRoadWithSpawn)
+                                Map.ChangeLocation((int)positionCase.X, (int)positionCase.Y, (int)Texture);
+                        }
                         // Sinon on previsualise en vert
                         else Hoover = positionCase;
                     }
@@ -53,12 +68,18 @@ namespace MapEditorTrumpTower
             }
             else if (Texture == MapTexture.myBase)
             {
-                /*if (Map.MapArray[(int)positionCase.Y, (int)positionCase.X] == (int)MapTexture.dirt &&
-                    (positionCase.Y == 0 || positionCase.Y == Map.HeightArrayMap - 1 || positionCase.X == 0 || positionCase.X == Map.WidthArrayMap - 1))*/
                 if (Map.MapArray[(int)positionCase.Y][(int)positionCase.X] == (int)MapTexture.dirt &&
                     (positionCase.Y == 0 || positionCase.Y == Map.HeightArrayMap - 1 || positionCase.X == 0 || positionCase.X == Map.WidthArrayMap - 1))
                 {
-                    if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released) Map.CreateBase(new Wall(Map, 50, new Vector2(positionCase.X * Constant.imgSizeMap, positionCase.Y * Constant.imgSizeMap)));
+                    // Si il existe déjà une base et qu'on veut en créer une
+                    if (Map.Wall != null && newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
+                    {
+                        Map.Wall.ChangePosition(new Vector2(positionCase.X * Constant.imgSizeMap, positionCase.Y * Constant.imgSizeMap));
+                        // On doit également recreer les avions
+                    }
+                    // Si il n'existe pas de base mais qu'on veut en créer une
+                    else if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
+                        Map.CreateBase(new Wall(Map, 500, new Vector2(positionCase.X * Constant.imgSizeMap, positionCase.Y * Constant.imgSizeMap)));
                     else Hoover = positionCase;
                 }
             }
@@ -68,11 +89,9 @@ namespace MapEditorTrumpTower
                 if (Map.Wall != null && positionCase.X == Map.Wall.Position.X / Constant.imgSizeMap && positionCase.Y == Map.Wall.Position.Y / Constant.imgSizeMap)
                 {
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released) Ctx.Wall_Pressed();
-                    Hoover = positionCase;
+                        Hoover = positionCase;
                 }
                 // Si on pointe une route sur le bord
-                /*else if (Map.MapArray[(int)positionCase.Y, (int)positionCase.X] == (int)MapTexture.dirt &&
-                    (positionCase.Y == 0 || positionCase.Y == Map.HeightArrayMap - 1 || positionCase.X == 0 || positionCase.X == Map.WidthArrayMap - 1))*/
                 else if (Map.MapArray[(int)positionCase.Y][(int)positionCase.X] == (int)MapTexture.dirt &&
                    (positionCase.Y == 0 || positionCase.Y == Map.HeightArrayMap - 1 || positionCase.X == 0 || positionCase.X == Map.WidthArrayMap - 1))
                 {
@@ -116,7 +135,7 @@ namespace MapEditorTrumpTower
                     Texture2D _currentTexture;
                     if (Texture == MapTexture.myBase) _currentTexture = Ctx.ImgWall;
                     else _currentTexture = Ctx.ImgMaps[(int)Texture];
-                    spriteBatch.Draw(_currentTexture, new Vector2(Hoover.X * _currentTexture.Width, Hoover.Y * _currentTexture.Height), Color.White * 0.6f);
+                        spriteBatch.Draw(_currentTexture, new Vector2(Hoover.X * _currentTexture.Width, Hoover.Y * _currentTexture.Height), Color.White * 0.6f);
                 }
                 else
                 {

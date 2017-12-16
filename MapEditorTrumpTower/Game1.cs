@@ -78,7 +78,8 @@ namespace MapEditorTrumpTower
         public GameState State { get; set; }
         public ActionCreatePath CurrentActionCreatePath { get; set; }
         #endregion
-        int posMenuRight; 
+        int posMenuRight;
+        int _lastRefresh;
 
         public Game1()
         {
@@ -113,28 +114,27 @@ namespace MapEditorTrumpTower
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
+
+
+
+
             _gui.Screen = new GuiScreen(graphics.GraphicsDevice.DisplayMode.Width, graphics.GraphicsDevice.DisplayMode.Height);
+
+
+
+
+
+
+
+
             _gui.Screen.Desktop.Bounds = new UniRectangle(new UniScalar(0f, 0), new UniScalar(0f, 0), new UniScalar(1f, 0), new UniScalar(1f, 0));
             // Perform second-stage initialization
             _gui.Initialize();
 
-            // POUR AJOUTER UN BOUTON
-            // Create few controls.
-            var button = new GuiButtonControl
-            {
-                Name = "button",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 20), new UniScalar(0.0f, 20), new UniScalar(0f, 120), new UniScalar(0f, 50)),
-                Text = "Creer Map"
-            };
-
-            // Si on press le bouton
-            button.Pressed += Button2_Pressed;
-
-            _gui.Screen.Desktop.Children.Add(button);
-
+            Button2_Pressed();
+            _lastRefresh = 0;
             posMenuRight = GraphicsDevice.Viewport.Width * 85 / 100;
             CurrentActionCreatePath = ActionCreatePath.Add;
-
             base.Initialize();
         }
 
@@ -215,36 +215,21 @@ namespace MapEditorTrumpTower
 
 
 
-
-
-
-
-
-
             _inputManager.Update(gameTime);
+            if (State.ActualState == StateType.Default)
+            {
+                // On actualise toutes les 5 secondes
+                if (_lastRefresh + 5 == gameTime.TotalGameTime.Seconds)
+                {
+                    _lastRefresh = gameTime.TotalGameTime.Seconds;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    if (_map.Wall != null)
+                    {
+                        for (int i = 0; i < _map.SpawnsEnemies.Count; i++)
+                            _map.SpawnsEnemies[i].ResetShortestWay();
+                    }
+                }
+            }
 
             #region Update HandleInput
             newStateMouse = Mouse.GetState();
@@ -256,41 +241,18 @@ namespace MapEditorTrumpTower
                                             newStateMouse.RightButton,
                                             newStateMouse.XButton1,
                                             newStateMouse.XButton2);
-
+            
+            
             KeyboardState newStateKeyboard = Keyboard.GetState();
             HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
+            
 
             lastStateMouse = newStateMouse;
             lastStateKeyboard = newStateKeyboard;
             #endregion
 
-            if (State.ActualState == StateType.Default)
-            {
-            }
-            else if (State.ActualState == StateType.CreatePathForSpawn)
-            {
-                if (CurrentActionCreatePath == ActionCreatePath.Add)
-                {
 
-                }
-                else if (CurrentActionCreatePath == ActionCreatePath.Reset)
-                {
-
-                }
-                else if (CurrentActionCreatePath == ActionCreatePath.Undo)
-                {
-
-                }
-                else if (CurrentActionCreatePath == ActionCreatePath.Validate)
-                {
-
-                }
-                else if (CurrentActionCreatePath == ActionCreatePath.Back)
-                {
-                    State.ActualState = StateType.Default;
-                    CurrentActionCreatePath = ActionCreatePath.Add;
-                }
-            }
             base.Update(gameTime);
             
         }
@@ -313,8 +275,24 @@ namespace MapEditorTrumpTower
                     ManagerAirPlane_Pressed();
                 else if (newStateKeyboard.IsKeyDown(Keys.Enter) && !lastStateKeyboard.IsKeyDown(Keys.Enter))
                 {
-                    BinarySerializer.Serialize(_map, "map1.xml");
-                    Exit();
+                    // On reactualise tous les chemins des spawns
+                    for (int i = 0; i < _map.SpawnsEnemies.Count; i++)
+                        _map.SpawnsEnemies[i].ResetShortestWay();
+
+                    bool hasPath = true;
+                    foreach (Spawn spawn in _map.SpawnsEnemies)
+                    {
+                        if (spawn.ShortestWay == null) hasPath = false;
+                    }
+                    bool hasName = _map.Name != null;
+                    bool hasBase = _map.Wall != null;
+                    if (!hasName || !hasBase || !hasPath)
+                        InfoSerialization_Pressed(hasName, hasBase, hasPath);
+                    else
+                    {
+                        BinarySerializer.Serialize(_map, "map1.xml");
+                        Exit();
+                    }
                 }
             }
 
@@ -337,13 +315,13 @@ namespace MapEditorTrumpTower
             GraphicsDevice.Clear(Color.DimGray);
 
             // TODO: Add your drawing code here
-            _gui.Draw(gameTime);
+            //_gui.Draw(gameTime);
             
             if (_map != null)
             {
                 #region Draw Right Menu
                 spriteBatch.Begin();
-
+                spriteBatch.Draw(_imgCursor, new Vector2(newStateMouse.X, newStateMouse.Y), Color.Red);
                 if (State.ActualState == StateType.Default)
                 {
                     spriteBatch.DrawString(_debug, "Menu de Texture", new Vector2(85 + posMenuRight, 10), Color.DarkRed);
@@ -390,8 +368,8 @@ namespace MapEditorTrumpTower
                 #endregion
 
                 #region Draw Debug
-                spriteBatch.DrawString(_debug, SelectTexture.Texture + "", new Vector2(150, 150), Color.Red);
-                spriteBatch.DrawString(_debug, CurrentActionCreatePath + "", new Vector2(150, 200), Color.Red);
+                //spriteBatch.DrawString(_debug, SelectTexture.Texture + "", new Vector2(150, 150), Color.Red);
+                //spriteBatch.DrawString(_debug, CurrentActionCreatePath + "", new Vector2(150, 200), Color.Red);
                 #endregion
 
                 #region Draw SelectorTexture
@@ -412,6 +390,8 @@ namespace MapEditorTrumpTower
                 {
                     Spawn spawn = _map.SpawnsEnemies[i];
                     spriteBatch.Draw(_imgNextWaveIsComming, spawn.Position, Color.White);
+                    if (spawn.ShortestWay == null)
+                        spriteBatch.Draw(_imgCloakTexture, spawn.Position, Color.DarkRed * 0.6f);
                 }
                 #endregion
 
@@ -446,19 +426,19 @@ namespace MapEditorTrumpTower
         #region WINDOW
 
         #region Window Map Size
-        private void Button2_Pressed(object sender, System.EventArgs e)
+        private void Button2_Pressed()
         {
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(300), new UniScalar(200))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
                 Title = "Taille de la map",
                 EnableDragging = true
             };
 
             var labelChoiceX = new GuiLabelControl()
             {
-                Text = "Largeur de la map ( Min " + Constant.MinWidthMap + ", Max " + Constant.MaxWidthMap+ " )",
+                Text = "Veuillez indiquer la taille de la map ( Min " + Constant.MinWidthMap + ", Max " + Constant.MaxWidthMap+ " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -469,18 +449,6 @@ namespace MapEditorTrumpTower
                 Text = Constant.MinWidthMap+""
             };
 
-            var labelChoiceY = new GuiLabelControl()
-            {
-                Text = "Longueur de la map ( Min " + Constant.MinHeightMap + ", Max " + Constant.MaxHeightMap + " )",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 80), new UniScalar(100), new UniScalar(25))
-            };
-
-            var choiceY = new GuiInputControl
-            {
-                Name = "choiceY",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 105), new UniScalar(100), new UniScalar(25)),
-                Text = Constant.MinHeightMap+""
-            };
             var button1 = new GuiButtonControl
             {
                 Name = "confirm",
@@ -499,8 +467,6 @@ namespace MapEditorTrumpTower
 
             window.Children.Add(labelChoiceX);
             window.Children.Add(choiceX);
-            window.Children.Add(labelChoiceY);
-            window.Children.Add(choiceY);
             window.Children.Add(button1);
             window.Children.Add(button2);
 
@@ -509,28 +475,26 @@ namespace MapEditorTrumpTower
 
         private void DialogueCancel_Pressed(object sender, System.EventArgs e)
         {
-            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            //_gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
         }
 
         private void DialogueConfirm_Pressed(object sender, System.EventArgs e)
         {
-            int _width = 0;
-            int _height = 0;
+            int _size = 0;
 
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
+                bool _try;
                 if (control.GetType() == typeof(GuiInputControl))
                 {
                     GuiInputControl inputSize = (GuiInputControl)control;
-                    if (control.Name == "choiceX") _width = Convert.ToInt32(inputSize.Text);
-                    if (control.Name == "choiceY") _height = Convert.ToInt32(inputSize.Text);
+                    if (control.Name == "choiceX") _try = Int32.TryParse(inputSize.Text, out _size);
                 }
             }
 
-            if (_width >= Constant.MinWidthMap && _width <= Constant.MaxWidthMap &&
-                _height >= Constant.MinHeightMap && _height <= Constant.MaxHeightMap)
+            if (_size >= Constant.MinWidthMap && _size <= Constant.MaxWidthMap)
             {
-                int[,] _mapPoint2D = new int[_height, _width];
+                int[,] _mapPoint2D = new int[_size, _size];
                 for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
                 {
                     for (int x = 0; x < _mapPoint2D.GetLength(1); x++)
@@ -539,7 +503,7 @@ namespace MapEditorTrumpTower
                     }
                 }
 
-                int[][] _mapPointJagged = new int[_height][];
+                int[][] _mapPointJagged = new int[_size][];
 
                 for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
                 {
@@ -602,13 +566,6 @@ namespace MapEditorTrumpTower
 
                 _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 1000), "Entrer",
                    new List<Keys>(new Keys[] { Keys.Enter })));
-
-                /*spriteBatch.DrawString(_debug, "Menu de Texture", new Vector2(85 + posMenuRight, 10), Color.DarkRed);
-                spriteBatch.DrawString(_debug, "Texture Utile", new Vector2(90 + posMenuRight, 50), Color.Black);
-                spriteBatch.DrawString(_debug, "Texture Decors", new Vector2(90 + posMenuRight, 220), Color.Black);
-                spriteBatch.DrawString(_debug, "Outil de Selection", new Vector2(90 + posMenuRight, 610), Color.Black);
-                spriteBatch.DrawString(_debug, "Options", new Vector2(90 + posMenuRight, 780), Color.Black);
-                spriteBatch.DrawString(_debug, "Validation", new Vector2(90 + posMenuRight, 950), Color.Black);*/
                 #endregion
 
                 #region Button Left Menu CreatePath
@@ -630,6 +587,57 @@ namespace MapEditorTrumpTower
                                 (GraphicsDevice.Viewport.Width * 85 / 100) / VirtualWidth,
                                 GraphicsDevice.Viewport.Height / VirtualHeight,
                                 1f);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                //_gui.Screen = new GuiScreen((GraphicsDevice.Viewport.Width * 85 / 100) / VirtualWidth, GraphicsDevice.Viewport.Height / VirtualHeight);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
                 GuiButtonControl deleteButton = null;
@@ -658,7 +666,7 @@ namespace MapEditorTrumpTower
 
             var labelHealthWall = new GuiLabelControl()
             {
-                Text = "Points de vie",
+                Text = "Points de vie ( Min " + Constant.MinWallHp + ", Max " + Constant.MaxWallHp + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -666,7 +674,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "healthWall",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25)),
-                Text = "500"
+                Text = _map.Wall.CurrentHp+""
             };
 
             var button1 = new GuiButtonControl
@@ -703,16 +711,20 @@ namespace MapEditorTrumpTower
             int _healthWall = 0;
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
+                bool _try;
                 if (control.GetType() == typeof(GuiInputControl))
                 {
                     GuiInputControl inputSize = (GuiInputControl)control;
-                    if (control.Name == "healthWall") _healthWall = Convert.ToInt32(inputSize.Text);
+                    if (control.Name == "healthWall") _try = Int32.TryParse(inputSize.Text, out _healthWall);
                 }
             }
 
-            _map.Wall.ChangeHp(_healthWall);
+            if (_healthWall >= Constant.MinWallHp && _healthWall <= Constant.MaxWallHp)
+            {
+                _map.Wall.ChangeHp(_healthWall);
 
-            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            }
         }
         #endregion
 
@@ -785,8 +797,8 @@ namespace MapEditorTrumpTower
                 if (control.GetType() == typeof(GuiInputControl))
                 {
                     GuiInputControl inputSize = (GuiInputControl)control;
-                    if (control.Name == "posX") _posX = Convert.ToInt32(inputSize.Text);
-                    if (control.Name == "posY") _posY = Convert.ToInt32(inputSize.Text);
+                    if (control.Name == "posX") Int32.TryParse(inputSize.Text, out _posX);
+                    if (control.Name == "posY") Int32.TryParse(inputSize.Text, out _posY);
                 }
             }
             _map.CreateSpawn(new Spawn(_map, new Vector2(_posX, _posY), new List<Wave>()));
@@ -864,11 +876,11 @@ namespace MapEditorTrumpTower
                 Text = "Suppr spawn"
             };
 
-            var createPath = new GuiButtonControl
+            var pathNotFound = new GuiLabelControl
             {
-                Name = "createPath",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -80), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Not implemented"
+                Name = "pathNotFound",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 90), new UniScalar(0.0f, 185), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Aucun chemin valide vers la base !"
             };
 
             var button2 = new GuiButtonControl
@@ -879,7 +891,6 @@ namespace MapEditorTrumpTower
             };
 
             deleteSpawn.Pressed += DeleteSpawn_Pressed;
-            createPath.Pressed += CreatePath_Pressed;
             modifyWave.Pressed += ModifyWave_Pressed;
             button2.Pressed += SpawnCancel_Pressed;
             addWave.Pressed += CreateWave_Pressed;
@@ -889,7 +900,7 @@ namespace MapEditorTrumpTower
             for (int i = 0; i < _spawn.Waves.Count; i++)
             {
                 Wave wave = _spawn.Waves[i];
-                wavesList.Items.Add("Vague " + (i+1) + " partira a " + wave.TimerBeforeStarting/60 + " secondes" );
+                wavesList.Items.Add("Vague " + (i+1) + " : Depart " + wave.TimerBeforeStarting/60 + " secondes et contient " + wave.Enemies.Count + " enemies" );
             }
             wavesList.SelectionMode = ListSelectionMode.Single;
             window.Children.Add(addWave);
@@ -901,15 +912,11 @@ namespace MapEditorTrumpTower
             window.Children.Add(posX);
             window.Children.Add(posY);
             window.Children.Add(deleteSpawn);
-            window.Children.Add(createPath);
+            if (_spawn.ShortestWay == null)
+                window.Children.Add(pathNotFound);
             window.Children.Add(button2);
             _gui.Screen.Desktop.Children.Add(window);
 
-        }
-
-        private void WavesList_SelectionChanged(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void SpawnCancel_Pressed(object sender, System.EventArgs e)
@@ -942,12 +949,6 @@ namespace MapEditorTrumpTower
                 }     
             }
 
-            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
-        }
-
-        private void CreatePath_Pressed(object sender, System.EventArgs e)
-        {
-            State.ActualState = StateType.CreatePathForSpawn;
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
         }
 
@@ -984,13 +985,14 @@ namespace MapEditorTrumpTower
         {
             int _posX = 0;
             int _posY = 0;
-            int _nbWave = 0;
+            int? _nbWave = null;
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
                 if (control.GetType() == typeof(GuiListControl))
                 {
                     GuiListControl input = (GuiListControl)control;
-                    _nbWave = input.SelectedItems[0];
+                    if (input.SelectedItems.Count > 0)
+                        _nbWave = input.SelectedItems[0];
                 }
                 else if (control.GetType() == typeof(GuiInputControl))
                 {
@@ -1000,29 +1002,33 @@ namespace MapEditorTrumpTower
                 }
             }
 
-            foreach (Spawn _spawn in _map.SpawnsEnemies)
+            if (_nbWave != null)
             {
-                // On cible le spawn
-                if (_spawn.Position == new Vector2(_posX, _posY))
-                    _spawn.DeleteWave(_nbWave);
-            }
+                foreach (Spawn _spawn in _map.SpawnsEnemies)
+                {
+                    // On cible le spawn
+                    if (_spawn.Position == new Vector2(_posX, _posY))
+                        _spawn.DeleteWave((int)_nbWave);
+                }
 
-            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
-            Spawn_Pressed(new Vector2(_posX, _posY));
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+                Spawn_Pressed(new Vector2(_posX, _posY));
+            }
         }
 
         private void ModifyWave_Pressed(object sender, System.EventArgs e)
         {
             int _posX = 0;
             int _posY = 0;
-            int _nbWave = 0;
+            int? _nbWave = null;
             Spawn _spawn = null;
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
                 if (control.GetType() == typeof(GuiListControl))
                 {
                     GuiListControl input = (GuiListControl)control;
-                    _nbWave = input.SelectedItems[0];
+                    if (input.SelectedItems.Count > 0)
+                        _nbWave = input.SelectedItems[0];
                 }
                 else if (control.GetType() == typeof(GuiInputControl))
                 {
@@ -1032,21 +1038,24 @@ namespace MapEditorTrumpTower
                 }
             }
 
-            int _nbSpawn = 0;
-            for (int i = 0; i < _map.SpawnsEnemies.Count; i++)
+            if (_nbWave != null)
             {
-                Spawn spawn = _map.SpawnsEnemies[i];
-                // On cible le spawn
-                if (spawn.Position == new Vector2(_posX, _posY))
+                int _nbSpawn = 0;
+                for (int i = 0; i < _map.SpawnsEnemies.Count; i++)
                 {
-                    _spawn = spawn;
-                    _nbSpawn = i;
-                    break;
+                    Spawn spawn = _map.SpawnsEnemies[i];
+                    // On cible le spawn
+                    if (spawn.Position == new Vector2(_posX, _posY))
+                    {
+                        _spawn = spawn;
+                        _nbSpawn = i;
+                        break;
+                    }
                 }
-            }
 
-            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
-            WindowModifyWave_Pressed(_spawn.Waves[_nbWave], _nbSpawn, _nbWave);
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+                WindowModifyWave_Pressed(_spawn.Waves[(int)_nbWave], _nbSpawn, (int)_nbWave);
+            }
         }
         #endregion
 
@@ -1067,14 +1076,14 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(350))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(500), new UniScalar(350))),
                 Title = "Vague",
                 EnableDragging = true
             };
 
             var labelTimerWave = new GuiLabelControl()
             {
-                Text = "Temps avant depart de la vague",
+                Text = "Temps avant depart de la vague en secondes ( Min " + Constant.MinEarthlyTimer + ", Max " + Constant.MaxEarthlyTimer + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1087,20 +1096,21 @@ namespace MapEditorTrumpTower
 
             var labelEnemyDefault = new GuiLabelControl()
             {
-                Text = "Nombres d'ennemis de base",
+                Text = "Nombres d'ennemis de base ( Min " + Constant.MinDefaultUnit + ", Max " + Constant.MaxDefaultUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 80), new UniScalar(100), new UniScalar(25))
             };
 
+            Dictionary<EnemyType, List<Enemy>> _dicEnemies = wave.GetAllEnemiesByType();
             var enemyDefault = new GuiInputControl
             {
                 Name = "enemyDefault",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 105), new UniScalar(100), new UniScalar(25)),
-                Text = 0+""
+                Text = _dicEnemies[EnemyType.defaultSoldier].Count +""
             };
 
             var labelKamikaze = new GuiLabelControl()
             {
-                Text = "Nombres de Kamikaze",
+                Text = "Nombres de Kamikaze ( Min " + Constant.MinKamikazeUnit + ", Max " + Constant.MaxKamikazeUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 130), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1108,12 +1118,12 @@ namespace MapEditorTrumpTower
             {
                 Name = "kamikaze",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 155), new UniScalar(100), new UniScalar(25)),
-                Text = 0+""
+                Text = _dicEnemies[EnemyType.kamikaze].Count + ""
             };
 
             var labelSaboteur = new GuiLabelControl()
             {
-                Text = "Nombres de Saboteur",
+                Text = "Nombres de Saboteur ( Min " + Constant.MinSaboteurUnit + ", Max " + Constant.MaxSaboteurUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 180), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1121,12 +1131,12 @@ namespace MapEditorTrumpTower
             {
                 Name = "saboteur",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 205), new UniScalar(100), new UniScalar(25)),
-                Text = 0+""
+                Text = _dicEnemies[EnemyType.saboteur].Count + ""
             };
 
             var labelDoctor = new GuiLabelControl()
             {
-                Text = "Nombres de Docteur",
+                Text = "Nombres de Docteur ( Min " + Constant.MinDoctorUnit + ", Max " + Constant.MaxDoctorUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 230), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1134,7 +1144,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "doctor",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 255), new UniScalar(100), new UniScalar(25)),
-                Text = 0+""
+                Text = _dicEnemies[EnemyType.doctor].Count + ""
             };
 
             var button1 = new GuiButtonControl
@@ -1154,6 +1164,8 @@ namespace MapEditorTrumpTower
             button1.Pressed += WaveConfirm_Pressed;
             button2.Pressed += WaveCancel_Pressed;
 
+            window.Children.Add(nbSpawn);
+            window.Children.Add(nbWave);
             window.Children.Add(labelTimerWave);
             window.Children.Add(timerWave);
             window.Children.Add(labelEnemyDefault);
@@ -1171,29 +1183,80 @@ namespace MapEditorTrumpTower
 
         private void WaveConfirm_Pressed(object sender, System.EventArgs e)
         {
-            throw new ArgumentException();
-            /*int _nbPlane = 0;
+            int _nbSpawn = 0;
+            int _nbWave = 0;
             int _timer = 0;
-            PlaneType _type = PlaneType.PlaneSlow;
+            int _defaultUnit = 0;
+            int _saboteurUnit = 0;
+            int _doctorUnit = 0;
+            int _kamikazeUnit = 0;
+
 
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
-                if (control.GetType() == typeof(GuiListControl))
-                {
-                    GuiListControl input = (GuiListControl)control;
-                    _type = (PlaneType)input.SelectedItems[0];
-                }
-
                 if (control.GetType() == typeof(GuiInputControl))
                 {
                     GuiInputControl inputSize = (GuiInputControl)control;
-                    if (control.Name == "numberPlane") _nbPlane = Convert.ToInt32(inputSize.Text);
-                    if (control.Name == "timerAir") _timer = Convert.ToInt32(inputSize.Text);
+                    if (control.Name == "nbSpawn") Int32.TryParse(inputSize.Text, out _nbSpawn);
+                    if (control.Name == "nbWave") Int32.TryParse(inputSize.Text, out _nbWave);
+                    if (control.Name == "timerWave") Int32.TryParse(inputSize.Text, out _timer);
+                    if (control.Name == "enemyDefault") Int32.TryParse(inputSize.Text, out _defaultUnit);
+                    if (control.Name == "saboteur") Int32.TryParse(inputSize.Text, out _saboteurUnit);
+                    if (control.Name == "doctor") Int32.TryParse(inputSize.Text, out _doctorUnit);
+                    if (control.Name == "kamikaze") Int32.TryParse(inputSize.Text, out _kamikazeUnit);
                 }
             }
-            _map.AirUnits.Add(new AirUnitsCollection(_map, _timer * 60, _nbPlane, _type));
-            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
-            ManagerAirPlane_Pressed();*/
+
+            Wave _wave = _map.SpawnsEnemies[_nbSpawn].Waves[_nbWave];
+
+            if (_timer >= Constant.MinEarthlyTimer && _timer <= Constant.MaxEarthlyTimer &&
+                _defaultUnit >= Constant.MinDefaultUnit && _defaultUnit <= Constant.MaxDefaultUnit &&
+                _saboteurUnit >= Constant.MinSaboteurUnit && _saboteurUnit <= Constant.MaxSaboteurUnit &&
+                _doctorUnit >= Constant.MinDoctorUnit && _doctorUnit <= Constant.MaxDoctorUnit &&
+                _kamikazeUnit >= Constant.MinKamikazeUnit && _kamikazeUnit <= Constant.MaxKamikazeUnit)
+            {
+                _wave.TimerBeforeStarting = _timer * 60;
+                Dictionary<EnemyType, List<Enemy>> _dicUnits = _wave.GetAllEnemiesByType();
+
+                int _nbUnit = _dicUnits[EnemyType.defaultSoldier].Count;
+                if (_defaultUnit > _nbUnit)
+                    _wave.CreateEnemies(EnemyType.defaultSoldier, _defaultUnit - _nbUnit);
+                else if (_defaultUnit < _nbUnit)
+                {
+                    _dicUnits[EnemyType.defaultSoldier].RemoveRange(0, _defaultUnit);
+                    _wave.DeleteEnemies(EnemyType.defaultSoldier, _dicUnits[EnemyType.defaultSoldier]);
+                }
+
+                _nbUnit = _dicUnits[EnemyType.saboteur].Count;
+                if (_saboteurUnit > _nbUnit)
+                    _wave.CreateEnemies(EnemyType.saboteur, _saboteurUnit - _nbUnit);
+                else if (_saboteurUnit < _nbUnit)
+                {
+                    _dicUnits[EnemyType.saboteur].RemoveRange(0, _saboteurUnit);
+                    _wave.DeleteEnemies(EnemyType.saboteur, _dicUnits[EnemyType.saboteur]);
+                }
+
+                _nbUnit = _dicUnits[EnemyType.doctor].Count;
+                if (_doctorUnit > _nbUnit)
+                    _wave.CreateEnemies(EnemyType.doctor, _doctorUnit - _nbUnit);
+                else if (_doctorUnit < _nbUnit)
+                {
+                    _dicUnits[EnemyType.doctor].RemoveRange(0, _doctorUnit);
+                    _wave.DeleteEnemies(EnemyType.doctor, _dicUnits[EnemyType.doctor]);
+                }
+
+                _nbUnit = _dicUnits[EnemyType.kamikaze].Count;
+                if (_kamikazeUnit > _nbUnit)
+                    _wave.CreateEnemies(EnemyType.kamikaze, _kamikazeUnit - _nbUnit);
+                else if (_kamikazeUnit < _nbUnit)
+                {
+                    _dicUnits[EnemyType.kamikaze].RemoveRange(0, _kamikazeUnit);
+                    _wave.DeleteEnemies(EnemyType.kamikaze, _dicUnits[EnemyType.kamikaze]);
+                }
+
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+                Spawn_Pressed(new Vector2(_map.SpawnsEnemies[_nbSpawn].Position.X, _map.SpawnsEnemies[_nbSpawn].Position.Y));
+            }
         }
 
         private void WaveCancel_Pressed(object sender, System.EventArgs e)
@@ -1206,8 +1269,8 @@ namespace MapEditorTrumpTower
                 if (control.GetType() == typeof(GuiInputControl))
                 {
                     GuiInputControl inputSize = (GuiInputControl)control;
-                    if (control.Name == "nbSpawnX") _nbSpawn = Convert.ToInt32(inputSize.Text);
-                    if (control.Name == "nbWaveX") _nbWave = Convert.ToInt32(inputSize.Text);
+                    if (control.Name == "nbSpawnX") Int32.TryParse(inputSize.Text, out _nbSpawn);
+                    if (control.Name == "nbWaveX") Int32.TryParse(inputSize.Text, out _nbWave);
                 }
             }
             Spawn _spawn = _map.SpawnsEnemies[_nbSpawn];
@@ -1295,12 +1358,12 @@ namespace MapEditorTrumpTower
                 {
                     GuiInputControl inputSize = (GuiInputControl)control;
                     if (control.Name == "nameMap") _nameMap = inputSize.Text;
-                    if (control.Name == "dollarsMap") _dollarsMap = Convert.ToInt32(inputSize.Text);
+                    if (control.Name == "dollarsMap") Int32.TryParse(inputSize.Text, out _dollarsMap);
                 }
             }
 
-            if ((_nameMap.Length > Constant.MinNameMap && _nameMap.Length < Constant.MaxNameMap) &&
-                (_dollarsMap > Constant.MinDollarsMap && _dollarsMap < Constant.MaxDollarsMap))
+            if ((_nameMap.Length >= Constant.MinNameMap && _nameMap.Length <= Constant.MaxNameMap) &&
+                (_dollarsMap >= Constant.MinDollarsMap && _dollarsMap <= Constant.MaxDollarsMap))
             {
                 _map.SettingTheMap(_nameMap, _dollarsMap);
 
@@ -1370,7 +1433,7 @@ namespace MapEditorTrumpTower
             for (int i = 0; i < _map.AirUnits.Count; i++)
             {
                 AirUnitsCollection collectionUnit  = _map.AirUnits[i];
-                wavesListAir.Items.Add("Vague aerienne " + (i + 1) + " : Depart " + collectionUnit.TimerBeforeStarting/60 + " secondes, les avions seront de type " + collectionUnit.Array[0].Name);
+                wavesListAir.Items.Add("Vague aerienne " + (i + 1) + " : Depart " + collectionUnit.TimerBeforeStarting/60 + " secondes, " + collectionUnit.Array.Count + " avions et de type " + collectionUnit.Array[0].Name.ToLower());
             }
             wavesListAir.SelectionMode = ListSelectionMode.Single;
            
@@ -1404,7 +1467,7 @@ namespace MapEditorTrumpTower
         }
 
         private void ManagerAirUnitModify_Pressed(object sender, System.EventArgs e)
-        {
+        { 
             AirUnitsCollection _unitsCollection = null;
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
@@ -1531,7 +1594,16 @@ namespace MapEditorTrumpTower
             window.Children.Add(timerAir);
             window.Children.Add(labelTypeAir);
             window.Children.Add(typeAir);
+            if (unitsCollection != null)
+            {
+                var unitCollection = new GuiInputControl
+                {
+                    Name = "unitCollection",
+                    Text = unitsCollection.Ctx.AirUnits.IndexOf(unitsCollection) + ""
+                };
 
+                window.Children.Add(unitCollection);
+            }
             window.Children.Add(button1);
             window.Children.Add(button2);
 
@@ -1547,6 +1619,7 @@ namespace MapEditorTrumpTower
 
         private void AddAirUnitConfirm_Pressed(object sender, System.EventArgs e)
         {
+            int? _unitCollectionNumber = null;
             int _nbPlane = 0;
             int _timer = 0;
             PlaneType _type = PlaneType.None;
@@ -1564,8 +1637,9 @@ namespace MapEditorTrumpTower
                     if (control.GetType() == typeof(GuiInputControl))
                     {
                         GuiInputControl inputSize = (GuiInputControl)control;
-                        if (control.Name == "numberPlane") _nbPlane = Convert.ToInt32(inputSize.Text);
-                        if (control.Name == "timerAir") _timer = Convert.ToInt32(inputSize.Text);
+                        if (control.Name == "numberPlane") Int32.TryParse(inputSize.Text, out _nbPlane);
+                        if (control.Name == "timerAir") Int32.TryParse(inputSize.Text, out _timer);
+                        if (control.Name == "unitCollection") _unitCollectionNumber = Convert.ToInt32(inputSize.Text);
                     }
                 }
 
@@ -1573,12 +1647,95 @@ namespace MapEditorTrumpTower
                     _timer >= Constant.MinPlaneTimer && _timer <= Constant.MaxPlaneTimer &&
                     _nbPlane >= Constant.MinPlaneInWave && _nbPlane <= Constant.MaxPlaneInWave)
                 {
-                    _map.AirUnits.Add(new AirUnitsCollection(_map, _timer * 60, _nbPlane, _type));
+                    if (_unitCollectionNumber == null)
+                        _map.AirUnits.Add(new AirUnitsCollection(_map, _timer * 60, _nbPlane, _type, _map.Wall));
+                    else
+                    {
+                        _map.AirUnits.RemoveAt((int)_unitCollectionNumber);
+                        _map.AirUnits.Add(new AirUnitsCollection(_map, _timer * 60, _nbPlane, _type, _map.Wall));
+                    }
+
                     _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
                     ManagerAirPlane_Pressed();
                 }
             }
             catch { }
+        }
+        #endregion
+
+        #region Window Info Serialization Map
+        private void InfoSerialization_Pressed(bool hasName, bool hasBase, bool hasPath)
+        {
+            var window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
+                Title = "Erreur sauvegarde de la map",
+                EnableDragging = true
+            };
+
+            var labelInfoSauvegarde = new GuiLabelControl()
+            {
+                Text = "La map n'a pas pu etre sauvegarde car : ",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var labelName = new GuiLabelControl()
+            {
+                Text = "Elle ne possede pas de nom",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var labelBase = new GuiLabelControl()
+            {
+                Text = "Elle ne possede pas de base",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var labelPath = new GuiLabelControl()
+            {
+                Text = "Tous les spawns d'ennemis ne possede pas un chemin valide les reliant a la base (le ou les spawn(s) sont colorie en rouge)",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var button2 = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Retour"
+            };
+
+            button2.Pressed += InfoSerCancel_Pressed;
+
+            window.Children.Add(labelInfoSauvegarde);
+            int positionX = 0;
+            if (!hasName)
+            {
+                window.Children.Add(labelName);
+                positionX += 30;
+                labelName.Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30 + positionX), new UniScalar(100), new UniScalar(25));
+            }
+            if (!hasBase)
+            {
+                window.Children.Add(labelBase);
+                positionX += 30;
+                labelBase.Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30 + positionX), new UniScalar(100), new UniScalar(25));
+            }
+            if (!hasPath)
+            {
+                window.Children.Add(labelPath);
+                positionX += 30;
+                labelPath.Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30 + positionX), new UniScalar(100), new UniScalar(25));
+                window.Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(900), new UniScalar(180)));
+            }
+            window.Children.Add(button2);
+
+            _gui.Screen.Desktop.Children.Add(window);
+        }
+
+        private void InfoSerCancel_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
         }
         #endregion
 

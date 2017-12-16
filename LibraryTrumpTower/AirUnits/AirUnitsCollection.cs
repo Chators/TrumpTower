@@ -17,19 +17,24 @@ namespace LibraryTrumpTower.AirUnits
         [DataMember]
         public Map Ctx { get; private set; }
         [DataMember]
-        public List<AirUnit> Array { get; private set; }
+        public List<AirUnit> Array { get; set; }
+        [DataMember]
+        public Wall Wall { get; private set; }
+        [DataMember]
+        public PlaneType TypeOfPlane { get; private set; }
         [DataMember]
         public int TimerBeforeStarting { get; private set; }
         [DataMember]
         public Random Random { get; private set; }
         #endregion
 
-        public AirUnitsCollection (Map ctx, int timerBeforeStarting, int numbersPlane, PlaneType type)
+        public AirUnitsCollection (Map ctx, int timerBeforeStarting, int numbersPlane, PlaneType type, Wall wall)
         {
             Ctx = ctx;
             Array = new List<AirUnit>();
             TimerBeforeStarting = timerBeforeStarting;
-
+            Wall = wall;
+            TypeOfPlane = type;
             Random = new Random();
             for (int i = 1; i < numbersPlane+1; i++) CreatePlane(type, i*60, Random);
         }
@@ -69,7 +74,7 @@ namespace LibraryTrumpTower.AirUnits
                 }
             }
             // Wall at Right
-            else if (Ctx.Wall.Position.X == Ctx.WidthArrayMap * Constant.imgSizeMap)
+            else if (Ctx.Wall.Position.X == Ctx.WidthArrayMap * Constant.imgSizeMap - Constant.imgSizeMap)
             {
                 if (randomSide == 1 || randomSide == 2)
                 {
@@ -101,7 +106,7 @@ namespace LibraryTrumpTower.AirUnits
                 }
             }
             // Wall at Bottom
-            else if (Ctx.Wall.Position.Y == Ctx.HeightArrayMap * Constant.imgSizeMap)
+            else if (Ctx.Wall.Position.Y == Ctx.HeightArrayMap * Constant.imgSizeMap - Constant.imgSizeMap)
             {
                 if (randomSide == 1 || randomSide == 2)
                 {
@@ -118,11 +123,18 @@ namespace LibraryTrumpTower.AirUnits
             }
             #endregion
             AirUnit unit = null;
-            if (type == PlaneType.PlaneSlow) unit = new AirUnit(this, "Lent", 100, 1000, positionPlane, 2, 0, timer, PlaneType.PlaneSlow, Ctx.Wall);
-            else if (type == PlaneType.PlaneNormal) unit = new AirUnit(this, "Normal", 100, 500, positionPlane, 4, 0, timer, PlaneType.PlaneNormal, Ctx.Wall);
-            else if (type == PlaneType.PlaneFast) unit = new AirUnit(this, "Rapide", 100, 200, positionPlane, 6, 0, timer, PlaneType.PlaneFast,Ctx.Wall);
+            if (type == PlaneType.PlaneSlow) unit = new AirUnit(this, "Lent", 100, 1000, positionPlane, 2, 0, timer, PlaneType.PlaneSlow);
+            else if (type == PlaneType.PlaneNormal) unit = new AirUnit(this, "Normal", 100, 500, positionPlane, 4, 0, timer, PlaneType.PlaneNormal);
+            else if (type == PlaneType.PlaneFast) unit = new AirUnit(this, "Rapide", 100, 200, positionPlane, 6, 0, timer, PlaneType.PlaneFast);
             Array.Add(unit);
             return unit;
+        }
+
+        public void ResetWaveOfPlane ()
+        {
+            int nbPlane = Array.Count;
+            Array = new List<AirUnit>();
+            for (int i = 0; i < nbPlane; i++) CreatePlane(TypeOfPlane, i * 60, Random);
         }
 
         public bool IsStarting => TimerBeforeStarting <= 0;

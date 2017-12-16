@@ -1,4 +1,5 @@
 ﻿using LibraryTrumpTower;
+using LibraryTrumpTower.AirUnits;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,14 @@ namespace TrumpTower.LibraryTrumpTower
             if (hp < 0) throw new ArgumentException("Parameter cannot < 0", "hp must be > 0");
             MaxHp = hp;
             CurrentHp = hp;
+        }
+
+        public void ChangePosition(Vector2 position)
+        {
+            Position = position;
+
+            foreach (AirUnitsCollection airCollection in _ctx.AirUnits)
+                airCollection.ResetWaveOfPlane();
         }
     }
 }

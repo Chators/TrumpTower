@@ -15,28 +15,29 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
     {
         #region Fields
         [DataMember]
-        Map _ctx;
+        public Map Ctx { get; private set; }
         [DataMember]
         public Vector2 Position { get; private set; }
         [DataMember]
         public List<Wave> Waves { get; private set; }
         [DataMember]
-        public List<Vector2> ShortestWay { get; private set; }
+        public List<Vector2> ShortestWay { get; set; }
         [DataMember]
-        //public int[,] MapArray { get { return _ctx.MapArray; } }
-        public int[][] MapArray { get { return _ctx.MapArray; } }
+        public int[][] MapArray { get { return Ctx.MapArray; } }
         #endregion
 
         public Spawn(Map ctx, Vector2 position, List<Wave> waves)
         {
-            _ctx = ctx;
+            Ctx = ctx;
             Position = position;
 
             if (waves == null) Waves = new List<Wave>();
             else Waves = waves;
 
-            ShortestWay = SeekShortestWay(_ctx.MapArray, _ctx.Wall, Position);
-            //ShortestWay = new List<Vector2>();
+            if (ctx.Wall != null)
+                ShortestWay = SeekShortestWay(Ctx.MapArray, Ctx.Wall, Position);
+            else
+                ShortestWay = null;
         }
 
         public void Update()
@@ -56,16 +57,20 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             Map.WavesTotals--;
         }
 
+        public Wall Wall => Ctx.Wall;
+
+        public void ResetShortestWay () => ShortestWay = SeekShortestWay(Ctx.MapArray, Ctx.Wall, Position);
+       
         #region pathFinding
-        private List<Vector2> SeekShortestWay(int[][] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
-        //private List<Vector2> SeekShortestWay(int[,] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
+        public List<Vector2> SeekShortestWay(int[][] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none, List<Vector2> visited = null)
         {
             List<Vector2> _shortestWay = new List<Vector2>();
+            if (visited == null) visited = new List<Vector2>();
 
             while (!_shortestWay.Contains(wall.Position))
             {
                 // On détermine les directions possible
-                List<Move> possiblesDirections = SeekClosePossiblesDirections(mapArray, currentPosition, lastDirection);
+                List<Move> possiblesDirections = SeekClosePossiblesDirections(mapArray, currentPosition, lastDirection, visited);
 
                 // Si on a plus d'une possibilité
                 if (possiblesDirections.Count > 1)
@@ -112,26 +117,64 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             return _shortestWay;
         }
 
-        //private List<Move> SeekClosePossiblesDirections(int[,] mapArray, Vector2 currentPosition, Move lastPosition)
-        private List<Move> SeekClosePossiblesDirections(int[][] mapArray, Vector2 currentPosition, Move lastPosition)
+        private List<Move> SeekClosePossiblesDirections(int[][] mapArray, Vector2 currentPosition, Move lastPosition, List<Vector2> visited)
         {
             int X = (int)currentPosition.X / Constant.imgSizeMap;
             int Y = (int)currentPosition.Y / Constant.imgSizeMap;
             List<Move> possiblesDirections = new List<Move>();
+            bool downAlreadyVisited = IsVisitedCase(visited, new Vector2(currentPosition.X, currentPosition.Y+Constant.imgSizeMap));
+            bool topAlreadyVisited = IsVisitedCase(visited, new Vector2(currentPosition.X, currentPosition.Y-Constant.imgSizeMap));
+            bool rightAlreadyVisited = IsVisitedCase(visited, new Vector2(currentPosition.X + Constant.imgSizeMap, currentPosition.Y));
+            bool leftAlreadyVisited = IsVisitedCase(visited, new Vector2(currentPosition.X - Constant.imgSizeMap, currentPosition.Y));
 
-            /*if (Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1, X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
-            if (Y - 1 >= 0 && mapArray[Y - 1, X] == (int)MapTexture.dirt && lastPosition != Move.down) possiblesDirections.Add(Move.top);
-            if (X + 1 < mapArray.GetLength(1) && mapArray[Y, X + 1] == (int)MapTexture.dirt && lastPosition != Move.left) possiblesDirections.Add(Move.right);
-            if (X - 1 >= 0 && mapArray[Y, X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);*/
-
-            if (Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1][X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
-            if (Y - 1 >= 0 && mapArray[Y - 1][X] == (int)MapTexture.dirt && lastPosition != Move.down) possiblesDirections.Add(Move.top);
-            if (X + 1 < mapArray.GetLength(1) && mapArray[Y][X + 1] == (int)MapTexture.dirt && lastPosition != Move.left) possiblesDirections.Add(Move.right);
-            if (X - 1 >= 0 && mapArray[Y][X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);
+            if (!downAlreadyVisited && Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1][X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
+            if (!topAlreadyVisited && Y - 1 >= 0 && mapArray[Y - 1][X] == (int)MapTexture.dirt && lastPosition != Move.down) possiblesDirections.Add(Move.top);
+            if (!rightAlreadyVisited && X + 1 < mapArray.GetLength(0) && mapArray[Y][X + 1] == (int)MapTexture.dirt && lastPosition != Move.left) possiblesDirections.Add(Move.right);
+            if (!leftAlreadyVisited && X - 1 >= 0 && mapArray[Y][X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);
 
             return possiblesDirections;
         }
 
+        private bool IsVisitedCase(List<Vector2> visited, Vector2 targetPosition)
+        {
+            foreach (Vector2 hasVisited in visited)
+            {
+                if (hasVisited == targetPosition) return true;
+            }
+            return false;
+        }
+        /*public int InContactWith(User targetUser, List<User> notVisited, List<User> notVisitedMoreDepth, List<User> visited, int depthLevel = 0)
+        {
+            User userCandidat;
+
+            // On retire le sommet des non visités et on le rajoute dans visité
+            notVisited.Remove(this);
+            visited.Add(this);
+
+            // On analyse toutes les arrêtes pour voir si il n'y a pas le sommet cible
+            foreach (Relationship relationship in CircleOfRelationships.Values)
+            {
+                userCandidat = (relationship.Users[0] == this) ? relationship.Users[1] : relationship.Users[0];
+                bool isUnknown = !notVisited.Contains(userCandidat) && !visited.Contains(userCandidat) && !notVisitedMoreDepth.Contains(userCandidat);
+                if (isUnknown) notVisitedMoreDepth.Add(userCandidat);
+                // Les personnes sont en contact
+                if (userCandidat == targetUser) return depthLevel + 1;
+            }
+
+            // Les personnes ne sont pas en contact
+            if (notVisited.Count == 0 && notVisitedMoreDepth.Count == 0) return 0;
+            // On continue à chercher
+            else
+            {
+                if (notVisited.Count == 0 && notVisitedMoreDepth.Count > 0)
+                {
+                    notVisited = notVisitedMoreDepth;
+                    notVisitedMoreDepth = new List<User>();
+                    depthLevel++;
+                }
+                return notVisited[0].InContactWith(targetUser, notVisited, notVisitedMoreDepth, visited, depthLevel);
+            } 
+        }*/
         #endregion
     }
 }

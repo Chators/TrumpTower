@@ -20,8 +20,6 @@ namespace LibraryTrumpTower.AirUnits
         [DataMember]
         public string Name { get; private set; }
         [DataMember]
-        public Wall Wall { get; private set; }
-        [DataMember]
         public double CurrentHp { get; private set; }
         [DataMember]
         public double MaxHp { get; private set; }
@@ -41,11 +39,10 @@ namespace LibraryTrumpTower.AirUnits
         public PlaneType TypeOfPlane { get; set; }
         #endregion
 
-        public AirUnit (AirUnitsCollection ctx, string name, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting, PlaneType type, Wall wall)
+        public AirUnit (AirUnitsCollection ctx, string name, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting, PlaneType type)
         {
             Ctx = ctx;
             Name = name;
-            Wall = wall;
             CurrentHp = life;
             MaxHp = life;
             Damage = damage;
@@ -59,9 +56,9 @@ namespace LibraryTrumpTower.AirUnits
 
         private void UpdateTryAttack()
         {
-            if (WithinReach(Wall.Position, Speed))
+            if (WithinReach(Ctx.Wall.Position, Speed))
             {
-                Wall.TakeHp(Damage);
+                Ctx.Wall.TakeHp(Damage);
                 Die(true);
             }
         }
@@ -78,9 +75,9 @@ namespace LibraryTrumpTower.AirUnits
         {
             if (IsStarting)
             {
-                SetRotate(new Vector2((int)Position.X + 32, (int)Position.Y + 32), new Vector2((int)Wall.Position.X + 32, (int)Wall.Position.Y + 32));
+                SetRotate(new Vector2((int)Position.X + 32, (int)Position.Y + 32), new Vector2((int)Ctx.Wall.Position.X + 32, (int)Ctx.Wall.Position.Y + 32));
                 UpdateTryAttack();
-                UpdateMove(Wall.Position);
+                UpdateMove(Ctx.Wall.Position);
             }
             TimerBeforeStarting--;
         }

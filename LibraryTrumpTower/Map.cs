@@ -57,6 +57,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         public Map(int[][] map)
         {
+            Name = null;
             MapArray = map;
             WidthArrayMap = map[0].Length;
             HeightArrayMap = map.Length;
