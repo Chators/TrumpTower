@@ -31,7 +31,7 @@ namespace LibraryTrumpTower.SpecialAbilities
         public Explosion (Map ctx)
         {
             _ctx = ctx;
-            Cooldown = 0 * 60;
+            Cooldown = 15 * 60;
             CurrentTimer = 0;
             Radius = 800;
             Damage = 30;
