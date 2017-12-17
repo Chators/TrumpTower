@@ -1,4 +1,5 @@
-﻿using LibraryTrumpTower.AirUnits;
+﻿using LibraryTrumpTower;
+using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower.Constants;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -7,6 +8,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using TrumpTower.Draw;
 using TrumpTower.Draw.Animations;
 using TrumpTower.Draw.ButtonsUI;
@@ -232,7 +235,7 @@ namespace TrumpTower
             // TODO: Add your initialization logic here
             #region Map INIT
 
-            _mapPoint = new int[,]
+            /*_mapPoint = new int[,]
             {
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,7 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
@@ -251,8 +254,11 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
-            _map = new Map(_mapPoint);
-
+            _map = new Map(_mapPoint);*/
+            _map = BinarySerializer.Deserialize<Map>("../../../../../Menu/bin/Windows/x86/Debug/map1.xml");
+            
+            foreach (Spawn spawn in _map.SpawnsEnemies)
+                Map.WavesTotals += spawn.Waves.Count;
             #endregion
 
             #region Graphics Device 
@@ -359,7 +365,7 @@ namespace TrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                if(name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
             }
 
             #endregion
@@ -482,7 +488,7 @@ namespace TrumpTower
             _cooldownSprite = Content.Load<SpriteFont>("cooldownText");
             _groupOfButtonsUIAbilities = new GroupOfButtonsUIAbilities(this, _map.Explosion, _cooldownSprite);
             ImgExplosionButton = Content.Load<Texture2D>("SpecialAbilities/explosion");
-            Vector2 _positionExplosionAbilityButton = new Vector2(15, _mapPoint.GetLength(0) * Constant.imgSizeMap - 80);
+            Vector2 _positionExplosionAbilityButton = new Vector2(15, _map.MapArray.GetLength(0) * Constant.imgSizeMap - 80);
             _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "explosionAbility", _positionExplosionAbilityButton, ImgExplosionButton));
 
             #endregion
@@ -572,7 +578,6 @@ namespace TrumpTower
             lastStateKeyboard = newStateKeyboard;
 
             #endregion
-            Console.WriteLine(stratPause);
             // update mouse variables
             MouseState mouse_state = Mouse.GetState();
             mx = newStateMouse.X;
@@ -646,6 +651,7 @@ namespace TrumpTower
                     Tower tower = _map.Towers[i];
                     AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X-148, (int)tower.Position.Y-30, Constant.DisabledTower));
                     _map.TowerDisabled.Remove(tower);
+                    Console.WriteLine("mdrr");
                 }
                 #endregion
 
@@ -761,8 +767,7 @@ namespace TrumpTower
                         MediaPlayer.Play(ManagerSound.Song1);
                         break;
                     case HomeButton:
-                        IsMouseVisible = false;
-                        MediaPlayer.Volume = 0.0f;
+                        Exit();
                         break;
                     default:
                         break;
@@ -1309,5 +1314,6 @@ namespace TrumpTower
 
         public Map Map => _map;
         public SpriteBatch SpriteBatch => spriteBatch;
+
     }
 }

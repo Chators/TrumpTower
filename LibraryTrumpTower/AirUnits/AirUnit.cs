@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower;
@@ -10,23 +11,38 @@ using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace LibraryTrumpTower.AirUnits
 {
+    [DataContract(IsReference = true)]
     public class AirUnit
     {
+        #region Fields
+        [DataMember]
         public AirUnitsCollection Ctx { get; private set; }
-        public Wall Wall { get; private set; }
+        [DataMember]
+        public string Name { get; private set; }
+        [DataMember]
         public double CurrentHp { get; private set; }
+        [DataMember]
         public double MaxHp { get; private set; }
+        [DataMember]
         public double Damage { get; private set; }
+        [DataMember]
         public int Bounty { get; private set; }
+        [DataMember]
         public Vector2 _position;
+        [DataMember]
         public double Speed { get; private set; }
+        [DataMember]
         public float Rotate { get; private set; }
+        [DataMember]
         public int TimerBeforeStarting { get; set; }
+        [DataMember]
+        public PlaneType TypeOfPlane { get; set; }
+        #endregion
 
-        public AirUnit (AirUnitsCollection ctx, Wall wall, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting)
+        public AirUnit (AirUnitsCollection ctx, string name, double life, double damage, Vector2 position, double speed, float rotate, int timerBeforeStarting, PlaneType type)
         {
             Ctx = ctx;
-            Wall = wall;
+            Name = name;
             CurrentHp = life;
             MaxHp = life;
             Damage = damage;
@@ -35,13 +51,14 @@ namespace LibraryTrumpTower.AirUnits
             Speed = speed;
             Rotate = rotate;
             TimerBeforeStarting = timerBeforeStarting;
+            TypeOfPlane = type;
         }
 
         private void UpdateTryAttack()
         {
-            if (WithinReach(Wall.Position, Speed))
+            if (WithinReach(Ctx.Wall.Position, Speed))
             {
-                Wall.TakeHp(Damage);
+                Ctx.Wall.TakeHp(Damage);
                 Die(true);
             }
         }
@@ -58,9 +75,9 @@ namespace LibraryTrumpTower.AirUnits
         {
             if (IsStarting)
             {
-                SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(Wall.Position.X + 32, Wall.Position.Y + 32));
+                SetRotate(new Vector2((int)Position.X + 32, (int)Position.Y + 32), new Vector2((int)Ctx.Wall.Position.X + 32, (int)Ctx.Wall.Position.Y + 32));
                 UpdateTryAttack();
-                UpdateMove(Wall.Position);
+                UpdateMove(Ctx.Wall.Position);
             }
             TimerBeforeStarting--;
         }

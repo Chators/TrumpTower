@@ -10,6 +10,7 @@ namespace LibraryTrumpTower.AirUnits
     {
         PlaneSlow,
         PlaneNormal,
-        PlaneFast
+        PlaneFast,
+        None
     }
 }

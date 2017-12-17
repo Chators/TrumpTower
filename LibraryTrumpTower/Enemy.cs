@@ -8,39 +8,58 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower;
+using System.Runtime.Serialization;
 
 namespace TrumpTower.LibraryTrumpTower
 {
+    [DataContract(IsReference = true)]
     public class Enemy
     {
+        [DataMember]
         readonly Map _map;
+        [DataMember]
         readonly Wave _wave;
-        public Wall Wall { get; private set; }
+        [DataMember]
         Vector2 _position;
+        [DataMember]
         string _name;
+        [DataMember]
         int _moveToState;
+        [DataMember]
         public readonly EnemyType _type;
+        [DataMember]
         public Move CurrentDirection { get; private set; }
+        [DataMember]
         public double CurrentHp { get; private set; }
+        [DataMember]
         public double MaxHp { get; private set; }
+        [DataMember]
         readonly double _damage;
+        [DataMember]
         readonly double _heal; // for the doc
+        [DataMember]
         public double Speed { get; private set; }
+        [DataMember]
         public int Bounty { get; private set; }
+        [DataMember]
         public int TimerBeforeStarting { get; set; }
+        [DataMember]
         public double ActionRadius { get; private set; } // doc & mech units
+        [DataMember]
         public double _reload; // doc & mech units
+        [DataMember]
         public double _healCooldown; // doc only
+        [DataMember]
         public bool _hasCast;
+        [DataMember]
         public bool _isCasting;
-        
 
-        public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
+        public Enemy(Map map, Wave wave, string name, EnemyType type)
         {
             _type = type;
             _map = map;
             _wave = wave;
-            Wall = wall;
             _name = name;
             _position = wave.Position;
             _moveToState = 0;
@@ -48,7 +67,7 @@ namespace TrumpTower.LibraryTrumpTower
 
             if (type == EnemyType.defaultSoldier)
             {
-                CurrentHp = 45;
+                CurrentHp = 85;
                 MaxHp = 85;
                 _damage = 10;
                 Speed = 3;
@@ -57,12 +76,12 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 CurrentHp = 200;
                 MaxHp = 200;
-                _damage = Wall.MaxHp;
+                _damage = Constant.MaxWallHp;
                 Speed = 2.2;
                 Bounty = 200;
             } else if (type == EnemyType.doctor)
             {
-                CurrentHp = 60;
+                CurrentHp = 120;
                 MaxHp = 120;
                 _damage = 5;
                 Speed = 3;
@@ -87,7 +106,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateMove()
         {
-            if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = Wall.Position;
+            if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = _map.Wall.Position;
             
 
             Vector2 _moveToPosition = ShortestWay[_moveToState];
@@ -137,9 +156,9 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateAttackWall()
         {
-            if (WithinReach(Position, Wall.Position, Speed))
+            if (WithinReach(Position, _map.Wall.Position, Speed))
             {
-                Wall.TakeHp(_damage);
+                _map.Wall.TakeHp(_damage);
                 Die(true);
             }
         }
@@ -174,9 +193,9 @@ namespace TrumpTower.LibraryTrumpTower
                     foreach (Tower tower in _towersToDisable)
                     {
                         if (!tower.IsDisabled || !tower.IsCasted)
-                        _isCasting = true; 
-                        StartCasting(tower);
-                        tower.IsCasted = true;
+                            _isCasting = true;
+                            StartCasting(tower);
+                            tower.IsCasted = true;
                     }
                 }
             }

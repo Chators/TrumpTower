@@ -24,6 +24,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         bigDirtCornerLeftUp,
         bigDirtCornerRightUp,
         bigDirtCornerRightDown,
-        bigDirtCornerLeftDown
+        bigDirtCornerLeftDown,
+        None
     }
 }
