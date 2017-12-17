@@ -145,11 +145,14 @@ namespace TrumpTower
         GroupOfButtonsUIAbilities _groupOfButtonsUIAbilities;
         SpriteFont _cooldownSprite;
         public Texture2D ImgExplosionButton { get; private set; }
+        Texture2D _circleExplosion;
 
         Texture2D _buttonSniper;
         Texture2D _ammoSniper;
         Texture2D _cursorTarget;
 
+        Texture2D _buttonMaki;
+        Texture2D _circleStickyRice;
         #endregion
 
         #endregion
@@ -159,10 +162,12 @@ namespace TrumpTower
         public Texture2D ImgCursor { get; set; }
         Texture2D _imgCursorBomb;
         Texture2D _imgCursorDefault;
-
+        Texture2D _imgCursorDeliveryRice;
         #endregion
+
         Texture2D grey;
         public bool realPause { get; private set; }
+
         #region In game menu
 
         public bool isNewGame;
@@ -305,6 +310,7 @@ namespace TrumpTower
             _verif = false;
 
             #endregion
+
             #region In game menu
 
             // starting x and y locations to stack buttons 
@@ -490,6 +496,7 @@ namespace TrumpTower
             ImgExplosionButton = Content.Load<Texture2D>("SpecialAbilities/explosion");
             Vector2 _positionExplosionAbilityButton = new Vector2(15, _map.MapArray.GetLength(0) * Constant.imgSizeMap - 80);
             _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "explosionAbility", _positionExplosionAbilityButton, ImgExplosionButton));
+            _circleExplosion = createCircleText((int)_map.Explosion.Radius);
 
             #endregion
 
@@ -497,8 +504,16 @@ namespace TrumpTower
             _buttonSniper = Content.Load<Texture2D>("SpecialAbilities/Sniper/buttonSniper");
             _ammoSniper = Content.Load<Texture2D>("SpecialAbilities/Sniper/ammo");
             _cursorTarget = Content.Load<Texture2D>("SpecialAbilities/Sniper/cursorTarget");
-            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "sniperAbility", new Vector2(_positionExplosionAbilityButton.X + 80, _positionExplosionAbilityButton.Y), _buttonSniper));
+            Vector2 _positionSniperAbilityButton = new Vector2(_positionExplosionAbilityButton.X + 80, _positionExplosionAbilityButton.Y);
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "sniperAbility", new Vector2(_positionSniperAbilityButton.X, _positionSniperAbilityButton.Y), _buttonSniper));
             #endregion
+
+            #region Stciky Rice Button
+            _buttonMaki = Content.Load<Texture2D>("SpecialAbilities/stickyMaki");
+            Vector2 _positionMakiAbilityButton = new Vector2(_positionSniperAbilityButton.X + 80, _positionSniperAbilityButton.Y);
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "stickyRiceAbility", new Vector2(_positionMakiAbilityButton.X, _positionMakiAbilityButton.Y), _buttonMaki));
+            _circleStickyRice = createCircleText((int)_map.StickyRice.Radius);
+            #endregion 
 
             #endregion
 
@@ -508,16 +523,16 @@ namespace TrumpTower
 
             _imgCursorBomb = Content.Load<Texture2D>("cursorBomb");
             _imgCursorDefault = Content.Load<Texture2D>("cursor");
-
+            _imgCursorDeliveryRice = Content.Load<Texture2D>("deliveryRice");
             #endregion
 
             #region Sound
 
             ManagerSound.LoadContent(Content);
             // MUSIQUE 
-            MediaPlayer.Play(ManagerSound.Song1);
+            /*MediaPlayer.Play(ManagerSound.Song1);
             MediaPlayer.Volume = 0.15f;
-            MediaPlayer.IsRepeating = true;
+            MediaPlayer.IsRepeating = true;*/
 
             #endregion
 
@@ -1022,7 +1037,7 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-
+            
             #region Maps
 
             for (int y = 0; y < _map.HeightArrayMap; y++)
@@ -1034,6 +1049,9 @@ namespace TrumpTower
             }
 
             #endregion
+
+            if (_map.StickyRice.IsActivate)
+                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
 
             #region Wall
 
@@ -1227,6 +1245,7 @@ namespace TrumpTower
 
             #region Abilities Buttons
             _groupOfButtonsUIAbilities.Draw(spriteBatch);
+            
             #endregion
 
             #endregion
@@ -1297,15 +1316,24 @@ namespace TrumpTower
             #region Cursor
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
+            {
                 spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
+                spriteBatch.Draw(_circleExplosion, new Vector2(newStateMouse.X - (_circleExplosion.Width / 2), newStateMouse.Y - (_circleExplosion.Height / 2)), Color.White * 0.1f);
+            }
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "sniperAbility")
                 spriteBatch.Draw(_cursorTarget, new Vector2(newStateMouse.X - _cursorTarget.Width / 2, newStateMouse.Y - _cursorTarget.Height / 2), Color.White);
+            else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "stickyRiceAbility")
+            {
+                spriteBatch.Draw(_imgCursorDeliveryRice, new Vector2(newStateMouse.X - _imgCursorDeliveryRice.Width / 2, newStateMouse.Y - _imgCursorDeliveryRice.Height / 2), Color.White);
+                spriteBatch.Draw(_circleStickyRice, new Vector2(newStateMouse.X - (_circleStickyRice.Width / 2), newStateMouse.Y - (_circleStickyRice.Height / 2)), Color.White * 0.1f);
+            }
             else
                 spriteBatch.Draw(_imgCursorDefault, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
 
-            #endregion
-            spriteBatch.End();
 
+            #endregion
+
+            spriteBatch.End();
             base.Draw(gameTime);
         }
 
@@ -1315,5 +1343,34 @@ namespace TrumpTower
         public Map Map => _map;
         public SpriteBatch SpriteBatch => spriteBatch;
 
+        Texture2D createCircleText(int radius)
+        {
+            radius /= 2;
+            Texture2D texture = new Texture2D(GraphicsDevice, radius, radius);
+            Color[] colorData = new Color[radius * radius];
+
+            float diam = radius / 2f;
+            float diamsq = diam * diam;
+
+            for (int x = 0; x < radius; x++)
+            {
+                for (int y = 0; y < radius; y++)
+                {
+                    int index = x * radius + y;
+                    Vector2 pos = new Vector2(x - diam, y - diam);
+                    if (pos.LengthSquared() <= diamsq)
+                    {
+                        colorData[index] = Color.White;
+                    }
+                    else
+                    {
+                        colorData[index] = Color.Transparent;
+                    }
+                }
+            }
+
+            texture.SetData(colorData);
+            return texture;
+        }
     }
 }

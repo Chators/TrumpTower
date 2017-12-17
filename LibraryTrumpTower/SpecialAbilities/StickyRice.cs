@@ -11,7 +11,7 @@ using TrumpTower.LibraryTrumpTower.Constants;
 namespace LibraryTrumpTower.SpecialAbilities
 {
     [DataContract(IsReference = true)]
-    public class Explosion
+    public class StickyRice
     {
         #region Fields
         [DataMember]
@@ -23,39 +23,74 @@ namespace LibraryTrumpTower.SpecialAbilities
         [DataMember]
         public double Radius { get; private set; }
         [DataMember]
-        public double Damage { get; private set; }
+        public double SpeedReduceInPercent { get; private set; }
         [DataMember]
-        private Vector2 Position { get; set; }
+        public List<Enemy> AffectedEnemies { get; set; }
+        [DataMember]
+        public Vector2 Position { get; set; }
+        [DataMember]
+        private int InProgress { get; set; }
         #endregion
 
-        public Explosion (Map ctx)
+        public StickyRice(Map ctx)
         {
             _ctx = ctx;
-            Cooldown = 0 * 60;
+            Cooldown = 25 * 60;
             CurrentTimer = 0;
-            Radius = 800;
-            Damage = 30;
+            Radius = 1200;
+            SpeedReduceInPercent = 50;
             Position = new Vector2(-1000, -1000);
+            AffectedEnemies = new List<Enemy>();
         }
 
-        private void UpdateAttackEnemies(List<Enemy> enemies)
+        private void UpdateSlowEnemies(List<Enemy> enemies)
         {
-            foreach (Enemy enemy in enemies)
+            InProgress--;
+
+            for (int i = 0; i < AffectedEnemies.Count; i++)
             {
-                enemy.TakeHp(Damage);
-                if (enemy.IsDead) enemy.Die();
+                Enemy enemy = AffectedEnemies[i];
+                if (enemy.IsDead) AffectedEnemies.Remove(enemy);
+                else enemy.Speed = enemy.DefaultSpeed;
             }
-            CurrentTimer = Cooldown;
-            Position = new Vector2(-1000, -1000);
+
+            AffectedEnemies = new List<Enemy>();
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                Enemy enemy = enemies[i];
+                double reduce = (enemy.Speed * SpeedReduceInPercent / 100);
+                enemy.Speed = reduce;
+                AffectedEnemies.Add(enemy);
+            }
+
+            if (InProgress <= 0)
+            {
+                for (int i = 0; i < AffectedEnemies.Count; i++)
+                {
+                    Enemy enemy = AffectedEnemies[i];
+                    enemy.Speed = enemy.DefaultSpeed;
+                }
+                AffectedEnemies = new List<Enemy>();
+                Position = new Vector2(-1000, -1000);
+            }
+            ManagerSound.PlayCoinUp();
         }
 
         public void Update()
         {
-            if (IsActivate && IsReloaded) UpdateAttackEnemies(GetEnemies(Position, Radius));
+            // Si on le lance
+            if (IsActivate && IsReloaded && InProgress <= 0)
+            {
+                CurrentTimer = Cooldown;
+                InProgress = 10 * 60;
+            }
+            if (IsActivate) UpdateSlowEnemies(GetEnemies(Position, Radius));
+            // On recharge
             if (!IsReloaded) CurrentTimer--;
         }
 
-        public void AttackOn(Vector2 position) => Position = position;
+        public void On(Vector2 position) => Position = position;
 
         private List<Enemy> GetEnemies(Vector2 position, double radius)
         {

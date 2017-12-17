@@ -52,6 +52,21 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
                 spriteBatch.Draw(_img, reloadedRect, color);
             }
+
+            if (_name == "stickyRiceAbility")
+            {
+                double _currentTimer = _ctx.Ctx.Map.StickyRice.CurrentTimer;
+                // Si ce n'est pas rechargé
+                if (_currentTimer > 0) color = Color.Gray * 0.6f;
+                reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
+                spriteBatch.Draw(_img, reloadedRect, color);
+
+                if (_currentTimer > 0)
+                {
+                    Vector2 _positionText = new Vector2(reloadedRect.Location.X + (_img.Width / 2) - 19, reloadedRect.Location.Y + (_img.Height / 2) - 8);
+                    spriteBatch.DrawString(_ctx.CooldownSprite, (int)_currentTimer / 60 + "", _positionText, Color.YellowGreen);
+                }
+            }
         }
 
         public string Name => _name;
