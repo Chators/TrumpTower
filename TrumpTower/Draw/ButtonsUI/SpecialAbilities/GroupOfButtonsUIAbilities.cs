@@ -69,6 +69,21 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     }
                     ButtonHover = button;
                 }
+
+                button = ButtonsUIArray["stickyRiceAbility"];
+                if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                    newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
+                    newStateKeyboard.IsKeyDown(Keys.E) &&
+                    Ctx.Map.StickyRice.IsReloaded)
+                {
+                    if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
+                        newStateKeyboard.IsKeyDown(Keys.E) && lastStateKeyboard.IsKeyDown(Keys.E))
+                    {
+                        ManagerSound.PlayReloadSniper();
+                        ButtonActivated = button;
+                    }
+                    ButtonHover = button;
+                }
             }
             // Second Selection
             else if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
@@ -83,6 +98,12 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 if (ButtonActivated.Name == "sniperAbility" && !Ctx.GameIsPaused)
                 {
                     Ctx.Map.UseSniperAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
+                    ManagerSound.PlaySniperShoot();
+                }
+
+                if (ButtonActivated.Name == "stickyRiceAbility" && !Ctx.GameIsPaused)
+                {
+                    Ctx.Map.UseStickyRiceAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
                     ManagerSound.PlaySniperShoot();
                 }
 

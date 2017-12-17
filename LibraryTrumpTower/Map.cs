@@ -54,11 +54,18 @@ namespace TrumpTower.LibraryTrumpTower
         public Explosion Explosion { get; set; }
         [DataMember]
         public Sniper Sniper { get; set; }
-
+        [DataMember]
+        public StickyRice StickyRice { get; set; }
+        bool mdr;
         #endregion
 
         public Map(int[][] map)
         {
+            mdr = false;
+
+
+
+
             Name = null;
             MapArray = map;
             WidthArrayMap = map[0].Length;
@@ -70,6 +77,7 @@ namespace TrumpTower.LibraryTrumpTower
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
             Sniper = new Sniper(this);
+            StickyRice = new StickyRice(this);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
             DeadUnitsAir = new List<AirUnit>();
@@ -81,6 +89,32 @@ namespace TrumpTower.LibraryTrumpTower
 
         public void Update()
         {
+
+
+
+
+
+
+
+
+
+
+
+            /*if (!mdr)
+            {
+                StickyRice.On(new Vector2(64, 64));
+                mdr = true;
+            }*/
+
+
+
+
+
+
+
+
+
+
             List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
             {
@@ -107,6 +141,7 @@ namespace TrumpTower.LibraryTrumpTower
 
             Explosion.Update();
             Sniper.Update();
+            StickyRice.Update();
 
         }
 
@@ -223,6 +258,11 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseSniperAbility(Vector2 position)
         {
             Sniper.AttackOn(position);
+        }
+
+        public void UseStickyRiceAbility(Vector2 position)
+        {
+            StickyRice.On(position);
         }
 
         public void SettingTheMap (string name, int dollars)

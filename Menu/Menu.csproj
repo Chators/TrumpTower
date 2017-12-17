@@ -60,6 +60,10 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibraryTrumpTower\LibraryTrumpTower.csproj">
+      <Project>{32b7c425-7a69-4b6e-87aa-dd05dc332d16}</Project>
+      <Name>LibraryTrumpTower</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MapEditorTrumpTower\MapEditorTrumpTower.csproj">
       <Project>{93ba96dd-9bf6-428b-a0bc-e70441ebe8ad}</Project>
       <Name>MapEditorTrumpTower</Name>

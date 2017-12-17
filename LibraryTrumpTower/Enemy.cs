@@ -39,7 +39,9 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         readonly double _heal; // for the doc
         [DataMember]
-        public double Speed { get; private set; }
+        public double Speed { get; set; }
+        [DataMember]
+        public double DefaultSpeed { get; private set; }
         [DataMember]
         public int Bounty { get; private set; }
         [DataMember]
@@ -71,6 +73,7 @@ namespace TrumpTower.LibraryTrumpTower
                 MaxHp = 85;
                 _damage = 10;
                 Speed = 3;
+                DefaultSpeed = 3;
                 Bounty = 100;
             } else if (type == EnemyType.kamikaze)
             {
@@ -78,6 +81,7 @@ namespace TrumpTower.LibraryTrumpTower
                 MaxHp = 200;
                 _damage = Constant.MaxWallHp;
                 Speed = 2.2;
+                DefaultSpeed = 2.2;
                 Bounty = 200;
             } else if (type == EnemyType.doctor)
             {
@@ -85,6 +89,7 @@ namespace TrumpTower.LibraryTrumpTower
                 MaxHp = 120;
                 _damage = 5;
                 Speed = 3;
+                DefaultSpeed = 3;
                 Bounty = 150;
                 _heal = 20;
                 ActionRadius = 400;
@@ -96,6 +101,7 @@ namespace TrumpTower.LibraryTrumpTower
                 MaxHp = 50;
                 _damage = 5;
                 Speed = 4;
+                DefaultSpeed = 4;
                 Bounty = 150;
                 ActionRadius = 500;
                 _reload = Constant.DisabledTower*60;
