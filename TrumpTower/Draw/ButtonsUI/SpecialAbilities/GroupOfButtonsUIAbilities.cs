@@ -79,7 +79,6 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
                         newStateKeyboard.IsKeyDown(Keys.E) && lastStateKeyboard.IsKeyDown(Keys.E))
                     {
-                        ManagerSound.PlayReloadSniper();
                         ButtonActivated = button;
                     }
                     ButtonHover = button;
@@ -104,7 +103,6 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 if (ButtonActivated.Name == "stickyRiceAbility" && !Ctx.GameIsPaused)
                 {
                     Ctx.Map.UseStickyRiceAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
-                    ManagerSound.PlaySniperShoot();
                 }
 
                 ButtonActivated = null;

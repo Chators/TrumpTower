@@ -1099,3 +1099,21 @@
 /processorParam:TextureFormat=Color
 /build:deliveryRice.png
 
+#begin Enemies/air/planeTurbo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/air/planeTurbo.png
+
+#begin Enemies/air/soundPlaneTurbo.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Enemies/air/soundPlaneTurbo.wav
+

@@ -100,6 +100,7 @@ namespace TrumpTower
         #region Air Units
         Texture2D _imgPlane1;
         Texture2D _imgPlane2;
+        Texture2D _imgPlaneTurbo;
 
         #endregion
 
@@ -274,7 +275,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true ;
             graphics.ApplyChanges();
 
             // Résolution d'écran
@@ -301,7 +302,6 @@ namespace TrumpTower
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
             GameIsPaused = false;
-
             
             #region Tower Selector
 
@@ -395,7 +395,7 @@ namespace TrumpTower
             #region Air Enemies
             _imgPlane1 = Content.Load<Texture2D>("Enemies/Air/plane1");
             _imgPlane2 = Content.Load<Texture2D>("Enemies/Air/plane2");
-
+            _imgPlaneTurbo = Content.Load<Texture2D>("Enemies/Air/planeTurbo");
             #endregion
 
             #endregion
@@ -670,6 +670,14 @@ namespace TrumpTower
                 }
                 #endregion
 
+                #endregion
+
+                #region Animated Stick Rice Plane
+                /*if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
+                {
+                    if (_map.StickyRice.PositionPlaneOfRice.X > VirtualWidth + _imgPlane1.Width)
+                        _map.StickyRice.PositionPlaneOfRice = new Vector2(-1000, -1000);
+                }*/
                 #endregion
             }
 
@@ -1050,9 +1058,18 @@ namespace TrumpTower
 
             #endregion
 
-            if (_map.StickyRice.IsActivate)
+            if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
                 spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
-
+            if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
+            {
+                Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlaneTurbo.Width, _imgPlaneTurbo.Height);
+                Vector2 origin = new Vector2(_imgPlaneTurbo.Width / 2, _imgPlaneTurbo.Height / 2);
+                Vector2 direction = _map.StickyRice.PositionPlaneOfRice - new Vector2(VirtualWidth + _imgPlaneTurbo.Width, _map.StickyRice.PositionPlaneOfRice.Y);
+                direction.Normalize();
+                float _rotate = (float)Math.Atan2(-direction.X, direction.Y);
+                spriteBatch.Draw(_imgPlaneTurbo, _map.StickyRice.PositionPlaneOfRice, null, Color.White, _rotate, origin, 1.0f, SpriteEffects.None, 1);
+            }
+        
             #region Wall
 
             Wall _wall = _map.Wall;

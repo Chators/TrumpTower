@@ -47,6 +47,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
 
         #endregion
 
+        public static int TIME_STICKYRICE = 10 * 60;
         public static int imgSizeMap = 64;
         public static int ImgSizePlane = 64;
         public static int ImgSizeEnemy = 64;

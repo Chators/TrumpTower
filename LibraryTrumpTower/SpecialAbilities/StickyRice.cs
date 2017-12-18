@@ -29,7 +29,14 @@ namespace LibraryTrumpTower.SpecialAbilities
         [DataMember]
         public Vector2 Position { get; set; }
         [DataMember]
-        private int InProgress { get; set; }
+        public int InProgress { get; set; }
+        [DataMember]
+        public Vector2 PositionPlaneOfRice;
+        [DataMember]
+        public bool PlaneIsClose { get; set; }
+        [DataMember]
+        public float SpeedPlane { get; set; }
+
         #endregion
 
         public StickyRice(Map ctx)
@@ -39,7 +46,10 @@ namespace LibraryTrumpTower.SpecialAbilities
             CurrentTimer = 0;
             Radius = 1200;
             SpeedReduceInPercent = 50;
+            SpeedPlane = 12f;
             Position = new Vector2(-1000, -1000);
+            PositionPlaneOfRice = new Vector2(-1000, -1000);
+            PlaneIsClose = false;
             AffectedEnemies = new List<Enemy>();
         }
 
@@ -74,7 +84,6 @@ namespace LibraryTrumpTower.SpecialAbilities
                 AffectedEnemies = new List<Enemy>();
                 Position = new Vector2(-1000, -1000);
             }
-            ManagerSound.PlayCoinUp();
         }
 
         public void Update()
@@ -82,10 +91,24 @@ namespace LibraryTrumpTower.SpecialAbilities
             // Si on le lance
             if (IsActivate && IsReloaded && InProgress <= 0)
             {
+                PositionPlaneOfRice = new Vector2(0, Position.Y);
                 CurrentTimer = Cooldown;
                 InProgress = 10 * 60;
+                ManagerSound.PlayPlaneTurbo();
             }
-            if (IsActivate) UpdateSlowEnemies(GetEnemies(Position, Radius));
+            if (IsActivate)
+            {
+                // Si l'avion est parti
+                if (PositionPlaneOfRice != new Vector2(-1000, -1000))
+                {
+                    PositionPlaneOfRice.X += SpeedPlane;
+                    if (!PlaneIsClose && Vector2.Distance(PositionPlaneOfRice, Position) < SpeedPlane)
+                        PlaneIsClose = true;
+                }
+                if (PlaneIsClose)
+                    UpdateSlowEnemies(GetEnemies(Position, Radius));
+
+            }
             // On recharge
             if (!IsReloaded) CurrentTimer--;
         }
