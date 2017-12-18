@@ -86,7 +86,7 @@ namespace MapEditorTrumpTower
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            IsMouseVisible = true;
+            IsMouseVisible = false;
             // First, we create an input manager.
             _inputManager = new InputListenerComponent(this);
 
@@ -343,7 +343,6 @@ namespace MapEditorTrumpTower
                 #endregion
 
                 spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-                IsMouseVisible = true;
 
                 #region Draw Map
                 for (int y = 0; y < _map.HeightArrayMap; y++)
@@ -403,11 +402,20 @@ namespace MapEditorTrumpTower
 
             _gui.Draw(gameTime);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-            #region Draw Cursor
-            spriteBatch.Draw(_imgCursor, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
-            #endregion
-            spriteBatch.End();
+            if (_gui.Screen.Desktop.Children.Count == 0)
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
+                spriteBatch.Draw(_imgCursor, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
+                spriteBatch.End();
+            }
+            else
+            {
+                newStateMouse = Mouse.GetState();
+                spriteBatch.Begin();
+                spriteBatch.Draw(_imgCursor, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
+                spriteBatch.End();
+            }
+
             base.Draw(gameTime);
         }
 
@@ -480,9 +488,11 @@ namespace MapEditorTrumpTower
                 }
             }
 
+            int _sizeY;
             if (_size >= Constant.MinWidthMap && _size <= Constant.MaxWidthMap)
             {
-                int[,] _mapPoint2D = new int[_size, _size];
+                _sizeY = _size / (16 / 9);
+                int[,] _mapPoint2D = new int[_size, _sizeY];
                 for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
                 {
                     for (int x = 0; x < _mapPoint2D.GetLength(1); x++)

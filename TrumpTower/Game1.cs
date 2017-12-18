@@ -260,7 +260,7 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
             _map = new Map(_mapPoint);*/
-            _map = BinarySerializer.Deserialize<Map>("../../../../../Menu/bin/Windows/x86/Debug/map1.xml");
+            _map = BinarySerializer.Deserialize<Map>("../../../../../MapEditorTrumpTower/bin/x86/Debug/map1.xml");
             
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
