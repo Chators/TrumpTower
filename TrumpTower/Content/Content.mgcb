@@ -1110,6 +1110,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemies/air/planeTurbo.png
+
 #begin Sound/game_over.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -1121,7 +1122,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Enemies/air/soundPlaneTurbo.wav
-
 
 #begin retry.png
 /importer:TextureImporter
@@ -1141,4 +1141,28 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:gameOver.spritefont
+
+#begin Heroes/heroes1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Heroes/heroes1.png
+
+#begin Heroes/jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Heroes/jump.wav
+
+#begin Heroes/shootHero.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Heroes/shootHero.wav
 

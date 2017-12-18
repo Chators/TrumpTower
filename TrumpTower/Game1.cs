@@ -38,6 +38,10 @@ namespace TrumpTower
         SpriteFont _gameOver;
         #endregion
 
+        #region Heroes
+        Texture2D _imgHeroes1;
+        #endregion
+
         #region Maps
 
         int[,] _mapPoint;
@@ -377,6 +381,10 @@ namespace TrumpTower
                 Content.Load<Texture2D>("retry");
 
 
+            #endregion
+
+            #region Heroes 
+            _imgHeroes1 = Content.Load<Texture2D>("Heroes/heroes1");
             #endregion
 
             #region Maps
@@ -829,6 +837,8 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
+            _map.Hero.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
             if (!realPause)
             {
                 _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
@@ -1053,6 +1063,7 @@ namespace TrumpTower
 
                 #endregion
             }
+            #region Pause
             if (newStateKeyboard.IsKeyDown(Keys.Escape) && lastStateKeyboard.IsKeyUp(Keys.Escape))
             {
                 if (realPause == false)
@@ -1077,6 +1088,7 @@ namespace TrumpTower
                 }
 
             }
+            #endregion
         }
 
 
@@ -1335,7 +1347,14 @@ namespace TrumpTower
             }
             #endregion
 
-            
+            #region Heroes
+            Hero hero = _map.Hero;
+            spriteBatch.Draw(_imgHeroes1, hero.Position, Color.White);
+            /*Vector2 originee = new Vector2(_imgHeroes1.Width / 2, _imgHeroes1.Height / 2);
+            spriteBatch.Draw(_imgHeroes1, hero.Position, null, Color.White, hero.Angle, originee, 1.0f, SpriteEffects.None, 1)*/
+            //spriteBatch.Draw(_imgHeroes1, hero.Position, null, Color.White, hero.Angle, originee, 1.0f, SpriteEffects.None, 1);
+            #endregion
+
 
             #region HELP DEBOGAGE
 
