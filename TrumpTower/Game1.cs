@@ -32,6 +32,11 @@ namespace TrumpTower
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        #region Lose condition
+        bool isLost;
+        int policeBlink;
+        SpriteFont _gameOver;
+        #endregion
 
         #region Maps
 
@@ -180,10 +185,11 @@ namespace TrumpTower
             DOWN
         }
 
-        const int NUMBER_OF_BUTTONS = 3,
+        const int NUMBER_OF_BUTTONS = 4,
                 ResumeButton = 0,
                 HomeButton = 1,
                 QuitButton = 2,
+                Retry = 3,
                 BUTTON_HEIGHT = 250,
                 BUTTON_WIDTH = 300;
 
@@ -261,7 +267,7 @@ namespace TrumpTower
             };
             _map = new Map(_mapPoint);*/
             _map = BinarySerializer.Deserialize<Map>("../../../../../MapEditorTrumpTower/bin/x86/Debug/map1.xml");
-            
+
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
             #endregion
@@ -269,7 +275,7 @@ namespace TrumpTower
             #region Graphics Device 
 
             Window.Position = new Point(800, 600);
-        
+
             Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
@@ -301,8 +307,9 @@ namespace TrumpTower
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
             GameIsPaused = false;
+            isLost = false;
+            policeBlink = 120;
 
-            
             #region Tower Selector
 
             _towerSelector = new Vector2(-1000, -1000);
@@ -362,6 +369,8 @@ namespace TrumpTower
                 Content.Load<Texture2D>("home");
             button_texture[QuitButton] =
                 Content.Load<Texture2D>("quit");
+            button_texture[Retry] =
+                Content.Load<Texture2D>("retry");
 
 
             #endregion
@@ -371,7 +380,7 @@ namespace TrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                if(name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
             }
 
             #endregion
@@ -443,6 +452,7 @@ namespace TrumpTower
             _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
             _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
             AnimationsDollars = new DollarsAnimationsDefinition(new Vector2(50, 17), _spriteDollars, spriteBatch, (int)_map.Dollars);
+            _gameOver = Content.Load<SpriteFont>("gameOver");
 
             #endregion
 
@@ -571,6 +581,7 @@ namespace TrumpTower
         protected override void Update(GameTime gameTime)
         {
 
+            Console.WriteLine(policeBlink);
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
 
@@ -605,11 +616,20 @@ namespace TrumpTower
             if (stratPause >= 5)
             {
                 GameIsPaused = false;
-                
+
             }
             if (!GameIsPaused && realPause == false)
             {
-                if (_map.Wall.IsDead()) Exit(); // If base loses hp, game will exit.
+                if (_map.Wall.IsDead())
+                {
+                    isLost = true;
+                    //Exit(); // If base loses hp, game will exit.
+                    policeBlink--;
+                    if (policeBlink <= 0)
+                    {
+                        policeBlink = 120;
+                    }
+                }
 
                 _map.Update();
 
@@ -664,7 +684,7 @@ namespace TrumpTower
                 for (int i = 0; i < _map.TowerDisabled.Count; i++)
                 {
                     Tower tower = _map.Towers[i];
-                    AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X-148, (int)tower.Position.Y-30, Constant.DisabledTower));
+                    AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, Constant.DisabledTower));
                     _map.TowerDisabled.Remove(tower);
                     Console.WriteLine("mdrr");
                 }
@@ -675,8 +695,7 @@ namespace TrumpTower
 
             base.Update(gameTime);
         }
-
-
+       
         #region In game menu
 
         // wrapper for hit_image_alpha taking Rectangle and Texture
@@ -769,7 +788,7 @@ namespace TrumpTower
         // Logic for each button click goes here
         void take_action_on_button(int i)
         {
-            if (realPause == true)
+            if (realPause == true || isLost == true)
             {
                 //take action corresponding to which button was clicked
                 switch (i)
@@ -783,6 +802,9 @@ namespace TrumpTower
                         break;
                     case HomeButton:
                         Exit();
+                        break;
+                    case Retry:
+                        /*DES CHOSES TREEEEES SOMBRE A FAIRE ICI*/
                         break;
                     default:
                         break;
@@ -1037,7 +1059,7 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-            
+        
             #region Maps
 
             for (int y = 0; y < _map.HeightArrayMap; y++)
@@ -1313,6 +1335,22 @@ namespace TrumpTower
                 for (int i = 0; i < 3; i++)
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
+            if (isLost)
+            {
+                
+                spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
+
+                if (policeBlink > 60)
+                {
+                    if(policeBlink == 120) ManagerSound.PlayGameOver();
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(530, 10),Color.Red);
+                }else if (policeBlink <= 60)
+                {
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(530, 10), Color.White);
+                }
+                spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
+                spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
+            }
             #region Cursor
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
@@ -1336,9 +1374,6 @@ namespace TrumpTower
             spriteBatch.End();
             base.Draw(gameTime);
         }
-
-
-
 
         public Map Map => _map;
         public SpriteBatch SpriteBatch => spriteBatch;
