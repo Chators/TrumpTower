@@ -61,11 +61,6 @@ namespace TrumpTower.LibraryTrumpTower
 
         public Map(int[][] map)
         {
-            mdr = false;
-
-
-
-
             Name = null;
             MapArray = map;
             WidthArrayMap = map[0].Length;
@@ -89,32 +84,6 @@ namespace TrumpTower.LibraryTrumpTower
 
         public void Update()
         {
-
-
-
-
-
-
-
-
-
-
-
-            /*if (!mdr)
-            {
-                StickyRice.On(new Vector2(64, 64));
-                mdr = true;
-            }*/
-
-
-
-
-
-
-
-
-
-
             List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
             {

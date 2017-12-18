@@ -67,11 +67,15 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitnoAvailable;
         private static SoundEffectInstance noAvailable;
 
+        private static SoundEffect InitPlaneTurbo;
+        private static SoundEffectInstance PlaneTurbo;
+
         private static SoundEffect InitGameOver;
         private static SoundEffectInstance GameOver;
 
         static public void LoadContent(ContentManager Content)
         {
+            InitPlaneTurbo = Content.Load<SoundEffect>("Enemies/air/soundPlaneTurbo");
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
             InitTowerShoot = Content.Load<SoundEffect>("Sound/songExplosion");
             InitExplosionAbility = Content.Load<SoundEffect>("SpecialAbilities/explosionSound");
@@ -91,6 +95,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitBuild = Content.Load<SoundEffect>("Sound/build");
             InitnoAvailable = Content.Load<SoundEffect>("Sound/no_available");
             InitGameOver = Content.Load<SoundEffect>("Sound/game_over");
+        }
+
+        public static void PlayPlaneTurbo()
+        {
+            PlaneTurbo = InitPlaneTurbo.CreateInstance();
+            PlaneTurbo.Volume = 1f;
+            PlaneTurbo.Play();
         }
 
         public static void PlayGameOver()
