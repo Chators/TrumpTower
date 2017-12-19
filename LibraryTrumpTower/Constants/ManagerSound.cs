@@ -76,6 +76,9 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitRiceSplash;
         private static SoundEffectInstance RiceSplash;
 
+        private static SoundEffect InitGameOver;
+        private static SoundEffectInstance GameOver;
+
         static public void LoadContent(ContentManager Content)
         {
             InitRiceSplash = Content.Load<SoundEffect>("Enemies/air/riceSplash");
@@ -99,6 +102,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitSell = Content.Load<SoundEffect>("Sound/sell");
             InitBuild = Content.Load<SoundEffect>("Sound/build");
             InitnoAvailable = Content.Load<SoundEffect>("Sound/no_available");
+            InitGameOver = Content.Load<SoundEffect>("Sound/game_over");
         }
 
         public static void PlayRiceSplash()
@@ -120,6 +124,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             PlaneTurbo = InitPlaneTurbo.CreateInstance();
             PlaneTurbo.Volume = 0.8f;
             PlaneTurbo.Play();
+        }
+
+        public static void PlayGameOver()
+        {
+            CoinUp = InitGameOver.CreateInstance();
+            CoinUp.Volume = 1f;
+            CoinUp.Play();
         }
 
         public static void PlayNoAvailable()

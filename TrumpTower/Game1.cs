@@ -32,6 +32,11 @@ namespace TrumpTower
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        #region Lose condition
+        bool isLost;
+        int policeBlink;
+        SpriteFont _gameOver;
+        #endregion
 
         #region Maps
 
@@ -75,6 +80,8 @@ namespace TrumpTower
         Texture2D _imgSell;
         bool _verif;
         bool _verif2;
+        bool _verif3;
+        bool _verif4;
 
         #endregion
 
@@ -181,10 +188,11 @@ namespace TrumpTower
             DOWN
         }
 
-        const int NUMBER_OF_BUTTONS = 3,
+        const int NUMBER_OF_BUTTONS = 4,
                 ResumeButton = 0,
                 HomeButton = 1,
                 QuitButton = 2,
+                Retry = 3,
                 BUTTON_HEIGHT = 250,
                 BUTTON_WIDTH = 300;
 
@@ -262,7 +270,7 @@ namespace TrumpTower
             };
             _map = new Map(_mapPoint);*/
             _map = BinarySerializer.Deserialize<Map>("../../../../../MapEditorTrumpTower/bin/x86/Debug/map1.xml");
-            
+
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
             #endregion
@@ -270,7 +278,7 @@ namespace TrumpTower
             #region Graphics Device 
 
             Window.Position = new Point(800, 600);
-        
+
             Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
@@ -291,7 +299,8 @@ namespace TrumpTower
 
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
-
+            _verif3 = false;
+            _verif4 = false;
             // Animations
             AnimSprites = new SimpleAnimationDefinition[4];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
@@ -302,7 +311,9 @@ namespace TrumpTower
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
             GameIsPaused = false;
-            
+            isLost = false;
+            policeBlink = 120;
+
             #region Tower Selector
 
             _towerSelector = new Vector2(-1000, -1000);
@@ -362,6 +373,8 @@ namespace TrumpTower
                 Content.Load<Texture2D>("home");
             button_texture[QuitButton] =
                 Content.Load<Texture2D>("quit");
+            button_texture[Retry] =
+                Content.Load<Texture2D>("retry");
 
 
             #endregion
@@ -371,7 +384,7 @@ namespace TrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                if(name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
             }
 
             #endregion
@@ -443,6 +456,7 @@ namespace TrumpTower
             _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
             _backgroundDollars = Content.Load<Texture2D>("Dollars/backgroundDollars");
             AnimationsDollars = new DollarsAnimationsDefinition(new Vector2(50, 17), _spriteDollars, spriteBatch, (int)_map.Dollars);
+            _gameOver = Content.Load<SpriteFont>("gameOver");
 
             #endregion
 
@@ -571,6 +585,7 @@ namespace TrumpTower
         protected override void Update(GameTime gameTime)
         {
 
+            Console.WriteLine(policeBlink);
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
 
@@ -605,11 +620,20 @@ namespace TrumpTower
             if (stratPause >= 5)
             {
                 GameIsPaused = false;
-                
+
             }
             if (!GameIsPaused && realPause == false)
             {
-                if (_map.Wall.IsDead()) Exit(); // If base loses hp, game will exit.
+                if (_map.Wall.IsDead())
+                {
+                    isLost = true;
+                    //Exit(); // If base loses hp, game will exit.
+                    policeBlink--;
+                    if (policeBlink <= 0)
+                    {
+                        policeBlink = 120;
+                    }
+                }
 
                 _map.Update();
 
@@ -664,7 +688,7 @@ namespace TrumpTower
                 for (int i = 0; i < _map.TowerDisabled.Count; i++)
                 {
                     Tower tower = _map.Towers[i];
-                    AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X-148, (int)tower.Position.Y-30, Constant.DisabledTower));
+                    AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, Constant.DisabledTower));
                     _map.TowerDisabled.Remove(tower);
                     Console.WriteLine("mdrr");
                 }
@@ -675,8 +699,7 @@ namespace TrumpTower
 
             base.Update(gameTime);
         }
-
-
+       
         #region In game menu
 
         // wrapper for hit_image_alpha taking Rectangle and Texture
@@ -769,7 +792,7 @@ namespace TrumpTower
         // Logic for each button click goes here
         void take_action_on_button(int i)
         {
-            if (realPause == true)
+            if (realPause == true || isLost == true)
             {
                 //take action corresponding to which button was clicked
                 switch (i)
@@ -783,6 +806,9 @@ namespace TrumpTower
                         break;
                     case HomeButton:
                         Exit();
+                        break;
+                    case Retry:
+                        /*DES CHOSES TREEEEES SOMBRE A FAIRE ICI*/
                         break;
                     default:
                         break;
@@ -809,15 +835,19 @@ namespace TrumpTower
                 if (newStateMouse.LeftButton == ButtonState.Pressed &&
                     lastStateMouse.LeftButton == ButtonState.Released)
                 {
-                    foreach (Vector2 position in emptyTowers)
+                    if (_verif3 == false)
                     {
-                        if (newStateMouse.X > position.X * Constant.imgSizeMap &&
-                            newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[5].Width &&
-                            newStateMouse.Y > position.Y * Constant.imgSizeMap &&
-                            newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
+                        foreach (Vector2 position in emptyTowers)
                         {
-                            _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
-                            _verif = true;
+                            if (newStateMouse.X > position.X * Constant.imgSizeMap &&
+                                newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[5].Width &&
+                                newStateMouse.Y > position.Y * Constant.imgSizeMap &&
+                                newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
+                            {
+                                _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
+                                _verif = true;
+                                _verif3 = true;
+                            }
                         }
                     }
                 }
@@ -827,6 +857,7 @@ namespace TrumpTower
                 {
                     if (_towerSelector != new Vector2(-1000, -1000))
                     {
+
                         if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
                         newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
                         newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
@@ -838,6 +869,8 @@ namespace TrumpTower
                                 _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
                                 _map.Dollars -= Tower.TowerPrice(TowerType.simple);
                                 _towerSelector = new Vector2(-1000, -1000);
+                                _verif3 = false;
+                                _verif4 = true;
                             }
                         }
                         else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
@@ -851,6 +884,8 @@ namespace TrumpTower
                                 _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
                                 _map.Dollars -= Tower.TowerPrice(TowerType.slow);
                                 _towerSelector = new Vector2(-1000, -1000);
+                                _verif3 = false;
+                                _verif4 = true;
                             }
                         }
                         else if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
@@ -864,6 +899,8 @@ namespace TrumpTower
                                 _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
                                 _map.Dollars -= Tower.TowerPrice(TowerType.area);
                                 _towerSelector = new Vector2(-1000, -1000);
+                                _verif3 = false;
+                                _verif4 = true;
                             }
                         }
                         else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
@@ -877,32 +914,21 @@ namespace TrumpTower
                                 _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
                                 _map.Dollars -= Tower.TowerPrice(TowerType.bank);
                                 _towerSelector = new Vector2(-1000, -1000);
+                                _verif3 = false;
+                                _verif4 = true;
                             }
                         }
                         else if (_verif == false)
                         {
                             _towerSelector = new Vector2(-1000, -1000);
+                            _verif3 = false;
                         }
                         _verif = false;
                     }
-                    else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
-                    newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
-                    newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
-                    newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                    else
                     {
-                        if (_map.Dollars >= Tower.TowerPrice(TowerType.bank))
-                        {
-                            _map.CreateTower(new Tower(_map, TowerType.bank, 1, _towerSelector));
-                            _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                            _map.Dollars -= Tower.TowerPrice(TowerType.bank);
-                            _towerSelector = new Vector2(-1000, -1000);
-                        }
+                        _verif3 = false;
                     }
-                    else if (_verif == false)
-                    {
-                        _towerSelector = new Vector2(-1000, -1000);
-                    }
-                    _verif = false;
                 }
 
                 #endregion
@@ -912,18 +938,27 @@ namespace TrumpTower
                 if (newStateMouse.LeftButton == ButtonState.Pressed &&
                 lastStateMouse.LeftButton == ButtonState.Released)
                 {
-                    foreach (Tower tow in _map.Towers)
+                    if (_towerSelector == new Vector2(-1000, -1000))
                     {
-                        if (newStateMouse.X > tow.Position.X &&
-                            newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
-                            newStateMouse.Y > tow.Position.Y &&
-                            newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                        if (_verif4 == false)
                         {
-                            _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
-                            _verif2 = true;
-                            _myTow = tow;
+                            foreach (Tower tow in _map.Towers)
+                            {
+                                if (newStateMouse.X > tow.Position.X &&
+                                    newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
+                                    newStateMouse.Y > tow.Position.Y &&
+                                    newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                                {
+                                    _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
+                                    _verif2 = true;
+                                    _myTow = tow;
+                                    _verif3 = true;
+                                    _verif4 = true;
 
-                            Console.WriteLine("selecteur : " + _towerSelectorUpgrade + "   Tower : " + _myTow.Position);
+
+                                    Console.WriteLine("selecteur : " + _towerSelectorUpgrade + "   Tower : " + _myTow.Position);
+                                }
+                            }
                         }
                     }
                 }
@@ -939,10 +974,11 @@ namespace TrumpTower
                         {
                             if (_myTow.Position == _towerSelectorUpgrade)
                             {
-                                if (_map.Dollars > Tower.TowerPrice(_myTow.Type) * 1.5)
+                                if (_map.Dollars >= Tower.TowerPrice(_myTow.Type) * 1.5)
                                 {
                                     _myTow.Upgrade(_myTow);
                                     ManagerSound.PlayPowerUp();
+                                    _verif4 = false;
                                 }
                             }
                             _towerSelectorUpgrade = new Vector2(-1000, -1000);
@@ -958,15 +994,24 @@ namespace TrumpTower
                                 _map.ChangeLocation((int)_myTow.Position.X / Constant.imgSizeMap, (int)_myTow.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
                                 _myTow.Sell(_myTow);
                                 ManagerSound.PlaySell();
+                                _verif4 = false;
+                                _verif3 = true;
                             }
                             _towerSelectorUpgrade = new Vector2(-1000, -1000);
                         }
                         else if (_verif2 == false)
                         {
                             _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                            _verif4 = false;
                         }
                         _verif2 = false;
                     }
+                    else
+                    {
+                        _verif4 = false;
+                    }
+
+
                 }
                 if (newStateMouse.RightButton == ButtonState.Pressed &&
                         lastStateMouse.RightButton == ButtonState.Released)
@@ -1037,7 +1082,7 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-            
+        
             #region Maps
 
             for (int y = 0; y < _map.HeightArrayMap; y++)
@@ -1322,6 +1367,22 @@ namespace TrumpTower
                 for (int i = 0; i < 3; i++)
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
+            if (isLost)
+            {
+                
+                spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
+
+                if (policeBlink > 60)
+                {
+                    if(policeBlink == 120) ManagerSound.PlayGameOver();
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(530, 10),Color.Red);
+                }else if (policeBlink <= 60)
+                {
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(530, 10), Color.White);
+                }
+                spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
+                spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
+            }
             #region Cursor
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
@@ -1345,9 +1406,6 @@ namespace TrumpTower
             spriteBatch.End();
             base.Draw(gameTime);
         }
-
-
-
 
         public Map Map => _map;
         public SpriteBatch SpriteBatch => spriteBatch;
