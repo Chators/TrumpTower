@@ -29,7 +29,6 @@ namespace TrumpTower
     {
 
         #region Fields
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         #region Lose condition
@@ -230,6 +229,8 @@ namespace TrumpTower
         public bool warning;
         Texture2D _imgWarning2;
 
+        Texture2D _spriteHeal;
+
         #endregion
 
         public Game1()
@@ -302,11 +303,12 @@ namespace TrumpTower
             _verif3 = false;
             _verif4 = false;
             // Animations
-            AnimSprites = new SimpleAnimationDefinition[4];
+            AnimSprites = new SimpleAnimationDefinition[5];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
             AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 20, false);
             AnimSprites[3] = new SimpleAnimationDefinition(this, this, "Enemies/animThunderSaboteur", new Point(350, 105), new Point(5, 2), 12, true);
+            AnimSprites[4] = new SimpleAnimationDefinition(this, this, "Enemies/heal", new Point(192, 192), new Point(5, 5), 100, false);
 
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
@@ -659,6 +661,30 @@ namespace TrumpTower
                         animatedSprite.Update(gameTime);
                     }
                 }
+                /*
+                double positionX = target.X + (imgTarget.Width / 2) - (_imgLife.Width / 2) * _sizeBar;
+                double positionY = target.Y - _imgLife.Height * _sizeBar;
+                */
+
+                #region Anim Heal
+                for (int i = 0; i < _map.AnimHeal.Count; i++)
+                {
+                    Enemy doctor = _map.AnimHeal[i];
+                    Vector2 positionDoctor = Vector2.Zero;
+
+                    if (doctor.CurrentDirection == Move.left)
+                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width - 25, (int)doctor.Position.Y - _imgEnemy1.Height);
+                    else if (doctor.CurrentDirection == Move.right)
+                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width/2, (int)doctor.Position.Y - _imgEnemy1.Height);
+                    if (doctor.CurrentDirection == Move.top)
+                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width , (int)doctor.Position.Y - _imgEnemy1.Height - 10);
+                    else if (doctor.CurrentDirection == Move.down)
+                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width, (int)doctor.Position.Y - _imgEnemy1.Height/2);
+
+                    AnimSprites[4].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[4], (int)positionDoctor.X, (int)positionDoctor.Y));
+                    _map.AnimHeal.Remove(doctor);
+                }
+                #endregion
 
                 #region Anim Blood
 
@@ -1095,6 +1121,7 @@ namespace TrumpTower
 
             #endregion
 
+            #region StickRice
             if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
                 spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
             if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
@@ -1106,7 +1133,8 @@ namespace TrumpTower
                 float _rotate = (float)Math.Atan2(-direction.X, direction.Y);
                 spriteBatch.Draw(_imgPlaneTurbo, _map.StickyRice.PositionPlaneOfRice, null, Color.White, _rotate, origin, 1.0f, SpriteEffects.None, 1);
             }
-        
+            #endregion
+
             #region Wall
 
             Wall _wall = _map.Wall;

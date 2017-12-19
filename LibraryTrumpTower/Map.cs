@@ -46,6 +46,8 @@ namespace TrumpTower.LibraryTrumpTower
         public List<AirUnitsCollection> AirUnits { get; set; }
         [DataMember]
         public List<AirUnit> DeadUnitsAir { get; set; }
+        [DataMember]
+        public List<Enemy> AnimHeal { get; set; }
 
         [DataMember]
         public List<Tower> TowerDisabled;
@@ -56,7 +58,6 @@ namespace TrumpTower.LibraryTrumpTower
         public Sniper Sniper { get; set; }
         [DataMember]
         public StickyRice StickyRice { get; set; }
-        bool mdr;
         #endregion
 
         public Map(int[][] map)
@@ -77,6 +78,7 @@ namespace TrumpTower.LibraryTrumpTower
             AirUnits = new List<AirUnitsCollection>();
             DeadUnitsAir = new List<AirUnit>();
             TowerDisabled = new List<Tower>();
+            AnimHeal = new List<Enemy>();
 
             WavesCounter = 0;
             WavesTotals = 0;

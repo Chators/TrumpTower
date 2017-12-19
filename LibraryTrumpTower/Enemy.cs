@@ -190,8 +190,8 @@ namespace TrumpTower.LibraryTrumpTower
                         if (enemy.CurrentHp + _heal > enemy.MaxHp) enemy.CurrentHp = enemy.MaxHp;
                         else enemy.CurrentHp += _heal;
                         _reload = _healCooldown * 60;
-
                     }
+                    _map.AnimHeal.Add(this);
                 }
             }
             
