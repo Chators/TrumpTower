@@ -79,7 +79,7 @@ namespace TrumpTower.LibraryTrumpTower
         //
         public void Update(List<Enemy> _enemies)
         {
-            if (_reload == 0) _isDisabled = false;
+            if (IsReload) _isDisabled = false;
 
             foreach (Enemy myEnemy in _enemies)
             {
@@ -94,8 +94,9 @@ namespace TrumpTower.LibraryTrumpTower
                 if (WithinReachOf(myEnemy.Position) && hpEnemy > 0)
                 { 
                     if (!IsDisabled)
-                    SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(myEnemy.Position.X + 32, myEnemy.Position.Y + 32));
-                    if (IsReload) UpdateShoot(myEnemy); 
+                        SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(myEnemy.Position.X + 32, myEnemy.Position.Y + 32));
+                    if (IsReload)
+                        UpdateShoot(myEnemy); 
                     break;
                 }
             }

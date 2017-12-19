@@ -283,7 +283,7 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true ;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             // Résolution d'écran
@@ -585,7 +585,6 @@ namespace TrumpTower
         protected override void Update(GameTime gameTime)
         {
 
-            Console.WriteLine(policeBlink);
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
 
@@ -684,10 +683,9 @@ namespace TrumpTower
                 #region Anim Saboteur
                 for (int i = 0; i < _map.TowerDisabled.Count; i++)
                 {
-                    Tower tower = _map.Towers[i];
+                    Tower tower = _map.TowerDisabled[i];
                     AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, Constant.DisabledTower));
                     _map.TowerDisabled.Remove(tower);
-                    Console.WriteLine("mdrr");
                 }
                 #endregion
 
@@ -959,9 +957,6 @@ namespace TrumpTower
                                     _myTow = tow;
                                     _verif3 = true;
                                     _verif4 = true;
-
-
-                                    Console.WriteLine("selecteur : " + _towerSelectorUpgrade + "   Tower : " + _myTow.Position);
                                 }
                             }
                         }

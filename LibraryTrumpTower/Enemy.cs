@@ -56,6 +56,8 @@ namespace TrumpTower.LibraryTrumpTower
         public bool _hasCast;
         [DataMember]
         public bool _isCasting;
+        [DataMember]
+        public Tower _towerBeingCast;
 
         public Enemy(Map map, Wave wave, string name, EnemyType type)
         {
@@ -106,6 +108,7 @@ namespace TrumpTower.LibraryTrumpTower
                 ActionRadius = 500;
                 _reload = Constant.DisabledTower*60;
                 _hasCast = false;
+                _towerBeingCast = null;
             }
         }
 
@@ -153,8 +156,13 @@ namespace TrumpTower.LibraryTrumpTower
             {
                  UpdateAttackWall();
                  UpdateSaboteur(GetTowers(_position, ActionRadius));
-                 if (_isCasting == false) UpdateMove(); // for the saboteur, is false by default.
-                 UpdateHeal(GetEnemies(_position, ActionRadius));
+
+                if (_isCasting == true)
+                    StartCasting(_towerBeingCast);
+                else if (_isCasting == false || _towerBeingCast == null)
+                    UpdateMove(); // for the saboteur, is false by default.
+
+                UpdateHeal(GetEnemies(_position, ActionRadius));
             } 
                 
             
@@ -198,10 +206,14 @@ namespace TrumpTower.LibraryTrumpTower
                 {
                     foreach (Tower tower in _towersToDisable)
                     {
-                        if (!tower.IsDisabled || !tower.IsCasted)
+                        if (!tower.IsDisabled && !tower.IsCasted)
+                        {
+                            _towerBeingCast = tower;
                             _isCasting = true;
                             StartCasting(tower);
                             tower.IsCasted = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -213,7 +225,13 @@ namespace TrumpTower.LibraryTrumpTower
         
         public void StartCasting(Tower tower)
         {
-            if (_reload <= 0)
+            List<Tower> towers = GetTowers(_position, ActionRadius);
+            if (!towers.Contains(tower))
+            {
+                _isCasting = false;
+                _towerBeingCast = null;
+            }
+            else if (_reload <= 0)
             {
                 if (tower.Type == TowerType.bank)
                 {
@@ -226,7 +244,9 @@ namespace TrumpTower.LibraryTrumpTower
                 _hasCast = true; // this minion cannot disable turrets anymore 
                 _isCasting = false; // Resumes moving
                 tower.IsDisabled = true;
+                tower.IsCasted = false;
                 _map.TowerDisabled.Add(tower);
+                _towerBeingCast = null;
 
             }  else {
                 _reload--;
@@ -289,6 +309,20 @@ namespace TrumpTower.LibraryTrumpTower
             _map.Dollars += Bounty;
             _wave.Enemies.Remove(this);
             _map.DeadEnemies.Add(this);
+
+
+
+
+
+            if (_type == EnemyType.saboteur && _towerBeingCast != null) _towerBeingCast.IsCasted = false;
+            // IS DISABLED
+
+
+
+
+
+
+
         }
 
         public void Die(bool Passedthebase)
