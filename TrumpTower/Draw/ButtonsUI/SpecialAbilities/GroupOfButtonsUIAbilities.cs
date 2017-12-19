@@ -79,6 +79,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
                         newStateKeyboard.IsKeyDown(Keys.E) && lastStateKeyboard.IsKeyDown(Keys.E))
                     {
+                        ManagerSound.PlayRice();
                         ButtonActivated = button;
                     }
                     ButtonHover = button;

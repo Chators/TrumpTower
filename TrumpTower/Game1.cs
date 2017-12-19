@@ -671,14 +671,6 @@ namespace TrumpTower
                 #endregion
 
                 #endregion
-
-                #region Animated Stick Rice Plane
-                /*if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
-                {
-                    if (_map.StickyRice.PositionPlaneOfRice.X > VirtualWidth + _imgPlane1.Width)
-                        _map.StickyRice.PositionPlaneOfRice = new Vector2(-1000, -1000);
-                }*/
-                #endregion
             }
 
             base.Update(gameTime);

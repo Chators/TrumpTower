@@ -103,7 +103,10 @@ namespace LibraryTrumpTower.SpecialAbilities
                 {
                     PositionPlaneOfRice.X += SpeedPlane;
                     if (!PlaneIsClose && Vector2.Distance(PositionPlaneOfRice, Position) < SpeedPlane)
+                    {
                         PlaneIsClose = true;
+                        ManagerSound.PlayRiceSplash();
+                    }
                 }
                 if (PlaneIsClose)
                     UpdateSlowEnemies(GetEnemies(Position, Radius));

@@ -70,8 +70,16 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitPlaneTurbo;
         private static SoundEffectInstance PlaneTurbo;
 
+        private static SoundEffect InitRice;
+        private static SoundEffectInstance Rice;
+
+        private static SoundEffect InitRiceSplash;
+        private static SoundEffectInstance RiceSplash;
+
         static public void LoadContent(ContentManager Content)
         {
+            InitRiceSplash = Content.Load<SoundEffect>("Enemies/air/riceSplash");
+            InitRice = Content.Load<SoundEffect>("SpecialAbilities/rice");
             InitPlaneTurbo = Content.Load<SoundEffect>("Enemies/air/soundPlaneTurbo");
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
             InitTowerShoot = Content.Load<SoundEffect>("Sound/songExplosion");
@@ -93,10 +101,24 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitnoAvailable = Content.Load<SoundEffect>("Sound/no_available");
         }
 
+        public static void PlayRiceSplash()
+        {
+            RiceSplash = InitRiceSplash.CreateInstance();
+            RiceSplash.Volume = 1f;
+            RiceSplash.Play();
+        }
+
+        public static void PlayRice()
+        {
+            Rice = InitRice.CreateInstance();
+            Rice.Volume = 0.6f;
+            Rice.Play();
+        }
+
         public static void PlayPlaneTurbo()
         {
             PlaneTurbo = InitPlaneTurbo.CreateInstance();
-            PlaneTurbo.Volume = 1f;
+            PlaneTurbo.Volume = 0.8f;
             PlaneTurbo.Play();
         }
 
@@ -165,14 +187,14 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static void PlayButtonExplosionAbility()
         {
             ButtonExplosionAbility = InitButtonExplosionAbility.CreateInstance();
-            ButtonExplosionAbility.Volume = 0.4f;
+            ButtonExplosionAbility.Volume = 0.2f;
             ButtonExplosionAbility.Play();
         }
 
         public static void PlayReloadSniper()
         {
             ReloadSniper = InitReloadSniper.CreateInstance();
-            ReloadSniper.Volume = 0.4f;
+            ReloadSniper.Volume = 0.2f;
             ReloadSniper.Play();
         }
 

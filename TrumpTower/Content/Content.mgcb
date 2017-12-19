@@ -1117,3 +1117,15 @@
 /processorParam:Quality=Best
 /build:Enemies/air/soundPlaneTurbo.wav
 
+#begin SpecialAbilities/rice.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SpecialAbilities/rice.wav
+
+#begin Enemies/air/riceSplash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Enemies/air/riceSplash.wav
+
