@@ -1110,6 +1110,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemies/air/planeTurbo.png
+
 #begin Sound/game_over.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -1134,7 +1135,6 @@
 /processorParam:Quality=Best
 /build:Enemies/air/riceSplash.wav
 
-
 #begin retry.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1153,4 +1153,28 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:gameOver.spritefont
+
+#begin trump_sad.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:trump_sad.png
+
+#begin game_over_screen.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:game_over_screen.jpg
 

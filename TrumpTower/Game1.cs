@@ -36,6 +36,8 @@ namespace TrumpTower
         bool isLost;
         int policeBlink;
         SpriteFont _gameOver;
+        Texture2D _sadTrump;
+        Texture2D _gameOverExplosion;
         #endregion
 
         #region Maps
@@ -312,7 +314,9 @@ namespace TrumpTower
 
             GameIsPaused = false;
             isLost = false;
-            policeBlink = 120;
+            policeBlink = 240;
+            _sadTrump = Content.Load<Texture2D>("trump_sad");
+            _gameOverExplosion = Content.Load<Texture2D>("game_over_screen");
 
             #region Tower Selector
 
@@ -696,9 +700,10 @@ namespace TrumpTower
             if (isLost)
             {
                 policeBlink--;
-                if (policeBlink <= 0)
+                if (policeBlink == 0)
                 {
-                    policeBlink = 120;
+                    ManagerSound.PlayGameOver();
+                    policeBlink = 240;
                 }
             }
 
@@ -1373,18 +1378,20 @@ namespace TrumpTower
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
             if (isLost)
-            {
-                
+            {    
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
-
-                if (policeBlink > 60)
+                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, 0), Color.White * 0.5f);
+                if (policeBlink > 120)
+                {         
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(465, 10),Color.Red);
+                }else if (policeBlink <= 120)
                 {
-                    if(policeBlink == 120) ManagerSound.PlayGameOver();
-                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(530, 10),Color.Red);
-                }else if (policeBlink <= 60)
-                {
-                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(530, 10), Color.White);
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(465, 10), Color.White);
                 }
+                
+              
+                spriteBatch.Draw(_sadTrump, new Vector2((VirtualHeight/2)-(320/2), (VirtualWidth / 2) + 320), Color.White );
+
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
             }
