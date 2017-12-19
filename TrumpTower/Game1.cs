@@ -627,12 +627,9 @@ namespace TrumpTower
                 if (_map.Wall.IsDead())
                 {
                     isLost = true;
+                    GameIsPaused = true;
                     //Exit(); // If base loses hp, game will exit.
-                    policeBlink--;
-                    if (policeBlink <= 0)
-                    {
-                        policeBlink = 120;
-                    }
+
                 }
 
                 _map.Update();
@@ -703,6 +700,14 @@ namespace TrumpTower
                         _map.StickyRice.PositionPlaneOfRice = new Vector2(-1000, -1000);
                 }*/
                 #endregion
+            }
+            if (isLost)
+            {
+                policeBlink--;
+                if (policeBlink <= 0)
+                {
+                    policeBlink = 120;
+                }
             }
 
             base.Update(gameTime);
