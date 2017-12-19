@@ -622,7 +622,7 @@ namespace TrumpTower
 
             update_buttons();
 
-            if (stratPause >= 5)
+            if (stratPause > 5)
             {
                 GameIsPaused = false;
 
@@ -1379,19 +1379,17 @@ namespace TrumpTower
                 foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
             }
 
+            #region Pause
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 93), sourceRectanglee, Color.Black * 0.6f);
             if (stratPause < 5)
             {
                 spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 100), Color.White);
             }
             else if (stratPause >= 5)
             {
-                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 100), Color.Red);
+                spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 100), Color.Red);
                 if (warning == true)
-                {
-                    spriteBatch.Draw(_imgWarning2, new Vector2(250, 88), Color.White);
-                   
-                }
-
+                    spriteBatch.Draw(_imgWarning2, new Vector2(230, 88), Color.White);
             }
 
             if (realPause == true)
@@ -1400,6 +1398,8 @@ namespace TrumpTower
                 for (int i = 0; i < 3; i++)
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
+            #endregion
+
             if (isLost)
             {    
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
@@ -1418,6 +1418,7 @@ namespace TrumpTower
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
             }
+
             #region Cursor
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
