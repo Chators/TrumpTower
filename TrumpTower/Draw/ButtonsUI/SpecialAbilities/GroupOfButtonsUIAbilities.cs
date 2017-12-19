@@ -57,12 +57,12 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 button = ButtonsUIArray["sniperAbility"];
                 if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                     newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
-                    newStateKeyboard.IsKeyDown(Keys.Z) &&
+                    newStateKeyboard.IsKeyDown(Keys.E) &&
                     Ctx.Map.Dollars >= Ctx.Map.Sniper.Cost &&
                     Ctx.Map.Sniper.IsReload)
                 {
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
-                        newStateKeyboard.IsKeyDown(Keys.Z) && lastStateKeyboard.IsKeyDown(Keys.Z))
+                        newStateKeyboard.IsKeyDown(Keys.E) && lastStateKeyboard.IsKeyDown(Keys.E))
                     {
                         ManagerSound.PlayReloadSniper();
                         ButtonActivated = button;
@@ -73,11 +73,11 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 button = ButtonsUIArray["stickyRiceAbility"];
                 if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                     newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
-                    newStateKeyboard.IsKeyDown(Keys.E) &&
+                    newStateKeyboard.IsKeyDown(Keys.R) &&
                     Ctx.Map.StickyRice.IsReloaded)
                 {
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
-                        newStateKeyboard.IsKeyDown(Keys.E) && lastStateKeyboard.IsKeyDown(Keys.E))
+                        newStateKeyboard.IsKeyDown(Keys.R) && lastStateKeyboard.IsKeyDown(Keys.R))
                     {
                         ButtonActivated = button;
                     }

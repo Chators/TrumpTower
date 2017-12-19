@@ -5,25 +5,39 @@ using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace TrumpTower.LibraryTrumpTower
 {
+    [DataContract(IsReference = true)]
     public class Tower
     {
+        [DataMember]
         Map _map;
+        [DataMember]
         readonly TowerType _type;
+        [DataMember]
         float _rotate;
+        [DataMember]
         int _lvl;
+        [DataMember]
         public double Earnings { get; set; }
+        [DataMember]
         public double Scope { get; private set; }
+        [DataMember]
         public int Damage { get;  set; }
+        [DataMember]
         readonly double _attackSpeed;
+        [DataMember]
         public double _reload;
+        [DataMember]
         public Vector2 Position { get; private set; }
+        [DataMember]
         public bool _isDisabled { get; set; }
+        [DataMember]
         public bool _isCasted { get; set; }
 
         public Tower(Map map, TowerType type, int lvl, Vector2 position)

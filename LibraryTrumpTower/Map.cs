@@ -167,7 +167,7 @@ namespace TrumpTower.LibraryTrumpTower
         /// <param name="y">position y</param>
         /// <param name="number">number of texture (example dirt = 0)</param>
         public void ChangeLocation(int x, int y, int number) => MapArray[y][x] = number;
-
+        public bool IsGrass(int x, int y) => MapArray[y][x] == (int)MapTexture.grass;
         public Vector2 SearchCase (int mouseX, int mouseY, int SizePixelMap)
         {
             for (int y = 0; y < WidthArrayMap; y++)

@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower;
+using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace LibraryTrumpTower
 {
@@ -50,7 +51,7 @@ namespace LibraryTrumpTower
             Angle = 0;
             Damage = 30;
             Reload = 0;
-            SpeedCharacter = 0.5f;
+            SpeedCharacter = 1f;
             TimeCurrentRepair = 0;
             TowerUnderRepair = null;
 
@@ -60,12 +61,58 @@ namespace LibraryTrumpTower
 
         public void Update()
         {
+            // On cherche tous les ennemies à proximité si on est pas entrain de rechargé
+            if (!IsReloading)
+            {
+                List<Enemy> enemies = Map.GetAllEnemies();
+                foreach (Enemy enemy in enemies)
+                {
+                    if (Vector2.Distance(Position, enemy.Position) < 150)
+                    {
+                        enemy.TakeHp(Damage);
+                        Reload = TimeForReload;
+                        ManagerSound.PlayHeroesShoot();
+                        break;
+                    }
+                }
+            }
+            else Reload--;
 
+
+            // On déplace le personnage
+            if (Velocity != Vector2.Zero)
+            {
+                Vector2 previousPosition = Position + Velocity;
+                if (Map.IsGrass((int)(previousPosition.X / Constant.imgSizeMap)+1, (int)(previousPosition.Y / Constant.imgSizeMap)+1))
+                    Position += Velocity;
+                /*else if (Map.IsGrass((int)previousPosition.X / Constant.imgSizeMap, (int)previousPosition.Y / Constant.imgSizeMap))
+                {
+
+                }*/
+                Velocity = Vector2.Zero;
+            }
         }
 
         public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            //if ()
+            if (newStateKeyboard.IsKeyDown(Keys.Z))
+                Velocity += new Vector2(0, -1);
+            if (newStateKeyboard.IsKeyDown(Keys.Q))
+                Velocity += new Vector2(-1, 0);
+            if (newStateKeyboard.IsKeyDown(Keys.S))
+                Velocity += new Vector2(0, 1);
+            if (newStateKeyboard.IsKeyDown(Keys.D))
+                Velocity += new Vector2(1, 0);
+
+            /* CAPACITE SPECIAL */
+            /*
+            if (newStateKeyboard.IsKeyDown(Keys.F))
+            {
+
+            }
+            */
         }
+
+        private bool IsReloading => Reload > 0;
     }
 }

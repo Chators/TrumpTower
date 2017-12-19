@@ -82,7 +82,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         static public void LoadContent(ContentManager Content)
         {
             InitHeroesJump = Content.Load<SoundEffect>("Heroes/jump");
-            InitHeroesShoot = Content.Load<SoundEffect>("Heroes/shootHeroes");
+            InitHeroesShoot = Content.Load<SoundEffect>("Heroes/shootHero");
             InitPlaneTurbo = Content.Load<SoundEffect>("Enemies/air/soundPlaneTurbo");
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
             InitTowerShoot = Content.Load<SoundEffect>("Sound/songExplosion");
