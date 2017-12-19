@@ -1100,6 +1100,17 @@ namespace TrumpTower
                 }
 
             }
+
+            #region it enlever vie unite
+            if (newStateKeyboard.IsKeyDown(Keys.P) && lastStateKeyboard.IsKeyUp(Keys.P))
+            {
+                List<Enemy> enemies = _map.GetAllEnemies();
+                foreach (Enemy enemy in enemies)
+                {
+                    enemy.TakeHp(10);
+                }
+            }
+            #endregion
         }
 
 
