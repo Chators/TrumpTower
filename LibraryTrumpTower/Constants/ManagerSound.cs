@@ -149,7 +149,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static void PlayPowerUp()
         {
             PowerUp = InitPowerUp.CreateInstance();
-            PowerUp.Volume = 0.7f;
+            PowerUp.Volume = 0.4f;
             PowerUp.Play();
         }
 
@@ -170,14 +170,14 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static void PlayPauseIn()
         {
             PauseIn = InitPauseIn.CreateInstance();
-            PauseIn.Volume = 0.4f;
+            PauseIn.Volume = 0.3f;
             PauseIn.Play();
         }
 
         public static void PlayPauseOut()
         {
             PauseOut = InitPauseOut.CreateInstance();
-            PauseOut.Volume = 0.4f;
+            PauseOut.Volume = 0.3f;
             PauseOut.Play();
         }
 
@@ -212,35 +212,35 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static void PlayManDie()
         {
             ManDie = InitManDie.CreateInstance();
-            ManDie.Volume = 0.8f;
+            ManDie.Volume = 0.35f;
             ManDie.Play();
         }
 
         public static void PlaySniperShoot()
         {
             SniperShoot = InitSniperShoot.CreateInstance();
-            SniperShoot.Volume = 0.2f;
+            SniperShoot.Volume = 0.15f;
             SniperShoot.Play();
         }
 
         public static void PlayDestroyUnitAir()
         {
             DestroyUnitAir = InitDestroyUnitAir.CreateInstance();
-            DestroyUnitAir.Volume = 1f;
+            DestroyUnitAir.Volume = 0.4f;
             DestroyUnitAir.Play();
         }
 
         public static void PlayAlertRaidUnitsAir()
         {
             AlertRaidUnitsAir = InitAlertRaidUnitsAir.CreateInstance();
-            AlertRaidUnitsAir.Volume = 1f;
+            AlertRaidUnitsAir.Volume = 0.4f;
             AlertRaidUnitsAir.Play();
         }
 
         public static void PlayImpactUnitAir()
         {
             ImpactUnitAir = InitImpactUnitAir.CreateInstance();
-            ImpactUnitAir.Volume = 0.85f;
+            ImpactUnitAir.Volume = 0.4f;
             ImpactUnitAir.Play();
         }
 

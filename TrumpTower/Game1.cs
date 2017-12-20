@@ -335,14 +335,14 @@ namespace TrumpTower
 
 
             int x = ((int)VirtualWidth / 2) - BUTTON_HEIGHT / 2;
-            int y = (int)VirtualHeight / 2 - NUMBER_OF_BUTTONS / 2 * BUTTON_HEIGHT - (NUMBER_OF_BUTTONS % 2);
+            int y = (int)VirtualHeight / 2 - NUMBER_OF_BUTTONS / 2 * BUTTON_HEIGHT - (NUMBER_OF_BUTTONS % 2)+100;
             for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
             {
                 button_state[i] = BState.UP;
                 button_color[i] = Color.White;
                 button_timer[i] = 0.0;
                 button_rectangle[i] = new Rectangle(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
-                y += 170;
+                y += 270;
             }
 
 
@@ -550,9 +550,9 @@ namespace TrumpTower
 
             ManagerSound.LoadContent(Content);
             // MUSIQUE 
-            /*MediaPlayer.Play(ManagerSound.Song1);
-            MediaPlayer.Volume = 0.15f;
-            MediaPlayer.IsRepeating = true;*/
+            MediaPlayer.Play(ManagerSound.Song1);
+            MediaPlayer.Volume = 0.05f;
+            MediaPlayer.IsRepeating = true;
 
             #endregion
 
@@ -836,7 +836,6 @@ namespace TrumpTower
                         break;
                     case ResumeButton:
                         realPause = false;
-                        MediaPlayer.Play(ManagerSound.Song1);
                         break;
                     case HomeButton:
                         Exit();
