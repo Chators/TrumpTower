@@ -83,6 +83,7 @@ namespace TrumpTower
         bool _verif2;
         bool _verif3;
         bool _verif4;
+        
 
         #endregion
 
@@ -304,6 +305,7 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
             _verif3 = false;
             _verif4 = false;
+            
             // Animations
             AnimSprites = new SimpleAnimationDefinition[5];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
@@ -856,9 +858,7 @@ namespace TrumpTower
         {
             if (!realPause)
             {
-                _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
-
-                _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+                
 
                 #region Towers
 
@@ -868,7 +868,7 @@ namespace TrumpTower
                 if (newStateMouse.LeftButton == ButtonState.Pressed &&
                     lastStateMouse.LeftButton == ButtonState.Released)
                 {
-                    if (_verif3 == false)
+                    if (_verif3 == false  && _groupOfButtonsUIAbilities.ButtonActivated == null)
                     {
                         foreach (Vector2 position in emptyTowers)
                         {
@@ -1004,14 +1004,15 @@ namespace TrumpTower
                         {
                             if (_myTow.Position == _towerSelectorUpgrade)
                             {
-                                if (_map.Dollars >= Tower.TowerPrice(_myTow.Type) * 1.5)
+                                if (_map.Dollars >= Tower.TowerPrice(_myTow.Type) * 1.5 && _myTow.TowerLvl < 3)
                                 {
                                     _myTow.Upgrade(_myTow);
                                     ManagerSound.PlayPowerUp();
                                     _verif4 = false;
+                                    _towerSelectorUpgrade = new Vector2(-1000, -1000);
                                 }
                             }
-                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                            
                         }
                         else if (newStateMouse.X > _towerSelectorUpgrade.X &&
                         newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
@@ -1025,7 +1026,7 @@ namespace TrumpTower
                                 _myTow.Sell(_myTow);
                                 ManagerSound.PlaySell();
                                 _verif4 = false;
-                                _verif3 = true;
+                                _verif3 = false;
                             }
                             _towerSelectorUpgrade = new Vector2(-1000, -1000);
                         }
@@ -1039,7 +1040,9 @@ namespace TrumpTower
                     else
                     {
                         _verif4 = false;
+                       
                     }
+                    
 
 
                 }
@@ -1074,6 +1077,9 @@ namespace TrumpTower
                 #endregion
 
                 #endregion
+                _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
+                _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
             }
             if (newStateKeyboard.IsKeyDown(Keys.Escape) && lastStateKeyboard.IsKeyUp(Keys.Escape))
             {
@@ -1295,6 +1301,10 @@ namespace TrumpTower
                 if(_map.Dollars < (double)Tower.TowerPrice(_myTow.Type)* 1.5)
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelectorUpgrade +new Vector2(0,-(Constant.imgSizeMap +5)) , null, Color.White);
+                }
+                if(_myTow.TowerLvl == 3)
+                {
+                    spriteBatch.Draw(_imgWrong, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
                 }
             }
 
