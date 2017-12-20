@@ -49,7 +49,7 @@ namespace LibraryTrumpTower
             Map = map;
             Name = name;
             _position = position;
-            Speed = 2;
+            Speed = 5;
             Angle = 0;
             Damage = 30;
             Reload = 0;
@@ -96,28 +96,6 @@ namespace LibraryTrumpTower
                 SetRotate(new Vector2((int)_position.X + 32, (int)_position.Y + 32), new Vector2((int)PositionGo.X + 32, (int)PositionGo.Y + 32));
                 UpdateMove(PositionGo);
             }
-        }
-
-        public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
-        {
-            
-            /*
-            if (newStateKeyboard.IsKeyDown(Keys.Z))
-                Velocity += new Vector2(0, -1);
-            if (newStateKeyboard.IsKeyDown(Keys.Q))
-                Velocity += new Vector2(-1, 0);
-            if (newStateKeyboard.IsKeyDown(Keys.S))
-                Velocity += new Vector2(0, 1);
-            if (newStateKeyboard.IsKeyDown(Keys.D))
-                Velocity += new Vector2(1, 0);
-            */
-            /* CAPACITE SPECIAL */
-            /*
-            if (newStateKeyboard.IsKeyDown(Keys.F))
-            {
-
-            }
-            */
         }
 
         public void SetRotate(Vector2 _position, Vector2 _targetPosition)

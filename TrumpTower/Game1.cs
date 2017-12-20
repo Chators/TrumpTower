@@ -828,7 +828,6 @@ namespace TrumpTower
 
         #endregion
 
-
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
             if (newStateMouse.RightButton == ButtonState.Pressed && lastStateMouse.RightButton == ButtonState.Released)
@@ -1345,9 +1344,7 @@ namespace TrumpTower
             #region Heroes
             Hero hero = _map.Hero;
             AnimSprites[4].AnimatedSprite[0].Position = new Point((int)hero.Position.X, (int)hero.Position.Y);
-            /*Vector2 originee = new Vector2(_imgHeroes1.Width / 2, _imgHeroes1.Height / 2);
-            spriteBatch.Draw(_imgHeroes1, hero.Position, null, Color.White, hero.Angle, originee, 1.0f, SpriteEffects.None, 1)*/
-            //spriteBatch.Draw(_imgHeroes1, hero.Position, null, Color.White, hero.Angle, originee, 1.0f, SpriteEffects.None, 1);
+            AnimSprites[4].AnimatedSprite[0].Angle = _map.Hero.Angle;
             #endregion
 
 

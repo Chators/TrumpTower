@@ -12,6 +12,7 @@ namespace TrumpTower.Draw.Animations
     {
         /* Proprietes */
         public Point Position;
+        public double Angle;
         protected SimpleAnimationDefinition Definition;
         protected Point CurrentFrame;
         protected SpriteBatch _spriteBatch;
@@ -90,11 +91,15 @@ namespace TrumpTower.Draw.Animations
         {
             /* Affichage de l'animation */
             if (DoBeginEnd) _spriteBatch.Begin();
-
+            Vector2 origine = new Vector2(Definition.Sprite.Width / 2, Definition.Sprite.Height / 2);
             _spriteBatch.Draw(Definition.Sprite,
-                                  new Rectangle(this.Position.X, this.Position.Y, this.Definition.FrameSize.X, this.Definition.FrameSize.Y),
-                                  new Rectangle(this.CurrentFrame.X * this.Definition.FrameSize.X, this.CurrentFrame.Y * this.Definition.FrameSize.Y, this.Definition.FrameSize.X, this.Definition.FrameSize.Y),
-                                  Color.White);
+                                new Rectangle(this.Position.X + (Definition.Sprite.Width / 2), this.Position.Y + (Definition.Sprite.Height / 2), this.Definition.FrameSize.X, this.Definition.FrameSize.Y),
+                                new Rectangle(this.CurrentFrame.X * this.Definition.FrameSize.X, this.CurrentFrame.Y * this.Definition.FrameSize.Y, this.Definition.FrameSize.X, this.Definition.FrameSize.Y),
+                                Color.White, 
+                                (float)Angle, 
+                                origine, 
+                                SpriteEffects.None, 
+                                1.0f);
 
             if (DoBeginEnd) _spriteBatch.End();
         }
