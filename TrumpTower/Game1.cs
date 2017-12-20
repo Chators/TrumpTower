@@ -79,6 +79,7 @@ namespace TrumpTower
         Vector2 _towerSelectorUpgrade;
         Texture2D _imgUpgrade;
         Texture2D _imgSell;
+        //Tower _drawTower;
         bool _verif;
         bool _verif2;
         bool _verif3;
@@ -176,6 +177,7 @@ namespace TrumpTower
         #endregion
 
         Texture2D grey;
+        
         public bool realPause { get; private set; }
 
         #region In game menu
@@ -305,6 +307,7 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
             _verif3 = false;
             _verif4 = false;
+            //_drawTower = null;
             
             // Animations
             AnimSprites = new SimpleAnimationDefinition[5];
@@ -624,11 +627,13 @@ namespace TrumpTower
 
             update_buttons();
 
+
             if (stratPause > 5)
             {
                 GameIsPaused = false;
 
             }
+
             if (!GameIsPaused && realPause == false)
             {
                 if (_map.Wall.IsDead())
@@ -681,11 +686,11 @@ namespace TrumpTower
                     if (doctor.CurrentDirection == Move.left)
                         positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width - 25, (int)doctor.Position.Y - _imgEnemy1.Height);
                     else if (doctor.CurrentDirection == Move.right)
-                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width/2, (int)doctor.Position.Y - _imgEnemy1.Height);
+                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width / 2, (int)doctor.Position.Y - _imgEnemy1.Height);
                     if (doctor.CurrentDirection == Move.top)
-                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width , (int)doctor.Position.Y - _imgEnemy1.Height - 10);
+                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width, (int)doctor.Position.Y - _imgEnemy1.Height - 10);
                     else if (doctor.CurrentDirection == Move.down)
-                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width, (int)doctor.Position.Y - _imgEnemy1.Height/2);
+                        positionDoctor = new Vector2((int)doctor.Position.X - _imgEnemy1.Width, (int)doctor.Position.Y - _imgEnemy1.Height / 2);
 
                     AnimSprites[4].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[4], (int)positionDoctor.X, (int)positionDoctor.Y));
                     _map.AnimHeal.Remove(doctor);
@@ -858,8 +863,6 @@ namespace TrumpTower
         {
             if (!realPause)
             {
-                
-
                 #region Towers
 
                 #region Buy Tower
@@ -1040,11 +1043,7 @@ namespace TrumpTower
                     else
                     {
                         _verif4 = false;
-                       
                     }
-                    
-
-
                 }
                 if (newStateMouse.RightButton == ButtonState.Pressed &&
                         lastStateMouse.RightButton == ButtonState.Released)
@@ -1289,7 +1288,40 @@ namespace TrumpTower
                     spriteBatch.Draw(_imgWrong, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 }
             }
-            
+
+            if (mx > _towerSelector.X - Constant.imgSizeMap &&
+                    mx < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
+                    my > _towerSelector.Y - Constant.imgSizeMap &&
+                    my < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+            {
+                spriteBatch.Draw(_imgTower1, _towerSelector, null, Color.White * 0.5f);
+            }
+            else if (mx > _towerSelector.X + Constant.imgSizeMap &&
+                        mx < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                        my > _towerSelector.Y - Constant.imgSizeMap &&
+                        my < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+            {
+                spriteBatch.Draw(_imgTower2, _towerSelector, null, Color.White * 0.5f);
+            }
+            else if (mx > _towerSelector.X - Constant.imgSizeMap &&
+                        mx < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
+                        my > _towerSelector.Y + Constant.imgSizeMap &&
+                        my < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+            {
+                spriteBatch.Draw(_imgTower3, _towerSelector, null, Color.White * 0.5f);
+            }
+            else if (mx > _towerSelector.X + Constant.imgSizeMap &&
+                        mx < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                        my > _towerSelector.Y + Constant.imgSizeMap &&
+                        my < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+            {
+                spriteBatch.Draw(_imgTower4, _towerSelector, null, Color.White * 0.5f);
+            }
+
+            /*if (_drawTower != null) {
+                Texture2D circleTower = createCircleText((int)_drawTower.Scope * Constant.imgSizeMap * (int)_drawTower.Scope);
+                spriteBatch.Draw(circleTower, new Vector2(_drawTower.Position.X - (circleTower.Width/2),_drawTower.Position.Y - (circleTower.Height/2)), null, Color.White * 0.5f);
+            }*/
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
@@ -1306,6 +1338,8 @@ namespace TrumpTower
                 {
                     spriteBatch.Draw(_imgWrong, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
                 }
+
+                
             }
 
 
