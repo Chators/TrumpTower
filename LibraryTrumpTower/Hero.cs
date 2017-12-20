@@ -19,9 +19,9 @@ namespace LibraryTrumpTower
         [DataMember]
         public string Name { get; private set; }
         [DataMember]
-        public Vector2 Position { get; private set; }
+        public Vector2 _position;
         [DataMember]
-        private Vector2 Velocity { get; set; }
+        private double Speed { get; set; }
         [DataMember]
         public double Angle { get; private set; }
         [DataMember]
@@ -34,6 +34,8 @@ namespace LibraryTrumpTower
         private int TimeCurrentRepair { get; set; }
         [DataMember]
         private Tower TowerUnderRepair { get; set; }
+        [DataMember]
+        public Vector2 PositionGo { get; set; }
         //[DataMember]
         //public HeroesSpecialCapacity Capacity { get; set; }
 
@@ -46,28 +48,37 @@ namespace LibraryTrumpTower
         {
             Map = map;
             Name = name;
-            Position = position;
-            Velocity = Vector2.Zero;
+            _position = position;
+            Speed = 2;
             Angle = 0;
             Damage = 30;
             Reload = 0;
             SpeedCharacter = 1f;
             TimeCurrentRepair = 0;
             TowerUnderRepair = null;
+            PositionGo = Vector2.Zero;
 
             TimeForRepair = 6 * 60;
             TimeForReload = 1 * 60;
         }
 
+        private void UpdateMove(Vector2 targetPosition)
+        {
+            if (_position.X < targetPosition.X) _position.X += (int)Speed;
+            if (_position.X > targetPosition.X) _position.X -= (int)Speed;
+            if (_position.Y < targetPosition.Y) _position.Y += (int)Speed;
+            if (_position.Y > targetPosition.Y) _position.Y -= (int)Speed;
+        }
+
         public void Update()
         {
-            // On cherche tous les ennemies à proximité si on est pas entrain de rechargé
-            if (!IsReloading)
+            // On cherche tous les ennemies à proximité si on est pas entrain de rechargé et si on est pas entrain de bouger
+            if (!IsReloading && PositionGo == null)
             {
                 List<Enemy> enemies = Map.GetAllEnemies();
                 foreach (Enemy enemy in enemies)
                 {
-                    if (Vector2.Distance(Position, enemy.Position) < 150)
+                    if (Vector2.Distance(_position, enemy.Position) < 150)
                     {
                         enemy.TakeHp(Damage);
                         Reload = TimeForReload;
@@ -80,21 +91,17 @@ namespace LibraryTrumpTower
 
 
             // On déplace le personnage
-            if (Velocity != Vector2.Zero)
+            if (PositionGo != new Vector2(-100,-100))
             {
-                Vector2 previousPosition = Position + Velocity;
-                if (Map.IsGrass((int)(previousPosition.X / Constant.imgSizeMap)+1, (int)(previousPosition.Y / Constant.imgSizeMap)+1))
-                    Position += Velocity;
-                /*else if (Map.IsGrass((int)previousPosition.X / Constant.imgSizeMap, (int)previousPosition.Y / Constant.imgSizeMap))
-                {
-
-                }*/
-                Velocity = Vector2.Zero;
+                SetRotate(new Vector2((int)_position.X + 32, (int)_position.Y + 32), new Vector2((int)PositionGo.X + 32, (int)PositionGo.Y + 32));
+                UpdateMove(PositionGo);
             }
         }
 
         public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
+            
+            /*
             if (newStateKeyboard.IsKeyDown(Keys.Z))
                 Velocity += new Vector2(0, -1);
             if (newStateKeyboard.IsKeyDown(Keys.Q))
@@ -103,7 +110,7 @@ namespace LibraryTrumpTower
                 Velocity += new Vector2(0, 1);
             if (newStateKeyboard.IsKeyDown(Keys.D))
                 Velocity += new Vector2(1, 0);
-
+            */
             /* CAPACITE SPECIAL */
             /*
             if (newStateKeyboard.IsKeyDown(Keys.F))
@@ -113,6 +120,14 @@ namespace LibraryTrumpTower
             */
         }
 
+        public void SetRotate(Vector2 _position, Vector2 _targetPosition)
+        {
+            Vector2 direction = _position - _targetPosition;
+            direction.Normalize();
+            Angle = (float)Math.Atan2(-direction.X, direction.Y);
+        }
+
+        public Vector2 Position => _position;
         private bool IsReloading => Reload > 0;
     }
 }

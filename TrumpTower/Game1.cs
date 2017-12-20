@@ -306,11 +306,12 @@ namespace TrumpTower
             _verif3 = false;
             _verif4 = false;
             // Animations
-            AnimSprites = new SimpleAnimationDefinition[4];
+            AnimSprites = new SimpleAnimationDefinition[5];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
             AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 20, false);
             AnimSprites[3] = new SimpleAnimationDefinition(this, this, "Enemies/animThunderSaboteur", new Point(350, 105), new Point(5, 2), 12, true);
+            AnimSprites[4] = new SimpleAnimationDefinition(this, this, "Heroes/animHelicopBlack", new Point(98, 128), new Point(3, 2), 12, true);
 
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
@@ -569,6 +570,8 @@ namespace TrumpTower
 
             // ANIMATION EXPLOSION ABILITY
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
+
+            AnimSprites[4].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[4], 0, 0, 100));
             // HEALTH BAR ON ENEMIES AND WALL
             HealthBar.LoadContent(Content);
         }
@@ -698,18 +701,9 @@ namespace TrumpTower
                     Tower tower = _map.Towers[i];
                     AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, Constant.DisabledTower));
                     _map.TowerDisabled.Remove(tower);
-                    Console.WriteLine("mdrr");
                 }
                 #endregion
 
-                #endregion
-
-                #region Animated Stick Rice Plane
-                /*if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
-                {
-                    if (_map.StickyRice.PositionPlaneOfRice.X > VirtualWidth + _imgPlane1.Width)
-                        _map.StickyRice.PositionPlaneOfRice = new Vector2(-1000, -1000);
-                }*/
                 #endregion
             }
 
@@ -837,7 +831,8 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            _map.Hero.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+            if (newStateMouse.RightButton == ButtonState.Pressed && lastStateMouse.RightButton == ButtonState.Released)
+                _map.Hero.PositionGo = new Vector2(newStateMouse.X, newStateMouse.Y);   
 
             if (!realPause)
             {
@@ -1349,7 +1344,7 @@ namespace TrumpTower
 
             #region Heroes
             Hero hero = _map.Hero;
-            spriteBatch.Draw(_imgHeroes1, hero.Position, Color.White);
+            AnimSprites[4].AnimatedSprite[0].Position = new Point((int)hero.Position.X, (int)hero.Position.Y);
             /*Vector2 originee = new Vector2(_imgHeroes1.Width / 2, _imgHeroes1.Height / 2);
             spriteBatch.Draw(_imgHeroes1, hero.Position, null, Color.White, hero.Angle, originee, 1.0f, SpriteEffects.None, 1)*/
             //spriteBatch.Draw(_imgHeroes1, hero.Position, null, Color.White, hero.Angle, originee, 1.0f, SpriteEffects.None, 1);
