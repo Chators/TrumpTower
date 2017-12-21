@@ -111,7 +111,7 @@ namespace MapEditorTrumpTower
             Window.Title = "TT Map Editor";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             _gui.Screen = new GuiScreen(graphics.GraphicsDevice.DisplayMode.Width, graphics.GraphicsDevice.DisplayMode.Height);
@@ -274,12 +274,28 @@ namespace MapEditorTrumpTower
                     }
                     bool hasName = _map.Name != null;
                     bool hasBase = _map.Wall != null;
+
                     if (!hasName || !hasBase || !hasPath)
                         InfoSerialization_Pressed(hasName, hasBase, hasPath);
                     else
                     {
-                        BinarySerializer.Serialize(_map, "map1.xml");
-                        Exit();
+                        bool nameIsExisting = false;
+                        if (hasName)
+                        {
+                            string[] filesInDirectory = Directory.GetFiles(BinarySerializer.pathCustomMap);
+                            for (int i = 0; i < filesInDirectory.Length; i++)
+                            {
+                                if (filesInDirectory[i] == (BinarySerializer.pathCustomMap + "\\" + _map.Name + ".xml")) nameIsExisting = true;
+                            }
+                        }
+
+                        if (nameIsExisting)
+                            ConfirmEraseMap_Pressed();
+                        else
+                        {
+                            BinarySerializer.Serialize(_map, "CustomMap/" + _map.Name + ".xml");
+                            Exit();
+                        }
                     }
                 }
             }
@@ -303,7 +319,6 @@ namespace MapEditorTrumpTower
             GraphicsDevice.Clear(Color.DimGray);
 
             // TODO: Add your drawing code here
-            //_gui.Draw(gameTime);
             
             if (_map != null)
             {
@@ -1732,6 +1747,68 @@ namespace MapEditorTrumpTower
         }
 
         private void InfoSerCancel_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+        #endregion
+
+        #region Window ConfirmeEraseMap Map
+        private void ConfirmEraseMap_Pressed()
+        {
+            var window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
+                Title = "Nom de map existant",
+                EnableDragging = true
+            };
+
+            var labelEraseMap = new GuiLabelControl()
+            {
+                Text = "Une map possede deja ce nom !",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var labelEraseMap2 = new GuiLabelControl()
+            {
+                Text = "Etes-vous sur de vouloir l'ecraser ?",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25))
+            };
+
+            var button1 = new GuiButtonControl
+            {
+                Name = "confirm",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Confirmer"
+            };
+
+            var button2 = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Retour"
+            };
+
+            button1.Pressed += ConfirmEraseMap_Pressed;
+            button2.Pressed += CancelEraseMap_Pressed;
+
+            window.Children.Add(labelEraseMap);
+            window.Children.Add(labelEraseMap2);
+
+            window.Children.Add(button1);
+            window.Children.Add(button2);
+
+            _gui.Screen.Desktop.Children.Add(window);
+        }
+
+        private void ConfirmEraseMap_Pressed(object sender, System.EventArgs e)
+        {
+            BinarySerializer.Serialize(_map, _map.Name + ".xml");
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            Exit();
+        }
+
+        private void CancelEraseMap_Pressed(object sender, System.EventArgs e)
         {
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
         }

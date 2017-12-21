@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace TrumpTower
 {
@@ -16,6 +17,8 @@ namespace TrumpTower
         {
             using (var game = new Game1())
                 game.Run();
+
+            Process.Start("Menu");
         }
     }
 #endif
