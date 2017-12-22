@@ -75,10 +75,13 @@ namespace Menu
         /// </summary>
         protected override void Initialize()
         {
+            Directory.CreateDirectory(BinarySerializer.pathCustomMap);
+            Directory.CreateDirectory(BinarySerializer.pathCampagneMap);
+
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             // starting x and y locations to stack buttons 
@@ -418,7 +421,6 @@ namespace Menu
         #endregion
 
         #region Window MapEditor
-        // MODIFIER, SUPPRIMER, CREER UNE NOUVELLE MAP, RETOUR
         public void MapEditor_Pressed()
         {
             var Window = new GuiWindowControl
@@ -536,9 +538,7 @@ namespace Menu
                 FileInfo file = new FileInfo(filesInDirectory[(int)_nbMap]);
                 // On copie le fichier dans CurrentMap
                 file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
-
-                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
-                //Process.Start("MapEditorTrumpTower");
+                Process.Start("MapEditorTrumpTower");
                 Exit();
             }
         }
