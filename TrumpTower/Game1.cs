@@ -731,10 +731,13 @@ namespace TrumpTower
             if (isLost)
             {
                 policeBlink--;
+                Console.WriteLine(policeBlink);
                 if (policeBlink == 0)
                 {
-                    ManagerSound.PlayGameOver();
                     policeBlink = 240;
+                }else if(policeBlink == 239)
+                {
+                    ManagerSound.PlayGameOver();
                 }
             }
 
