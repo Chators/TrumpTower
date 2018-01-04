@@ -488,11 +488,12 @@ namespace MapEditorTrumpTower
                 }
             }
 
-            int _sizeY;
+            double _sizeY;
             if (_size >= Constant.MinWidthMap && _size <= Constant.MaxWidthMap)
             {
-                _sizeY = _size / (16 / 9);
-                int[,] _mapPoint2D = new int[_size, _sizeY];
+                
+                _sizeY = (int)Math.Truncate(_size/(16.0f/9));
+                int[,] _mapPoint2D = new int[ (int)_sizeY, _size];
                 for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
                 {
                     for (int x = 0; x < _mapPoint2D.GetLength(1); x++)
@@ -501,7 +502,7 @@ namespace MapEditorTrumpTower
                     }
                 }
 
-                int[][] _mapPointJagged = new int[_size][];
+                int[][] _mapPointJagged = new int[(int)_sizeY][];
 
                 for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
                 {

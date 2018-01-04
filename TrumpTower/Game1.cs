@@ -51,6 +51,8 @@ namespace TrumpTower
         #endregion
 
         #region Towers
+        int _towerCompteur;
+        Tower _hoveredTower;
         SpriteFont _upgradeFont;
         Tower _myTow;
         #region Image Tower
@@ -326,7 +328,7 @@ namespace TrumpTower
             _gameOverExplosion = Content.Load<Texture2D>("game_over_screen");
 
             #region Tower Selector
-
+            _towerCompteur = 60;
             _towerSelector = new Vector2(-1000, -1000);
             _towerSelectorUpgrade = new Vector2(-1000, -1000);
             _verif = false;
@@ -627,7 +629,32 @@ namespace TrumpTower
 
             update_buttons();
 
-
+            foreach (Tower tow in _map.Towers)
+            {
+                    if (newStateMouse.X > tow.Position.X &&
+                        newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
+                        newStateMouse.Y > tow.Position.Y &&
+                        newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                    {
+                        _hoveredTower = tow;
+                        break;
+                    }
+                    else
+                    {
+                        _hoveredTower = null;
+                    }
+            }
+        
+            if (_hoveredTower != null)
+            {
+                
+                _towerCompteur--;
+            }
+            else
+            {
+                _towerCompteur = 60;
+            }
+            
             if (stratPause > 5)
             {
                 GameIsPaused = false;
@@ -1325,6 +1352,23 @@ namespace TrumpTower
                 Texture2D circleTower = createCircleText((int)_drawTower.Scope * Constant.imgSizeMap * (int)_drawTower.Scope);
                 spriteBatch.Draw(circleTower, new Vector2(_drawTower.Position.X - (circleTower.Width/2),_drawTower.Position.Y - (circleTower.Height/2)), null, Color.White * 0.5f);
             }*/
+            
+            if(_hoveredTower != null)
+            {
+                if(_towerCompteur <= 0)
+                {
+                    int WIDTH = (int)VirtualWidth / 11;
+                    int HEIGHT = (int)VirtualHeight / 13;
+                    Texture2D rect = new Texture2D(graphics.GraphicsDevice, WIDTH, HEIGHT);
+
+                    Color[] data = new Color[WIDTH * HEIGHT];
+                    for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
+                    rect.SetData(data);
+
+                    spriteBatch.Draw(rect, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+5,0),Color.White*0.7f);
+                }
+            }
+
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
