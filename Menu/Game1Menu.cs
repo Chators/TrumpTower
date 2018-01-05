@@ -1,4 +1,5 @@
 ﻿using LibraryTrumpTower.Constants;
+using Menu.ButtonsMenu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,6 +8,7 @@ using MonoGame.Extended.NuclexGui;
 using MonoGame.Extended.NuclexGui.Controls;
 using MonoGame.Extended.NuclexGui.Controls.Desktop;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -21,47 +23,46 @@ namespace Menu
     public class Game1Menu : Game
     {
         // Global variables
-        enum BState
+        public enum MenuState
         {
-            HOVER,
-            UP,
-            JUST_RELEASED,
-            DOWN
+            MAIN,
+            CAMPAGNE,
+            WORLD1,
+            WORLD2,
+            WORLD3,
+            NONE
         }
-        const int NUMBER_OF_BUTTONS = 5,
-            MODE_CAMPAGNE_BUTTON_INDEX = 0,
-            MODE_CUSTOM_BUTTON_INDEX = 1,
-            EDITEUR_MAP_BUTTON_INDEX = 2,
-            OPTIONS_BUTTON_INDEX = 3,
-            QUIT_BUTTON_INDEX = 4,
-            BUTTON_HEIGHT = 100,
-            BUTTON_WIDTH = 300;
-        Color background_color;
-        Color[] button_color = new Color[NUMBER_OF_BUTTONS];
-        Rectangle[] button_rectangle = new Rectangle[NUMBER_OF_BUTTONS];
-        BState[] button_state = new BState[NUMBER_OF_BUTTONS];
-        Texture2D[] button_texture = new Texture2D[NUMBER_OF_BUTTONS];
-        double[] button_timer = new double[NUMBER_OF_BUTTONS];
+
+        #region FIELDS
+        MainButtons _mainButtons;
+        CampagneButtons _campagneButtons;
+        WorldButton _world1Button;
+        WorldButton _world2Button;
+        WorldButton _world3Button;
+
         //mouse pressed and mouse just pressed
         bool mpressed, prev_mpressed = false;
         //mouse location in window
         int mx, my;
         double frame_time;
 
+        public MenuState state;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         private readonly InputListenerComponent _inputManager;
         private readonly GuiManager _gui;
+        #endregion
 
         public Game1Menu()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            state = MenuState.MAIN;
+
             // First, we create an input manager.
             _inputManager = new InputListenerComponent(this);
-
             // Then, we create GUI.
             var guiInputService = new GuiInputService(_inputManager);
             _gui = new GuiManager(Services, guiInputService);
@@ -84,25 +85,95 @@ namespace Menu
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
-            // starting x and y locations to stack buttons 
-            // vertically in the middle of the screen
-            int x = Window.ClientBounds.Width / 2 - BUTTON_WIDTH / 2;
-            int y = Window.ClientBounds.Height / 2 -
-                NUMBER_OF_BUTTONS / 2 * BUTTON_HEIGHT -
-                (NUMBER_OF_BUTTONS % 2) * BUTTON_HEIGHT / 2;
-            for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
-            {
-                button_state[i] = BState.UP;
-                button_color[i] = Color.White;
-                button_timer[i] = 0.0;
-                button_rectangle[i] = new Rectangle(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
-                y += BUTTON_HEIGHT;
-            }
+            #region BUTTON MAIN
+            int numberOfButtons = 5;
+            Dictionary<int, string> indexOfButtons = new Dictionary<int, string>();
+            indexOfButtons[0] = "mode_campagne";
+            indexOfButtons[1] = "mode_custom";
+            indexOfButtons[2] = "editeur_de_map";
+            indexOfButtons[3] = "options";
+            indexOfButtons[4] = "quitter";
+            int buttonHeight = 100;
+            int buttonWidth = 300;
+            _mainButtons = new MainButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
+            #endregion
+
+            #region BUTTON CAMPAGNE
+            numberOfButtons = 4;
+            indexOfButtons = new Dictionary<int, string>();
+            indexOfButtons[0] = "World1/World-1";
+            indexOfButtons[1] = "World2/World-2";
+            indexOfButtons[2] = "World3/World-3";
+            indexOfButtons[3] = "return";
+            buttonHeight = 100;
+            buttonWidth = 300;
+            _campagneButtons = new CampagneButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
+            #endregion
+
+            #region BUTTON WORLD
+            #region BUTTON WORLD 1
+            numberOfButtons = 6;
+            indexOfButtons = new Dictionary<int, string>();
+            indexOfButtons[0] = "World1/Map-1";
+            indexOfButtons[1] = "World1/Map-2";
+            indexOfButtons[2] = "World1/Map-3";
+            indexOfButtons[3] = "World1/Map-4";
+            indexOfButtons[4] = "World1/Map-5";
+            indexOfButtons[5] = "return";
+            List<string>nameMaps = new List<string>();
+            nameMaps.Add("Map-1");
+            nameMaps.Add("Map-2");
+            nameMaps.Add("Map-3");
+            nameMaps.Add("Map-4");
+            nameMaps.Add("Map-5");
+            buttonHeight = 100;
+            buttonWidth = 300;
+            _world1Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World1", nameMaps);
+            #endregion
+
+            #region BUTTON WORLD 2
+            numberOfButtons = 6;
+            indexOfButtons = new Dictionary<int, string>();
+            indexOfButtons[0] = "World2/Map-1";
+            indexOfButtons[1] = "World2/Map-2";
+            indexOfButtons[2] = "World2/Map-3";
+            indexOfButtons[3] = "World2/Map-4";
+            indexOfButtons[4] = "World2/Map-5";
+            indexOfButtons[5] = "return";
+            nameMaps = new List<string>();
+            nameMaps.Add("Map-1");
+            nameMaps.Add("Map-2");
+            nameMaps.Add("Map-3");
+            nameMaps.Add("Map-4");
+            nameMaps.Add("Map-5");
+            buttonHeight = 100;
+            buttonWidth = 300;
+            _world2Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World2", nameMaps);
+            #endregion
+
+            #region BUTTON WORLD 3
+            numberOfButtons = 6;
+            indexOfButtons = new Dictionary<int, string>();
+            indexOfButtons[0] = "World3/Map-1";
+            indexOfButtons[1] = "World3/Map-2";
+            indexOfButtons[2] = "World3/Map-3";
+            indexOfButtons[3] = "World3/Map-4";
+            indexOfButtons[4] = "World3/Map-5";
+            indexOfButtons[5] = "return";
+            nameMaps = new List<string>();
+            nameMaps.Add("Map-1");
+            nameMaps.Add("Map-2");
+            nameMaps.Add("Map-3");
+            nameMaps.Add("Map-4");
+            nameMaps.Add("Map-5");
+            buttonHeight = 100;
+            buttonWidth = 300;
+            _world3Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World3", nameMaps);
+            #endregion
+            #endregion
+
             IsMouseVisible = true;
-            background_color = Color.Black;
-
             _gui.Screen = new GuiScreen(graphics.GraphicsDevice.DisplayMode.Width, graphics.GraphicsDevice.DisplayMode.Height);
-
             _gui.Screen.Desktop.Bounds = new UniRectangle(new UniScalar(0f, 0), new UniScalar(0f, 0), new UniScalar(1f, 0), new UniScalar(1f, 0));
             // Perform second-stage initialization
             _gui.Initialize();
@@ -120,16 +191,11 @@ namespace Menu
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            button_texture[MODE_CAMPAGNE_BUTTON_INDEX] =
-                Content.Load<Texture2D>("mode_campagne");
-            button_texture[MODE_CUSTOM_BUTTON_INDEX] =
-                Content.Load<Texture2D>("mode_custom");
-            button_texture[EDITEUR_MAP_BUTTON_INDEX] =
-                Content.Load<Texture2D>("editeur_de_map");
-            button_texture[OPTIONS_BUTTON_INDEX] =
-                Content.Load<Texture2D>("options");
-            button_texture[QUIT_BUTTON_INDEX] =
-                Content.Load<Texture2D>("quitter");
+            _mainButtons.LoadContent();
+            _campagneButtons.LoadContent();
+            _world1Button.LoadContent();
+            _world2Button.LoadContent();
+            _world3Button.LoadContent();
         }
 
         /// <summary>
@@ -152,13 +218,12 @@ namespace Menu
                 Exit();
 
             // TODO: Add your update logic here
-            /*try { _inputManager.Update(gameTime); }
-            catch { }*/
+            try { _inputManager.Update(gameTime); }
+            catch { }
             _inputManager.Update(gameTime);
 
             // get elapsed frame time in seconds
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
-
             // update mouse variables
             MouseState mouse_state = Mouse.GetState();
             mx = mouse_state.X;
@@ -167,7 +232,18 @@ namespace Menu
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
 
             if (_gui.Screen.Desktop.Children.Count == 0)
-            update_buttons();
+            {
+                if (state == MenuState.MAIN)
+                    _mainButtons.Update(frame_time, mx, my, prev_mpressed, mpressed);
+                else if (state == MenuState.CAMPAGNE)
+                    _campagneButtons.Update(frame_time, mx, my, prev_mpressed, mpressed);
+                else if (state == MenuState.WORLD1)
+                    _world1Button.Update(frame_time, mx, my, prev_mpressed, mpressed);
+                else if (state == MenuState.WORLD2)
+                    _world2Button.Update(frame_time, mx, my, prev_mpressed, mpressed);
+                else if (state == MenuState.WORLD3)
+                    _world3Button.Update(frame_time, mx, my, prev_mpressed, mpressed);
+            }
 
             base.Update(gameTime);
         }
@@ -179,131 +255,27 @@ namespace Menu
         protected override void Draw(GameTime gameTime)
         {
             // TODO: Add your drawing code here
-            GraphicsDevice.Clear(background_color);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
-                spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
+
+            if (state == MenuState.MAIN)
+                _mainButtons.Draw(spriteBatch);
+            else if (state == MenuState.CAMPAGNE)
+                _campagneButtons.Draw(spriteBatch);
+            else if (state == MenuState.WORLD1)
+                _world1Button.Draw(spriteBatch);
+            else if (state == MenuState.WORLD2)
+                _world2Button.Draw(spriteBatch);
+            else if (state == MenuState.WORLD3)
+                _world3Button.Draw(spriteBatch);
+
             spriteBatch.End();
 
             _gui.Draw(gameTime);
 
             base.Draw(gameTime);
         }
-
-        #region Class BUTTON
-        // wrapper for hit_image_alpha taking Rectangle and Texture
-        Boolean hit_image_alpha(Rectangle rect, Texture2D tex, int x, int y)
-        {
-            return hit_image_alpha(0, 0, tex, tex.Width * (x - rect.X) /
-                rect.Width, tex.Height * (y - rect.Y) / rect.Height);
-        }
-
-        // wraps hit_image then determines if hit a transparent part of image 
-        Boolean hit_image_alpha(float tx, float ty, Texture2D tex, int x, int y)
-        {
-            if (hit_image(tx, ty, tex, x, y))
-            {
-                uint[] data = new uint[tex.Width * tex.Height];
-                tex.GetData<uint>(data);
-                if ((x - (int)tx) + (y - (int)ty) *
-                    tex.Width < tex.Width * tex.Height)
-                {
-                    return ((data[
-                        (x - (int)tx) + (y - (int)ty) * tex.Width
-                        ] &
-                                0xFF000000) >> 24) > 20;
-                }
-            }
-            return false;
-        }
-
-        // determine if x,y is within rectangle formed by texture located at tx,ty
-        Boolean hit_image(float tx, float ty, Texture2D tex, int x, int y)
-        {
-            return (x >= tx &&
-                x <= tx + tex.Width &&
-                y >= ty &&
-                y <= ty + tex.Height);
-        }
-
-        // determine state and color of button
-        void update_buttons()
-        {
-            for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
-            {
-
-                if (hit_image_alpha(
-                    button_rectangle[i], button_texture[i], mx, my))
-                {
-                    button_timer[i] = 0.0;
-                    if (mpressed)
-                    {
-                        // mouse is currently down
-                        button_state[i] = BState.DOWN;
-                        button_color[i] = Color.Blue;
-                    }
-                    else if (!mpressed && prev_mpressed)
-                    {
-                        // mouse was just released
-                        if (button_state[i] == BState.DOWN)
-                        {
-                            // button i was just down
-                            button_state[i] = BState.JUST_RELEASED;
-                        }
-                    }
-                    else
-                    {
-                        button_state[i] = BState.HOVER;
-                        button_color[i] = Color.LightBlue;
-                    }
-                }
-                else
-                {
-                    button_state[i] = BState.UP;
-                    if (button_timer[i] > 0)
-                    {
-                        button_timer[i] = button_timer[i] - frame_time;
-                    }
-                    else
-                    {
-                        button_color[i] = Color.White;
-                    }
-                }
-
-                if (button_state[i] == BState.JUST_RELEASED)
-                {
-                    take_action_on_button(i);
-                }
-            }
-        }
-
-
-        // Logic for each button click goes here
-        void take_action_on_button(int i)
-        {
-            //take action corresponding to which button was clicked
-            switch (i)
-            {
-                case MODE_CAMPAGNE_BUTTON_INDEX:
-                    Exit();
-                    break;
-                case MODE_CUSTOM_BUTTON_INDEX:
-                    MapPlay_Pressed();
-                    break;
-                case EDITEUR_MAP_BUTTON_INDEX:
-                    MapEditor_Pressed();
-                    break;
-                case OPTIONS_BUTTON_INDEX:
-                    break;
-                case QUIT_BUTTON_INDEX:
-                    Exit();
-                    break;
-                default:
-                    break;
-            }
-        }
-        #endregion
 
         #region WINDOW
 
@@ -550,5 +522,6 @@ namespace Menu
         #endregion 
 
         #endregion
+
     }
 }

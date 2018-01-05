@@ -486,7 +486,8 @@ namespace MapEditorTrumpTower
             int _sizeY;
             if (_size >= Constant.MinWidthMap && _size <= Constant.MaxWidthMap)
             {
-                _sizeY = _size / (16 / 9);
+
+                _sizeY = _size / (16/9);
                 int[,] _mapPoint2D = new int[_size, _sizeY];
                 for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
                 {

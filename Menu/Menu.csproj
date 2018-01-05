@@ -74,7 +74,11 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ButtonsMenu\CampagneButtons.cs" />
+    <Compile Include="ButtonsMenu\MainButtons.cs" />
+    <Compile Include="ButtonsMenu\WorldButton.cs" />
     <Compile Include="Game1Menu.cs" />
+    <Compile Include="ButtonsMenu\GroupOfButtons.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
