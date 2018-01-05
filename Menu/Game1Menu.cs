@@ -61,6 +61,9 @@ namespace Menu
 
             state = MenuState.MAIN;
 
+            Player a = new Player("Thibaud", "mdr", 2);
+            a.Serialize();
+
             // First, we create an input manager.
             _inputManager = new InputListenerComponent(this);
             // Then, we create GUI.
