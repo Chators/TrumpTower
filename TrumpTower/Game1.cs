@@ -31,6 +31,9 @@ namespace TrumpTower
         #region Fields
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        int nombre;
+        int nombre2;
+        
         #region Lose condition
         bool isLost;
         int policeBlink;
@@ -307,7 +310,8 @@ namespace TrumpTower
             graphics.ApplyChanges();
 
             #endregion
-
+            nombre = 0;
+            nombre2 = 0;
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
             _verif3 = false;
@@ -773,7 +777,14 @@ namespace TrumpTower
                     ManagerSound.PlayGameOver();
                 }
             }
+            if (nombre < 50) nombre += 4;
+            if (nombre >= 50) nombre = 0;
 
+            if (warning && nombre2 <=30 )
+            {
+                nombre2++;
+            }
+            if (!warning) nombre2 = 0;
             base.Update(gameTime);
         }
        
@@ -1509,9 +1520,25 @@ namespace TrumpTower
             }
             else if (stratPause >= 5)
             {
-                spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 100), Color.Red);
-                if (warning == true)
-                    spriteBatch.Draw(_imgWarning2, new Vector2(230, 88), Color.White);
+                if(!warning) spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 100), Color.Red);
+                {
+                    if (nombre2 < 30)
+                    {
+                        if (warning)
+                        {
+                            for (int i = 0; i < nombre; i++)
+                            {
+                                spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10 + (nombre / 7), 100), Color.Red);
+                            }
+
+                            if (warning == true) spriteBatch.Draw(_imgWarning2, new Vector2(230 + (nombre / 7), 88), Color.White);
+                        }
+                    }
+                    else
+                    {
+                        spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 100), Color.Red);
+                    }
+                }
             }
 
             if (realPause == true)
