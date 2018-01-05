@@ -43,7 +43,7 @@ namespace TrumpTower.Draw.ButtonsUI
                         if (_ctx.stratPause >= 6 )
                         {
                             ManagerSound.PlayNoAvailable();
-                            _ctx.stratPause = 5;
+                           /*ligne à commenter pour remettre la pause stratégique*/ _ctx.stratPause = 5;
                         }
                         ManagerSound.PlayPauseIn();
                     }
