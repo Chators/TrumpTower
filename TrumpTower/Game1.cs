@@ -1399,6 +1399,8 @@ namespace TrumpTower
                     }
                     else
                     {
+                        spriteBatch.Draw(_imgCoin, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+3, (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
+                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Earnings, _hoveredTower.Position + new Vector2((Constant.imgSizeMap+3)+((float)_map.WidthArrayMap/64)*64, (((VirtualHeight / 13) / 2) - 5)), Color.Blue);
 
                     }
                 }
