@@ -283,7 +283,7 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
             _map = new Map(_mapPoint);*/
-            _map = BinarySerializer.Deserialize<Map>("../../../../../MapEditorTrumpTower/bin/x86/Debug/map1.xml");
+            _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
 
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
@@ -331,8 +331,7 @@ namespace TrumpTower
             GameIsPaused = false;
             isLost = false;
             policeBlink = 240;
-            _sadTrump = Content.Load<Texture2D>("trump_sad");
-            _gameOverExplosion = Content.Load<Texture2D>("game_over_screen");
+            
 
             #region Tower Selector
             _towerCompteur = 60;
@@ -367,6 +366,7 @@ namespace TrumpTower
             #endregion
 
             warning = false;
+            graphics.IsFullScreen = false;
             base.Initialize();
         }
 
@@ -581,6 +581,9 @@ namespace TrumpTower
             _timerRaidAirClose = 0;
             _shadowRaidAirClose = 0.5f;
             _shadowVar = 0.1f;
+
+            _sadTrump = Content.Load<Texture2D>("trump_sad");
+            _gameOverExplosion = Content.Load<Texture2D>("game_over_screen");
 
             // ANIMATION EXPLOSION ABILITY
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);

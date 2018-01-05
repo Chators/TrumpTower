@@ -1,0 +1,9 @@
+La serialization comment elle marche ?
+TrumpTower/Menu/MapXml
+On a toutes les maps qui ont été crée :
+	- Le dossier CampagneMap contient toutes les maps de campagne (si on veut en remplacer une, il suffit juste de copier-coller votre nouvelle map dedans) 
+	- Le dossier CustomMap contient toutes les maps créer par le joueur
+	- Le fichier CurrentMap.xml contient la map qui sera lancer 
+Donc si on veut charger une map il suffit de copier la map que l'on veut jouer dans CurrentMap.xml
+
+!!!!! Les maps sont dans le bin donc y'a pas de partage sur GIT, de plus elles peuvent se faire supprimer avec des regénérations donc enregistrer-les par sécurité dans un autre fichier !!!!

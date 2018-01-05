@@ -60,6 +60,7 @@ namespace MapEditorTrumpTower
         private Texture2D _imgKamikaze;
         private Texture2D _imgDoctor;
         private Texture2D _imgSaboteur;
+
         #region Init Dollars
         private Texture2D _imgDollars;
         private SpriteFont _spriteDollars;
@@ -72,12 +73,12 @@ namespace MapEditorTrumpTower
         #endregion
 
         private List<ButtonTexture> _buttonsTexture;
-        private List<ButtonCreatePath> _buttonsCreatePath;
 
         #region gameState
         public GameState State { get; set; }
         public ActionCreatePath CurrentActionCreatePath { get; set; }
         #endregion
+
         int posMenuRight;
         int _lastRefresh;
 
@@ -95,7 +96,6 @@ namespace MapEditorTrumpTower
             _gui = new GuiManager(Services, guiInputService);
 
             _buttonsTexture = new List<ButtonTexture>();
-            _buttonsCreatePath = new List<ButtonCreatePath>();
         }
 
         /// <summary>
@@ -120,10 +120,12 @@ namespace MapEditorTrumpTower
             // Perform second-stage initialization
             _gui.Initialize();
 
-            Button2_Pressed();
+            if (File.Exists(BinarySerializer.pathCurrentMapXml)) _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+            else Button2_Pressed();
+
             _lastRefresh = 0;
             posMenuRight = GraphicsDevice.Viewport.Width * 85 / 100;
-            CurrentActionCreatePath = ActionCreatePath.Add;
+
             base.Initialize();
         }
 
@@ -175,6 +177,9 @@ namespace MapEditorTrumpTower
             #region Load Cursor
             _imgCursor = Content.Load<Texture2D>("cursor");
             #endregion
+
+            if (_map != null)
+                InitMapCreator();
         }
 
         /// <summary>
@@ -202,7 +207,6 @@ namespace MapEditorTrumpTower
 
             try { _inputManager.Update(gameTime); }
             catch { }
-            //_inputManager.Update(gameTime);
 
             if (State.ActualState == StateType.Default)
             {
@@ -274,22 +278,29 @@ namespace MapEditorTrumpTower
                     }
                     bool hasName = _map.Name != null;
                     bool hasBase = _map.Wall != null;
+
                     if (!hasName || !hasBase || !hasPath)
                         InfoSerialization_Pressed(hasName, hasBase, hasPath);
                     else
                     {
-                        BinarySerializer.Serialize(_map, "map1.xml");
-                        Exit();
-                    }
-                }
-            }
+                        bool nameIsExisting = false;
+                        if (hasName)
+                        {
+                            string[] filesInDirectory = Directory.GetFiles(BinarySerializer.pathCustomMap);
+                            for (int i = 0; i < filesInDirectory.Length; i++)
+                            {
+                                if (filesInDirectory[i] == (BinarySerializer.pathCustomMap + "\\" + _map.Name + ".xml")) nameIsExisting = true;
+                            }
+                        }
 
-            else if (State.ActualState == StateType.CreatePathForSpawn)
-            {
-                for (int i = 0; i < _buttonsCreatePath.Count; i++)
-                {
-                    ButtonCreatePath _buttonTexture = _buttonsCreatePath[i];
-                    _buttonTexture.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+                        if (nameIsExisting)
+                            ConfirmEraseMap_Pressed();
+                        else
+                        {
+                            BinarySerializer.Serialize(_map, "CustomMap/" + _map.Name + ".xml");
+                            Exit();
+                        }
+                    }
                 }
             }
         }
@@ -300,10 +311,9 @@ namespace MapEditorTrumpTower
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DimGray);
+            GraphicsDevice.Clear(Color.Maroon);
 
             // TODO: Add your drawing code here
-            //_gui.Draw(gameTime);
             
             if (_map != null)
             {
@@ -323,21 +333,6 @@ namespace MapEditorTrumpTower
                         ButtonTexture _buttonTexture = _buttonsTexture[i];
                         _buttonTexture.Draw(spriteBatch);
                     }
-                }
-                else if (State.ActualState == StateType.CreatePathForSpawn)
-                {
-                    spriteBatch.DrawString(_debug, "Outil de tracage de chemin", new Vector2(85 + posMenuRight, 10), Color.Blue);
-                    spriteBatch.DrawString(_debug, "Les unites sortant du spawn emprunteront ce chemin.", new Vector2(20 + posMenuRight, 50), Color.BlueViolet);
-                    spriteBatch.DrawString(_debug, "Il doit etre sur une route", new Vector2(20 + posMenuRight, 70), Color.BlueViolet);
-                    spriteBatch.DrawString(_debug, "Il doit etre relie a la base", new Vector2(20 + posMenuRight, 90), Color.BlueViolet);
-                    spriteBatch.DrawString(_debug, "Les cases vertes represente le chemin et vous ne pouvez pas revenir sur une meme case", new Vector2(20 + posMenuRight, 110), Color.BlueViolet);
-                    for (int i = 0; i < _buttonsCreatePath.Count; i++)
-                    {
-                        ButtonCreatePath _buttonTexture = _buttonsCreatePath[i];
-                        _buttonTexture.Draw(spriteBatch);
-                    }
-
-
                 }
                 spriteBatch.End();
                 #endregion
@@ -515,128 +510,7 @@ namespace MapEditorTrumpTower
 
                 _map = new Map(_mapPointJagged);
 
-                SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
-
-                #region Button Left Menu Default
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, 100), "1",
-                    new List<Keys>(new Keys[] { Keys.D1 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, 100), "2",
-                    new List<Keys>(new Keys[] { Keys.D2 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, 100), "3",
-                    new List<Keys>(new Keys[] { Keys.D3 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, 100), "4",
-                    new List<Keys>(new Keys[] { Keys.D4 })));
-
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 270), "CTRL+1",
-                    new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D1 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 270), "CTRL+2",
-                    new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D2 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtUpGrassDown], _debug, MapTexture.dirtUpGrassDown, new Vector2(posMenuRight + 150, 270), "CTRL+3",
-                    new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D3 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtLeftGrassRight], _debug, MapTexture.dirtLeftGrassRight, new Vector2(posMenuRight + 220, 270), "CTRL+4",
-                    new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D4 })));
-
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftDown], _debug, MapTexture.bigDirtCornerLeftDown, new Vector2(posMenuRight + 10, 380), "ALT+1",
-                    new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D1 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightDown], _debug, MapTexture.bigDirtCornerRightDown, new Vector2(posMenuRight + 80, 380), "ALT+2",
-                    new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D2 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightUp], _debug, MapTexture.bigDirtCornerRightUp, new Vector2(posMenuRight + 150, 380), "ALT+3",
-                    new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D3 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftUp], _debug, MapTexture.bigDirtCornerLeftUp, new Vector2(posMenuRight + 220, 380), "ALT+4",
-                    new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D4 })));
-
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftDown], _debug, MapTexture.dirtCornerLeftDown, new Vector2(posMenuRight + 10, 490), "SHIFT+1",
-                    new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D1 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightDown], _debug, MapTexture.dirtCornerRightDown, new Vector2(posMenuRight + 80, 490), "SHIFT+2",
-                    new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D2 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightUp], _debug, MapTexture.dirtCornerRightUp, new Vector2(posMenuRight + 150, 490), "SHIFT+3",
-                    new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D3 })));
-                _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 490), "SHIFT+4",
-                    new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D4 })));
-
-                _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 670), "A",
-                    new List<Keys>(new Keys[] { Keys.A })));
-
-                _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 75, 830), "I",
-                    new List<Keys>(new Keys[] { Keys.I })));
-
-                _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 160, 830), "P",
-                   new List<Keys>(new Keys[] { Keys.P })));
-
-                _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 1000), "Entrer",
-                   new List<Keys>(new Keys[] { Keys.Enter })));
-                #endregion
-
-                #region Button Left Menu CreatePath
-                _buttonsCreatePath.Add(new ButtonCreatePath(this, "Ajouter un chemin", _imgNoSelect, _debug, ActionCreatePath.Add, new Vector2(posMenuRight + 10, 100), "A",
-                    new List<Keys>(new Keys[] { Keys.A })));
-                _buttonsCreatePath.Add(new ButtonCreatePath(this, "Retour arriere", _imgNoSelect, _debug, ActionCreatePath.Undo, new Vector2(posMenuRight + 60, 100), "CTRL+Z",
-                    new List<Keys>(new Keys[] { Keys.LeftControl, Keys.Z })));
-                _buttonsCreatePath.Add(new ButtonCreatePath(this, "Reinitialiser", _imgNoSelect, _debug, ActionCreatePath.Reset, new Vector2(posMenuRight + 110, 100), "R",
-                    new List<Keys>(new Keys[] { Keys.R })));
-                _buttonsCreatePath.Add(new ButtonCreatePath(this, "Retour", _imgNoSelect, _debug, ActionCreatePath.Back, new Vector2(posMenuRight + 160, 100), "<--",
-                    new List<Keys>(new Keys[] { Keys.Back })));
-                _buttonsCreatePath.Add(new ButtonCreatePath(this, "Valider", _imgNoSelect, _debug, ActionCreatePath.Validate, new Vector2(posMenuRight + 210, 100), "Entree",
-                    new List<Keys>(new Keys[] { Keys.Enter })));
-                #endregion
-
-                VirtualWidth = _map.WidthArrayMap * Constant.imgSizeMap;
-                VirtualHeight = _map.HeightArrayMap * Constant.imgSizeMap;
-                scale = Matrix.CreateScale(
-                                (GraphicsDevice.Viewport.Width * 85 / 100) / VirtualWidth,
-                                GraphicsDevice.Viewport.Height / VirtualHeight,
-                                1f);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                //_gui.Screen = new GuiScreen((GraphicsDevice.Viewport.Width * 85 / 100) / VirtualWidth, GraphicsDevice.Viewport.Height / VirtualHeight);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                InitMapCreator();
 
                 _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
                 GuiButtonControl deleteButton = null;
@@ -645,7 +519,6 @@ namespace MapEditorTrumpTower
                     if (button.Name == "button") deleteButton = button;
                 }
 
-                State.ActualState = StateType.Default;
                 _gui.Screen.Desktop.Children.Remove(deleteButton);
             }
         }
@@ -1738,11 +1611,135 @@ namespace MapEditorTrumpTower
         }
         #endregion
 
+        #region Window ConfirmeEraseMap Map
+        private void ConfirmEraseMap_Pressed()
+        {
+            var window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
+                Title = "Nom de map existant",
+                EnableDragging = true
+            };
+
+            var labelEraseMap = new GuiLabelControl()
+            {
+                Text = "Une map possede deja ce nom !",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
+            };
+
+            var labelEraseMap2 = new GuiLabelControl()
+            {
+                Text = "Etes-vous sur de vouloir l'ecraser ?",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25))
+            };
+
+            var button1 = new GuiButtonControl
+            {
+                Name = "confirm",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Confirmer"
+            };
+
+            var button2 = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Retour"
+            };
+
+            button1.Pressed += ConfirmEraseMap_Pressed;
+            button2.Pressed += CancelEraseMap_Pressed;
+
+            window.Children.Add(labelEraseMap);
+            window.Children.Add(labelEraseMap2);
+
+            window.Children.Add(button1);
+            window.Children.Add(button2);
+
+            _gui.Screen.Desktop.Children.Add(window);
+        }
+
+        private void ConfirmEraseMap_Pressed(object sender, System.EventArgs e)
+        {
+            BinarySerializer.Serialize(_map, "CustomMap/" + _map.Name + ".xml");
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            Exit();
+        }
+
+        private void CancelEraseMap_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+        #endregion
+
         #endregion
 
         public List<Texture2D> ImgMaps => _imgMaps;
         public Texture2D ImgWall => _imgWall;
+        public void InitMapCreator()
+        {
+            SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
+
+            #region Button Left Menu Default
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, 100), "1",
+                new List<Keys>(new Keys[] { Keys.D1 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, 100), "2",
+                new List<Keys>(new Keys[] { Keys.D2 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, 100), "3",
+                new List<Keys>(new Keys[] { Keys.D3 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, 100), "4",
+                new List<Keys>(new Keys[] { Keys.D4 })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 270), "CTRL+1",
+                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D1 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 270), "CTRL+2",
+                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D2 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtUpGrassDown], _debug, MapTexture.dirtUpGrassDown, new Vector2(posMenuRight + 150, 270), "CTRL+3",
+                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D3 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtLeftGrassRight], _debug, MapTexture.dirtLeftGrassRight, new Vector2(posMenuRight + 220, 270), "CTRL+4",
+                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D4 })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftDown], _debug, MapTexture.bigDirtCornerLeftDown, new Vector2(posMenuRight + 10, 380), "ALT+1",
+                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D1 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightDown], _debug, MapTexture.bigDirtCornerRightDown, new Vector2(posMenuRight + 80, 380), "ALT+2",
+                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D2 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightUp], _debug, MapTexture.bigDirtCornerRightUp, new Vector2(posMenuRight + 150, 380), "ALT+3",
+                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D3 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftUp], _debug, MapTexture.bigDirtCornerLeftUp, new Vector2(posMenuRight + 220, 380), "ALT+4",
+                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D4 })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftDown], _debug, MapTexture.dirtCornerLeftDown, new Vector2(posMenuRight + 10, 490), "SHIFT+1",
+                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D1 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightDown], _debug, MapTexture.dirtCornerRightDown, new Vector2(posMenuRight + 80, 490), "SHIFT+2",
+                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D2 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightUp], _debug, MapTexture.dirtCornerRightUp, new Vector2(posMenuRight + 150, 490), "SHIFT+3",
+                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D3 })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 490), "SHIFT+4",
+                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D4 })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 670), "A",
+                new List<Keys>(new Keys[] { Keys.A })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 75, 830), "I",
+                new List<Keys>(new Keys[] { Keys.I })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 160, 830), "P",
+               new List<Keys>(new Keys[] { Keys.P })));
+
+            _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 1000), "Entrer",
+               new List<Keys>(new Keys[] { Keys.Enter })));
+            #endregion
+
+            VirtualWidth = _map.WidthArrayMap * Constant.imgSizeMap;
+            VirtualHeight = _map.HeightArrayMap * Constant.imgSizeMap;
+            scale = Matrix.CreateScale(
+                            (GraphicsDevice.Viewport.Width * 85 / 100) / VirtualWidth,
+                            GraphicsDevice.Viewport.Height / VirtualHeight,
+                            1f);
+
+            State.ActualState = StateType.Default;
+        }
 
     }
 }
-

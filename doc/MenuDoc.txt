@@ -1,0 +1,7 @@
+Pour ajouter les boutons d'un menu il faut :
+- Creer une classe qui hérite de GroupOfButtons
+- Ajouter l'initialize, load content, update et draw dans le Game1Menu
+
+Pour créer des boutons :
+- https://textcraft.net/
+- nom de compte : TrumpTower / mot de passe : TowerTrump

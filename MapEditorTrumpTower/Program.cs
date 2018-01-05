@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace MapEditorTrumpTower
 {
@@ -16,6 +17,8 @@ namespace MapEditorTrumpTower
         {
             using (var game = new Game1MapEditor())
                 game.Run();
+
+            Process.Start("Menu");
         }
     }
 #endif
