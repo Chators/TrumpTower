@@ -69,6 +69,22 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     }
                     ButtonHover = button;
                 }
+               button = ButtonsUIArray["wallBossAbility"];
+
+                if (Ctx.Map.WallBoss._isUsed == false)
+                    {
+                    if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                        newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height)
+
+                    {
+                        if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released || newStateKeyboard.IsKeyDown(Keys.V) && lastStateKeyboard.IsKeyDown(Keys.V))
+                        {
+
+                            ButtonActivated = button;
+                        }
+                        ButtonHover = button;
+                    }
+                }
             }
             // Second Selection
             else if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released)
@@ -85,6 +101,13 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     Ctx.Map.UseSniperAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
                     ManagerSound.PlaySniperShoot();
                 }
+
+                if (ButtonActivated.Name == "wallBossAbility" && !Ctx.GameIsPaused)
+                {
+                    Ctx.Map.UseWallBossAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
+                   
+                }
+
 
                 ButtonActivated = null;
             }

@@ -52,6 +52,12 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
                 spriteBatch.Draw(_img, reloadedRect, color);
             }
+
+            if(_name == "wallBossAbility")
+            {
+                reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
+                spriteBatch.Draw(_img, reloadedRect, color);
+            }
         }
 
         public string Name => _name;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.SpecialAbilities;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -40,11 +41,15 @@ namespace TrumpTower.LibraryTrumpTower
         public bool _isVulnerable; // for boss1 after breaching wall
         public bool _isCastingBoss1;
         public bool _canChargeBoss1;
+        public double _rangeBoss;
+        public double _timeofVulnerability;
+        public WallBoss _WallBoss { get; private set; }
+        
+        
 
 
 
-
-        public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type)
+        public Enemy(Map map, Wave wave, string name, Wall wall, EnemyType type, WallBoss WallBoss)
         {
             _type = type;
             _map = map;
@@ -54,6 +59,7 @@ namespace TrumpTower.LibraryTrumpTower
             _position = wave.Position;
             _moveToState = 0;
             _isCasting = false;
+            _WallBoss = null;
 
             if (type == EnemyType.defaultSoldier)
             {
@@ -101,8 +107,11 @@ namespace TrumpTower.LibraryTrumpTower
                 _hasCharged = false;
                 _timeBeforeCharging = 6 * 60; // When it comes to 0, boss1 starts casting charge 
                 _isVulnerable = false;
+                _timeofVulnerability = 3 * 60; // Time where boss doesnt move and take *2 dmg before resuming actions.
                 _isCastingBoss1 = false;
                 _timeBeforeEndofCastingCharge = 3 * 60; // When it comes to 0, boss1 charges, doubling his speed and dammage, build a wall to stop him
+                _rangeBoss = 200;
+                _WallBoss = WallBoss;
                 
             }
         }
@@ -155,7 +164,7 @@ namespace TrumpTower.LibraryTrumpTower
                  UpdateHeal(GetEnemies(_position, ActionRadius));
             } else if (_type == EnemyType.boss1)
             {
-                if (_position != Wall.Position && _isCastingBoss1 == false) UpdateMove();
+                if (!WithinReach(Position, Wall.Position, _rangeBoss) && _isCastingBoss1 == false && _isVulnerable == false) UpdateMove();
                 UpdateBoss1();
             }  
         }
@@ -164,6 +173,7 @@ namespace TrumpTower.LibraryTrumpTower
         {
             if (_timeBeforeCharging > 0) _timeBeforeCharging--;
             else if (_timeBeforeCharging == 0 && _hasCharged == false && _isCharging == false) ChargeBoss1();
+            EncounterWallCreated();
             UpdateAttackWallBoss1();
         }
 
@@ -184,17 +194,45 @@ namespace TrumpTower.LibraryTrumpTower
             Speed = Speed * 5;
         }
 
+        
+
         private void EncounterWallCreated() // Boss1
         {
             // If boss is charging and encounters a wall created, the wall breaks.
             //Then _isCharging goes false.
             // Boss resumes normal speed and dmg after a few seconds of stun where he takes double dmg.
             // Keeps _hasCharged = true so he doesnt resume charging 
+            if (_isVulnerable == false && _WallBoss._isBreached == false)
+            {
+                if (WithinReach(Position, _WallBoss.Position, _WallBoss.Radius))
+                {
+                    if (_isCharging == true)
+                    {
+                        Speed = Speed / 5;
+                        _damage = _damage / 2;
+                    }
+                    _isCharging = false;
+                    _WallBoss._isBreached = true;
+                    _isVulnerable = true;
+                }
+            }
+            else if (_isVulnerable == true)
+            {
+                if (_timeofVulnerability > 0)
+                {
+                    _timeofVulnerability--;
+                } else if (_timeofVulnerability <= 0)
+                {
+                    _isVulnerable = false;
+
+                }
+            }
         }
+    
 
         private void UpdateAttackWallBoss1()
         {
-            if (WithinReach(Position, Wall.Position, Speed))
+            if (WithinReach(Position, Wall.Position, _rangeBoss))
             {
                 if (_reload != 0) _reload --;
                 else
@@ -314,7 +352,12 @@ namespace TrumpTower.LibraryTrumpTower
         public Vector2 Position => _position;
         public bool IsStarting => TimerBeforeStarting <= 0;
         public bool IsDead => CurrentHp <= 0;
-        public void TakeHp(double damage) => CurrentHp -= damage;
+
+        public void TakeHp(double damage)
+        {
+            CurrentHp -= damage;
+            if (_type == EnemyType.boss1 && _isVulnerable == true) CurrentHp -= damage * 2;
+        }
         public List<Vector2> ShortestWay => _wave.ShortestWay;
         private bool WithinReach(Vector2 myPosition, Vector2 target, double speed)
         {

@@ -35,6 +35,7 @@ namespace TrumpTower.LibraryTrumpTower
         // SPECIAL ABILITIES
         public Explosion Explosion { get; set; }
         public Sniper Sniper { get; set; }
+        public WallBoss WallBoss { get; set;}
 
         public Map(int[,] map)
         {
@@ -48,6 +49,7 @@ namespace TrumpTower.LibraryTrumpTower
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
             Sniper = new Sniper(this);
+            WallBoss = new WallBoss(this);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
             DeadUnitsAir = new List<AirUnit>();
@@ -58,9 +60,9 @@ namespace TrumpTower.LibraryTrumpTower
             //
             // Create AIR UNITS
             //
-            AirUnits.Add(new AirUnitsCollection(this, 7*60, 8, PlaneType.PlaneSlow));
-            AirUnits.Add(new AirUnitsCollection(this, 32*60, 10, PlaneType.PlaneNormal));
-            AirUnits.Add(new AirUnitsCollection(this, 48*60, 5, PlaneType.PlaneFast));
+          //  AirUnits.Add(new AirUnitsCollection(this, 7*60, 8, PlaneType.PlaneSlow));
+          //  AirUnits.Add(new AirUnitsCollection(this, 32*60, 10, PlaneType.PlaneNormal));
+          //  AirUnits.Add(new AirUnitsCollection(this, 48*60, 5, PlaneType.PlaneFast));
 
             //
             // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
@@ -73,9 +75,15 @@ namespace TrumpTower.LibraryTrumpTower
 
             // WAVE 1 FOR TOWER GREEN
             SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 6 * 60));
-            SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.boss1));
-            SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
+            SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.boss1, WallBoss));
+            //SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
 
+
+            /* TEST BOSS 1
+             * 
+             * 
+             * 
+             * 
             // WAVE 2 FOR TOWER YELLOW
             SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 15 * 60));
             SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.saboteur));
@@ -143,8 +151,11 @@ namespace TrumpTower.LibraryTrumpTower
 
             // WAVE 4
             SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 54 * 60));
-            for (int i = 0; i < 10; i++) SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+        
+   for (int i = 0; i < 10; i++) SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall, EnemyType.defaultSoldier));
+         */
         }
+
 
         public void Update()
         {
@@ -174,6 +185,7 @@ namespace TrumpTower.LibraryTrumpTower
 
             Explosion.Update();
             Sniper.Update();
+            WallBoss.Update();
 
         }
 
@@ -246,6 +258,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         public Missile CreateMissile(Missile missile)
         {
+
             Missiles.Add(missile);
             return missile;
         }
@@ -258,6 +271,11 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseSniperAbility(Vector2 position)
         {
             Sniper.AttackOn(position);
+        }
+
+        public void UseWallBossAbility(Vector2 position)
+        {
+            WallBoss.PutWallBoss(position);
         }
     }
 }

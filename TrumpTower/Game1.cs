@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.SpecialAbilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -146,6 +147,7 @@ namespace TrumpTower
         Texture2D _buttonSniper;
         Texture2D _ammoSniper;
         Texture2D _cursorTarget;
+        Texture2D _wallBoss;
 
         #endregion
 
@@ -416,6 +418,17 @@ namespace TrumpTower
             _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "sniperAbility", new Vector2(_positionExplosionAbilityButton.X + 80, _positionExplosionAbilityButton.Y), _buttonSniper));
             #endregion
 
+            #region wallBoss button
+
+            _wallBoss = Content.Load<Texture2D>("SpecialAbilities/wallBoss");
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "wallBossAbility", new Vector2(_positionExplosionAbilityButton.X + 240, _positionExplosionAbilityButton.Y), _wallBoss));
+            Vector2 _positionWallBossAbility = new Vector2(15, _mapPoint.GetLength(0) * Constant.imgSizeMap - 80);
+            
+            #endregion
+
+
+
+
             #endregion
 
             #endregion
@@ -474,7 +487,7 @@ namespace TrumpTower
 
             // TODO: Add your update logic here
 
-            #region Prepare and Execut HandleInput
+            #region Prepare and Execut Input
 
             newStateMouse = Mouse.GetState();
             newStateMouse = new MouseState((int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)),
@@ -801,6 +814,13 @@ namespace TrumpTower
             HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f);
             wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);
 
+            #endregion
+
+            #region WallBoss
+            
+            WallBoss WallBoss = _map.WallBoss;   
+            spriteBatch.Draw(_imgWall, WallBoss.Position, Color.White);
+            
             #endregion
 
             #region Enemies
