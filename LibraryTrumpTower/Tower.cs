@@ -129,6 +129,8 @@ namespace TrumpTower.LibraryTrumpTower
 
         public TowerType Type => _type;
 
+        public double AttackSpeed => _attackSpeed;
+
         public double Reload
         {
             get { return _reload; }
