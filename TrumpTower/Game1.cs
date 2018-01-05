@@ -1395,10 +1395,12 @@ namespace TrumpTower
                         spriteBatch.Draw(_imgTowerAttackSpeed, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 10, ((VirtualHeight / 13) - ((float)_map.WidthArrayMap / 64) * 64) - 5), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
                         spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Damage, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 20 + (((float)_map.WidthArrayMap / 64) * 64), ((((float)_map.WidthArrayMap / 64) * 64) / 2) - 2), Color.Red);
                         spriteBatch.Draw(_imgTowerDamages, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 10, 5), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
-                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.AttackSpeed + "/s", _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 20 + (((float)_map.WidthArrayMap / 64) * 64), ((VirtualHeight / 13) - ((((float)_map.WidthArrayMap / 64) * 64) / 2)) - 5), Color.Blue);
+                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower._attackSpeed + "/s", _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 20 + (((float)_map.WidthArrayMap / 64) * 64), ((VirtualHeight / 13) - ((((float)_map.WidthArrayMap / 64) * 64) / 2)) - 5), Color.Blue);
                     }
                     else
                     {
+                        spriteBatch.Draw(_imgCoin, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+3, (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
+                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Earnings, _hoveredTower.Position + new Vector2((Constant.imgSizeMap+3)+((float)_map.WidthArrayMap/64)*64, (((VirtualHeight / 13) / 2) - 5)), Color.Blue);
 
                     }
                 }

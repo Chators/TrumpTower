@@ -30,7 +30,7 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public int Damage { get;  set; }
         [DataMember]
-        readonly double _attackSpeed;
+        public double _attackSpeed { get; private set; }
         [DataMember]
         public double _reload;
         [DataMember]
@@ -129,7 +129,7 @@ namespace TrumpTower.LibraryTrumpTower
 
         public TowerType Type => _type;
 
-        public double AttackSpeed => _attackSpeed;
+        
 
         public double Reload
         {
