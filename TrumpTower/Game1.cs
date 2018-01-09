@@ -61,6 +61,9 @@ namespace TrumpTower
         Texture2D _imgTowerDamages;
         Texture2D _imgTowerAttackSpeed;
         Texture2D _imgLvl;
+        Texture2D rect;
+        Texture2D circleTower;
+        Tower _lastHoveredTower;
         #region Image Tower
 
         Texture2D _imgTower1;
@@ -316,6 +319,7 @@ namespace TrumpTower
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
             _verif3 = false;
             _verif4 = false;
+            _lastHoveredTower = null;
             //_drawTower = null;
             
             // Animations
@@ -368,6 +372,14 @@ namespace TrumpTower
             warning = false;
             graphics.IsFullScreen = false;
             base.Initialize();
+
+            int WIDTH = (int)VirtualWidth / 12;
+            int HEIGHT = (int)VirtualHeight / 13;
+            rect = new Texture2D(graphics.GraphicsDevice, WIDTH, HEIGHT);
+
+            Color[] data = new Color[WIDTH * HEIGHT];
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
+            rect.SetData(data);
         }
 
 
@@ -648,13 +660,13 @@ namespace TrumpTower
                         newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
                         newStateMouse.Y > tow.Position.Y &&
                         newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
-                    {
+                    {  
                         _hoveredTower = tow;
                         break;
                     }
                     else
                     {
-                        _hoveredTower = null;
+                        _hoveredTower = null;   
                     }
             }
         
@@ -1368,23 +1380,15 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgTower4, _towerSelector, null, Color.White * 0.5f);
             }
 
-            /*if (_drawTower != null) {
-                Texture2D circleTower = createCircleText((int)_drawTower.Scope * Constant.imgSizeMap * (int)_drawTower.Scope);
-                spriteBatch.Draw(circleTower, new Vector2(_drawTower.Position.X - (circleTower.Width/2),_drawTower.Position.Y - (circleTower.Height/2)), null, Color.White * 0.5f);
-            }*/
+            
+                
+            
             
             if(_hoveredTower != null)
             {
                 if(_towerCompteur <= 0)
                 {
-                    int WIDTH = (int)VirtualWidth / 12;
-                    int HEIGHT = (int)VirtualHeight / 13;
-                    Texture2D rect = new Texture2D(graphics.GraphicsDevice, WIDTH, HEIGHT);
-
-                    Color[] data = new Color[WIDTH * HEIGHT];
-                    for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
-                    rect.SetData(data);
-
+                    
                     spriteBatch.Draw(rect, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+5,0),Color.White*0.7f);
                     spriteBatch.Draw(_imgLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 128) - 5)), (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
                     spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.TowerLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 48) )), ((VirtualHeight / 13) / 2)-5), Color.Black);
@@ -1403,6 +1407,12 @@ namespace TrumpTower
                         spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Earnings, _hoveredTower.Position + new Vector2((Constant.imgSizeMap+3)+((float)_map.WidthArrayMap/64)*64, (((VirtualHeight / 13) / 2) - 5)), Color.Blue);
 
                     }
+                    if (_hoveredTower != _lastHoveredTower)
+                    {
+                        circleTower = createCircleText((int)_hoveredTower.Scope * Constant.imgSizeMap * (int)_hoveredTower.Scope);
+                    }
+                    _lastHoveredTower = _hoveredTower;
+                    spriteBatch.Draw(circleTower, new Vector2(_hoveredTower.Position.X - (circleTower.Width / 2), _hoveredTower.Position.Y - (circleTower.Height / 2)), null, Color.White * 0.5f);
                 }
             }
            
@@ -1561,7 +1571,8 @@ namespace TrumpTower
                 if (policeBlink > 120)
                 {         
                     spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(465, 10),Color.Red);
-                }else if (policeBlink <= 120)
+                }
+                else if (policeBlink <= 120)
                 {
                     spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(465, 10), Color.White);
                 }

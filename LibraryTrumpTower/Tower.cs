@@ -39,6 +39,8 @@ namespace TrumpTower.LibraryTrumpTower
         public bool _isDisabled { get; set; }
         [DataMember]
         public bool _isCasted { get; set; }
+        
+        
 
         public Tower(Map map, TowerType type, int lvl, Vector2 position)
         {
