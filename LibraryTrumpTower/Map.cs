@@ -134,6 +134,19 @@ namespace TrumpTower.LibraryTrumpTower
             return allEnemies;
         }
 
+        public List<Enemy> GetAllEnemies2()
+        {
+            List<Enemy> allEnemies2 = new List<Enemy>();
+            foreach (Spawn spawn in SpawnsEnemies)
+            {
+                foreach (Wave wave in spawn.Waves)
+                {
+                    allEnemies2.InsertRange(allEnemies2.Count, wave.Enemies);
+                }
+            }
+            return allEnemies2;
+        }
+
         public List<AirUnit> GetAllAirEnemies()
         {
             List<AirUnit> allAirUnits = new List<AirUnit>();

@@ -1415,7 +1415,8 @@ namespace TrumpTower
                     spriteBatch.Draw(circleTower, new Vector2(_hoveredTower.Position.X - (circleTower.Width / 2), _hoveredTower.Position.Y - (circleTower.Height / 2)), null, Color.White * 0.5f);
                 }
             }
-           
+            spriteBatch.DrawString(_spriteDollars, "" + _map.GetAllEnemies2().Count,   new Vector2(200, 300), Color.Red);
+
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
