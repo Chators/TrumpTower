@@ -33,7 +33,12 @@ namespace TrumpTower
         SpriteBatch spriteBatch;
         int nombre;
         int nombre2;
-        
+
+        #region Win condition
+        bool isWon;
+
+        #endregion
+
         #region Lose condition
         bool isLost;
         int policeBlink;
@@ -264,6 +269,7 @@ namespace TrumpTower
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            isWon = false;
             #region Map INIT
 
             /*_mapPoint = new int[,]
@@ -792,6 +798,12 @@ namespace TrumpTower
                     ManagerSound.PlayGameOver();
                 }
             }
+
+            if(!isLost && _map.GetAllEnemies2().Count == 0)
+            {
+                isWon = true;
+            }
+
             if (nombre < 50) nombre += 4;
             if (nombre >= 50) nombre = 0;
 
@@ -895,7 +907,7 @@ namespace TrumpTower
         // Logic for each button click goes here
         void take_action_on_button(int i)
         {
-            if (realPause == true || isLost == true)
+            if (realPause == true || isLost == true || isWon == true)
             {
                 //take action corresponding to which button was clicked
                 switch (i)
@@ -1415,7 +1427,7 @@ namespace TrumpTower
                     spriteBatch.Draw(circleTower, new Vector2(_hoveredTower.Position.X - (circleTower.Width / 2), _hoveredTower.Position.Y - (circleTower.Height / 2)), null, Color.White * 0.5f);
                 }
             }
-            spriteBatch.DrawString(_spriteDollars, "" + _map.GetAllEnemies2().Count,   new Vector2(200, 300), Color.Red);
+            
 
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
@@ -1564,6 +1576,16 @@ namespace TrumpTower
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
             #endregion
+
+            if (isWon)
+            {
+                spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
+                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, 0), Color.White * 0.5f);
+                spriteBatch.DrawString(_gameOver, "Vous avez gagner", new Vector2(465, 10), Color.White);
+                spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
+                spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
+
+            }
 
             if (isLost)
             {    
