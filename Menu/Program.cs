@@ -15,6 +15,7 @@ namespace Menu
         [STAThread]
         static void Main()
         {
+            //Debugger.Launch();
             using (var game = new Game1Menu())
                 game.Run();
         }
