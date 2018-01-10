@@ -33,10 +33,11 @@ namespace TrumpTower
         SpriteBatch spriteBatch;
         int nombre;
         int nombre2;
-        Texture2D trumpWin;
+        
 
         #region Win condition
-        bool isWon;
+        bool _isWon;
+        Texture2D _trumpWin;
         #endregion
 
         #region Lose condition
@@ -208,11 +209,12 @@ namespace TrumpTower
             DOWN
         }
 
-        const int NUMBER_OF_BUTTONS = 4,
+        const int NUMBER_OF_BUTTONS = 5,
                 ResumeButton = 0,
                 HomeButton = 1,
                 QuitButton = 2,
                 Retry = 3,
+                NextLevel = 4,
                 BUTTON_HEIGHT = 250,
                 BUTTON_WIDTH = 300;
 
@@ -269,7 +271,7 @@ namespace TrumpTower
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            isWon = false;
+            _isWon = false;
             #region Map INIT
 
             /*_mapPoint = new int[,]
@@ -358,14 +360,14 @@ namespace TrumpTower
 
 
             int x = ((int)VirtualWidth / 2) - BUTTON_WIDTH / 2;
-            int y = (int)VirtualHeight / 2 - NUMBER_OF_BUTTONS / 2 * BUTTON_HEIGHT - (NUMBER_OF_BUTTONS % 2);
+            int y = (int)VirtualHeight / 2 - 4 / 2 * BUTTON_HEIGHT - (4 % 2);
             for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
             {
                 button_state[i] = BState.UP;
                 button_color[i] = Color.White;
                 button_timer[i] = 0.0;
                 button_rectangle[i] = new Rectangle(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
-                y += 170;
+                y += 100;
             }
 
 
@@ -413,10 +415,12 @@ namespace TrumpTower
                 Content.Load<Texture2D>("quit");
             button_texture[Retry] =
                 Content.Load<Texture2D>("retry");
+            button_texture[NextLevel] =
+                Content.Load<Texture2D>("next_level");
 
 
             #endregion
-
+                
             #region Maps
 
             _imgMaps = new List<Texture2D>();
@@ -593,7 +597,7 @@ namespace TrumpTower
 
             grey = Content.Load<Texture2D>("grey");
 
-            trumpWin = Content.Load<Texture2D>("Trum_win");
+            _trumpWin = Content.Load<Texture2D>("Trum_win");
 
             _imgWarning2 = Content.Load<Texture2D>("Warning2");
             // RAID AIR
@@ -804,10 +808,10 @@ namespace TrumpTower
 
             if(!isLost && _map.GetAllEnemies2().Count == 0)
             {
-                isWon = true;
+                _isWon = true;
             }
 
-            if (isWon)
+            if (_isWon)
             {
                 policeBlink--;
                 if (policeBlink == 0)
@@ -922,7 +926,7 @@ namespace TrumpTower
         // Logic for each button click goes here
         void take_action_on_button(int i)
         {
-            if (realPause == true || isLost == true || isWon == true)
+            if (realPause == true || isLost == true)
             {
                 //take action corresponding to which button was clicked
                 switch (i)
@@ -938,6 +942,26 @@ namespace TrumpTower
                         break;
                     case Retry:
                         /*DES CHOSES TREEEEES SOMBRE A FAIRE ICI*/
+                        break;
+                    case NextLevel:
+                        /*DES CHOSES A FAIRE */
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (_isWon)
+            {
+                switch (i)
+                {
+                    case QuitButton:
+                        Exit();
+                        break;
+                    case HomeButton:
+                        Exit();
+                        break;
+                    case NextLevel:
+                        /*DES CHOSES A FAIRE */
                         break;
                     default:
                         break;
@@ -1592,7 +1616,7 @@ namespace TrumpTower
             }
             #endregion
 
-            if (isWon)
+            if (_isWon)
             {
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
                 Vector2 _sizeString = _gameOver.MeasureString("You Win !");
@@ -1602,14 +1626,14 @@ namespace TrumpTower
                 {
                     spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth / 2) - (_sizeString.X / 2), 0), Color.Red);
                 }
-                else
+                else if(policeBlink <=120)
                 {
                     spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth / 2) - (_sizeString.X / 2), 0), Color.White);
                 }
 
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
-                spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
-                spriteBatch.Draw(trumpWin, new Vector2(0, VirtualHeight-trumpWin.Height), Color.White);
+                spriteBatch.Draw(button_texture[4], button_rectangle[4], button_color[4]);
+                spriteBatch.Draw(_trumpWin, new Vector2(0, VirtualHeight-_trumpWin.Height), Color.White);
 
             }
 
@@ -1618,6 +1642,7 @@ namespace TrumpTower
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
                 Vector2 _sizeStringLose = _gameOver.MeasureString("Game Over");
                 spriteBatch.Draw(_gameOverExplosion, new Vector2(0, VirtualHeight - _gameOverExplosion.Height), Color.White);
+
                 if (policeBlink > 120)
                 {         
                     spriteBatch.DrawString(_gameOver, "Game Over", new Vector2((VirtualWidth / 2) - (_sizeStringLose.X / 2), 0), Color.Red);
@@ -1627,10 +1652,9 @@ namespace TrumpTower
                     spriteBatch.DrawString(_gameOver, "Game Over", new Vector2((VirtualWidth / 2) - (_sizeStringLose.X / 2), 0), Color.White);
                 }
                 
-                spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
-
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
+                spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
             }
 
             #region Cursor
