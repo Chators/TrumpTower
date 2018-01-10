@@ -57,19 +57,19 @@ namespace TrumpTower.LibraryTrumpTower
             if(type == TowerType.simple)
             {
                 Damage = 6;
-                Scope = 5;
+                Scope = 800;
                 _attackSpeed = 0.8;  
             }
             else if(type == TowerType.slow)
             {
                 Damage = 19;
-                Scope = 3.5;
+                Scope = 1300;
                 _attackSpeed = 1.8;  
             }
             else if(type == TowerType.area)
             {
                 Damage = 13;
-                Scope = 6.5;
+                Scope = 600;
                 _attackSpeed = 1.2;
                 
             }
@@ -259,7 +259,7 @@ namespace TrumpTower.LibraryTrumpTower
         internal bool WithinReachOf(Vector2 target)
         {
             double distanceTower = DistanceOf(target);
-            return distanceTower < Scope * Constant.imgSizeMap * Scope * Constant.imgSizeMap;
+            return distanceTower < Scope * Constant.imgSizeMap ;
 
         }
 
