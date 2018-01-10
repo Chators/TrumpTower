@@ -360,7 +360,7 @@ namespace TrumpTower
             // vertically in the middle of the screen
 
 
-            int x = ((int)VirtualWidth / 2) - BUTTON_HEIGHT / 2;
+            int x = ((int)VirtualWidth / 2) - BUTTON_WIDTH / 2;
             int y = (int)VirtualHeight / 2 - NUMBER_OF_BUTTONS / 2 * BUTTON_HEIGHT - (NUMBER_OF_BUTTONS % 2);
             for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
             {
