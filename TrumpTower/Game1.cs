@@ -33,9 +33,11 @@ namespace TrumpTower
         SpriteBatch spriteBatch;
         int nombre;
         int nombre2;
+        Texture2D trumpWin;
 
         #region Win condition
         bool isWon;
+        int winJingle;
 
         #endregion
 
@@ -320,6 +322,7 @@ namespace TrumpTower
 
             #endregion
             nombre = 0;
+            winJingle = 0;
             nombre2 = 0;
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
@@ -592,6 +595,9 @@ namespace TrumpTower
             #endregion
 
             grey = Content.Load<Texture2D>("grey");
+
+            trumpWin = Content.Load<Texture2D>("Trum_win");
+
             _imgWarning2 = Content.Load<Texture2D>("Warning2");
             // RAID AIR
             _imgWarning = Content.Load<Texture2D>("warning");
@@ -628,7 +634,8 @@ namespace TrumpTower
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-
+            
+           
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
 
@@ -802,6 +809,15 @@ namespace TrumpTower
             if(!isLost && _map.GetAllEnemies2().Count == 0)
             {
                 isWon = true;
+            }
+            if (isWon)
+            {
+                winJingle++;
+            }
+
+            if (winJingle == 1)
+            {
+                ManagerSound.PlayYouWin();
             }
 
             if (nombre < 50) nombre += 4;
@@ -1580,10 +1596,12 @@ namespace TrumpTower
             if (isWon)
             {
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
+                Vector2 _sizeString = _gameOver.MeasureString("You Win !");
                 spriteBatch.Draw(_gameOverExplosion, new Vector2(0, 0), Color.White * 0.5f);
-                spriteBatch.DrawString(_gameOver, "You won", new Vector2(465, 10), Color.White);
+                spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth/2)-(_sizeString.X/2),0), Color.White);
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
+                spriteBatch.Draw(trumpWin, new Vector2(0, VirtualHeight-trumpWin.Height), Color.White);
 
             }
 
