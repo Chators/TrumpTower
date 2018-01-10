@@ -59,6 +59,8 @@
     <Compile Include="Map.cs" />
     <Compile Include="Missile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spawns\Dijkstra\Relationship.cs" />
+    <Compile Include="Spawns\Dijkstra\User.cs" />
     <Compile Include="Spawns\Spawn.cs" />
     <Compile Include="Spawns\Wave.cs" />
     <Compile Include="SpecialAbilities\Explosion.cs" />

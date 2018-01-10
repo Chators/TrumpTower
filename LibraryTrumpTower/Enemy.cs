@@ -116,8 +116,6 @@ namespace TrumpTower.LibraryTrumpTower
         private void UpdateMove()
         {
             if (_moveToState == ShortestWay.Count - 1 && WithinReach(Position, ShortestWay[_moveToState], Speed)) _position = _map.Wall.Position;
-            
-
             Vector2 _moveToPosition = ShortestWay[_moveToState];
             if (WithinReach(Position, _moveToPosition, Speed))
             {
