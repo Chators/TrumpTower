@@ -1597,7 +1597,7 @@ namespace TrumpTower
             {
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
                 Vector2 _sizeString = _gameOver.MeasureString("You Win !");
-                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, 0), Color.White * 0.5f);
+                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, VirtualHeight - _gameOverExplosion.Height), Color.White * 0.5f);
                 spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth/2)-(_sizeString.X/2),0), Color.White);
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
