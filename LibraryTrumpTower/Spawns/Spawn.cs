@@ -1,4 +1,5 @@
 ﻿using LibraryTrumpTower;
+using LibraryTrumpTower.Spawns.Dijkstra;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,10 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             else Waves = waves;
 
             if (ctx.Wall != null)
-                ShortestWay = SeekShortestWay(Ctx.MapArray, Ctx.Wall, Position);
+            {
+                ResetShortestWay();
+                //ShortestWay = SeekShortestWay(Ctx.MapArray, Ctx.Wall, Position);
+            }
             else
                 ShortestWay = null;
         }
@@ -59,10 +63,65 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
 
         public Wall Wall => Ctx.Wall;
 
-        public void ResetShortestWay () => ShortestWay = SeekShortestWay(Ctx.MapArray, Ctx.Wall, Position);
-       
+        public void ResetShortestWay()
+        {
+            Dictionary<string, User> usersDic = CreateGraph(Ctx.MapArray);
+            User userSpawn = null;
+            User userWall = null;
+            foreach(User user in usersDic.Values)
+            {
+                if (new Vector2(user._position.X * Constant.imgSizeMap, user._position.Y * Constant.imgSizeMap) == Position) userSpawn = user;
+                if (new Vector2(user._position.X * Constant.imgSizeMap, user._position.Y * Constant.imgSizeMap) == Ctx.Wall.Position) userWall = user;
+            }
+            Vector2 positionWall = Ctx.Wall.Position;
+            List<User> usersShortestPosition = userSpawn.OnSFaitUnPtitDijkstra(usersDic, userWall);
+            ShortestWay = new List<Vector2>();
+            foreach(User user in usersShortestPosition)
+                ShortestWay.Add(user._position*new Vector2(Constant.imgSizeMap, Constant.imgSizeMap));
+            //ShortestWay = SeekShortestWay(Ctx.MapArray, Ctx.Wall, Position);
+        }
+
         #region pathFinding
-        public List<Vector2> SeekShortestWay(int[][] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none, List<Vector2> visited = null)
+        List<User> UsersList { get; set; }
+
+        #region formation graphe
+
+        private Dictionary<string, User> CreateGraph(int[][] mapArray)
+        {
+            Dictionary<string, User> Users = new Dictionary<string, User>();
+            int mdrctropmoche = 0;
+            // D'abord on rentre tous les noeuds
+            for (int y = 0; y < Ctx.HeightArrayMap; y++)
+            {
+                for (int x = 0; x < Ctx.WidthArrayMap; x++)
+                {
+                    if (mapArray[y][x] == (int)MapTexture.dirt)
+                        Users[mdrctropmoche.ToString()] = new User(mdrctropmoche + "", "", "", new Vector2(x, y));
+                    mdrctropmoche++;
+                }
+            }
+
+            // Après on les lie ensemble
+            foreach (User user in Users.Values)
+            //for (int i = 0; i < Users.Count; i++)
+            {
+                //User user = Users[i];
+                Vector2 positionUser = user._position;
+                foreach (User userTarget in Users.Values)
+                //for (int j = 0; j < Users.Count; j++)
+                {
+                    if (positionUser + new Vector2(1, 0) == userTarget._position) user.AddRelationship(userTarget);
+                    if (positionUser + new Vector2(0, 1) == userTarget._position) user.AddRelationship(userTarget);
+                    if (positionUser + new Vector2(-1, 0) == userTarget._position) user.AddRelationship(userTarget);
+                    if (positionUser + new Vector2(0, -1) == userTarget._position) user.AddRelationship(userTarget);
+                }
+            }
+            return Users;
+        }
+
+        #endregion
+        #region AVANT
+        /*public List<Vector2> SeekShortestWay(int[][] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none, List<Vector2> visited = null)
         {
             List<Vector2> _shortestWay = new List<Vector2>();
             if (visited == null) visited = new List<Vector2>();
@@ -175,6 +234,8 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
                 return notVisited[0].InContactWith(targetUser, notVisited, notVisitedMoreDepth, visited, depthLevel);
             } 
         }*/
+        #endregion
+
         #endregion
     }
 }
