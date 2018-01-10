@@ -37,8 +37,6 @@ namespace TrumpTower
 
         #region Win condition
         bool isWon;
-        int winJingle;
-
         #endregion
 
         #region Lose condition
@@ -322,7 +320,6 @@ namespace TrumpTower
 
             #endregion
             nombre = 0;
-            winJingle = 0;
             nombre2 = 0;
             _waveSprite = new WaveIsComingImg(_map, Map.WaveIsComming);
             _groupOfButtonsUITimer = new GroupOfButtonsUITimer(this);
@@ -796,7 +793,6 @@ namespace TrumpTower
             if (isLost)
             {
                 policeBlink--;
-                Console.WriteLine(policeBlink);
                 if (policeBlink == 0)
                 {
                     policeBlink = 240;
@@ -810,14 +806,17 @@ namespace TrumpTower
             {
                 isWon = true;
             }
+
             if (isWon)
             {
-                winJingle++;
-            }
-
-            if (winJingle == 1)
-            {
-                ManagerSound.PlayYouWin();
+                policeBlink--;
+                if (policeBlink == 0)
+                {
+                    policeBlink = 240;
+                }else if(policeBlink == 239)
+                {
+                    ManagerSound.PlayYouWin();
+                }
             }
 
             if (nombre < 50) nombre += 4;
@@ -1597,8 +1596,17 @@ namespace TrumpTower
             {
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
                 Vector2 _sizeString = _gameOver.MeasureString("You Win !");
-                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, VirtualHeight - _gameOverExplosion.Height), Color.White * 0.5f);
-                spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth/2)-(_sizeString.X/2),0), Color.White);
+                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, VirtualHeight - _gameOverExplosion.Height), Color.White);
+
+                if (policeBlink > 120)
+                {
+                    spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth / 2) - (_sizeString.X / 2), 0), Color.Red);
+                }
+                else
+                {
+                    spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth / 2) - (_sizeString.X / 2), 0), Color.White);
+                }
+
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
                 spriteBatch.Draw(trumpWin, new Vector2(0, VirtualHeight-trumpWin.Height), Color.White);
@@ -1608,18 +1616,18 @@ namespace TrumpTower
             if (isLost)
             {    
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
-                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, 0), Color.White * 0.5f);
+                Vector2 _sizeStringLose = _gameOver.MeasureString("Game Over");
+                spriteBatch.Draw(_gameOverExplosion, new Vector2(0, VirtualHeight - _gameOverExplosion.Height), Color.White);
                 if (policeBlink > 120)
                 {         
-                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(465, 10),Color.Red);
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2((VirtualWidth / 2) - (_sizeStringLose.X / 2), 0), Color.Red);
                 }
                 else if (policeBlink <= 120)
                 {
-                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2(465, 10), Color.White);
+                    spriteBatch.DrawString(_gameOver, "Game Over", new Vector2((VirtualWidth / 2) - (_sizeStringLose.X / 2), 0), Color.White);
                 }
                 
-              
-                spriteBatch.Draw(_sadTrump, new Vector2((VirtualHeight/2)-(320/2), (VirtualWidth / 2) + 320), Color.White );
+                spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
 
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
