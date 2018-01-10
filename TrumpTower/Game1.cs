@@ -1460,10 +1460,16 @@ namespace TrumpTower
                     }
                     if (_hoveredTower != _lastHoveredTower)
                     {
-                        circleTower = createCircleText((int)_hoveredTower.Scope);
+                        if (_hoveredTower.Scope > 0)
+                        {
+                            circleTower = createCircleText((int)_hoveredTower.Scope);
+                        }
                     }
                     _lastHoveredTower = _hoveredTower;
-                    spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2))+Constant.imgSizeMap/2, (_hoveredTower.Position.Y - (circleTower.Height / 2)) + Constant.imgSizeMap / 2), null, Color.White * 0.5f);
+                    if (_hoveredTower.Scope > 0)
+                    {
+                        spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2)) + Constant.imgSizeMap / 2, (_hoveredTower.Position.Y - (circleTower.Height / 2)) + Constant.imgSizeMap / 2), null, Color.White * 0.5f);
+                    }
                 }
             }
             
