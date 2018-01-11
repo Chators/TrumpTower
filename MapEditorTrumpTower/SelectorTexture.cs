@@ -68,7 +68,19 @@ namespace MapEditorTrumpTower
             }
             else if (Texture == MapTexture.myBase)
             {
+                Spawn containSpawn = null;
+                for (int i = 0; i < Map.SpawnsEnemies.Count; i++)
+                {
+                    Spawn spawn = Map.SpawnsEnemies[i];
+                    if (spawn.Position == new Vector2(positionCase.X * Constant.imgSizeMap, positionCase.Y * Constant.imgSizeMap))
+                    {
+                        containSpawn = spawn;
+                        break;
+                    }
+                }
+
                 if (Map.MapArray[(int)positionCase.Y][(int)positionCase.X] == (int)MapTexture.dirt &&
+                    containSpawn == null &&
                     (positionCase.Y == 0 || positionCase.Y == Map.HeightArrayMap - 1 || positionCase.X == 0 || positionCase.X == Map.WidthArrayMap - 1))
                 {
                     // Si il existe déjà une base et qu'on veut en créer une

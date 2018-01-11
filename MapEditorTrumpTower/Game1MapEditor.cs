@@ -311,7 +311,7 @@ namespace MapEditorTrumpTower
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Maroon);
+            GraphicsDevice.Clear(Color.SlateGray);
 
             // TODO: Add your drawing code here
             
@@ -319,7 +319,6 @@ namespace MapEditorTrumpTower
             {
                 #region Draw Right Menu
                 spriteBatch.Begin();
-                spriteBatch.Draw(_imgCursor, new Vector2(newStateMouse.X, newStateMouse.Y), Color.Red);
                 if (State.ActualState == StateType.Default)
                 {
                     spriteBatch.DrawString(_debug, "Menu de Texture", new Vector2(85 + posMenuRight, 10), Color.DarkRed);
