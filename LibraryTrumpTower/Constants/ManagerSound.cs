@@ -81,18 +81,18 @@ namespace TrumpTower.LibraryTrumpTower.Constants
 
         static public void LoadContent(ContentManager Content)
         {
-            InitRiceSplash = Content.Load<SoundEffect>("Enemies/air/riceSplash");
-            InitRice = Content.Load<SoundEffect>("SpecialAbilities/rice");
-            InitPlaneTurbo = Content.Load<SoundEffect>("Enemies/air/soundPlaneTurbo");
+            InitRiceSplash = Content.Load<SoundEffect>("Sound/riceSplash");
+            InitRice = Content.Load<SoundEffect>("Sound/rice");
+            InitPlaneTurbo = Content.Load<SoundEffect>("Sound/soundPlaneTurbo");
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
             InitTowerShoot = Content.Load<SoundEffect>("Sound/songExplosion");
-            InitExplosionAbility = Content.Load<SoundEffect>("SpecialAbilities/explosionSound");
-            InitButtonExplosionAbility = Content.Load<SoundEffect>("SpecialAbilities/buttonExplosionSound");
-            InitPauseIn = Content.Load<SoundEffect>("ManagerTime/soundPauseIn");
-            InitPauseOut = Content.Load<SoundEffect>("ManagerTime/soundPauseOut");
+            InitExplosionAbility = Content.Load<SoundEffect>("Sound/explosionSound");
+            InitButtonExplosionAbility = Content.Load<SoundEffect>("Sound/buttonExplosionSound");
+            InitPauseIn = Content.Load<SoundEffect>("Sound/soundPauseIn");
+            InitPauseOut = Content.Load<SoundEffect>("Sound/soundPauseOut");
             Song1 = Content.Load<Song>("Sound/song1");
-            InitReloadSniper = Content.Load<SoundEffect>("SpecialAbilities/Sniper/reloadSniper");
-            InitSniperShoot = Content.Load<SoundEffect>("SpecialAbilities/Sniper/sniperShoot");
+            InitReloadSniper = Content.Load<SoundEffect>("Sound/reloadSniper");
+            InitSniperShoot = Content.Load<SoundEffect>("Sound/sniperShoot");
             InitDestroyUnitAir = Content.Load<SoundEffect>("Sound/DestroyUnitAir");
             InitAlertRaidUnitsAir = Content.Load<SoundEffect>("Sound/AlertRaidUnitsAir");
             InitImpactUnitAir = Content.Load<SoundEffect>("Sound/ImpactUnitAir");

@@ -74,6 +74,17 @@ namespace MapEditorTrumpTower
 
         private List<ButtonTexture> _buttonsTexture;
 
+        private Texture2D _imgMenuTexture;
+        private Texture2D _imgOptions;
+        private Texture2D _imgOutilDeSelection;
+        private Texture2D _imgTextureDecors;
+        private Texture2D _imgTextureUtile;
+        private Texture2D _imgValidation;
+        private Texture2D _imgSelectionActuelle;
+        private Texture2D _imgInformation;
+
+        private SpriteFont _imgString;
+
         #region gameState
         public GameState State { get; set; }
         public ActionCreatePath CurrentActionCreatePath { get; set; }
@@ -81,6 +92,9 @@ namespace MapEditorTrumpTower
 
         int posMenuRight;
         int _lastRefresh;
+
+        int _timerInfo;
+        double _timerTransparancy;
 
         public Game1MapEditor()
         {
@@ -125,6 +139,8 @@ namespace MapEditorTrumpTower
 
             _lastRefresh = 0;
             posMenuRight = GraphicsDevice.Viewport.Width * 85 / 100;
+            _timerInfo = 0;
+            _timerTransparancy = 1;
 
             base.Initialize();
         }
@@ -147,6 +163,17 @@ namespace MapEditorTrumpTower
             {
                 if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
             }
+            #endregion
+
+            #region Load Name Menu
+            _imgMenuTexture = Content.Load<Texture2D>("NameMenu/Menu-Texture");
+            _imgOptions = Content.Load<Texture2D>("NameMenu/Options");
+            _imgOutilDeSelection = Content.Load<Texture2D>("NameMenu/Outil-de-selection");
+            _imgTextureDecors = Content.Load<Texture2D>("NameMenu/Texture-Decors");
+            _imgTextureUtile = Content.Load<Texture2D>("NameMenu/Texture-Utile");
+            _imgValidation = Content.Load<Texture2D>("NameMenu/Validation");
+            _imgSelectionActuelle = Content.Load<Texture2D>("NameMenu/Selection-Actuelle");
+            _imgInformation = Content.Load<Texture2D>("NameMenu/information-button");
             #endregion
 
             _imgAccept = Content.Load<Texture2D>("accept");
@@ -177,6 +204,10 @@ namespace MapEditorTrumpTower
             #region Load Cursor
             _imgCursor = Content.Load<Texture2D>("cursor");
             #endregion
+
+            _imgString = Content.Load<SpriteFont>("info");
+
+            ManagerSound.LoadContent(Content);
 
             if (_map != null)
                 InitMapCreator();
@@ -262,6 +293,11 @@ namespace MapEditorTrumpTower
                 }
 
                 if (newStateKeyboard.IsKeyDown(Keys.I) && !lastStateKeyboard.IsKeyDown(Keys.I))
+                {
+                    _timerInfo = 10*60;
+                    _timerTransparancy = 1;
+                }
+                else if (newStateKeyboard.IsKeyDown(Keys.K) && !lastStateKeyboard.IsKeyDown(Keys.K))
                     MapSetting_Pressed();
                 else if (newStateKeyboard.IsKeyDown(Keys.P) && !lastStateKeyboard.IsKeyDown(Keys.P))
                     ManagerAirPlane_Pressed();
@@ -319,14 +355,49 @@ namespace MapEditorTrumpTower
             {
                 #region Draw Right Menu
                 spriteBatch.Begin();
+                string infoSelection = "";
+                if (SelectTexture.Texture == MapTexture.None)
+                    infoSelection = Constant.SELECTION_INFO;
+                else if (SelectTexture.Texture == MapTexture.dirt)
+                    infoSelection = Constant.ROAD_INFO;
+                else if (SelectTexture.Texture == MapTexture.myBase)
+                    infoSelection = Constant.WHITE_HOUSE_INFO;
+                else if (SelectTexture.Texture == MapTexture.emptyTower)
+                    infoSelection = Constant.EMPTY_TOWER_INFO;
+                else
+                    infoSelection = Constant.OTHER_INFO;
+                if (_timerInfo > 0)
+                {
+                    if (_timerInfo < 3)
+                        _timerTransparancy -= 0.01;
+                    spriteBatch.DrawString(_imgString, infoSelection, new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2), Color.Red * (float)_timerTransparancy, 0, Vector2.Zero, 0, SpriteEffects.None, 1000);
+                    _timerInfo--;
+                }
+
                 if (State.ActualState == StateType.Default)
                 {
-                    spriteBatch.DrawString(_debug, "Menu de Texture", new Vector2(85 + posMenuRight, 10), Color.DarkRed);
-                    spriteBatch.DrawString(_debug, "Texture Utile", new Vector2(90 + posMenuRight, 50), Color.Black);
-                    spriteBatch.DrawString(_debug, "Texture Decors", new Vector2(90 + posMenuRight, 220), Color.Black);
-                    spriteBatch.DrawString(_debug, "Outil de Selection", new Vector2(90 + posMenuRight, 610), Color.Black);
-                    spriteBatch.DrawString(_debug, "Options", new Vector2(90 + posMenuRight, 780), Color.Black);
-                    spriteBatch.DrawString(_debug, "Validation", new Vector2(90 + posMenuRight, 950), Color.Black);
+                    int pos = posMenuRight + ((graphics.GraphicsDevice.Viewport.Width - posMenuRight) / 2);
+                    spriteBatch.Draw(_imgMenuTexture, new Vector2(pos - _imgMenuTexture.Width/2, 5), Color.White);
+                    spriteBatch.Draw(_imgTextureUtile, new Vector2(pos - _imgTextureUtile.Width / 2, 40), Color.White);
+                    spriteBatch.Draw(_imgTextureDecors, new Vector2(pos - _imgTextureDecors.Width / 2, 170), Color.White);
+                    spriteBatch.Draw(_imgOutilDeSelection, new Vector2(pos - _imgOutilDeSelection.Width / 2, 480), Color.White);
+                    spriteBatch.Draw(_imgOptions, new Vector2(pos - _imgOptions.Width / 2, 610), Color.White);
+                    spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, 740), Color.White);
+                    spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, 870), Color.White);
+                    spriteBatch.Draw(_imgInformation, new Vector2(posMenuRight + 115, 1000), Color.White);
+
+                    Texture2D currentSelectionTexture = null;
+                    if (SelectTexture.Texture == MapTexture.None)
+                        currentSelectionTexture = _imgNoSelect;
+                    else if (SelectTexture.Texture == MapTexture.myBase)
+                        currentSelectionTexture = ImgWall;
+                    else 
+                        currentSelectionTexture = ImgMaps[(int)SelectTexture.Texture];
+                    spriteBatch.Draw(currentSelectionTexture, new Vector2(posMenuRight + 115, 910), Color.White);
+
+                    
+
+
                     for (int i = 0; i < _buttonsTexture.Count; i++)
                     {
                         ButtonTexture _buttonTexture = _buttonsTexture[i];
@@ -1681,53 +1752,54 @@ namespace MapEditorTrumpTower
             SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
 
             #region Button Left Menu Default
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, 100), "1",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, 80), "1",
                 new List<Keys>(new Keys[] { Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, 100), "2",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, 80), "2",
                 new List<Keys>(new Keys[] { Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, 100), "3",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, 80), "3",
                 new List<Keys>(new Keys[] { Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, 100), "4",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, 80), "4",
                 new List<Keys>(new Keys[] { Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 270), "CTRL+1",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 210), "CTRL+1",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 270), "CTRL+2",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 210), "CTRL+2",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtUpGrassDown], _debug, MapTexture.dirtUpGrassDown, new Vector2(posMenuRight + 150, 270), "CTRL+3",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtUpGrassDown], _debug, MapTexture.dirtUpGrassDown, new Vector2(posMenuRight + 150, 210), "CTRL+3",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtLeftGrassRight], _debug, MapTexture.dirtLeftGrassRight, new Vector2(posMenuRight + 220, 270), "CTRL+4",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtLeftGrassRight], _debug, MapTexture.dirtLeftGrassRight, new Vector2(posMenuRight + 220, 210), "CTRL+4",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftDown], _debug, MapTexture.bigDirtCornerLeftDown, new Vector2(posMenuRight + 10, 380), "ALT+1",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftDown], _debug, MapTexture.bigDirtCornerLeftDown, new Vector2(posMenuRight + 10, 300), "ALT+1",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightDown], _debug, MapTexture.bigDirtCornerRightDown, new Vector2(posMenuRight + 80, 380), "ALT+2",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightDown], _debug, MapTexture.bigDirtCornerRightDown, new Vector2(posMenuRight + 80, 300), "ALT+2",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightUp], _debug, MapTexture.bigDirtCornerRightUp, new Vector2(posMenuRight + 150, 380), "ALT+3",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightUp], _debug, MapTexture.bigDirtCornerRightUp, new Vector2(posMenuRight + 150, 300), "ALT+3",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftUp], _debug, MapTexture.bigDirtCornerLeftUp, new Vector2(posMenuRight + 220, 380), "ALT+4",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftUp], _debug, MapTexture.bigDirtCornerLeftUp, new Vector2(posMenuRight + 220, 300), "ALT+4",
                 new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftDown], _debug, MapTexture.dirtCornerLeftDown, new Vector2(posMenuRight + 10, 490), "SHIFT+1",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftDown], _debug, MapTexture.dirtCornerLeftDown, new Vector2(posMenuRight + 10, 390), "SHIFT+1",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightDown], _debug, MapTexture.dirtCornerRightDown, new Vector2(posMenuRight + 80, 490), "SHIFT+2",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightDown], _debug, MapTexture.dirtCornerRightDown, new Vector2(posMenuRight + 80, 390), "SHIFT+2",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightUp], _debug, MapTexture.dirtCornerRightUp, new Vector2(posMenuRight + 150, 490), "SHIFT+3",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightUp], _debug, MapTexture.dirtCornerRightUp, new Vector2(posMenuRight + 150, 390), "SHIFT+3",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 490), "SHIFT+4",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 390), "SHIFT+4",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 670), "A",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 520), "A",
                 new List<Keys>(new Keys[] { Keys.A })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 75, 830), "I",
-                new List<Keys>(new Keys[] { Keys.I })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 75, 650), "K",
+                new List<Keys>(new Keys[] { Keys.K })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 160, 830), "P",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 160, 650), "P",
                new List<Keys>(new Keys[] { Keys.P })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 1000), "Entrer",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 780), "Entrer",
                new List<Keys>(new Keys[] { Keys.Enter })));
+
             #endregion
 
             VirtualWidth = _map.WidthArrayMap * Constant.imgSizeMap;

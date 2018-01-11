@@ -54,5 +54,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static float PI = 3.14159265359f;
         public static double BankReloading = 10 * 60;
         public static int DisabledTower = 5;
+
+        #region Info Editor Map
+        public static string ROAD_INFO = "Permet aux ennemis de se deplacer";
+        public static string EMPTY_TOWER_INFO = "Un emplacement pour construire des tourelles";
+        public static string WHITE_HOUSE_INFO = "Si la maison blanche est detruite le joueur a perdu, elle est unique et se construit sur une route (uniquement sur le bord de la carte)";
+        public static string SELECTION_INFO = "Permet 2 choses, construire un spawn d'ennemis sur la carte (uniquement sur le bord) ou modifier la maison blanche (si elle est construite)";
+        public static string OTHER_INFO = "Element de decors";
+        #endregion
     }
 }

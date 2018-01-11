@@ -128,24 +128,6 @@
 /processorParam:TextureFormat=Color
 /build:Towers/tower3.png
 
-#begin Sound/songExplosion.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/songExplosion.wav
-
-#begin Sound/songExplosion2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/songExplosion2.wav
-
-#begin Sound/songManDie.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/songManDie.wav
-
 #begin NextWave/next_wave.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -460,12 +442,6 @@
 /processorParam:TextureFormat=Color
 /build:SpecialAbilities/explosion.png
 
-#begin SpecialAbilities/explosionSound.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SpecialAbilities/explosionSound.wav
-
 #begin cursorBomb.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -501,36 +477,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemies/animBlood.png
-
-#begin Buttons/soundButton1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Buttons/soundButton1.wav
-
-#begin ManagerTime/soundPauseOut.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:ManagerTime/soundPauseOut.wav
-
-#begin ManagerTime/soundPauseIn.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:ManagerTime/soundPauseIn.wav
-
-#begin SpecialAbilities/buttonExplosionSound.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SpecialAbilities/buttonExplosionSound.wav
-
-#begin Sound/song1.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Sound/song1.mp3
 
 #begin Map/decor/decor1.png
 /importer:TextureImporter
@@ -870,18 +816,6 @@
 /processorParam:TextureFormat=Color
 /build:SpecialAbilities/Sniper/cursorTarget.png
 
-#begin SpecialAbilities/Sniper/reloadSniper.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SpecialAbilities/Sniper/reloadSniper.wav
-
-#begin SpecialAbilities/Sniper/sniperShoot.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SpecialAbilities/Sniper/sniperShoot.wav
-
 #begin SpecialAbilities/Sniper/buttonSniper.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -893,24 +827,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SpecialAbilities/Sniper/buttonSniper.png
-
-#begin Sound/AlertRaidUnitsAir.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/AlertRaidUnitsAir.wav
-
-#begin Sound/ImpactUnitAir.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/ImpactUnitAir.wav
-
-#begin Sound/DestroyUnitAir.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/DestroyUnitAir.wav
 
 #begin Enemies/air/animPlaneExplosion.png
 /importer:TextureImporter
@@ -943,12 +859,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Enemies/air/RaidAirIsComming.spritefont
 
-#begin Sound/trumpGetOutOfHere.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/trumpGetOutOfHere.wav
-
 #begin Towers/bank_empty.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -972,30 +882,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Towers/coin.png
-
-#begin Sound/coinUp.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/coinUp.wav
-
-#begin Sound/powerUp.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/powerUp.wav
-
-#begin Sound/sell.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/sell.wav
-
-#begin Sound/build.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/build.wav
 
 #begin Enemies/animThunderSaboteur.png
 /importer:TextureImporter
@@ -1069,12 +955,6 @@
 /processorParam:TextureFormat=Color
 /build:warning2.png
 
-#begin Sound/no_available.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/no_available.wav
-
 #begin SpecialAbilities/stickyMaki.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1110,30 +990,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemies/air/planeTurbo.png
-
-#begin Sound/game_over.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/game_over.wav
-
-#begin Enemies/air/soundPlaneTurbo.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Enemies/air/soundPlaneTurbo.wav
-
-#begin SpecialAbilities/rice.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SpecialAbilities/rice.wav
-
-#begin Enemies/air/riceSplash.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Enemies/air/riceSplash.wav
 
 #begin retry.png
 /importer:TextureImporter
@@ -1225,4 +1081,154 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Towers/lvl.png
+
+#begin Sound/aaa.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/aaa.wav
+
+#begin Sound/AlertRaidUnitsAir.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/AlertRaidUnitsAir.wav
+
+#begin Sound/build.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/build.wav
+
+#begin Sound/buttonExplosionSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/buttonExplosionSound.wav
+
+#begin Sound/coinUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/coinUp.wav
+
+#begin Sound/DestroyUnitAir.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/DestroyUnitAir.wav
+
+#begin Sound/explosionSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/explosionSound.wav
+
+#begin Sound/game_over.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/game_over.wav
+
+#begin Sound/ImpactUnitAir.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/ImpactUnitAir.wav
+
+#begin Sound/no_available.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/no_available.wav
+
+#begin Sound/powerUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/powerUp.wav
+
+#begin Sound/rice.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/rice.wav
+
+#begin Sound/riceSplash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/riceSplash.wav
+
+#begin Sound/sell.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/sell.wav
+
+#begin Sound/song1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sound/song1.mp3
+
+#begin Sound/songExplosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/songExplosion.wav
+
+#begin Sound/songExplosion2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/songExplosion2.wav
+
+#begin Sound/songManDie.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/songManDie.wav
+
+#begin Sound/soundButton1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/soundButton1.wav
+
+#begin Sound/soundPauseIn.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/soundPauseIn.wav
+
+#begin Sound/soundPauseOut.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/soundPauseOut.wav
+
+#begin Sound/soundPlaneTurbo.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/soundPlaneTurbo.wav
+
+#begin Sound/trumpGetOutOfHere.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/trumpGetOutOfHere.wav
+
+#begin Sound/reloadSniper.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/reloadSniper.wav
+
+#begin Sound/sniperShoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/sniperShoot.wav
 

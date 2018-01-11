@@ -20,13 +20,14 @@ namespace MapEditorTrumpTower
         public Texture2D CloakTexture { get; set; }
         public MapTexture Texture { get; set; }
         public Vector2 Hoover { get; set; }
+        public Texture2D CurrentTexture { get; set; }
 
         public SelectorTexture (Game1MapEditor ctx, Map map, Texture2D cloakTexture)
         {
             Ctx = ctx;
             Map = map;
             CloakTexture = cloakTexture;
-            Texture = MapTexture.myBase;
+            Texture = MapTexture.None;
         }
 
         public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
@@ -144,10 +145,9 @@ namespace MapEditorTrumpTower
             {
                 if (Ctx.SelectTexture.Texture != MapTexture.None)
                 {
-                    Texture2D _currentTexture;
-                    if (Texture == MapTexture.myBase) _currentTexture = Ctx.ImgWall;
-                    else _currentTexture = Ctx.ImgMaps[(int)Texture];
-                        spriteBatch.Draw(_currentTexture, new Vector2(Hoover.X * _currentTexture.Width, Hoover.Y * _currentTexture.Height), Color.White * 0.6f);
+                    if (Texture == MapTexture.myBase) CurrentTexture = Ctx.ImgWall;
+                    else CurrentTexture = Ctx.ImgMaps[(int)Texture];
+                        spriteBatch.Draw(CurrentTexture, new Vector2(Hoover.X * CurrentTexture.Width, Hoover.Y * CurrentTexture.Height), Color.White * 0.6f);
                 }
                 else
                 {
