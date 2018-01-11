@@ -9,6 +9,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
     public class Constant
     {
         #region The Rules Map
+
         public static int MinWidthMap = 20;
         public static int MaxWidthMap = 80;
         public static int MinHeightMap = 20;
@@ -47,7 +48,27 @@ namespace TrumpTower.LibraryTrumpTower.Constants
 
         #endregion
 
-        public static int TIME_STICKYRICE = 10 * 60;
+        #region Abilities
+
+        #region Explosion
+        public static int EXPLOSION_DAMAGE = 50;
+        public static int EXPLOSION_COOLDOWN = 15*60;
+        public static int EXPLOSION_RADIUS = 800;
+        #endregion
+
+        #region Sniper
+        public static int SNIPER_COST = 25;
+        public static int SNIPER_DAMAGE = 50;
+        #endregion
+
+        #region Sticky Rice
+        public static double STICKY_RICE_SPEED_REDUCE = 50;
+        public static int STICKY_RICE_COOLDOWN = 25 * 60;
+        public static double STICKY_RICE_RADIUS = 1200;
+        #endregion
+
+        #endregion
+
         public static int imgSizeMap = 64;
         public static int ImgSizePlane = 64;
         public static int ImgSizeEnemy = 64;

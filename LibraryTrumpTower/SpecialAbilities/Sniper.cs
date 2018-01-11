@@ -28,8 +28,8 @@ namespace LibraryTrumpTower.SpecialAbilities
         public Sniper (Map map)
         {
             Ctx = map;
-            Cost = 25;
-            Damage = 50;
+            Cost = Constant.SNIPER_COST;
+            Damage = Constant.SNIPER_DAMAGE;
             Reload = 0;
         }
 

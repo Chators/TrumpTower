@@ -31,10 +31,10 @@ namespace LibraryTrumpTower.SpecialAbilities
         public Explosion (Map ctx)
         {
             _ctx = ctx;
-            Cooldown = 15 * 60;
+            Cooldown = Constant.EXPLOSION_COOLDOWN;
             CurrentTimer = 0;
-            Radius = 800;
-            Damage = 30;
+            Radius = Constant.EXPLOSION_RADIUS;
+            Damage = Constant.EXPLOSION_DAMAGE;
             Position = new Vector2(-1000, -1000);
         }
 

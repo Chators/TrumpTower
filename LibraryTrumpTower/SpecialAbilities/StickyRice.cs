@@ -42,10 +42,10 @@ namespace LibraryTrumpTower.SpecialAbilities
         public StickyRice(Map ctx)
         {
             _ctx = ctx;
-            Cooldown = 25 * 60;
+            Cooldown = Constant.STICKY_RICE_COOLDOWN;
             CurrentTimer = 0;
-            Radius = 1200;
-            SpeedReduceInPercent = 50;
+            Radius = Constant.STICKY_RICE_RADIUS;
+            SpeedReduceInPercent = Constant.STICKY_RICE_SPEED_REDUCE;
             SpeedPlane = 12f;
             Position = new Vector2(-1000, -1000);
             PositionPlaneOfRice = new Vector2(-1000, -1000);
