@@ -327,3 +327,21 @@
 /processorParam:TextureFormat=Color
 /build:return.png
 
+#begin GetReadyForTheNextBattle.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:GetReadyForTheNextBattle.wav
+
+#begin mortal-kombat-theme-song-original.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:mortal-kombat-theme-song-original.mp3
+
+#begin bomb-c4-explode-sound-effect-csgo.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:bomb-c4-explode-sound-effect-csgo.wav
+

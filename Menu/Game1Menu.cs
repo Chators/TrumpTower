@@ -1,8 +1,10 @@
 ﻿using LibraryTrumpTower.Constants;
 using Menu.ButtonsMenu;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.NuclexGui;
 using MonoGame.Extended.NuclexGui.Controls;
@@ -52,6 +54,10 @@ namespace Menu
 
         private readonly InputListenerComponent _inputManager;
         private readonly GuiManager _gui;
+
+        private Song _musique;
+        private SoundEffect _getReadyForTheFight;
+        private SoundEffect _bombC4;
         #endregion
 
         public Game1Menu()
@@ -200,6 +206,17 @@ namespace Menu
             _world1Button.LoadContent();
             _world2Button.LoadContent();
             _world3Button.LoadContent();
+
+            _musique = Content.Load<Song>("mortal-kombat-theme-song-original");
+            _getReadyForTheFight = Content.Load<SoundEffect>("GetReadyForTheNextBattle");
+            _bombC4 = Content.Load<SoundEffect>("bomb-c4-explode-sound-effect-csgo");
+
+            // MUSIQUE 
+            MediaPlayer.Play(_musique);
+            MediaPlayer.Volume = 0.05f;
+            MediaPlayer.IsRepeating = true;
+
+            _getReadyForTheFight.Play();
         }
 
         /// <summary>
