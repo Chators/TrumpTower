@@ -10,10 +10,10 @@ namespace TrumpTower.LibraryTrumpTower.Constants
     {
         #region The Rules Map
 
-        public static int MinWidthMap = 20;
-        public static int MaxWidthMap = 80;
-        public static int MinHeightMap = 20;
-        public static int MaxHeightMap = 80;
+        public static int MinWidthMap = 30;
+        public static int MaxWidthMap = 45;
+        public static int MinHeightMap =30;
+        public static int MaxHeightMap = 45;
 
         public static int MinNameMap = 5;
         public static int MaxNameMap = 20;
