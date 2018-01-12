@@ -345,18 +345,6 @@
 /processorParam:Quality=Best
 /build:bomb-c4-explode-sound-effect-csgo.wav
 
-#begin kimlebro.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:kimlebro.png
-
 #begin theboss.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -423,6 +411,17 @@
 /processorParam:Quality=Best
 /build:explosion.wav
 
+#begin kimlebro.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:kimlebro.png
 #begin importer_map.png
 /importer:TextureImporter
 /processor:TextureProcessor
