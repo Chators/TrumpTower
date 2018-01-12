@@ -809,6 +809,7 @@ namespace TrumpTower
             if(!isLost && _map.GetAllEnemies2().Count == 0)
             {
                 _isWon = true;
+
             }
 
             if (_isWon)
