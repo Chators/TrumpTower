@@ -125,7 +125,7 @@ namespace MapEditorTrumpTower
             Window.Title = "TT Map Editor";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             _gui.Screen = new GuiScreen(graphics.GraphicsDevice.DisplayMode.Width, graphics.GraphicsDevice.DisplayMode.Height);
@@ -355,24 +355,7 @@ namespace MapEditorTrumpTower
             {
                 #region Draw Right Menu
                 spriteBatch.Begin();
-                string infoSelection = "";
-                if (SelectTexture.Texture == MapTexture.None)
-                    infoSelection = Constant.SELECTION_INFO;
-                else if (SelectTexture.Texture == MapTexture.dirt)
-                    infoSelection = Constant.ROAD_INFO;
-                else if (SelectTexture.Texture == MapTexture.myBase)
-                    infoSelection = Constant.WHITE_HOUSE_INFO;
-                else if (SelectTexture.Texture == MapTexture.emptyTower)
-                    infoSelection = Constant.EMPTY_TOWER_INFO;
-                else
-                    infoSelection = Constant.OTHER_INFO;
-                if (_timerInfo > 0)
-                {
-                    if (_timerInfo < 3)
-                        _timerTransparancy -= 0.01;
-                    spriteBatch.DrawString(_imgString, infoSelection, new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2), Color.Red * (float)_timerTransparancy, 0, Vector2.Zero, 0, SpriteEffects.None, 1000);
-                    _timerInfo--;
-                }
+                
 
                 if (State.ActualState == StateType.Default)
                 {
@@ -462,6 +445,25 @@ namespace MapEditorTrumpTower
                 spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
                 #endregion
 
+                string infoSelection = "";
+                if (SelectTexture.Texture == MapTexture.None)
+                    infoSelection = Constant.SELECTION_INFO;
+                else if (SelectTexture.Texture == MapTexture.dirt)
+                    infoSelection = Constant.ROAD_INFO;
+                else if (SelectTexture.Texture == MapTexture.myBase)
+                    infoSelection = Constant.WHITE_HOUSE_INFO;
+                else if (SelectTexture.Texture == MapTexture.emptyTower)
+                    infoSelection = Constant.EMPTY_TOWER_INFO;
+                else
+                    infoSelection = Constant.OTHER_INFO;
+                if (_timerInfo > 0)
+                {
+                    if (_timerInfo < 10*10)
+                        _timerTransparancy -= 0.01;
+                    Vector2 sizeString = _imgString.MeasureString(infoSelection);
+                    spriteBatch.DrawString(_imgString, infoSelection, new Vector2(VirtualWidth / 2 - sizeString.X/2, VirtualHeight / 2), Color.Red * (float)_timerTransparancy);
+                    _timerInfo--;
+                }
                 spriteBatch.End();
             }
 

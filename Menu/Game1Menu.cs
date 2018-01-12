@@ -1,4 +1,6 @@
 ﻿using LibraryTrumpTower.Constants;
+using Menu.Animation;
+using Menu.Animation.SpriteSheet;
 using Menu.ButtonsMenu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -57,7 +59,26 @@ namespace Menu
 
         private Song _musique;
         private SoundEffect _getReadyForTheFight;
-        private SoundEffect _bombC4;
+        private SoundEffect _initBombC4;
+        private SoundEffectInstance _bombC4;
+        private SoundEffect _explosion;
+        private SoundEffectInstance _explosionInstance;
+
+        private TrumpAnimation _animTrump;
+        private Texture2D _imgTheBoss;
+        private SoundEffect _announcementTrump;
+        private KimAnimation _animKim;
+        private Texture2D _imgKimTheBro;
+        private SoundEffect _announcementKim;
+
+        private VersusAnimation _animVersus;
+
+        private Texture2D _imgCursor;
+        private MouseState mouse_state;
+        private Texture2D _imgVersus;
+        private Texture2D _imgTrumpTower;
+
+        public SimpleAnimationDefinition[] AnimSprites { get; private set; }
         #endregion
 
         public Game1Menu()
@@ -182,11 +203,16 @@ namespace Menu
             #endregion
             #endregion
 
-            IsMouseVisible = true;
+            IsMouseVisible = false;
             _gui.Screen = new GuiScreen(graphics.GraphicsDevice.DisplayMode.Width, graphics.GraphicsDevice.DisplayMode.Height);
             _gui.Screen.Desktop.Bounds = new UniRectangle(new UniScalar(0f, 0), new UniScalar(0f, 0), new UniScalar(1f, 0), new UniScalar(1f, 0));
             // Perform second-stage initialization
             _gui.Initialize();
+
+            // Animations=
+            AnimSprites = new SimpleAnimationDefinition[1];
+            AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
+            foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
             base.Initialize();
         }
@@ -207,14 +233,27 @@ namespace Menu
             _world2Button.LoadContent();
             _world3Button.LoadContent();
 
+            _imgTheBoss = Content.Load<Texture2D>("theboss");
+            _announcementTrump = Content.Load<SoundEffect>("americaGreatAgain");
+            _animTrump = new TrumpAnimation(this, _imgTheBoss, new Vector2(-200, graphics.GraphicsDevice.Viewport.Height), true, 1, Color.White, _announcementTrump);
+
+            _imgKimTheBro = Content.Load<Texture2D>("kimlebro");
+            _announcementKim = Content.Load<SoundEffect>("kimAnnouncement");
+            _animKim = new KimAnimation(this, _imgKimTheBro, new Vector2(graphics.GraphicsDevice.Viewport.Width-_imgKimTheBro.Width+150, graphics.GraphicsDevice.Viewport.Height), true, 1, Color.White, _announcementKim);
+
             _musique = Content.Load<Song>("mortal-kombat-theme-song-original");
             _getReadyForTheFight = Content.Load<SoundEffect>("GetReadyForTheNextBattle");
-            _bombC4 = Content.Load<SoundEffect>("bomb-c4-explode-sound-effect-csgo");
+            _initBombC4 = Content.Load<SoundEffect>("bomb-c4-explode-sound-effect-csgo");
 
-            // MUSIQUE 
-            MediaPlayer.Play(_musique);
-            MediaPlayer.Volume = 0.05f;
-            MediaPlayer.IsRepeating = true;
+            _imgCursor = Content.Load<Texture2D>("cursor");
+            _imgVersus = Content.Load<Texture2D>("versus");
+            _animVersus = new VersusAnimation(this, _imgVersus, new Vector2(graphics.GraphicsDevice.Viewport.Width / 2 - _imgVersus.Width / 2, graphics.GraphicsDevice.Viewport.Height - _imgVersus.Height - 40), true, 1, Color.White, _announcementKim);
+               
+            _imgTrumpTower = Content.Load<Texture2D>("Trump-Tower");
+            _explosion = Content.Load<SoundEffect>("explosion");
+
+            // ANIMATION EXPLOSION ABILITY
+            foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
 
             _getReadyForTheFight.Play();
         }
@@ -243,14 +282,21 @@ namespace Menu
             catch { }
             _inputManager.Update(gameTime);
 
+            if (gameTime.TotalGameTime > TimeSpan.FromSeconds(1) && MediaPlayer.State != MediaState.Playing) ActiveMusique();
             // get elapsed frame time in seconds
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // update mouse variables
-            MouseState mouse_state = Mouse.GetState();
+            mouse_state = Mouse.GetState();
             mx = mouse_state.X;
             my = mouse_state.Y;
             prev_mpressed = mpressed;
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
+
+            if (mpressed && prev_mpressed != mpressed)
+            {
+                AnimSprites[0].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[0], mx - AnimSprites[0].FrameSize.X / 2, my - AnimSprites[0].FrameSize.Y / 2));
+                ExplosionPlay();
+            }
 
             if (_gui.Screen.Desktop.Children.Count == 0)
             {
@@ -266,6 +312,20 @@ namespace Menu
                     _world3Button.Update(frame_time, mx, my, prev_mpressed, mpressed);
             }
 
+            _animTrump.Update(graphics, gameTime);
+            _animKim.Update(graphics, gameTime);
+            _animVersus.Update(graphics, gameTime);
+
+            #region Animation Sprite Sheet
+            foreach (SimpleAnimationDefinition def in AnimSprites)
+            {
+                for (int j = 0; j < def.AnimatedSprite.Count; j++)
+                {
+                    SimpleAnimationSprite animatedSprite = def.AnimatedSprite[j];
+                    animatedSprite.Update(gameTime);
+                }
+            }
+            #endregion
             base.Update(gameTime);
         }
 
@@ -291,9 +351,24 @@ namespace Menu
             else if (state == MenuState.WORLD3)
                 _world3Button.Draw(spriteBatch);
 
+            _animTrump.Draw(spriteBatch, gameTime);
+            _animKim.Draw(spriteBatch, gameTime);
+            _animVersus.Draw(spriteBatch, gameTime);
             spriteBatch.End();
 
             _gui.Draw(gameTime);
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(_imgTrumpTower, new Vector2(graphics.GraphicsDevice.Viewport.Width / 2 - _imgTrumpTower.Width / 2, 40), Color.White);
+
+            // ANIM EXPLOSION ABILITY
+            foreach (SimpleAnimationDefinition def in AnimSprites)
+            {
+                foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
+            }
+
+            spriteBatch.Draw(_imgCursor, new Vector2(mouse_state.Position.X, mouse_state.Position.Y), Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -540,9 +615,32 @@ namespace Menu
         {
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
         }
-        #endregion 
+        #endregion
 
         #endregion
 
+        void ActiveMusique()
+        {
+            // MUSIQUE 
+            MediaPlayer.Play(_musique);
+            MediaPlayer.Volume = 0.05f;
+            MediaPlayer.IsRepeating = true;
+        }
+
+        public SpriteBatch SpriteBatch => spriteBatch;
+
+        public void BombPlay()
+        {
+            _bombC4 = _initBombC4.CreateInstance();
+            _bombC4.Volume = 0.5f;
+            _bombC4.Play();
+        }
+
+        public void ExplosionPlay()
+        {
+            _explosionInstance = _explosion.CreateInstance();
+            _explosionInstance.Volume = 0.1f;
+            _explosionInstance.Play();
+        }
     }
 }

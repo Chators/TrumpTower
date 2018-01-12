@@ -74,6 +74,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animation\Animation.cs" />
+    <Compile Include="Animation\KimAnimation.cs" />
+    <Compile Include="Animation\SpriteSheet\SimpleAnimationDefinition.cs" />
+    <Compile Include="Animation\SpriteSheet\SimpleAnimationSprite.cs" />
+    <Compile Include="Animation\TrumpAnimation.cs" />
+    <Compile Include="Animation\VersusAnimation.cs" />
     <Compile Include="ButtonsMenu\CampagneButtons.cs" />
     <Compile Include="ButtonsMenu\MainButtons.cs" />
     <Compile Include="ButtonsMenu\WorldButton.cs" />
