@@ -8,6 +8,7 @@ using LibraryTrumpTower.Constants;
 using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower;
 using System.Runtime.Serialization;
+using LibraryTrumpTower.Decors;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -48,7 +49,8 @@ namespace TrumpTower.LibraryTrumpTower
         public List<AirUnit> DeadUnitsAir { get; set; }
         [DataMember]
         public List<Enemy> AnimHeal { get; set; }
-
+        [DataMember]
+        public List<Decor> Decors;
         [DataMember]
         public List<Tower> TowerDisabled;
         // SPECIAL ABILITIES
@@ -79,6 +81,7 @@ namespace TrumpTower.LibraryTrumpTower
             DeadUnitsAir = new List<AirUnit>();
             TowerDisabled = new List<Tower>();
             AnimHeal = new List<Enemy>();
+            Decors = new List<Decor>();
 
             WavesCounter = 0;
             WavesTotals = 0;

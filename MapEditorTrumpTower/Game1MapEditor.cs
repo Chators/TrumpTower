@@ -1,6 +1,7 @@
 ﻿using LibraryTrumpTower;
 using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.Decors;
 using MapEditorTrumpTower.Button;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -48,6 +49,7 @@ namespace MapEditorTrumpTower
 
         private SpriteFont _debug;
 
+        public List<Texture2D> _imgDecors;
         private Texture2D _imgAccept;
         private Texture2D _imgWall;
         private Texture2D _imgCursor;
@@ -162,6 +164,16 @@ namespace MapEditorTrumpTower
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
                 if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+            }
+            #endregion
+
+
+            #region Load Decors 
+            _imgDecors = new List<Texture2D>();
+            _imgDecors.Add(null);
+            for (int i = 1; i < 9; i++)
+            {
+                _imgDecors.Add(Content.Load<Texture2D>("Map/decor/decor" + i));
             }
             #endregion
 
@@ -297,6 +309,8 @@ namespace MapEditorTrumpTower
                     _timerInfo = 10*60;
                     _timerTransparancy = 1;
                 }
+                else if (newStateKeyboard.IsKeyDown(Keys.G) && !lastStateKeyboard.IsKeyDown(Keys.G))
+                    _map.Decors = GeneratorDecors.Generate(_map.MapArray);
                 else if (newStateKeyboard.IsKeyDown(Keys.K) && !lastStateKeyboard.IsKeyDown(Keys.K))
                     MapSetting_Pressed();
                 else if (newStateKeyboard.IsKeyDown(Keys.P) && !lastStateKeyboard.IsKeyDown(Keys.P))
@@ -420,8 +434,12 @@ namespace MapEditorTrumpTower
                 }
                 #endregion
 
+
+                foreach (Decor decor in _map.Decors)
+                    spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X- _imgDecors[decor._numberDecor].Width, decor._position.Y- _imgDecors[decor._numberDecor].Height), Color.White);
+
                 #region Draw Spawn
-                for(int i = 0; i < _map.SpawnsEnemies.Count; i++)
+                for (int i = 0; i < _map.SpawnsEnemies.Count; i++)
                 {
                     Spawn spawn = _map.SpawnsEnemies[i];
                     spriteBatch.Draw(_imgNextWaveIsComming, spawn.Position, Color.White);
