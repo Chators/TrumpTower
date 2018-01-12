@@ -483,6 +483,7 @@ namespace Menu
 
                 _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
                 Process.Start("TrumpTower");
+                MediaPlayer.Stop();
                 Exit();
             }
         }
@@ -588,6 +589,7 @@ namespace Menu
             FileInfo file = new FileInfo(BinarySerializer.pathCurrentMapXml);
             file.Delete();
             Process.Start("MapEditorTrumpTower");
+            MediaPlayer.Stop();
             Exit();
         }
 
@@ -612,6 +614,7 @@ namespace Menu
                 // On copie le fichier dans CurrentMap
                 file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
                 Process.Start("MapEditorTrumpTower");
+                MediaPlayer.Stop();
                 Exit();
             }
         }
