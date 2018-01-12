@@ -113,17 +113,18 @@ namespace Menu
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             #region BUTTON MAIN
-            int numberOfButtons = 5;
+            int numberOfButtons = 6;
             Dictionary<int, string> indexOfButtons = new Dictionary<int, string>();
             indexOfButtons[0] = "mode_campagne";
             indexOfButtons[1] = "mode_custom";
             indexOfButtons[2] = "editeur_de_map";
             indexOfButtons[3] = "options";
-            indexOfButtons[4] = "quitter";
+            indexOfButtons[4] = "importer_map";
+            indexOfButtons[5] = "quitter";
             int buttonHeight = 100;
             int buttonWidth = 300;
             _mainButtons = new MainButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
@@ -375,6 +376,10 @@ namespace Menu
 
         #region WINDOW
 
+        public void Explorer()
+        {
+            System.Diagnostics.Process.Start("explorer.exe", @"C:\");
+        }
         #region Window MapPlay
         public void MapPlay_Pressed()
         {
