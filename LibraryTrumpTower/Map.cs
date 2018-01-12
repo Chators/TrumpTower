@@ -58,6 +58,8 @@ namespace TrumpTower.LibraryTrumpTower
         public Sniper Sniper { get; set; }
         [DataMember]
         public StickyRice StickyRice { get; set; }
+        [DataMember]
+        public WallBoss WallBoss { get; set; }
         #endregion
 
         public Map(int[][] map)
@@ -74,6 +76,7 @@ namespace TrumpTower.LibraryTrumpTower
             Explosion = new Explosion(this);
             Sniper = new Sniper(this);
             StickyRice = new StickyRice(this);
+            WallBoss = new WallBoss(this);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
             DeadUnitsAir = new List<AirUnit>();
@@ -234,6 +237,11 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseStickyRiceAbility(Vector2 position)
         {
             StickyRice.On(position);
+        }
+
+        public void UseWallBossAbility(Vector2 position)
+        {
+            WallBoss.PutWallBoss(position);
         }
 
         public void SettingTheMap (string name, int dollars)
