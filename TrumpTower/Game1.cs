@@ -1657,10 +1657,11 @@ namespace TrumpTower
                 {
                     spriteBatch.DrawString(_gameOver, "Game Over", new Vector2((VirtualWidth / 2) - (_sizeStringLose.X / 2), 0), Color.White);
                 }
-                
+
+                spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
-                spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
+                
             }
 
             #region Cursor
