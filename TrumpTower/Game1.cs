@@ -806,7 +806,7 @@ namespace TrumpTower
                 }
             }
 
-            if(!isLost && _map.GetAllEnemies2().Count == 0)
+            if(!isLost && _map.GetAllEnemies2().Count == 0 && _map.GetAllAirEnemies2().Count==0)
             {
                 _isWon = true;
 
@@ -1616,7 +1616,6 @@ namespace TrumpTower
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
             #endregion
-
             if (_isWon)
             {
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);

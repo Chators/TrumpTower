@@ -159,6 +159,18 @@ namespace TrumpTower.LibraryTrumpTower
             }
             return allAirUnits;
         }
+        public List<AirUnit> GetAllAirEnemies2()
+        {
+            List<AirUnit> allAirUnits2 = new List<AirUnit>();
+            foreach (AirUnitsCollection airUnitsCollection in AirUnits)
+            {
+                foreach (AirUnit unit in airUnitsCollection.Array)
+                {
+                    allAirUnits2.Add(unit);
+                }
+            }
+            return allAirUnits2;
+        }
 
         public List<Vector2> SearchPositionTextureInArray(MapTexture nameTexture)
         {
