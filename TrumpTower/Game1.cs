@@ -293,8 +293,10 @@ namespace TrumpTower
 
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
-
-            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
+            
+            //BOSS1
+            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
+            Map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
             #endregion
 
             #region Graphics Device 
@@ -1255,6 +1257,8 @@ namespace TrumpTower
                 Texture2D _imgEnemy = null;
                 if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.boss1) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss2) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss2_1) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
                 else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
                 else if (enemy._type == EnemyType.saboteur && enemy._hasCast == false) _imgEnemy = _imgSaboteur1;

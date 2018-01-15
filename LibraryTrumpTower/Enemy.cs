@@ -79,6 +79,16 @@ namespace TrumpTower.LibraryTrumpTower
         public double _timeofVulnerability;
         [DataMember]
         public WallBoss _WallBoss { get; private set; }
+        [DataMember]
+        public double _timeBetweenDeaths;
+        [DataMember]
+        public int _timesBeingRevived = 0; // for boss 2
+        [DataMember]
+        public double _timeBeforeReviving;
+        [DataMember]
+        public bool _bothBossesDown;
+        [DataMember]
+        public bool _isKilled;
 
         public Enemy(Map map, Wave wave, string name, EnemyType type, WallBoss Wallboss)
         {
@@ -149,6 +159,18 @@ namespace TrumpTower.LibraryTrumpTower
                 _rangeBoss = 200;
                 _WallBoss = Wallboss;
 
+            } else if (type == EnemyType.boss2 || type == EnemyType.boss2_1) // Twin Commies 
+            {
+                CurrentHp = 200;
+                MaxHp = 200;
+                _damage = 10 * (1 + _timesBeingRevived);
+                Speed = 3 * (1 + _timesBeingRevived);
+                _reload = 2 * 60; // Attacks every two seconds
+                _rangeBoss = 200;
+                _isKilled = false;
+                _timeBetweenDeaths = 3 * 60; // If any of them dies, you have 3 secs to kill the other.  
+                _timeBeforeReviving = 5 * 60; // For draw animation purposes 
+                _bothBossesDown = false; // Victory condition              
             }
         }
 
@@ -190,7 +212,7 @@ namespace TrumpTower.LibraryTrumpTower
         public void Update()
         {
             if (!IsStarting) TimerBeforeStarting--;
-            else if (_type != EnemyType.boss1 && _type != EnemyType.boss2 && _type != EnemyType.boss3)
+            else if (_type != EnemyType.boss1 && _type != EnemyType.boss2 && _type != EnemyType.boss3 && _type != EnemyType.boss2_1)
             {
                  UpdateAttackWall();
                  UpdateSaboteur(GetTowers(_position, ActionRadius));
@@ -206,17 +228,93 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && _isCastingBoss1 == false && _isVulnerable == false) UpdateMove();
                 UpdateBoss1();
+            } else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1)
+            {
+                if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead== false) UpdateMove();
+                UpdateBossTwins();
             }
-
-
         }
+
+        private void UpdateBossTwins()
+        {
+            //Checks if any of them is dead
+            // Revives if necessary ++ enraging
+            //Checks if both dead to win
+            UpdateAttackWallBoss();
+            CheckForDeadBosses();
+            UpdateBoss2();
+            UpdateBoss2_1();
+            
+        }
+
+        private void UpdateBoss2()
+        {
+            
+            if (_isKilled == true && _bothBossesDown == false)
+            {
+                if (_timeBetweenDeaths > 0) _timeBetweenDeaths--;
+                else if (_timeBetweenDeaths <= 0) ReviveBosses();    
+            }
+        }
+
+        private void UpdateBoss2_1()
+        {
+            
+            if (_isKilled == true && _bothBossesDown == false)
+            {
+                if (_timeBetweenDeaths > 0) _timeBetweenDeaths--;
+                else if (_timeBetweenDeaths <= 0) ReviveBosses();
+            }
+        }
+
+        private void ReviveBosses() // A revoir
+        {
+           
+           foreach (Enemy enemy in _map.GetAllEnemies())
+            {
+                if (enemy != this && (enemy._type == EnemyType.boss2 || enemy._type == EnemyType.boss2_1)) {
+                    _wave.Enemies.Remove(enemy);
+                    _map.DeadEnemies.Add(enemy);
+                }
+            }
+            
+
+            _timesBeingRevived++;
+
+            _map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
+            _map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
+        }
+            
+
+        private bool CheckForDeadBosses() // NE FONCTIONNE PAS
+        {
+            if (_type == EnemyType.boss2 && IsDead == true)
+            {
+                _isKilled = true;
+                if (_type == EnemyType.boss2_1 && IsDead == true)
+                {
+                    _isKilled = true;
+                    _bothBossesDown = true; // win condition
+                    return true;     
+                }  else
+                {
+                    return false;
+                }             
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+        
 
         private void UpdateBoss1()
         {
             if (_timeBeforeCharging > 0) _timeBeforeCharging--;
             else if (_timeBeforeCharging == 0 && _hasCharged == false && _isCharging == false) ChargeBoss1();
             EncounterWallCreated();
-            UpdateAttackWallBoss1();
+            UpdateAttackWallBoss();
         }
 
         private void ChargeBoss1() // Stops moving for couple of secs, before truly charging
@@ -280,7 +378,7 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
-        private void UpdateAttackWallBoss1()
+        private void UpdateAttackWallBoss()
         {
             if (WithinReach(Position, _map.Wall.Position, _rangeBoss))
             {
