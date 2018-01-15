@@ -43,6 +43,7 @@ namespace TrumpTower
         #region Lose condition
         bool isLost;
         int policeBlink;
+        int policeBlink2;
         SpriteFont _gameOver;
         Texture2D _sadTrump;
         Texture2D _gameOverExplosion;
@@ -271,7 +272,7 @@ namespace TrumpTower
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _isWon = false;
+           
             #region Map INIT
 
             /*_mapPoint = new int[,]
@@ -343,7 +344,7 @@ namespace TrumpTower
             GameIsPaused = false;
             isLost = false;
             policeBlink = 240;
-            
+            policeBlink2 = 240;
 
             #region Tower Selector
             _towerCompteur = 60;
@@ -794,34 +795,39 @@ namespace TrumpTower
 
                 #endregion
             }
-            if (isLost)
+            if (isLost == true)
             {
+                _isWon = false;
                 policeBlink--;
                 if (policeBlink == 0)
                 {
                     policeBlink = 240;
+
                 }else if(policeBlink == 239)
                 {
                     ManagerSound.PlayGameOver();
                 }
             }
 
-            if(!isLost && _map.GetAllEnemies2().Count == 0 && _map.GetAllAirEnemies2().Count==0)
-            {
-                _isWon = true;
 
-            }
-
-            if (_isWon)
+            if (_isWon == true)
             {
-                policeBlink--;
-                if (policeBlink == 0)
+                isLost = false;
+                policeBlink2--;
+                if (policeBlink2 == 0)
                 {
-                    policeBlink = 240;
-                }else if(policeBlink == 239)
+                    policeBlink2 = 240;
+
+                }else if(policeBlink2 == 239)
                 {
                     ManagerSound.PlayYouWin();
                 }
+            }
+
+            if (!isLost && _map.GetAllEnemies2().Count == 0 && _map.GetAllAirEnemies2().Count == 0)
+            {
+                _isWon = true;
+
             }
 
             if (nombre < 50) nombre += 4;
@@ -1622,11 +1628,11 @@ namespace TrumpTower
                 Vector2 _sizeString = _gameOver.MeasureString("You Win !");
                 spriteBatch.Draw(_gameOverExplosion, new Vector2(0, VirtualHeight - _gameOverExplosion.Height), Color.White);
 
-                if (policeBlink > 120)
+                if (policeBlink2 > 120)
                 {
                     spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth / 2) - (_sizeString.X / 2), 0), Color.Red);
                 }
-                else if(policeBlink <=120)
+                else if(policeBlink2 <=120)
                 {
                     spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth / 2) - (_sizeString.X / 2), 0), Color.White);
                 }
@@ -1634,11 +1640,13 @@ namespace TrumpTower
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[4], button_rectangle[4], button_color[4]);
                 spriteBatch.Draw(_trumpWin, new Vector2(0, VirtualHeight-_trumpWin.Height), Color.White);
+               
 
             }
 
             if (isLost)
-            {    
+            {
+               
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
                 Vector2 _sizeStringLose = _gameOver.MeasureString("Game Over");
                 spriteBatch.Draw(_gameOverExplosion, new Vector2(0, VirtualHeight - _gameOverExplosion.Height), Color.White);
@@ -1655,6 +1663,11 @@ namespace TrumpTower
                 spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
                 spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
+               
+                spriteBatch.DrawString(_gameOver, "is won : " + _isWon, new Vector2(100, 100), Color.Red);
+                spriteBatch.DrawString(_gameOver, "is lost : " + isLost, new Vector2(100, 200), Color.Red);
+                spriteBatch.DrawString(_gameOver, "police blink : " + policeBlink, new Vector2(100, 300), Color.Red);
+                spriteBatch.DrawString(_gameOver, "police blink2 : " + policeBlink2, new Vector2(100, 400), Color.Red);
             }
 
             #region Cursor
