@@ -1664,10 +1664,10 @@ namespace TrumpTower
                 spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
                 spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
                
-                spriteBatch.DrawString(_gameOver, "is won : " + _isWon, new Vector2(100, 100), Color.Red);
+               /* spriteBatch.DrawString(_gameOver, "is won : " + _isWon, new Vector2(100, 100), Color.Red);
                 spriteBatch.DrawString(_gameOver, "is lost : " + isLost, new Vector2(100, 200), Color.Red);
                 spriteBatch.DrawString(_gameOver, "police blink : " + policeBlink, new Vector2(100, 300), Color.Red);
-                spriteBatch.DrawString(_gameOver, "police blink2 : " + policeBlink2, new Vector2(100, 400), Color.Red);
+                spriteBatch.DrawString(_gameOver, "police blink2 : " + policeBlink2, new Vector2(100, 400), Color.Red);*/
             }
 
             #region Cursor
