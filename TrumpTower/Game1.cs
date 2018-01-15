@@ -272,7 +272,7 @@ namespace TrumpTower
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-           
+            isLost = false;
             #region Map INIT
 
             /*_mapPoint = new int[,]
@@ -947,9 +947,6 @@ namespace TrumpTower
                     case HomeButton:
                         Exit();
                         break;
-                    case Retry:
-                        /*DES CHOSES TREEEEES SOMBRE A FAIRE ICI*/
-                        break;
                     case NextLevel:
                         /*DES CHOSES A FAIRE */
                         break;
@@ -957,7 +954,7 @@ namespace TrumpTower
                         break;
                 }
             }
-            if (_isWon)
+            if (_isWon && !isLost)
             {
                 switch (i)
                 {
@@ -974,6 +971,27 @@ namespace TrumpTower
                         break;
                 }
             }
+           else  if (isLost && !_isWon)
+            {
+                switch (i)
+                {
+                    case QuitButton:
+                        Exit();
+                        break;
+                    case HomeButton:
+                        Exit();
+                        break;
+                    case Retry:
+                        _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+                        isLost = false;
+                        realPause = false;
+                        GameIsPaused = false;
+                        stratPause = 0;
+                        break;
+                    default:
+                        break;
+                }
+           }
         }
 
         #endregion
