@@ -300,8 +300,23 @@ namespace TrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
 
-            graphics.IsFullScreen = true;
-            graphics.ApplyChanges();
+            {
+                int attempts = 0;
+                while( true )
+                {
+                    try
+                    {
+                        graphics.IsFullScreen = true;
+                        graphics.ApplyChanges();
+                        break;
+                    }
+                    catch( SharpDX.SharpDXException ex )
+                    {
+                        if( ex.HResult != -2005270494 || attempts > 10 ) throw;
+                        attempts++;
+                    }
+                }
+            }
 
             // Résolution d'écran
             VirtualWidth = _map.WidthArrayMap * Constant.imgSizeMap;

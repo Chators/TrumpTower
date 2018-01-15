@@ -482,8 +482,8 @@ namespace Menu
                 file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
 
                 _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
-                Process.Start("TrumpTower");
                 MediaPlayer.Stop();
+                Process.Start( "TrumpTower" );
                 Exit();
             }
         }
