@@ -114,6 +114,23 @@ namespace Menu
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
             graphics.IsFullScreen = true;
+            {
+                int attempts = 0;
+                while (true)
+                {
+                    try
+                    {
+                        graphics.IsFullScreen = true;
+                        graphics.ApplyChanges();
+                        break;
+                    }
+                    catch (SharpDX.SharpDXException ex)
+                    {
+                        if (ex.HResult != -2005270494 || attempts > 10) throw;
+                        attempts++;
+                    }
+                }
+            }
             graphics.ApplyChanges();
 
             #region BUTTON MAIN

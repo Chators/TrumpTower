@@ -125,7 +125,25 @@ namespace MapEditorTrumpTower
             Window.Title = "TT Map Editor";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
+
+            {
+                int attempts = 0;
+                while (true)
+                {
+                    try
+                    {
+                        graphics.IsFullScreen = true;
+                        graphics.ApplyChanges();
+                        break;
+                    }
+                    catch (SharpDX.SharpDXException ex)
+                    {
+                        if (ex.HResult != -2005270494 || attempts > 10) throw;
+                        attempts++;
+                    }
+                }
+            }
             graphics.ApplyChanges();
 
             _gui.Screen = new GuiScreen(graphics.GraphicsDevice.DisplayMode.Width, graphics.GraphicsDevice.DisplayMode.Height);
