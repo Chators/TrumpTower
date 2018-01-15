@@ -312,7 +312,7 @@ namespace TrumpTower
                     }
                     catch( SharpDX.SharpDXException ex )
                     {
-                        if( ex.HResult != -2005270494 || attempts > 10 ) throw;
+                        if( ex.HResult != -2005270494 || attempts > 150 ) throw;
                         attempts++;
                     }
                 }
