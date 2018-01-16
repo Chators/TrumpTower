@@ -69,6 +69,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
 
         #endregion
 
+        #region Entity
+        public static double LOSTGAUGE = 1;
+        public static double MAXGAUGE = 50000;
+        public static int PRICEIMPROVEGAUGE = 50;
+        public static double ADDGAUGEWHENIMPROVE = 10;
+        #endregion
+
         public static int imgSizeMap = 64;
         public static int ImgSizePlane = 64;
         public static int ImgSizeEnemy = 64;

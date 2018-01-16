@@ -6,17 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrumpTower.Drawing;
 
-namespace TrumpTower.Drawing
+namespace TrumpTower.Draw
 {
-    public class HealthBar
+    class EntityBar
     {
         static Texture2D _imgLife;
         double _currentHp;
         double _maxHp;
         double _sizeBar;
 
-        public HealthBar(double currentHp, double maxHp, double sizeBar)
+        public EntityBar(double currentHp, double maxHp, double sizeBar)
         {
             _currentHp = currentHp;
             _maxHp = maxHp;

@@ -60,6 +60,8 @@ namespace TrumpTower.LibraryTrumpTower
         public Sniper Sniper { get; set; }
         [DataMember]
         public StickyRice StickyRice { get; set; }
+        [DataMember]
+        public Entity Entity { get; set; }
         #endregion
 
         public Map(int[][] map)
@@ -82,6 +84,7 @@ namespace TrumpTower.LibraryTrumpTower
             TowerDisabled = new List<Tower>();
             AnimHeal = new List<Enemy>();
             Decors = new List<Decor>();
+            Entity = new Entity(this);
 
             WavesCounter = 0;
             WavesTotals = 0;
@@ -116,7 +119,7 @@ namespace TrumpTower.LibraryTrumpTower
             Explosion.Update();
             Sniper.Update();
             StickyRice.Update();
-
+            Entity.Update();
         }
 
         public int GetTypeArray(int x, int y)

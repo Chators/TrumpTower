@@ -1,6 +1,7 @@
 ﻿using LibraryTrumpTower;
 using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.Decors;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -51,6 +52,10 @@ namespace TrumpTower
         public float VirtualHeight { get; set; }
         Matrix scale;
 
+        #endregion
+
+        #region Decors
+        private List<Texture2D> _imgDecors;
         #endregion
 
         #region Towers
@@ -434,6 +439,15 @@ namespace TrumpTower
                 if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
             }
 
+            #endregion
+
+            #region Decors 
+            _imgDecors = new List<Texture2D>();
+            _imgDecors.Add(null);
+            for (int i = 1; i < 9; i++)
+            {
+                _imgDecors.Add(Content.Load<Texture2D>("Map/decor/decor" + i));
+            }
             #endregion
 
             #region Wall
@@ -1218,6 +1232,11 @@ namespace TrumpTower
 
             #endregion
 
+            #region Decors
+            foreach (Decor decor in _map.Decors)
+                spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X - _imgDecors[decor._numberDecor].Width, decor._position.Y - _imgDecors[decor._numberDecor].Height), Color.White);
+            #endregion
+
             #region StickRice
             if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
                 spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
@@ -1483,6 +1502,8 @@ namespace TrumpTower
 
             #endregion
 
+            
+
             #region Buttons
 
             #region Timer Buttons
@@ -1509,6 +1530,13 @@ namespace TrumpTower
             spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
 
+            #endregion
+
+            #region Entity
+            HealthBar entityBar = new HealthBar(_map.Entity.CurrentGauge, _map.Entity.MaxGauge, 3f);
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 100), sourceRectanglee, Color.Black * 0.6f);
+            spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 100), Color.White);
+            entityBar.Draw(spriteBatch, new Vector2(50, 107), _imgWall);
             #endregion
 
             #region Raid Units Air is Comming
@@ -1542,7 +1570,7 @@ namespace TrumpTower
             {
                 foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
             }
-
+            /*
             #region Pause
             spriteBatch.Draw(_backgroundDollars, new Vector2(5, 93), sourceRectanglee, Color.Black * 0.6f);
             if (stratPause < 5)
@@ -1579,7 +1607,7 @@ namespace TrumpTower
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
             #endregion
-
+            */
             if (isLost)
             {    
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
