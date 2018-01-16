@@ -63,7 +63,7 @@ namespace LibraryTrumpTower
             }
             else 
             {
-                // Bonus
+                // bonus
                 EntityFace = EntityFace.Happy;
             }
         }

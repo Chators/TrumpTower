@@ -327,12 +327,12 @@ namespace MapEditorTrumpTower
                     _buttonTexture.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
                 }
 
-                if (newStateKeyboard.IsKeyDown(Keys.I) && !lastStateKeyboard.IsKeyDown(Keys.I))
+                /*if (newStateKeyboard.IsKeyDown(Keys.I) && !lastStateKeyboard.IsKeyDown(Keys.I))
                 {
                     _timerInfo = 10 * 60;
                     _timerTransparancy = 1;
-                }
-                else if (newStateKeyboard.IsKeyDown(Keys.L) && !lastStateKeyboard.IsKeyDown(Keys.L))
+                }*/
+                if (newStateKeyboard.IsKeyDown(Keys.L) && !lastStateKeyboard.IsKeyDown(Keys.L))
                     _map.Decors = GeneratorDecors.Generate(_map.MapArray);
                 else if (newStateKeyboard.IsKeyDown(Keys.J) && !lastStateKeyboard.IsKeyDown(Keys.J))
                     MapSetting_Pressed();
@@ -404,7 +404,7 @@ namespace MapEditorTrumpTower
                     spriteBatch.Draw(_imgOptions, new Vector2(pos - _imgOptions.Width / 2, 610), Color.White);
                     spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, 740), Color.White);
                     spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, 870), Color.White);
-                    spriteBatch.Draw(_imgInformation, new Vector2(posMenuRight + 115, 1000), Color.White);
+                    //spriteBatch.Draw(_imgInformation, new Vector2(posMenuRight + 115, 1000), Color.White);
 
                     Texture2D currentSelectionTexture = null;
                     if (SelectTexture.Texture == MapTexture.None)
@@ -486,7 +486,7 @@ namespace MapEditorTrumpTower
                 spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
                 #endregion
 
-                string infoSelection = "";
+                /*string infoSelection = "";
                 if (SelectTexture.Texture == MapTexture.None)
                     infoSelection = Constant.SELECTION_INFO;
                 else if (SelectTexture.Texture == MapTexture.dirt)
@@ -504,7 +504,7 @@ namespace MapEditorTrumpTower
                     Vector2 sizeString = _imgString.MeasureString(infoSelection);
                     spriteBatch.DrawString(_imgString, infoSelection, new Vector2(VirtualWidth / 2 - sizeString.X / 2, VirtualHeight / 2), Color.Red * (float)_timerTransparancy);
                     _timerInfo--;
-                }
+                }*/
 
                 #region Entity
                 spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
@@ -1858,11 +1858,11 @@ namespace MapEditorTrumpTower
             _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 520), "A",
                 new List<Keys>(new Keys[] { Keys.A })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 50, 650), "J",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 40, 650), "J",
                 new List<Keys>(new Keys[] { Keys.J })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 120, 650), "K",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 110, 650), "K",
                new List<Keys>(new Keys[] { Keys.K })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgTree, _debug, MapTexture.None, new Vector2(posMenuRight + 190, 650), "L",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgTree, _debug, MapTexture.None, new Vector2(posMenuRight + 180, 650), "L",
                new List<Keys>(new Keys[] { Keys.L })));
 
             _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 780), "Entrer",
