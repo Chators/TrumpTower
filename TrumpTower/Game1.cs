@@ -210,21 +210,24 @@ namespace TrumpTower
             DOWN
         }
 
-        const int NUMBER_OF_BUTTONS = 5,
-                ResumeButton = 0,
-                HomeButton = 1,
-                QuitButton = 2,
-                Retry = 3,
-                NextLevel = 4,
-                BUTTON_HEIGHT = 250,
-                BUTTON_WIDTH = 300;
+        const int 
+                BUTTON_HEIGHT = 58,
+                BUTTON_WIDTH = 250;
 
         Color background_color;
-        Color[] button_color = new Color[NUMBER_OF_BUTTONS];
-        Rectangle[] button_rectangle = new Rectangle[NUMBER_OF_BUTTONS];
-        BState[] button_state = new BState[NUMBER_OF_BUTTONS];
-        Texture2D[] button_texture = new Texture2D[NUMBER_OF_BUTTONS];
-        double[] button_timer = new double[NUMBER_OF_BUTTONS];
+
+        Color[] button_color_pause = new Color[3];
+        Rectangle[] button_rectangle_pause = new Rectangle[3];
+        Texture2D[] button_texture_pause = new Texture2D[3];
+
+        Color[] button_color_lost = new Color[3];
+        Rectangle[] button_rectangle_lost = new Rectangle[3];
+        Texture2D[] button_texture_lost = new Texture2D[3];
+
+        Color[] button_color_win = new Color[2];
+        Rectangle[] button_rectangle_win = new Rectangle[2];
+        Texture2D[] button_texture_win = new Texture2D[2];
+
         //mouse pressed and mouse just pressed
         bool mpressed, prev_mpressed = false;
         //mouse location in window
@@ -362,13 +365,35 @@ namespace TrumpTower
 
             int x = ((int)VirtualWidth / 2) - BUTTON_WIDTH / 2;
             int y = (int)VirtualHeight / 2 - 4 / 2 * BUTTON_HEIGHT - (4 % 2);
-            for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
+            for (int i = 0; i < 3; i++)
             {
-                button_state[i] = BState.UP;
-                button_color[i] = Color.White;
-                button_timer[i] = 0.0;
-                button_rectangle[i] = new Rectangle(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
+                
+                button_color_pause[i] = Color.White;
+                
+                button_rectangle_pause[i] = new Rectangle(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
                 y += 100;
+            }
+
+            int x2 = ((int)VirtualWidth / 2) - BUTTON_WIDTH / 2;
+            int y2 = (int)VirtualHeight / 2 - 4 / 2 * BUTTON_HEIGHT - (4 % 2);
+            for (int i = 0; i < 2; i++)
+            {
+
+                button_color_lost[i] = Color.White;
+
+                button_rectangle_lost[i] = new Rectangle(x2, y2, BUTTON_WIDTH, BUTTON_HEIGHT);
+                y2 += 200;
+            }
+
+            int x3 = ((int)VirtualWidth / 2) - BUTTON_WIDTH / 2;
+            int y3 = (int)VirtualHeight / 2 - 4 / 2 * BUTTON_HEIGHT - (4 % 2);
+            for (int i = 0; i < 2; i++)
+            {
+
+                button_color_win[i] = Color.White;
+
+                button_rectangle_win[i] = new Rectangle(x3, y3, BUTTON_WIDTH, BUTTON_HEIGHT);
+                y3 += 100;
             }
 
 
@@ -379,7 +404,7 @@ namespace TrumpTower
             #endregion
 
             warning = false;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             base.Initialize();
 
             int WIDTH = (int)VirtualWidth / 12;
@@ -408,20 +433,24 @@ namespace TrumpTower
             #region In game menu
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            button_texture[ResumeButton] =
+            button_texture_pause[0] =
                  Content.Load<Texture2D>("resume");
-            button_texture[HomeButton] =
+            button_texture_pause[1] =
                 Content.Load<Texture2D>("home");
-            button_texture[QuitButton] =
+            button_texture_pause[2] =
                 Content.Load<Texture2D>("quit");
-            button_texture[Retry] =
+            button_texture_lost[0] =
+                Content.Load<Texture2D>("home");
+            button_texture_lost[1] =
                 Content.Load<Texture2D>("retry");
-            button_texture[NextLevel] =
+            button_texture_win[0] =
+                Content.Load<Texture2D>("home");
+            button_texture_win[1] =
                 Content.Load<Texture2D>("next_level");
 
 
             #endregion
-                
+
             #region Maps
 
             _imgMaps = new List<Texture2D>();
@@ -667,7 +696,7 @@ namespace TrumpTower
             prev_mpressed = mpressed;
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
 
-            update_buttons();
+            //update_buttons();
 
             foreach (Tower tow in _map.Towers)
             {
@@ -684,7 +713,9 @@ namespace TrumpTower
                         _hoveredTower = null;   
                     }
             }
-        
+
+            
+
             if (_hoveredTower != null)
             {
                 
@@ -878,122 +909,11 @@ namespace TrumpTower
                 y <= ty + tex.Height);
         }
 
-        // determine state and color of button
-        void update_buttons()
-        {
-            for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
-            {
-
-                if (hit_image_alpha(
-                    button_rectangle[i], button_texture[i], mx, my))
-                {
-                    button_timer[i] = 0.0;
-                    if (mpressed)
-                    {
-                        // mouse is currently down
-                        button_state[i] = BState.DOWN;
-                        button_color[i] = Color.Blue;
-                    }
-                    else if (!mpressed && prev_mpressed)
-                    {
-                        // mouse was just released
-                        if (button_state[i] == BState.DOWN)
-                        {
-                            // button i was just down
-                            button_state[i] = BState.JUST_RELEASED;
-                        }
-                    }
-                    else
-                    {
-                        button_state[i] = BState.HOVER;
-                        button_color[i] = Color.LightBlue;
-                    }
-                }
-                else
-                {
-                    button_state[i] = BState.UP;
-                    if (button_timer[i] > 0)
-                    {
-                        button_timer[i] = button_timer[i] - frame_time;
-                    }
-                    else
-                    {
-                        button_color[i] = Color.White;
-                    }
-                }
-
-                if (button_state[i] == BState.JUST_RELEASED)
-                {
-                    take_action_on_button(i);
-                }
-            }
-        }
+        
+       
 
 
-        // Logic for each button click goes here
-        void take_action_on_button(int i)
-        {
-            if (realPause == true || isLost == true)
-            {
-                //take action corresponding to which button was clicked
-                switch (i)
-                {
-                    case QuitButton:
-                        Exit();
-                        break;
-                    case ResumeButton:
-                        realPause = false;
-                        break;
-                    case HomeButton:
-                        Exit();
-                        break;
-                    case NextLevel:
-                        /*DES CHOSES A FAIRE */
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (_isWon && !isLost)
-            {
-                switch (i)
-                {
-                    case QuitButton:
-                        Exit();
-                        break;
-                    case HomeButton:
-                        Exit();
-                        break;
-                    case NextLevel:
-                        /*DES CHOSES A FAIRE */
-                        break;
-                    default:
-                        break;
-                }
-            }
-           else  if (isLost && !_isWon)
-            {
-                switch (i)
-                {
-                    case QuitButton:
-                        Exit();
-                        break;
-                    case HomeButton:
-                        Exit();
-                        break;
-                    case Retry:
-                        _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
-                        isLost = false;
-                        realPause = false;
-                        GameIsPaused = false;
-                        stratPause = 0;
-                        Map.WavesCounter = 0;
-                        break;
-                    default:
-                        break;
-                }
-           }
-        }
+        
 
         #endregion
 
@@ -1215,9 +1135,97 @@ namespace TrumpTower
                 #endregion
 
                 #endregion
-                _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+                
+                    _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
                 _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+            }
+            if (realPause && !isLost && !_isWon)
+            {
+                
+                
+                    if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                        lastStateMouse.LeftButton == ButtonState.Released)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            if (newStateMouse.X > button_rectangle_pause[i].X &&
+                                        newStateMouse.X < button_rectangle_pause[i].X + BUTTON_WIDTH &&
+                                        newStateMouse.Y > button_rectangle_pause[i].Y &&
+                                        newStateMouse.Y < button_rectangle_pause[i].Y + BUTTON_HEIGHT)
+                            {
+                                if (button_rectangle_pause[i] == button_rectangle_pause[0])
+                                {
+                                    realPause = false;
+                                    break;
+                                }
+                                if (button_rectangle_pause[i] == button_rectangle_pause[1])
+                                {
+                                    Exit();
+                                    
+                                }
+                                if (button_rectangle_pause[i] == button_rectangle_pause[2])
+                                {
+                                    Exit();
+                                }
+                            }
+                        }
+                    }
+            }
+            if (isLost && !_isWon)
+            {
+                if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                        lastStateMouse.LeftButton == ButtonState.Released)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        if (newStateMouse.X > button_rectangle_lost[i].X &&
+                                    newStateMouse.X < button_rectangle_lost[i].X + BUTTON_WIDTH &&
+                                    newStateMouse.Y > button_rectangle_lost[i].Y &&
+                                    newStateMouse.Y < button_rectangle_lost[i].Y + BUTTON_HEIGHT)
+                        {
+                            if (button_rectangle_lost[i] == button_rectangle_lost[0])
+                            {
+                                Exit();
+                            }
+                            else if (button_rectangle_lost[i] == button_rectangle_lost[1])
+                            {
+                                _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+                                isLost = false;
+                                realPause = false;
+                                GameIsPaused = false;
+                                stratPause = 0;
+                                Map.WavesCounter = 0;
+                                break;
+                            } 
+                        }
+                    }
+                }
+            }
+            if(_isWon && !isLost)
+            {
+                if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                        lastStateMouse.LeftButton == ButtonState.Released)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        if (newStateMouse.X > button_rectangle_win[i].X &&
+                                    newStateMouse.X < button_rectangle_win[i].X + BUTTON_WIDTH &&
+                                    newStateMouse.Y > button_rectangle_win[i].Y &&
+                                    newStateMouse.Y < button_rectangle_win[i].Y + BUTTON_HEIGHT)
+                        {
+                            if (button_rectangle_win[i] == button_rectangle_win[0])
+                            {
+                                Exit();
+                            }
+                            else if (button_rectangle_win[i] == button_rectangle_win[1])
+                            {
+                                //a faire mdr
+                                Exit();
+                            }
+                        }
+                    }
+                }
             }
             if (newStateKeyboard.IsKeyDown(Keys.Escape) && lastStateKeyboard.IsKeyUp(Keys.Escape))
             {
@@ -1637,8 +1645,12 @@ namespace TrumpTower
             if (realPause == true)
             {
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.White * 0.5f);
-                for (int i = 0; i < 3; i++)
-                    spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
+
+                spriteBatch.Draw(button_texture_pause[0], button_rectangle_pause[0], button_color_pause[0]);
+                spriteBatch.Draw(button_texture_pause[1], button_rectangle_pause[1], button_color_pause[1]);
+                spriteBatch.Draw(button_texture_pause[2], button_rectangle_pause[2], button_color_pause[2]);
+
+
             }
             #endregion
             if (_isWon)
@@ -1656,8 +1668,8 @@ namespace TrumpTower
                     spriteBatch.DrawString(_gameOver, "You win !", new Vector2((VirtualWidth / 2) - (_sizeString.X / 2), 0), Color.White);
                 }
 
-                spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
-                spriteBatch.Draw(button_texture[4], button_rectangle[4], button_color[4]);
+                spriteBatch.Draw(button_texture_win[0], button_rectangle_win[0], button_color_win[0]);
+                spriteBatch.Draw(button_texture_win[1], button_rectangle_win[1], button_color_win[1]);
                 spriteBatch.Draw(_trumpWin, new Vector2(0, VirtualHeight-_trumpWin.Height), Color.White);
                
 
@@ -1679,8 +1691,8 @@ namespace TrumpTower
                     spriteBatch.DrawString(_gameOver, "Game Over", new Vector2((VirtualWidth / 2) - (_sizeStringLose.X / 2), 0), Color.White);
                 }
                 
-                spriteBatch.Draw(button_texture[1], button_rectangle[1], button_color[1]);
-                spriteBatch.Draw(button_texture[3], button_rectangle[3], button_color[3]);
+                spriteBatch.Draw(button_texture_lost[0], button_rectangle_lost[0], button_color_lost[0]);
+                spriteBatch.Draw(button_texture_lost[1], button_rectangle_lost[1], button_color_lost[1]);
                 spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
                
                /* spriteBatch.DrawString(_gameOver, "is won : " + _isWon, new Vector2(100, 100), Color.Red);
