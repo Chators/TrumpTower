@@ -16,7 +16,6 @@ namespace Menu.ButtonsMenu
             if (!IndexOfButtons.ContainsValue("editeur_de_map")) throw new ArgumentException("Dictionary must contain creer_votre_map");
             if (!IndexOfButtons.ContainsValue("options")) throw new ArgumentException("Dictionary must contain options");
             if (!IndexOfButtons.ContainsValue("quitter")) throw new ArgumentException("Dictionary must contain quit");
-            if (!IndexOfButtons.ContainsValue("importer_map")) throw new ArgumentException("Dictionary must contain importer_map");
         }
 
         public override void take_action_on_button(int i)
@@ -35,11 +34,7 @@ namespace Menu.ButtonsMenu
             }
             else if (IndexOfButtons[i] == "options")
             {
-                
-            }
-            else if (IndexOfButtons[i] == "importer_map")
-            {
-                _ctx.Explorer();
+                _ctx.state = MenuState.OPTIONS;
             }
             else if (IndexOfButtons[i] == "quitter")
             {

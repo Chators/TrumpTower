@@ -34,6 +34,7 @@ namespace Menu
             WORLD1,
             WORLD2,
             WORLD3,
+            OPTIONS,
             NONE
         }
 
@@ -134,14 +135,13 @@ namespace Menu
             graphics.ApplyChanges();
 
             #region BUTTON MAIN
-            int numberOfButtons = 6;
+            int numberOfButtons = 5;
             Dictionary<int, string> indexOfButtons = new Dictionary<int, string>();
             indexOfButtons[0] = "mode_campagne";
             indexOfButtons[1] = "mode_custom";
             indexOfButtons[2] = "editeur_de_map";
             indexOfButtons[3] = "options";
-            indexOfButtons[4] = "importer_map";
-            indexOfButtons[5] = "quitter";
+            indexOfButtons[4] = "quitter";
             int buttonHeight = 100;
             int buttonWidth = 300;
             _mainButtons = new MainButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
@@ -393,10 +393,6 @@ namespace Menu
 
         #region WINDOW
 
-        public void Explorer()
-        {
-            System.Diagnostics.Process.Start("explorer.exe", @"C:\");
-        }
         #region Window MapPlay
         public void MapPlay_Pressed()
         {
