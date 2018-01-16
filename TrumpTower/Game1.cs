@@ -393,7 +393,7 @@ namespace TrumpTower
                 button_color_win[i] = Color.White;
 
                 button_rectangle_win[i] = new Rectangle(x3, y3, BUTTON_WIDTH, BUTTON_HEIGHT);
-                y3 += 100;
+                y3 += 200;
             }
 
 
@@ -714,7 +714,59 @@ namespace TrumpTower
                     }
             }
 
-            
+            if (realPause && !isLost && !_isWon)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (newStateMouse.X > button_rectangle_pause[i].X &&
+                                newStateMouse.X < button_rectangle_pause[i].X + BUTTON_WIDTH &&
+                                newStateMouse.Y > button_rectangle_pause[i].Y &&
+                                newStateMouse.Y < button_rectangle_pause[i].Y + BUTTON_HEIGHT)
+                    {
+                        button_color_pause[i] = Color.LightBlue * 0.7f;
+                    }
+                    else
+                    {
+                        button_color_pause[i] = Color.White;
+                    }
+                }
+            }
+
+            if (isLost && !_isWon)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    if (newStateMouse.X > button_rectangle_lost[i].X &&
+                                newStateMouse.X < button_rectangle_lost[i].X + BUTTON_WIDTH &&
+                                newStateMouse.Y > button_rectangle_lost[i].Y &&
+                                newStateMouse.Y < button_rectangle_lost[i].Y + BUTTON_HEIGHT)
+                    {
+                        button_color_lost[i] = Color.LightBlue * 0.7f;
+                    }
+                    else
+                    {
+                        button_color_lost[i] = Color.White;
+                    }
+                }
+            }
+
+            if (!isLost && _isWon)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    if (newStateMouse.X > button_rectangle_win[i].X &&
+                                newStateMouse.X < button_rectangle_win[i].X + BUTTON_WIDTH &&
+                                newStateMouse.Y > button_rectangle_win[i].Y &&
+                                newStateMouse.Y < button_rectangle_win[i].Y + BUTTON_HEIGHT)
+                    {
+                        button_color_win[i] = Color.LightBlue * 0.7f;
+                    }
+                    else
+                    {
+                        button_color_win[i] = Color.White;
+                    }
+                }
+            }
 
             if (_hoveredTower != null)
             {
@@ -871,52 +923,6 @@ namespace TrumpTower
             if (!warning) nombre2 = 0;
             base.Update(gameTime);
         }
-       
-        #region In game menu
-
-        // wrapper for hit_image_alpha taking Rectangle and Texture
-        bool hit_image_alpha(Rectangle rect, Texture2D tex, int x, int y)
-        {
-            return hit_image_alpha(0, 0, tex, tex.Width * (x - rect.X) /
-                rect.Width, tex.Height * (y - rect.Y) / rect.Height);
-        }
-
-        // wraps hit_image then determines if hit a transparent part of image 
-        bool hit_image_alpha(float tx, float ty, Texture2D tex, int x, int y)
-        {
-            if (hit_image(tx, ty, tex, x, y))
-            {
-                uint[] data = new uint[tex.Width * tex.Height];
-                tex.GetData<uint>(data);
-                if ((x - (int)tx) + (y - (int)ty) *
-                    tex.Width < tex.Width * tex.Height)
-                {
-                    return ((data[
-                        (x - (int)tx) + (y - (int)ty) * tex.Width
-                        ] &
-                                0xFF000000) >> 24) > 20;
-                }
-            }
-            return false;
-        }
-
-        // determine if x,y is within rectangle formed by texture located at tx,ty
-        bool hit_image(float tx, float ty, Texture2D tex, int x, int y)
-        {
-            return (x >= tx &&
-                x <= tx + tex.Width &&
-                y >= ty &&
-                y <= ty + tex.Height);
-        }
-
-        
-       
-
-
-        
-
-        #endregion
-
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
