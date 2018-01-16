@@ -84,9 +84,11 @@ namespace MapEditorTrumpTower
         private Texture2D _imgValidation;
         private Texture2D _imgSelectionActuelle;
         private Texture2D _imgInformation;
+        private Texture2D _imgEntity;
+        private Texture2D _imgTree;
 
         private SpriteFont _imgString;
-
+        private Texture2D _imgHappyFace;
         #region gameState
         public GameState State { get; set; }
         public ActionCreatePath CurrentActionCreatePath { get; set; }
@@ -165,7 +167,7 @@ namespace MapEditorTrumpTower
             base.Initialize();
         }
 
-        
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -204,11 +206,13 @@ namespace MapEditorTrumpTower
             _imgValidation = Content.Load<Texture2D>("NameMenu/Validation");
             _imgSelectionActuelle = Content.Load<Texture2D>("NameMenu/Selection-Actuelle");
             _imgInformation = Content.Load<Texture2D>("NameMenu/information-button");
+            _imgEntity = Content.Load<Texture2D>("NameMenu/happyWorld");
+            _imgTree = Content.Load<Texture2D>("NameMenu/tree");
             #endregion
 
             _imgAccept = Content.Load<Texture2D>("accept");
             _imgWall = Content.Load<Texture2D>("Wall");
-            _imgNoSelect = Content.Load <Texture2D>("select");
+            _imgNoSelect = Content.Load<Texture2D>("select");
             _imgCloakTexture = Content.Load<Texture2D>("cloakImgMap");
             _debug = Content.Load<SpriteFont>("DefaultFont");
             _imgNextWaveIsComming = Content.Load<Texture2D>("north_korea_is_comming");
@@ -220,6 +224,7 @@ namespace MapEditorTrumpTower
             _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
             _imgSaboteur = Content.Load<Texture2D>("Enemies/saboteur");
 
+            _imgHappyFace = Content.Load<Texture2D>("Entity/happy");
             #region Load Dollars
             _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
             _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
@@ -294,12 +299,12 @@ namespace MapEditorTrumpTower
                                             newStateMouse.RightButton,
                                             newStateMouse.XButton1,
                                             newStateMouse.XButton2);
-            
-            
+
+
             KeyboardState newStateKeyboard = Keyboard.GetState();
             HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
-            
+
 
             lastStateMouse = newStateMouse;
             lastStateKeyboard = newStateKeyboard;
@@ -307,7 +312,7 @@ namespace MapEditorTrumpTower
 
 
             base.Update(gameTime);
-            
+
         }
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
@@ -322,16 +327,16 @@ namespace MapEditorTrumpTower
                     _buttonTexture.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
                 }
 
-                if (newStateKeyboard.IsKeyDown(Keys.I) && !lastStateKeyboard.IsKeyDown(Keys.I))
+                /*if (newStateKeyboard.IsKeyDown(Keys.I) && !lastStateKeyboard.IsKeyDown(Keys.I))
                 {
-                    _timerInfo = 10*60;
+                    _timerInfo = 10 * 60;
                     _timerTransparancy = 1;
-                }
-                else if (newStateKeyboard.IsKeyDown(Keys.G) && !lastStateKeyboard.IsKeyDown(Keys.G))
+                }*/
+                if (newStateKeyboard.IsKeyDown(Keys.L) && !lastStateKeyboard.IsKeyDown(Keys.L))
                     _map.Decors = GeneratorDecors.Generate(_map.MapArray);
-                else if (newStateKeyboard.IsKeyDown(Keys.K) && !lastStateKeyboard.IsKeyDown(Keys.K))
+                else if (newStateKeyboard.IsKeyDown(Keys.J) && !lastStateKeyboard.IsKeyDown(Keys.J))
                     MapSetting_Pressed();
-                else if (newStateKeyboard.IsKeyDown(Keys.P) && !lastStateKeyboard.IsKeyDown(Keys.P))
+                else if (newStateKeyboard.IsKeyDown(Keys.K) && !lastStateKeyboard.IsKeyDown(Keys.K))
                     ManagerAirPlane_Pressed();
                 else if (newStateKeyboard.IsKeyDown(Keys.Enter) && !lastStateKeyboard.IsKeyDown(Keys.Enter))
                 {
@@ -382,35 +387,35 @@ namespace MapEditorTrumpTower
             GraphicsDevice.Clear(Color.SlateGray);
 
             // TODO: Add your drawing code here
-            
+
             if (_map != null)
             {
                 #region Draw Right Menu
                 spriteBatch.Begin();
-                
+
 
                 if (State.ActualState == StateType.Default)
                 {
                     int pos = posMenuRight + ((graphics.GraphicsDevice.Viewport.Width - posMenuRight) / 2);
-                    spriteBatch.Draw(_imgMenuTexture, new Vector2(pos - _imgMenuTexture.Width/2, 5), Color.White);
+                    spriteBatch.Draw(_imgMenuTexture, new Vector2(pos - _imgMenuTexture.Width / 2, 5), Color.White);
                     spriteBatch.Draw(_imgTextureUtile, new Vector2(pos - _imgTextureUtile.Width / 2, 40), Color.White);
                     spriteBatch.Draw(_imgTextureDecors, new Vector2(pos - _imgTextureDecors.Width / 2, 170), Color.White);
                     spriteBatch.Draw(_imgOutilDeSelection, new Vector2(pos - _imgOutilDeSelection.Width / 2, 480), Color.White);
                     spriteBatch.Draw(_imgOptions, new Vector2(pos - _imgOptions.Width / 2, 610), Color.White);
                     spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, 740), Color.White);
                     spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, 870), Color.White);
-                    spriteBatch.Draw(_imgInformation, new Vector2(posMenuRight + 115, 1000), Color.White);
+                    //spriteBatch.Draw(_imgInformation, new Vector2(posMenuRight + 115, 1000), Color.White);
 
                     Texture2D currentSelectionTexture = null;
                     if (SelectTexture.Texture == MapTexture.None)
                         currentSelectionTexture = _imgNoSelect;
                     else if (SelectTexture.Texture == MapTexture.myBase)
                         currentSelectionTexture = ImgWall;
-                    else 
+                    else
                         currentSelectionTexture = ImgMaps[(int)SelectTexture.Texture];
                     spriteBatch.Draw(currentSelectionTexture, new Vector2(posMenuRight + 115, 910), Color.White);
 
-                    
+
 
 
                     for (int i = 0; i < _buttonsTexture.Count; i++)
@@ -446,7 +451,7 @@ namespace MapEditorTrumpTower
                 #region Draw Wall
                 if (_map.Wall != null)
                 {
-                    
+
                     Wall _wall = _map.Wall;
                     spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
                 }
@@ -454,7 +459,7 @@ namespace MapEditorTrumpTower
 
 
                 foreach (Decor decor in _map.Decors)
-                    spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X- _imgDecors[decor._numberDecor].Width, decor._position.Y- _imgDecors[decor._numberDecor].Height), Color.White);
+                    spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X - _imgDecors[decor._numberDecor].Width, decor._position.Y - _imgDecors[decor._numberDecor].Height), Color.White);
 
                 #region Draw Spawn
                 for (int i = 0; i < _map.SpawnsEnemies.Count; i++)
@@ -481,7 +486,7 @@ namespace MapEditorTrumpTower
                 spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
                 #endregion
 
-                string infoSelection = "";
+                /*string infoSelection = "";
                 if (SelectTexture.Texture == MapTexture.None)
                     infoSelection = Constant.SELECTION_INFO;
                 else if (SelectTexture.Texture == MapTexture.dirt)
@@ -494,12 +499,18 @@ namespace MapEditorTrumpTower
                     infoSelection = Constant.OTHER_INFO;
                 if (_timerInfo > 0)
                 {
-                    if (_timerInfo < 10*10)
+                    if (_timerInfo < 10 * 10)
                         _timerTransparancy -= 0.01;
                     Vector2 sizeString = _imgString.MeasureString(infoSelection);
-                    spriteBatch.DrawString(_imgString, infoSelection, new Vector2(VirtualWidth / 2 - sizeString.X/2, VirtualHeight / 2), Color.Red * (float)_timerTransparancy);
+                    spriteBatch.DrawString(_imgString, infoSelection, new Vector2(VirtualWidth / 2 - sizeString.X / 2, VirtualHeight / 2), Color.Red * (float)_timerTransparancy);
                     _timerInfo--;
-                }
+                }*/
+
+                #region Entity
+                spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
+                spriteBatch.Draw(_imgHappyFace, new Vector2(10, 90), Color.White);
+                #endregion
+
                 spriteBatch.End();
             }
 
@@ -537,7 +548,7 @@ namespace MapEditorTrumpTower
 
             var labelChoiceX = new GuiLabelControl()
             {
-                Text = "Veuillez indiquer la taille de la map ( Min " + Constant.MinWidthMap + ", Max " + Constant.MaxWidthMap+ " )",
+                Text = "Veuillez indiquer la taille de la map ( Min " + Constant.MinWidthMap + ", Max " + Constant.MaxWidthMap + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -545,7 +556,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "choiceX",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25)),
-                Text = Constant.MinWidthMap+""
+                Text = Constant.MinWidthMap + ""
             };
 
             var button1 = new GuiButtonControl
@@ -594,9 +605,9 @@ namespace MapEditorTrumpTower
             double _sizeY;
             if (_size >= Constant.MinWidthMap && _size <= Constant.MaxWidthMap)
             {
-                
-                _sizeY = (int)Math.Truncate(_size/(16.0f/9));
-                int[,] _mapPoint2D = new int[ (int)_sizeY, _size];
+
+                _sizeY = (int)Math.Truncate(_size / (16.0f / 9));
+                int[,] _mapPoint2D = new int[(int)_sizeY, _size];
                 for (int y = 0; y < _mapPoint2D.GetLength(0); y++)
                 {
                     for (int x = 0; x < _mapPoint2D.GetLength(1); x++)
@@ -654,7 +665,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "healthWall",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25)),
-                Text = _map.Wall.CurrentHp+""
+                Text = _map.Wall.CurrentHp + ""
             };
 
             var button1 = new GuiButtonControl
@@ -714,13 +725,13 @@ namespace MapEditorTrumpTower
             var posX = new GuiInputControl
             {
                 Name = "posX",
-                Text = positionRoad.X+""
+                Text = positionRoad.X + ""
             };
 
             var posY = new GuiInputControl
             {
                 Name = "posY",
-                Text = positionRoad.Y+""
+                Text = positionRoad.Y + ""
             };
 
             var window = new GuiWindowControl
@@ -825,9 +836,9 @@ namespace MapEditorTrumpTower
             var wavesList = new GuiListControl()
             {
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(1.0f, -20), new UniScalar(0f, 80)),
-                
+
             };
-            
+
             var addWave = new GuiButtonControl
             {
                 Name = "AddWave",
@@ -880,7 +891,7 @@ namespace MapEditorTrumpTower
             for (int i = 0; i < _spawn.Waves.Count; i++)
             {
                 Wave wave = _spawn.Waves[i];
-                wavesList.Items.Add("Vague " + (i+1) + " : Depart " + wave.TimerBeforeStarting/60 + " secondes et contient " + wave.Enemies.Count + " enemies" );
+                wavesList.Items.Add("Vague " + (i + 1) + " : Depart " + wave.TimerBeforeStarting / 60 + " secondes et contient " + wave.Enemies.Count + " enemies");
             }
             wavesList.SelectionMode = ListSelectionMode.Single;
             window.Children.Add(addWave);
@@ -926,7 +937,7 @@ namespace MapEditorTrumpTower
                     _map.DeleteSpawn(_spawn);
                     Map.WavesTotals -= _spawn.Waves.Count;
                     break;
-                }     
+                }
             }
 
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
@@ -952,7 +963,7 @@ namespace MapEditorTrumpTower
                 // On cible le spawn
                 if (_spawn.Position == new Vector2(_posX, _posY))
                 {
-                    _spawn.CreateWave(new Wave(_spawn, new List<Enemy>(), 5*60));
+                    _spawn.CreateWave(new Wave(_spawn, new List<Enemy>(), 5 * 60));
                     break;
                 }
             }
@@ -1050,7 +1061,7 @@ namespace MapEditorTrumpTower
             var nbWave = new GuiInputControl
             {
                 Name = "nbWave",
-                Text = nbWaveX+""
+                Text = nbWaveX + ""
             };
 
             var window = new GuiWindowControl
@@ -1071,7 +1082,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "timerWave",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25)),
-                Text = wave.TimerBeforeStarting/60+""
+                Text = wave.TimerBeforeStarting / 60 + ""
             };
 
             var labelEnemyDefault = new GuiLabelControl()
@@ -1085,7 +1096,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "enemyDefault",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 105), new UniScalar(100), new UniScalar(25)),
-                Text = _dicEnemies[EnemyType.defaultSoldier].Count +""
+                Text = _dicEnemies[EnemyType.defaultSoldier].Count + ""
             };
 
             var labelKamikaze = new GuiLabelControl()
@@ -1266,7 +1277,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(320), new UniScalar(200))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(250))),
                 Title = "Option Map",
                 EnableDragging = true
             };
@@ -1294,7 +1305,20 @@ namespace MapEditorTrumpTower
             {
                 Name = "dollarsMap",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 105), new UniScalar(100), new UniScalar(25)),
-                Text = _map.Dollars+""
+                Text = _map.Dollars + ""
+            };
+
+            var labelGauge = new GuiLabelControl()
+            {
+                Text = "Vitesse de la jauge d'entite ( Min " + Constant.MINLOSTGAUGE+ ", Max " + Constant.MAXLOSTGAUGE + ", peut etre un chiffre a virgule)",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 135), new UniScalar(100), new UniScalar(25))
+            };
+
+            var Gauge = new GuiInputControl
+            {
+                Name = "lostGauge",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 160), new UniScalar(100), new UniScalar(25)),
+                Text = (float)_map.Entity.LostGauge + ""
             };
 
             var button1 = new GuiButtonControl
@@ -1317,6 +1341,8 @@ namespace MapEditorTrumpTower
             window.Children.Add(nameMap);
             window.Children.Add(labelDollarsMap);
             window.Children.Add(dollarsMap);
+            window.Children.Add(labelGauge);
+            window.Children.Add(Gauge);
             window.Children.Add(button1);
             window.Children.Add(button2);
 
@@ -1332,6 +1358,7 @@ namespace MapEditorTrumpTower
         {
             string _nameMap = "";
             int _dollarsMap = 0;
+            float _lostGauge = 0;
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
                 if (control.GetType() == typeof(GuiInputControl))
@@ -1339,14 +1366,16 @@ namespace MapEditorTrumpTower
                     GuiInputControl inputSize = (GuiInputControl)control;
                     if (control.Name == "nameMap") _nameMap = inputSize.Text;
                     if (control.Name == "dollarsMap") Int32.TryParse(inputSize.Text, out _dollarsMap);
+                    if (control.Name == "lostGauge") float.TryParse(inputSize.Text, out _lostGauge);
                 }
             }
 
             if ((_nameMap.Length >= Constant.MinNameMap && _nameMap.Length <= Constant.MaxNameMap) &&
-                (_dollarsMap >= Constant.MinDollarsMap && _dollarsMap <= Constant.MaxDollarsMap))
+                (_dollarsMap >= Constant.MinDollarsMap && _dollarsMap <= Constant.MaxDollarsMap) &&
+                (_lostGauge >= Constant.MINLOSTGAUGE && _lostGauge <= Constant.MAXLOSTGAUGE))
             {
                 _map.SettingTheMap(_nameMap, _dollarsMap);
-
+                _map.Entity.LostGauge = _lostGauge;
                 _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
             }
         }
@@ -1409,14 +1438,14 @@ namespace MapEditorTrumpTower
             button2.Pressed += ManagerAirUnitCancel_Pressed;
 
             window.Children.Add(wavesListAir);
-            
+
             for (int i = 0; i < _map.AirUnits.Count; i++)
             {
-                AirUnitsCollection collectionUnit  = _map.AirUnits[i];
-                wavesListAir.Items.Add("Vague aerienne " + (i + 1) + " : Depart " + collectionUnit.TimerBeforeStarting/60 + " secondes, " + collectionUnit.Array.Count + " avions et de type " + collectionUnit.Array[0].Name.ToLower());
+                AirUnitsCollection collectionUnit = _map.AirUnits[i];
+                wavesListAir.Items.Add("Vague aerienne " + (i + 1) + " : Depart " + collectionUnit.TimerBeforeStarting / 60 + " secondes, " + collectionUnit.Array.Count + " avions et de type " + collectionUnit.Array[0].Name.ToLower());
             }
             wavesListAir.SelectionMode = ListSelectionMode.Single;
-           
+
             if (_map.Wall == null)
             {
                 window.Children.Add(labelInfoWarning);
@@ -1447,7 +1476,7 @@ namespace MapEditorTrumpTower
         }
 
         private void ManagerAirUnitModify_Pressed(object sender, System.EventArgs e)
-        { 
+        {
             AirUnitsCollection _unitsCollection = null;
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
@@ -1829,11 +1858,12 @@ namespace MapEditorTrumpTower
             _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 520), "A",
                 new List<Keys>(new Keys[] { Keys.A })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 75, 650), "K",
-                new List<Keys>(new Keys[] { Keys.K })));
-
-            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 160, 650), "P",
-               new List<Keys>(new Keys[] { Keys.P })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 40, 650), "J",
+                new List<Keys>(new Keys[] { Keys.J })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 110, 650), "K",
+               new List<Keys>(new Keys[] { Keys.K })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgTree, _debug, MapTexture.None, new Vector2(posMenuRight + 180, 650), "L",
+               new List<Keys>(new Keys[] { Keys.L })));
 
             _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 780), "Entrer",
                new List<Keys>(new Keys[] { Keys.Enter })));
