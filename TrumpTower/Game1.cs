@@ -618,7 +618,7 @@ namespace TrumpTower
 
             #region Entity Button
             Vector2 _positionEntityButton = new Vector2(VirtualWidth - 15, _positionSniperAbilityButton.Y);
-            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "entityAbility", new Vector2(_positionEntityButton.X, _positionEntityButton.Y), _imgButtonDollars));
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "entityAbility", new Vector2(_positionEntityButton.X - _imgButtonDollars.Width, _positionEntityButton.Y), _imgButtonDollars));
             #endregion
 
             #endregion
@@ -1186,6 +1186,7 @@ namespace TrumpTower
                 #endregion
 
                 #endregion
+
                 _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
                 _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);

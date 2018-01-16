@@ -28,7 +28,7 @@ namespace LibraryTrumpTower
         [DataMember]
         public double MaxGauge { get; private set; }
         [DataMember]
-        private double LostGauge { get; set; }
+        public double LostGauge { get; set; }
         [DataMember]
         public int PriceImproveGauge { get; set; }
         [DataMember]

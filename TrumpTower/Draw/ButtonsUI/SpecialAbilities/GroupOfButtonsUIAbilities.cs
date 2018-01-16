@@ -88,11 +88,10 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 button = ButtonsUIArray["entityAbility"];
                 if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                     newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
-                    newStateKeyboard.IsKeyDown(Keys.P) &&
-                    Ctx.Map.StickyRice.IsReloaded)
+                    newStateKeyboard.IsKeyDown(Keys.P))
                 {
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
-                        newStateKeyboard.IsKeyDown(Keys.P) && lastStateKeyboard.IsKeyDown(Keys.P))
+                        newStateKeyboard.IsKeyDown(Keys.P) && !lastStateKeyboard.IsKeyDown(Keys.P))
                     {
                         Ctx.Map.UseEntity();
                     }
