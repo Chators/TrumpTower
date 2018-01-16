@@ -987,6 +987,7 @@ namespace TrumpTower
                         realPause = false;
                         GameIsPaused = false;
                         stratPause = 0;
+                        Map.WavesCounter = 0;
                         break;
                     default:
                         break;
