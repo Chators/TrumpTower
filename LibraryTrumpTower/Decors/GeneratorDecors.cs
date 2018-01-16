@@ -15,7 +15,16 @@ namespace LibraryTrumpTower.Decors
             List<Decor> decors = new List<Decor>();
             int mapHeight = map.Length;
             int mapWidth = map[0].Length;
-            int numberOfDecors = mapHeight + mapWidth;
+
+            int numberOfGrass = 0;
+            for (int i = 0; i < mapHeight; i++)
+            {
+                for (int j = 0; j < mapWidth; j++)
+                {
+                    if (map[i][j] == (int)MapTexture.grass) numberOfGrass++;
+                }
+            }
+            int numberOfDecors = numberOfGrass;
 
             Random rdn = new Random();
             int x, x1;
@@ -28,13 +37,12 @@ namespace LibraryTrumpTower.Decors
                 x = rdn.Next(0, mapWidth);
                 y = rdn.Next(0, mapHeight);
 
-                if (map[y][x] != (int)MapTexture.dirt &&
-                    map[y][x] != (int)MapTexture.emptyTower)
+                if (map[y][x] == (int)MapTexture.grass)
                 {
-                    x1 = rdn.Next(0, Constant.imgSizeMap);
-                    y1 = rdn.Next(0, Constant.imgSizeMap);
+                    x1 = rdn.Next(0, Constant.imgSizeMap - 52);
+                    y1 = rdn.Next(0, Constant.imgSizeMap - 52);
                     textureOfDecor = rdn.Next(1, 8);
-                    decors.Add(new Decor(textureOfDecor, new Vector2((x*Constant.imgSizeMap)-Constant.imgSizeMap+ x1, (y * Constant.imgSizeMap) - Constant.imgSizeMap + y1)));
+                    decors.Add(new Decor(textureOfDecor, new Vector2((x*Constant.imgSizeMap) + Constant.imgSizeMap + x1, (y * Constant.imgSizeMap) + Constant.imgSizeMap + y1)));
                     count++;
                 }
             }
