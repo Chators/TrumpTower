@@ -1444,9 +1444,11 @@ namespace TrumpTower
                 {
                     if (_hoveredTower != _lastHoveredTower)
                     {
+                        if(_hoveredTower.Type != TowerType.bank)
                         circleTower = createCircleText((int)_hoveredTower.Scope);
                     }
                     _lastHoveredTower = _hoveredTower;
+                    if(_hoveredTower.Type != TowerType.bank)
                     spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2)+Constant.imgSizeMap/2), (_hoveredTower.Position.Y - (circleTower.Height / 2)+Constant.imgSizeMap/2)), null, Color.Gray * 0.2f);
 
                     spriteBatch.Draw(rect, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+5,0),Color.White*0.7f);
@@ -1679,7 +1681,9 @@ namespace TrumpTower
 
         Texture2D createCircleText(int radius)
         {
+            
             radius /= 2;
+
             Texture2D texture = new Texture2D(GraphicsDevice, radius, radius);
             Color[] colorData = new Color[radius * radius];
 
