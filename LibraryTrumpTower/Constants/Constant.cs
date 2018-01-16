@@ -71,7 +71,7 @@ namespace TrumpTower.LibraryTrumpTower.Constants
 
         #region Entity
         public static double LOSTGAUGE = 1;
-        public static double MAXGAUGE = 50000;
+        public static double MAXGAUGE = 5000;
         public static int PRICEIMPROVEGAUGE = 50;
         public static double ADDGAUGEWHENIMPROVE = 10;
         #endregion

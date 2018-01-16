@@ -192,6 +192,12 @@ namespace TrumpTower
         Texture2D _imgCursorDeliveryRice;
         #endregion
 
+        #region Entity
+        Texture2D _imgHappyFace;
+        Texture2D _imgAngryFace;
+        Texture2D _imgVeryAngryFace;
+        Texture2D _imgButtonDollars;
+        #endregion
         Texture2D grey;
         
         public bool realPause { get; private set; }
@@ -591,7 +597,7 @@ namespace TrumpTower
             Vector2 _positionMakiAbilityButton = new Vector2(_positionSniperAbilityButton.X + 80, _positionSniperAbilityButton.Y);
             _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "stickyRiceAbility", new Vector2(_positionMakiAbilityButton.X, _positionMakiAbilityButton.Y), _buttonMaki));
             _circleStickyRice = createCircleText((int)_map.StickyRice.Radius);
-            #endregion 
+            #endregion
 
             #endregion
 
@@ -602,6 +608,19 @@ namespace TrumpTower
             _imgCursorBomb = Content.Load<Texture2D>("cursorBomb");
             _imgCursorDefault = Content.Load<Texture2D>("cursor");
             _imgCursorDeliveryRice = Content.Load<Texture2D>("deliveryRice");
+            #endregion
+
+            #region Entity
+            _imgHappyFace = Content.Load<Texture2D>("Entity/happy");
+            _imgAngryFace = Content.Load<Texture2D>("Entity/angry");
+            _imgVeryAngryFace = Content.Load<Texture2D>("Entity/mad");
+            _imgButtonDollars = Content.Load<Texture2D>("Entity/money");
+
+            #region Entity Button
+            Vector2 _positionEntityButton = new Vector2(VirtualWidth - 15, _positionSniperAbilityButton.Y);
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "entityAbility", new Vector2(_positionEntityButton.X, _positionEntityButton.Y), _imgButtonDollars));
+            #endregion
+
             #endregion
 
             #region Sound
@@ -1197,7 +1216,7 @@ namespace TrumpTower
             }
 
             #region it enlever vie unite
-            if (newStateKeyboard.IsKeyDown(Keys.P) && lastStateKeyboard.IsKeyUp(Keys.P))
+            if (newStateKeyboard.IsKeyDown(Keys.N) && lastStateKeyboard.IsKeyUp(Keys.N))
             {
                 List<Enemy> enemies = _map.GetAllEnemies();
                 foreach (Enemy enemy in enemies)
@@ -1256,7 +1275,7 @@ namespace TrumpTower
             Wall _wall = _map.Wall;
             spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
 
-            HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f);
+            HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f, 1.8f);
             wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);
 
             #endregion
@@ -1282,7 +1301,7 @@ namespace TrumpTower
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
                 Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
                 spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
-                HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f);
+                HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f, 1f);
                 enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy);
             }
 
@@ -1298,7 +1317,7 @@ namespace TrumpTower
                         Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
                         Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
                         spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
-                        HealthBar enemyHealthBar = new HealthBar(unit.CurrentHp, unit.MaxHp, 1f);
+                        HealthBar enemyHealthBar = new HealthBar(unit.CurrentHp, unit.MaxHp, 1f, 1f);
                         enemyHealthBar.Draw(spriteBatch, unit.Position, _imgPlane1);
                 }
                 }
@@ -1502,8 +1521,6 @@ namespace TrumpTower
 
             #endregion
 
-            
-
             #region Buttons
 
             #region Timer Buttons
@@ -1533,10 +1550,14 @@ namespace TrumpTower
             #endregion
 
             #region Entity
-            HealthBar entityBar = new HealthBar(_map.Entity.CurrentGauge, _map.Entity.MaxGauge, 3f);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 100), sourceRectanglee, Color.Black * 0.6f);
-            spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 100), Color.White);
-            entityBar.Draw(spriteBatch, new Vector2(50, 107), _imgWall);
+            HealthBar entityBar = new HealthBar(_map.Entity.CurrentGauge, _map.Entity.MaxGauge, 7.8f, 3f);
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
+            Texture2D entityFace = null;
+            if (_map.Entity.EntityFace == EntityFace.VeryAngry) entityFace = _imgVeryAngryFace;
+            else if (_map.Entity.EntityFace == EntityFace.Angry) entityFace = _imgAngryFace;
+            else if (_map.Entity.EntityFace == EntityFace.Happy) entityFace = _imgHappyFace;
+            spriteBatch.Draw(entityFace, new Vector2(10, 90), Color.White);
+            entityBar.Draw(spriteBatch, new Vector2(123, 117), _imgWall);
             #endregion
 
             #region Raid Units Air is Comming
@@ -1570,16 +1591,16 @@ namespace TrumpTower
             {
                 foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
             }
-            /*
+            
             #region Pause
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 93), sourceRectanglee, Color.Black * 0.6f);
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 133), sourceRectanglee, Color.Black * 0.6f);
             if (stratPause < 5)
             {
-                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 100), Color.White);
+                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 140), Color.White);
             }
             else if (stratPause >= 5)
             {
-                if(!warning) spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 100), Color.Red);
+                if(!warning) spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 140), Color.Red);
                 {
                     if (nombre2 < 30)
                     {
@@ -1587,15 +1608,15 @@ namespace TrumpTower
                         {
                             for (int i = 0; i < nombre; i++)
                             {
-                                spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10 + (nombre / 7), 100), Color.Red);
+                                spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10 + (nombre / 7), 140), Color.Red);
                             }
 
-                            if (warning == true) spriteBatch.Draw(_imgWarning2, new Vector2(230 + (nombre / 7), 88), Color.White);
+                            if (warning == true) spriteBatch.Draw(_imgWarning2, new Vector2(230 + (nombre / 7), 128), Color.White);
                         }
                     }
                     else
                     {
-                        spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 100), Color.Red);
+                        spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 140), Color.Red);
                     }
                 }
             }
@@ -1607,7 +1628,7 @@ namespace TrumpTower
                     spriteBatch.Draw(button_texture[i], button_rectangle[i], button_color[i]);
             }
             #endregion
-            */
+            
             if (isLost)
             {    
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);

@@ -10,6 +10,14 @@ using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace LibraryTrumpTower
 {
+    public enum EntityFace
+    {
+        VeryAngry,
+        Angry,
+        Happy,
+        None
+    }
+
     [DataContract(IsReference = true)]
     public class Entity
     {
@@ -22,9 +30,11 @@ namespace LibraryTrumpTower
         [DataMember]
         private double LostGauge { get; set; }
         [DataMember]
-        private int PriceImproveGauge { get; set; }
+        public int PriceImproveGauge { get; set; }
         [DataMember]
         private double AddGaugeWhenImprove { get; set; }
+        [DataMember]
+        public EntityFace EntityFace { get; set; }
 
         public Entity(Map map)
         {
@@ -34,23 +44,27 @@ namespace LibraryTrumpTower
             LostGauge = Constant.LOSTGAUGE;
             PriceImproveGauge = Constant.PRICEIMPROVEGAUGE;
             AddGaugeWhenImprove = Constant.ADDGAUGEWHENIMPROVE;
+            EntityFace = EntityFace.Happy;
         }
 
         public void Update()
         {
-            CurrentGauge -= LostGauge; // Update Gauge
+            CurrentGauge = CurrentGauge - LostGauge < 0 ? 0 : CurrentGauge - LostGauge; // Update Gauge
 
             if (CurrentGauge < (MaxGauge * 25) / 100)
             {
                 // malus
+                EntityFace = EntityFace.VeryAngry;
             }
             else if (CurrentGauge < (MaxGauge * 50) / 100)
             {
                 // malus
+                EntityFace = EntityFace.Angry;
             }
             else 
             {
                 // Bonus
+                EntityFace = EntityFace.Happy;
             }
         }
 

@@ -242,6 +242,11 @@ namespace TrumpTower.LibraryTrumpTower
             StickyRice.On(position);
         }
 
+        public void UseEntity()
+        {
+            Entity.PayEntity();
+        }
+
         public void SettingTheMap (string name, int dollars)
         {
             Name = name;

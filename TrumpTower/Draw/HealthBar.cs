@@ -14,13 +14,15 @@ namespace TrumpTower.Drawing
         static Texture2D _imgLife;
         double _currentHp;
         double _maxHp;
-        double _sizeBar;
+        double _sizeBarX;
+        double _sizeBarY;
 
-        public HealthBar(double currentHp, double maxHp, double sizeBar)
+        public HealthBar(double currentHp, double maxHp, double sizeBarX, double sizeBarY)
         {
             _currentHp = currentHp;
             _maxHp = maxHp;
-            _sizeBar = sizeBar;
+            _sizeBarX = sizeBarX;
+            _sizeBarY = sizeBarY;
         }
 
         static public void LoadContent(ContentManager Content)
@@ -38,17 +40,17 @@ namespace TrumpTower.Drawing
 
         private Rectangle LifeRectangle(Vector2 target, Texture2D imgTarget)
         {
-            double positionX = target.X + (imgTarget.Width / 2) - (_imgLife.Width / 2) * _sizeBar;
-            double positionY = target.Y - _imgLife.Height * _sizeBar;
-            double lessPercent = _imgLife.Width * _sizeBar * (1 - (((_maxHp - _currentHp) * 100 / _maxHp) / 100));
-            return new Rectangle((int)positionX, (int)positionY, (int)lessPercent, Convert.ToInt32(_imgLife.Height * _sizeBar));
+            double positionX = target.X + (imgTarget.Width / 2) - (_imgLife.Width / 2) * _sizeBarX;
+            double positionY = target.Y - _imgLife.Height * _sizeBarY;
+            double lessPercent = _imgLife.Width * _sizeBarX * (1 - (((_maxHp - _currentHp) * 100 / _maxHp) / 100));
+            return new Rectangle((int)positionX, (int)positionY, (int)lessPercent, Convert.ToInt32(_imgLife.Height * _sizeBarY));
         }
 
         private Rectangle LessLifeRectangle(Rectangle lifeRectangle)
         {
             int positionX = lifeRectangle.X + lifeRectangle.Width;
-            double addPercent = _imgLife.Width * _sizeBar * ((_maxHp - _currentHp) * 100 / _maxHp) / 100;
-            return new Rectangle(positionX, lifeRectangle.Y, (int)addPercent, Convert.ToInt32(_imgLife.Height * _sizeBar));
+            double addPercent = _imgLife.Width * _sizeBarX * ((_maxHp - _currentHp) * 100 / _maxHp) / 100;
+            return new Rectangle(positionX, lifeRectangle.Y, (int)addPercent, Convert.ToInt32(_imgLife.Height * _sizeBarY));
         }
     }
 }
