@@ -62,7 +62,6 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static int ImgSizePlane = 64;
         public static int ImgSizeEnemy = 64;
         public static float PI = 3.14159265359f;
-        public static int DisabledTower = 5;
 
         #region Info Editor Map
         public static string ROAD_INFO = "Permet aux ennemis de se deplacer";
