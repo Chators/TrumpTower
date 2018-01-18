@@ -62,8 +62,6 @@ namespace Menu.BDD
             string pathMap = BinarySerializer.pathCustomMap + "/" + nameMap + ".xml";
             requete.AddFile("map", new FileStream(pathMap, FileMode.Open), nameMap + ".xml");
             client.Execute<string>(requete);
-
-            //throw new ArgumentException();
         }
 
         /* Permet de download une map */
@@ -80,7 +78,7 @@ namespace Menu.BDD
 
             Directory.CreateDirectory(BinarySerializer.pathCustomMap);
             Directory.CreateDirectory(BinarySerializer.pathCampagneMap);
-            FileStream flux = new FileStream(BinarySerializer.pathCustomMap + "/" + name, FileMode.Create);
+            FileStream flux = new FileStream(BinarySerializer.pathCustomMap + "/" + name + ".xml", FileMode.Create);
             StreamWriter writer = new StreamWriter(flux);
             writer.WriteLine(mapXML);
             writer.Flush();

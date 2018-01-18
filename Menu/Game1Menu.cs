@@ -797,8 +797,8 @@ namespace Menu
 
             if (_nbName != null)
             {
-                List<string> AllName = Bdd.GetAllNameOfMap();
-                nameMap = AllName[(int)_nbName];
+                string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCustomMap);
+                nameMap = filesInDirectory[(int)_nbName].Split('\\')[1].Split('.')[0];
                 _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
                 UploadThisMap_Pressed(nameMap);
             }
@@ -806,6 +806,7 @@ namespace Menu
 
         private void UploadThisMap_Pressed(string nameMap)
         {
+            Console.WriteLine(nameMap);
             var Window = new GuiWindowControl
             {
                 Name = "window",
@@ -817,7 +818,6 @@ namespace Menu
             var nameOfMap = new GuiInputControl
             {
                 Name = "nameMap",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 40), new UniScalar(100), new UniScalar(25)),
                 Text = nameMap
             };
 
@@ -858,6 +858,7 @@ namespace Menu
             ListDifficultMap.Items.Add("Hard");
             ListDifficultMap.SelectionMode = ListSelectionMode.Single;
 
+            Window.Children.Add(nameOfMap);
             Window.Children.Add(UploadMap);
             Window.Children.Add(ReturnDifficultButton);
 
@@ -867,7 +868,7 @@ namespace Menu
         private void SendAndUploadMap_Pressed(object sender, System.EventArgs e)
         {
             string nameMap = null;
-            int _difficultMap = 0;
+            int? _difficultMap = null;
 
             foreach (var control in ((GuiButtonControl)sender).Parent.Children)
             {
@@ -883,12 +884,15 @@ namespace Menu
                     if (control.Name == "nameMap") nameMap = inputSize.Text;
                 }
             }
-            string mapDifficult;
+            string mapDifficult = null;
             if (_difficultMap == 0) mapDifficult = "easy";
             else if (_difficultMap == 1) mapDifficult = "medium";
-            else mapDifficult = "hard";
-            Bdd.UploadMap(_player._name, nameMap, "", "", mapDifficult);
-            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            else if (_difficultMap == 2) mapDifficult = "hard";
+            if (mapDifficult != null)
+            {
+                Bdd.UploadMap(_player._name, nameMap, "", "", mapDifficult);
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            }
         }
 
         private void CancelDifficultUploadMap_Pressed(object sender, System.EventArgs e)
