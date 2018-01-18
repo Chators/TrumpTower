@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LibraryTrumpTower.Constants.BalanceGame;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,7 @@ namespace LibraryTrumpTower.SpecialAbilities
         [DataMember]
         Map _ctx;
         [DataMember]
-        public int Cooldown { get; private set; }
-        [DataMember]
-        public int CurrentTimer { get; private set; }
-        [DataMember]
-        public double Radius { get; private set; }
-        [DataMember]
-        public double SpeedReduceInPercent { get; private set; }
+        public int CurrentTimer { get; private set; }        
         [DataMember]
         public List<Enemy> AffectedEnemies { get; set; }
         [DataMember]
@@ -34,19 +29,32 @@ namespace LibraryTrumpTower.SpecialAbilities
         public Vector2 PositionPlaneOfRice;
         [DataMember]
         public bool PlaneIsClose { get; set; }
-        [DataMember]
-        public float SpeedPlane { get; set; }
-
+        public int Cooldown
+        {
+            get { return BalanceStickyRice.STICKY_RICE_COOLDOWN; }
+            private set { BalanceStickyRice.STICKY_RICE_COOLDOWN = value; }
+        }
+        public double Radius
+        {
+            get { return BalanceStickyRice.STICKY_RICE_RADIUS; }
+            private set { BalanceStickyRice.STICKY_RICE_RADIUS = value; }
+        }
+        public double SpeedReduceInPercent
+        {
+            get { return BalanceStickyRice.STICKY_RICE_SPEED_REDUCE; }
+            private set { BalanceStickyRice.STICKY_RICE_SPEED_REDUCE = value; }
+        }
+        public float SpeedPlane
+        {
+            get { return BalanceStickyRice.STICK_RICE_SPEED_PLANE; }
+            private set { BalanceStickyRice.STICK_RICE_SPEED_PLANE = value; }
+        }
         #endregion
 
         public StickyRice(Map ctx)
         {
             _ctx = ctx;
-            Cooldown = Constant.STICKY_RICE_COOLDOWN;
             CurrentTimer = 0;
-            Radius = Constant.STICKY_RICE_RADIUS;
-            SpeedReduceInPercent = Constant.STICKY_RICE_SPEED_REDUCE;
-            SpeedPlane = 12f;
             Position = new Vector2(-1000, -1000);
             PositionPlaneOfRice = new Vector2(-1000, -1000);
             PlaneIsClose = false;

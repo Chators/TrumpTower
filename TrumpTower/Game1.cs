@@ -1,6 +1,7 @@
 ﻿using LibraryTrumpTower;
 using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using LibraryTrumpTower.Decors;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -1174,7 +1175,7 @@ namespace TrumpTower
                                     if (tower2.Reload <= 0)
                                     {
                                         _map.Dollars += tower2.Earnings;
-                                        tower2.Reload = Constant.BankReloading;
+                                        tower2.Reload = BalanceTowerBank.TOWER_BANK_RELOADING;
                                         ManagerSound.PlaySell();
                                     }
                                 }

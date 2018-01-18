@@ -48,6 +48,13 @@
     <Compile Include="AirUnits\AirUnit.cs" />
     <Compile Include="AirUnits\AirUnitsCollection.cs" />
     <Compile Include="AirUnits\PlaneType.cs" />
+    <Compile Include="Constants\BalanceGame\Abilities\BalanceExplosion.cs" />
+    <Compile Include="Constants\BalanceGame\Abilities\BalanceSniper.cs" />
+    <Compile Include="Constants\BalanceGame\Abilities\BalanceStickyRice.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerArea.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerBank.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSimple.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSlow.cs" />
     <Compile Include="Constants\BinarySerializer.cs" />
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="Constants\EnemyType.cs" />
@@ -72,6 +79,8 @@
     <Compile Include="Tower.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Constants\BalanceGame\Enemies\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

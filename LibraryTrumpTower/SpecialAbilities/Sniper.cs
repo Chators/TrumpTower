@@ -1,4 +1,5 @@
 ﻿using LibraryTrumpTower.AirUnits;
+using LibraryTrumpTower.Constants.BalanceGame;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,18 +19,23 @@ namespace LibraryTrumpTower.SpecialAbilities
         [DataMember]
         public Map Ctx { get; private set; }
         [DataMember]
-        public int Cost { get; private set; }
-        [DataMember]
-        public double Damage { get; private set; }
-        [DataMember]
         public int Reload { get; private set; }
+        public int Cost
+        {
+            get { return BalanceSniper.SNIPER_COST; }
+            private set { BalanceSniper.SNIPER_COST = value; }
+        }
+        public double Damage
+        {
+            get { return BalanceSniper.SNIPER_COST; }
+            private set { BalanceSniper.SNIPER_COST = (int)value; }
+        }
+
         #endregion
 
         public Sniper (Map map)
         {
             Ctx = map;
-            Cost = Constant.SNIPER_COST;
-            Damage = Constant.SNIPER_DAMAGE;
             Reload = 0;
         }
 

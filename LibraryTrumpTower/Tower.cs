@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
@@ -24,14 +25,6 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         int _lvl;
         [DataMember]
-        public double Earnings { get; set; }
-        [DataMember]
-        public double Scope { get; private set; }
-        [DataMember]
-        public int Damage { get;  set; }
-        [DataMember]
-        public double _attackSpeed { get; private set; }
-        [DataMember]
         public double _reload;
         [DataMember]
         public Vector2 Position { get; private set; }
@@ -39,48 +32,89 @@ namespace TrumpTower.LibraryTrumpTower
         public bool _isDisabled { get; set; }
         [DataMember]
         public bool _isCasted { get; set; }
-        
-        
+
+        public double Scope
+        {
+            get
+            {
+                if (_type == TowerType.simple) return BalanceTowerSimple.TOWER_SIMPLE_SCOPE;
+                else if (_type == TowerType.slow) return BalanceTowerSlow.TOWER_SLOW_SCOPE;
+                else if (_type == TowerType.area) return BalanceTowerArea.TOWER_AREA_SCOPE;
+                else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_SCOPE;
+                else return 0;
+            }
+            private set
+            {
+                if (_type == TowerType.simple) BalanceTowerSimple.TOWER_SIMPLE_SCOPE = value;
+                else if (_type == TowerType.slow) BalanceTowerSlow.TOWER_SLOW_SCOPE = value;
+                else if (_type == TowerType.area) BalanceTowerArea.TOWER_AREA_SCOPE = value;
+                else if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_SCOPE = value;
+            }
+        }
+        public int Damage
+        {
+            get
+            {
+                if (_type == TowerType.simple) return BalanceTowerSimple.TOWER_SIMPLE_DAMAGE;
+                else if (_type == TowerType.slow) return BalanceTowerSlow.TOWER_SLOW_DAMAGE;
+                else if (_type == TowerType.area) return BalanceTowerArea.TOWER_AREA_DAMAGE;
+                else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_DAMAGE;
+                else return 0;
+            }
+            private set
+            {
+                if (_type == TowerType.simple) BalanceTowerSimple.TOWER_SIMPLE_DAMAGE = value;
+                else if (_type == TowerType.slow) BalanceTowerSlow.TOWER_SLOW_DAMAGE = value;
+                else if (_type == TowerType.area) BalanceTowerArea.TOWER_AREA_DAMAGE = value;
+                else if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_DAMAGE = value;
+            }
+        }
+        public double _attackSpeed
+        {
+            get
+            {
+                if (_type == TowerType.simple) return BalanceTowerSimple.TOWER_SIMPLE_ATTACK_SPEED;
+                else if (_type == TowerType.slow) return BalanceTowerSlow.TOWER_SLOW_ATTACK_SPEED;
+                else if (_type == TowerType.area) return BalanceTowerArea.TOWER_AREA_ATTACK_SPEED;
+                else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_ATTACK_SPEED;
+                else return 0;
+            }
+            private set
+            {
+                if (_type == TowerType.simple) BalanceTowerSimple.TOWER_SIMPLE_ATTACK_SPEED = value;
+                else if (_type == TowerType.slow) BalanceTowerSlow.TOWER_SLOW_ATTACK_SPEED = value;
+                else if (_type == TowerType.area) BalanceTowerArea.TOWER_AREA_ATTACK_SPEED = value;
+                else if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_ATTACK_SPEED = value;
+            }
+        }
+        public double Earnings
+        {
+            get
+            {
+                if (_type == TowerType.simple) return 0;
+                else if (_type == TowerType.slow) return 0;
+                else if (_type == TowerType.area) return 0;
+                else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_EARNINGS_MONEY;
+                else return 0;
+            }
+            private set
+            {
+                if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_EARNINGS_MONEY = value;
+            }
+        }
 
         public Tower(Map map, TowerType type, int lvl, Vector2 position)
         {
             _map = map;
             _type = type;
             _lvl = lvl;
-            _reload = 0;
             Position = position;
             _rotate = 0;
             Earnings = 0;
             ManagerSound.PlayBuild();
             _isDisabled = false;
-
-            if(type == TowerType.simple)
-            {
-                Damage = 6;
-                Scope = 800;
-                _attackSpeed = 0.8;  
-            }
-            else if(type == TowerType.slow)
-            {
-                Damage = 19;
-                Scope = 800;
-                _attackSpeed = 1.8;  
-            }
-            else if(type == TowerType.area)
-            {
-                Damage = 13;
-                Scope = 800;
-                _attackSpeed = 1.2;
-                
-            }
-            else if(type == TowerType.bank)
-            {
-                Damage = 0;
-                _reload = Constant.BankReloading;
-                Scope = 0;
-                _attackSpeed = 0;
-                Earnings = 200;
-            }
+            if(type == TowerType.bank) _reload = BalanceTowerBank.TOWER_BANK_RELOADING;
+            else _reload = 0;
         }
 
         private void UpdateShoot(Enemy myEnemy)
