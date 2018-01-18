@@ -119,7 +119,7 @@ namespace Menu
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             {
                 int attempts = 0;
                 while (true)

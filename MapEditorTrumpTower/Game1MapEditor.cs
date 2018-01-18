@@ -1310,7 +1310,7 @@ namespace MapEditorTrumpTower
 
             var labelGauge = new GuiLabelControl()
             {
-                Text = "Entity Gauge Speed ( Min " + Constant.MINLOSTGAUGE+ ", Max " + Constant.MAXLOSTGAUGE + ", peut etre un chiffre a virgule)",
+                Text = "Entity Gauge Speed ( Min " + Constant.MINLOSTGAUGE+ ", Max " + Constant.MAXLOSTGAUGE + ", decimal number)",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 135), new UniScalar(100), new UniScalar(25))
             };
 
