@@ -81,8 +81,9 @@ namespace Menu
 
         private Texture2D _imgCursor;
         private MouseState mouse_state;
-        private Texture2D _imgVersus;
+        public Texture2D _imgVersus;
         private Texture2D _imgTrumpTower;
+        public Texture2D _imgArrowRight;
 
         public SimpleAnimationDefinition[] AnimSprites { get; private set; }
         #endregion
@@ -94,7 +95,7 @@ namespace Menu
 
             state = MenuState.MAIN;
 
-            Player _player = new Player("Thibaud", "mdr", 2);
+            _player = new Player("Thibaud", "mdr", 8);
             _player.Serialize();
 
             // First, we create an input manager.
@@ -182,7 +183,7 @@ namespace Menu
             nameMaps.Add("Map-5");
             buttonHeight = 100;
             buttonWidth = 300;
-            _world1Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World1", nameMaps);
+            _world1Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World1", nameMaps, 0);
             #endregion
 
             #region BUTTON WORLD 2
@@ -202,7 +203,7 @@ namespace Menu
             nameMaps.Add("Map-5");
             buttonHeight = 100;
             buttonWidth = 300;
-            _world2Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World2", nameMaps);
+            _world2Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World2", nameMaps, 1);
             #endregion
 
             #region BUTTON WORLD 3
@@ -222,7 +223,7 @@ namespace Menu
             nameMaps.Add("Map-5");
             buttonHeight = 100;
             buttonWidth = 300;
-            _world3Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World3", nameMaps);
+            _world3Button = new WorldButton(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth, "World3", nameMaps, 2);
             #endregion
             #endregion
 
@@ -287,6 +288,7 @@ namespace Menu
             _imgTrumpTower = Content.Load<Texture2D>("Trump-Tower");
             _explosion = Content.Load<SoundEffect>("explosion");
 
+            _imgArrowRight = Content.Load<Texture2D>("arrow_right");
             // ANIMATION EXPLOSION ABILITY
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
 

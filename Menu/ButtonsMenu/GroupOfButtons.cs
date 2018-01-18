@@ -21,15 +21,15 @@ namespace Menu.ButtonsMenu
     {
         internal Game1Menu _ctx;
 
-        private int NumberOfButtons { get; set; } // The number of buttons
+        internal int NumberOfButtons { get; set; } // The number of buttons
         internal Dictionary<int, string> IndexOfButtons { get; set; } // The position of the different buttons in order with the exact path IN CONTENT
         private int ButtonHeight { get; set; } // Height of ONE button
         private int ButtonWidth { get; set; } // Width of ONE button in the middle of the screen
 
         private Color[] _buttonColor;
-        private Rectangle[] _buttonRectangle;
+        public Rectangle[] _buttonRectangle;
         private BState[] _buttonState;
-        private Texture2D[] _buttonTexture;
+        public Texture2D[] _buttonTexture;
         private double[] _buttonTimer;
 
         public GroupOfButtons(Game1Menu ctx, int numberOfButtons, Dictionary<int, string> indexOfButtons, int buttonHeight, int buttonWidth)
@@ -77,7 +77,7 @@ namespace Menu.ButtonsMenu
             update_buttons(frame_time, mx, my, prev_mpressed, mpressed);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < NumberOfButtons; i++)
                 spriteBatch.Draw(_buttonTexture[i], _buttonRectangle[i], _buttonColor[i]);
