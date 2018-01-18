@@ -52,6 +52,10 @@
     <Compile Include="Constants\BalanceGame\Abilities\BalanceSniper.cs" />
     <Compile Include="Constants\BalanceGame\Abilities\BalanceStickyRice.cs" />
     <Compile Include="Constants\BalanceGame\BalanceMissile.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDefaultSoldier.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDoctor.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyKamikaze.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemySaboteur.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerArea.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerBank.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSimple.cs" />
@@ -80,8 +84,6 @@
     <Compile Include="Tower.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Constants\BalanceGame\Enemies\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

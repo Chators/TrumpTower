@@ -29,7 +29,16 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public readonly EnemyType _type;
         [DataMember]
-        public Move CurrentDirection { get; private set; }
+        public Move CurrentDirection { get; private set; }       
+        [DataMember]
+        public int TimerBeforeStarting { get; set; }
+        [DataMember]
+        public bool _hasCast;
+        [DataMember]
+        public bool _isCasting;
+        [DataMember]
+        public Tower _towerBeingCast;
+
         [DataMember]
         public double CurrentHp { get; private set; }
         [DataMember]
@@ -37,27 +46,19 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         readonly double _damage;
         [DataMember]
-        readonly double _heal; // for the doc
-        [DataMember]
         public double Speed { get; set; }
         [DataMember]
         public double DefaultSpeed { get; private set; }
         [DataMember]
         public int Bounty { get; private set; }
         [DataMember]
-        public int TimerBeforeStarting { get; set; }
-        [DataMember]
         public double ActionRadius { get; private set; } // doc & mech units
+        [DataMember]
+        readonly double _heal; // for the doc
         [DataMember]
         public double _reload; // doc & mech units
         [DataMember]
         public double _healCooldown; // doc only
-        [DataMember]
-        public bool _hasCast;
-        [DataMember]
-        public bool _isCasting;
-        [DataMember]
-        public Tower _towerBeingCast;
 
         public Enemy(Map map, Wave wave, string name, EnemyType type)
         {

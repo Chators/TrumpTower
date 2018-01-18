@@ -43,13 +43,13 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_SCOPE;
                 else return 0;
             }
-            private set
+            /*private set
             {
                 if (_type == TowerType.simple) BalanceTowerSimple.TOWER_SIMPLE_SCOPE = value;
                 else if (_type == TowerType.slow) BalanceTowerSlow.TOWER_SLOW_SCOPE = value;
                 else if (_type == TowerType.area) BalanceTowerArea.TOWER_AREA_SCOPE = value;
                 else if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_SCOPE = value;
-            }
+            }*/
         }
         public int Damage
         {
@@ -61,13 +61,13 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_DAMAGE;
                 else return 0;
             }
-            private set
+            /*private set
             {
                 if (_type == TowerType.simple) BalanceTowerSimple.TOWER_SIMPLE_DAMAGE = value;
                 else if (_type == TowerType.slow) BalanceTowerSlow.TOWER_SLOW_DAMAGE = value;
                 else if (_type == TowerType.area) BalanceTowerArea.TOWER_AREA_DAMAGE = value;
                 else if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_DAMAGE = value;
-            }
+            }*/
         }
         public double _attackSpeed
         {
@@ -79,13 +79,13 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_ATTACK_SPEED;
                 else return 0;
             }
-            private set
+            /*private set
             {
                 if (_type == TowerType.simple) BalanceTowerSimple.TOWER_SIMPLE_ATTACK_SPEED = value;
                 else if (_type == TowerType.slow) BalanceTowerSlow.TOWER_SLOW_ATTACK_SPEED = value;
                 else if (_type == TowerType.area) BalanceTowerArea.TOWER_AREA_ATTACK_SPEED = value;
                 else if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_ATTACK_SPEED = value;
-            }
+            }*/
         }
         public double Earnings
         {
@@ -97,10 +97,10 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_EARNINGS_MONEY;
                 else return 0;
             }
-            private set
+            /*private set
             {
                 if (_type == TowerType.bank) BalanceTowerBank.TOWER_BANK_EARNINGS_MONEY = value;
-            }
+            }*/
         }
 
         public Tower(Map map, TowerType type, int lvl, Vector2 position)
