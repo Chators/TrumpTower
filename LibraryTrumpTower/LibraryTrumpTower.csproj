@@ -51,6 +51,7 @@
     <Compile Include="Constants\BalanceGame\Abilities\BalanceExplosion.cs" />
     <Compile Include="Constants\BalanceGame\Abilities\BalanceSniper.cs" />
     <Compile Include="Constants\BalanceGame\Abilities\BalanceStickyRice.cs" />
+    <Compile Include="Constants\BalanceGame\BalanceMissile.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerArea.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerBank.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSimple.cs" />

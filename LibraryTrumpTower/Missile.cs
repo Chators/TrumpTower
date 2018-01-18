@@ -1,4 +1,5 @@
 ﻿using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.Constants.BalanceGame;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace TrumpTower.LibraryTrumpTower
             _map = map;
             _tower = tower;
             _damage = damage;
-            Speed = 10;
+            Speed = BalanceMissile.MISSILE_SPEED;
             Target = target;
             _position = position;
             _rotate = 0;
