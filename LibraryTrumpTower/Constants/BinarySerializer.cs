@@ -31,14 +31,5 @@ namespace LibraryTrumpTower.Constants
             var reader = XmlReader.Create(pathMapXml + "/CurrentMap.xml");
             return (T)serializer.ReadObject(reader);
         }
-
-        /*
-        public static T Deserialize<T>(string path)
-        {
-            var serializer = new DataContractSerializer(typeof(T));
-            var reader = XmlReader.Create("../../../../MapXml/" + path);
-            return (T)serializer.ReadObject(reader);
-        }
-        */
     }
 }

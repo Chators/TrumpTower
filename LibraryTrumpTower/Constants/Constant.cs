@@ -48,27 +48,6 @@ namespace TrumpTower.LibraryTrumpTower.Constants
 
         #endregion
 
-        #region Abilities
-
-        #region Explosion
-        public static int EXPLOSION_DAMAGE = 50;
-        public static int EXPLOSION_COOLDOWN = 15*60;
-        public static int EXPLOSION_RADIUS = 800;
-        #endregion
-
-        #region Sniper
-        public static int SNIPER_COST = 25;
-        public static int SNIPER_DAMAGE = 50;
-        #endregion
-
-        #region Sticky Rice
-        public static double STICKY_RICE_SPEED_REDUCE = 50;
-        public static int STICKY_RICE_COOLDOWN = 25 * 60;
-        public static double STICKY_RICE_RADIUS = 1200;
-        #endregion
-
-        #endregion
-
         #region Entity
         public static double LOSTGAUGE = 1;
         public static double MINLOSTGAUGE = 0;
@@ -83,8 +62,6 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         public static int ImgSizePlane = 64;
         public static int ImgSizeEnemy = 64;
         public static float PI = 3.14159265359f;
-        public static double BankReloading = 10 * 60;
-        public static int DisabledTower = 5;
 
         #region Info Editor Map
         public static string ROAD_INFO = "Permet aux ennemis de se deplacer";

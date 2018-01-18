@@ -483,7 +483,7 @@ namespace MapEditorTrumpTower
                 Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
                 spriteBatch.Draw(_backgroundDollars, new Vector2(5, 50), sourceRectanglee, Color.Black * 0.6f);
                 spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 50), Color.White);
-                spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
+                spriteBatch.DrawString(_imgNextWave, "Waves " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
                 #endregion
 
                 /*string infoSelection = "";
@@ -542,13 +542,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
-                Title = "Taille de la map",
+                Title = "Map size",
                 EnableDragging = true
             };
 
             var labelChoiceX = new GuiLabelControl()
             {
-                Text = "Veuillez indiquer la taille de la map ( Min " + Constant.MinWidthMap + ", Max " + Constant.MaxWidthMap + " )",
+                Text = "Indicate the size of the map ( Min " + Constant.MinWidthMap + ", Max " + Constant.MaxWidthMap + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -563,13 +563,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Confirmer"
+                Text = "Confirm"
             };
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button1.Pressed += DialogueConfirm_Pressed;
@@ -651,13 +651,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(300), new UniScalar(200))),
-                Title = "Definir les points de vie de la base",
+                Title = "Defining the health points of the base",
                 EnableDragging = true
             };
 
             var labelHealthWall = new GuiLabelControl()
             {
-                Text = "Points de vie ( Min " + Constant.MinWallHp + ", Max " + Constant.MaxWallHp + " )",
+                Text = "Health points ( Min " + Constant.MinWallHp + ", Max " + Constant.MaxWallHp + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -672,13 +672,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Confirmer"
+                Text = "Confirm"
             };
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button1.Pressed += WallConfirm_Pressed;
@@ -738,13 +738,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(300), new UniScalar(200))),
-                Title = "Creer un spawn ?",
+                Title = "Spawn",
                 EnableDragging = true
             };
 
             var labelCreateSpawn = new GuiLabelControl()
             {
-                Text = "Voulez-vous creer un spawn ?",
+                Text = "Create a spawn ?",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -752,13 +752,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Confirmer"
+                Text = "Confirm"
             };
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button1.Pressed += RoadConfirm_Pressed;
@@ -843,42 +843,42 @@ namespace MapEditorTrumpTower
             {
                 Name = "AddWave",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 120), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Ajouter vague"
+                Text = "Add wave"
             };
 
             var modifyWave = new GuiButtonControl
             {
                 Name = "ModifyWave",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -250), new UniScalar(0.0f, 120), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Modifier vague"
+                Text = "Modify wave"
             };
 
             var deleteWave = new GuiButtonControl
             {
                 Name = "DeleteWave",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(0.0f, 120), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Suppr vague"
+                Text = "Delete wave"
             };
 
             var deleteSpawn = new GuiButtonControl
             {
                 Name = "deleteSpawn",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Suppr spawn"
+                Text = "Delete spawn"
             };
 
             var pathNotFound = new GuiLabelControl
             {
                 Name = "pathNotFound",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 90), new UniScalar(0.0f, 185), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Aucun chemin valide vers la base !"
+                Text = "No valid path to the base !"
             };
 
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             deleteSpawn.Pressed += DeleteSpawn_Pressed;
@@ -891,7 +891,7 @@ namespace MapEditorTrumpTower
             for (int i = 0; i < _spawn.Waves.Count; i++)
             {
                 Wave wave = _spawn.Waves[i];
-                wavesList.Items.Add("Vague " + (i + 1) + " : Depart " + wave.TimerBeforeStarting / 60 + " secondes et contient " + wave.Enemies.Count + " enemies");
+                wavesList.Items.Add("Wave " + (i + 1) + " : Departure " + wave.TimerBeforeStarting / 60 + " seconds and contains " + wave.Enemies.Count + " enemies");
             }
             wavesList.SelectionMode = ListSelectionMode.Single;
             window.Children.Add(addWave);
@@ -1068,13 +1068,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(500), new UniScalar(350))),
-                Title = "Vague",
+                Title = "Wave",
                 EnableDragging = true
             };
 
             var labelTimerWave = new GuiLabelControl()
             {
-                Text = "Temps avant depart de la vague en secondes ( Min " + Constant.MinEarthlyTimer + ", Max " + Constant.MaxEarthlyTimer + " )",
+                Text = "Timer before the start of the wave in seconds ( Min " + Constant.MinEarthlyTimer + ", Max " + Constant.MaxEarthlyTimer + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1087,7 +1087,7 @@ namespace MapEditorTrumpTower
 
             var labelEnemyDefault = new GuiLabelControl()
             {
-                Text = "Nombres d'ennemis de base ( Min " + Constant.MinDefaultUnit + ", Max " + Constant.MaxDefaultUnit + " )",
+                Text = "Number of Basic enemies ( Min " + Constant.MinDefaultUnit + ", Max " + Constant.MaxDefaultUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 80), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1101,7 +1101,7 @@ namespace MapEditorTrumpTower
 
             var labelKamikaze = new GuiLabelControl()
             {
-                Text = "Nombres de Kamikaze ( Min " + Constant.MinKamikazeUnit + ", Max " + Constant.MaxKamikazeUnit + " )",
+                Text = "Number of Kamikaze ( Min " + Constant.MinKamikazeUnit + ", Max " + Constant.MaxKamikazeUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 130), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1114,7 +1114,7 @@ namespace MapEditorTrumpTower
 
             var labelSaboteur = new GuiLabelControl()
             {
-                Text = "Nombres de Saboteur ( Min " + Constant.MinSaboteurUnit + ", Max " + Constant.MaxSaboteurUnit + " )",
+                Text = "Number of Saboteur ( Min " + Constant.MinSaboteurUnit + ", Max " + Constant.MaxSaboteurUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 180), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1127,7 +1127,7 @@ namespace MapEditorTrumpTower
 
             var labelDoctor = new GuiLabelControl()
             {
-                Text = "Nombres de Docteur ( Min " + Constant.MinDoctorUnit + ", Max " + Constant.MaxDoctorUnit + " )",
+                Text = "Number of Doctor ( Min " + Constant.MinDoctorUnit + ", Max " + Constant.MaxDoctorUnit + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 230), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1142,14 +1142,14 @@ namespace MapEditorTrumpTower
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Confirmer"
+                Text = "Confirm"
             };
 
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button1.Pressed += WaveConfirm_Pressed;
@@ -1278,13 +1278,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(250))),
-                Title = "Option Map",
+                Title = "Options Map",
                 EnableDragging = true
             };
 
             var labelNameMap = new GuiLabelControl()
             {
-                Text = "Nom de la map (Min Carac " + Constant.MinNameMap + ", Max Carac " + Constant.MaxNameMap + " )",
+                Text = "Map name (Min Carac " + Constant.MinNameMap + ", Max Carac " + Constant.MaxNameMap + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1297,7 +1297,7 @@ namespace MapEditorTrumpTower
 
             var labelDollarsMap = new GuiLabelControl()
             {
-                Text = "Dollars initial de la map ( Min " + Constant.MinDollarsMap + ", Max " + Constant.MaxDollarsMap + " )",
+                Text = "Initial map dollars ( Min " + Constant.MinDollarsMap + ", Max " + Constant.MaxDollarsMap + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 85), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1310,7 +1310,7 @@ namespace MapEditorTrumpTower
 
             var labelGauge = new GuiLabelControl()
             {
-                Text = "Vitesse de la jauge d'entite ( Min " + Constant.MINLOSTGAUGE+ ", Max " + Constant.MAXLOSTGAUGE + ", peut etre un chiffre a virgule)",
+                Text = "Entity Gauge Speed ( Min " + Constant.MINLOSTGAUGE+ ", Max " + Constant.MAXLOSTGAUGE + ", decimal number)",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 135), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1325,13 +1325,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Confirmer"
+                Text = "Confirm"
             };
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button1.Pressed += MapSettingConfirm_Pressed;
@@ -1388,7 +1388,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(540), new UniScalar(220))),
-                Title = "Menu vague aerienne",
+                Title = "Air Wave Menu",
                 EnableDragging = true
             };
 
@@ -1401,35 +1401,35 @@ namespace MapEditorTrumpTower
             {
                 Name = "InfoWarning",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 50), new UniScalar(0.0f, 120), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Vous devez avoir une base avant de creer des vagues d'avions !"
+                Text = "You must have a base before you create waves of airplanes !"
             };
 
             var addWaveAir = new GuiButtonControl
             {
                 Name = "AddWaveAir",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 37), new UniScalar(0.0f, 120), new UniScalar(0f, 130), new UniScalar(0f, 30)),
-                Text = "Ajouter une vague"
+                Text = "Add Wave"
             };
 
             var modifyWaveAir = new GuiButtonControl
             {
                 Name = "ModifyWaveAir",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 204), new UniScalar(0.0f, 120), new UniScalar(0f, 130), new UniScalar(0f, 30)),
-                Text = "Modifier vague"
+                Text = "Modify Wave"
             };
 
             var deleteWaveAir = new GuiButtonControl
             {
                 Name = "DeleteWave",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 371), new UniScalar(0.0f, 120), new UniScalar(0f, 130), new UniScalar(0f, 30)),
-                Text = "Suppr vague"
+                Text = "Delete Wave"
             };
 
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 225), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             addWaveAir.Pressed += ManagerAirUnitAdd_Pressed;
@@ -1442,7 +1442,7 @@ namespace MapEditorTrumpTower
             for (int i = 0; i < _map.AirUnits.Count; i++)
             {
                 AirUnitsCollection collectionUnit = _map.AirUnits[i];
-                wavesListAir.Items.Add("Vague aerienne " + (i + 1) + " : Depart " + collectionUnit.TimerBeforeStarting / 60 + " secondes, " + collectionUnit.Array.Count + " avions et de type " + collectionUnit.Array[0].Name.ToLower());
+                wavesListAir.Items.Add("Air Wave " + (i + 1) + " : Departure " + collectionUnit.TimerBeforeStarting / 60 + " seconds, " + collectionUnit.Array.Count + " airplanes and type " + collectionUnit.Array[0].Name.ToLower());
             }
             wavesListAir.SelectionMode = ListSelectionMode.Single;
 
@@ -1522,13 +1522,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
-                Title = "Ajouter Air plane",
+                Title = "Add Air Plane",
                 EnableDragging = true
             };
 
             var labelTimerAir = new GuiLabelControl()
             {
-                Text = "Temps avant depart de la vague ( Min " + Constant.MinPlaneTimer + ", Max " + Constant.MaxPlaneTimer + " )",
+                Text = "Time before start of the wave ( Min " + Constant.MinPlaneTimer + ", Max " + Constant.MaxPlaneTimer + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1542,7 +1542,7 @@ namespace MapEditorTrumpTower
 
             var labelNumberPlane = new GuiLabelControl()
             {
-                Text = "Nombres d'avions ( Min " + Constant.MinPlaneInWave + ", Max " + Constant.MaxPlaneInWave + " )",
+                Text = "Number of Airplanes ( Min " + Constant.MinPlaneInWave + ", Max " + Constant.MaxPlaneInWave + " )",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 80), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1556,7 +1556,7 @@ namespace MapEditorTrumpTower
 
             var labelTypeAir = new GuiLabelControl()
             {
-                Text = "Type d'avions",
+                Text = "Type of Airplanes",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 130), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1571,11 +1571,11 @@ namespace MapEditorTrumpTower
             for (int i = 0; i < planeType.Length; i++)
             {
                 if (i == 0)
-                { typeAir.Items.Add("Avion Lent"); }
+                { typeAir.Items.Add("Slow Airplane"); }
                 else if (i == 1)
-                { typeAir.Items.Add("Avion Normal"); }
+                { typeAir.Items.Add("Normal Airplane"); }
                 else if (i == 2)
-                { typeAir.Items.Add("Avion Rapide"); }
+                { typeAir.Items.Add("Fast Airplane"); }
             }
 
             typeAir.SelectionMode = ListSelectionMode.Single;
@@ -1585,13 +1585,13 @@ namespace MapEditorTrumpTower
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Confirmer"
+                Text = "Confirm"
             };
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button1.Pressed += AddAirUnitConfirm_Pressed;
@@ -1679,31 +1679,31 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
-                Title = "Erreur sauvegarde de la map",
+                Title = "Save Map Error",
                 EnableDragging = true
             };
 
             var labelInfoSauvegarde = new GuiLabelControl()
             {
-                Text = "La map n'a pas pu etre sauvegarde car : ",
+                Text = "The map could not be saved because : ",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
             var labelName = new GuiLabelControl()
             {
-                Text = "Elle ne possede pas de nom",
+                Text = "She doesn't have a name",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
             var labelBase = new GuiLabelControl()
             {
-                Text = "Elle ne possede pas de base",
+                Text = "It does not have a base",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
             var labelPath = new GuiLabelControl()
             {
-                Text = "Tous les spawns d'ennemis ne possede pas un chemin valide les reliant a la base (le ou les spawn(s) sont colorie en rouge)",
+                Text = "Not all enemy spawns have a valid path to the base (the spawn(s) are colored red)",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1711,7 +1711,7 @@ namespace MapEditorTrumpTower
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button2.Pressed += InfoSerCancel_Pressed;
@@ -1755,19 +1755,19 @@ namespace MapEditorTrumpTower
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
-                Title = "Nom de map existant",
+                Title = "Existing map name",
                 EnableDragging = true
             };
 
             var labelEraseMap = new GuiLabelControl()
             {
-                Text = "Une map possede deja ce nom !",
+                Text = "A map already has this name !",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
             var labelEraseMap2 = new GuiLabelControl()
             {
-                Text = "Etes-vous sur de vouloir l'ecraser ?",
+                Text = "Are you sure you want to overwrite him?",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 55), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1775,14 +1775,14 @@ namespace MapEditorTrumpTower
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Confirmer"
+                Text = "Confirm"
             };
 
             var button2 = new GuiButtonControl
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             button1.Pressed += ConfirmEraseMap_Pressed;

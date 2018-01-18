@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 namespace Menu
 {
     [DataContract(IsReference = true)]
-    class Player
+    public class Player
     {
         [DataMember]
-        string _name; // name
+        public string _name; // name
         [DataMember]
-        string _password; // password
+        private string _password; // password
         [DataMember]
-        int _lvlAccess; // the lvl of the player can access
+        public int _lvlAccess; // the lvl of the player can access
 
         public Player(string name, string password, int lvlAccess)
         {

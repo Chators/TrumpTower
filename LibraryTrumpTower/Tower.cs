@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
@@ -24,14 +25,6 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         int _lvl;
         [DataMember]
-        public double Earnings { get; set; }
-        [DataMember]
-        public double Scope { get; private set; }
-        [DataMember]
-        public int Damage { get;  set; }
-        [DataMember]
-        public double _attackSpeed { get; private set; }
-        [DataMember]
         public double _reload;
         [DataMember]
         public Vector2 Position { get; private set; }
@@ -39,48 +32,87 @@ namespace TrumpTower.LibraryTrumpTower
         public bool _isDisabled { get; set; }
         [DataMember]
         public bool _isCasted { get; set; }
-        
-        
+
+        public double Scope
+        {
+            get
+            {
+                if (_type == TowerType.simple) return BalanceTowerSimple.TOWER_SIMPLE_SCOPE;
+                else if (_type == TowerType.slow) return BalanceTowerSlow.TOWER_SLOW_SCOPE;
+                else if (_type == TowerType.area) return BalanceTowerArea.TOWER_AREA_SCOPE;
+                else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_SCOPE;
+                else return 0;
+            }
+        }
+        public int Damage
+        {
+            get
+            {
+                if (_type == TowerType.simple)
+                {
+                    if (_lvl == 1) return BalanceTowerSimple.TOWER_SIMPLE_DAMAGE;
+                    else if (_lvl == 2) return BalanceTowerSimple.TOWER2_SIMPLE_DAMAGE;
+                    else if (_lvl == 3) return BalanceTowerSimple.TOWER3_SIMPLE_DAMAGE;
+                    return 0;
+                }
+                else if (_type == TowerType.slow)
+                {
+                    if (_lvl == 1) return BalanceTowerSlow.TOWER_SLOW_DAMAGE;
+                    else if (_lvl == 2) return BalanceTowerSlow.TOWER2_SLOW_DAMAGE;
+                    else if (_lvl == 3) return BalanceTowerSlow.TOWER3_SLOW_DAMAGE;
+                    return 0;
+                }
+                else if (_type == TowerType.area)
+                {
+                    if (_lvl == 1) return BalanceTowerArea.TOWER_AREA_DAMAGE;
+                    else if (_lvl == 2) return BalanceTowerArea.TOWER2_AREA_DAMAGE;
+                    else if (_lvl == 3) return BalanceTowerArea.TOWER3_AREA_DAMAGE;
+                    return 0;
+                }
+                else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_DAMAGE;
+                else return 0;
+            }
+        }
+        public double _attackSpeed
+        {
+            get
+            {
+                if (_type == TowerType.simple) return BalanceTowerSimple.TOWER_SIMPLE_ATTACK_SPEED;
+                else if (_type == TowerType.slow) return BalanceTowerSlow.TOWER_SLOW_ATTACK_SPEED;
+                else if (_type == TowerType.area) return BalanceTowerArea.TOWER_AREA_ATTACK_SPEED;
+                else if (_type == TowerType.bank) return BalanceTowerBank.TOWER_BANK_ATTACK_SPEED;
+                else return 0;
+            }
+        }
+        public double Earnings
+        {
+            get
+            {
+                if (_type == TowerType.simple) return 0;
+                else if (_type == TowerType.slow) return 0;
+                else if (_type == TowerType.area) return 0;
+                else if (_type == TowerType.bank)
+                {
+                    if (_lvl == 1) return BalanceTowerBank.TOWER_BANK_EARNINGS_MONEY;
+                    else if (_lvl == 2) return BalanceTowerBank.TOWER2_BANK_EARNINGS_MONEY;
+                    else if (_lvl == 3) return BalanceTowerBank.TOWER3_BANK_EARNINGS_MONEY;
+                    return 0;
+                }
+                else return 0;
+            }
+        }
 
         public Tower(Map map, TowerType type, int lvl, Vector2 position)
         {
             _map = map;
             _type = type;
             _lvl = lvl;
-            _reload = 0;
             Position = position;
             _rotate = 0;
-            Earnings = 0;
             ManagerSound.PlayBuild();
             _isDisabled = false;
-
-            if(type == TowerType.simple)
-            {
-                Damage = 6;
-                Scope = 800;
-                _attackSpeed = 0.8;  
-            }
-            else if(type == TowerType.slow)
-            {
-                Damage = 19;
-                Scope = 800;
-                _attackSpeed = 1.8;  
-            }
-            else if(type == TowerType.area)
-            {
-                Damage = 13;
-                Scope = 800;
-                _attackSpeed = 1.2;
-                
-            }
-            else if(type == TowerType.bank)
-            {
-                Damage = 0;
-                _reload = Constant.BankReloading;
-                Scope = 0;
-                _attackSpeed = 0;
-                Earnings = 200;
-            }
+            if(type == TowerType.bank) _reload = BalanceTowerBank.TOWER_BANK_RELOADING;
+            else _reload = 0;
         }
 
         private void UpdateShoot(Enemy myEnemy)
@@ -153,29 +185,27 @@ namespace TrumpTower.LibraryTrumpTower
         {
             if (tower.Type == TowerType.simple)
             {
-                double initialPrice = Tower.TowerPrice(TowerType.simple)/2;
-                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
-                else if (tower.TowerLvl == 2) _map.Dollars += 1.5*initialPrice + initialPrice;
-                else if (tower.TowerLvl == 3) _map.Dollars += 3 * initialPrice + initialPrice;
+                if (tower.TowerLvl == 1) _map.Dollars += BalanceTowerSimple.TOWER_SIMPLE_SELL;
+                else if (tower.TowerLvl == 2) _map.Dollars += BalanceTowerSimple.TOWER2_SIMPLE_SELL;
+                else if (tower.TowerLvl == 3) _map.Dollars += BalanceTowerSimple.TOWER3_SIMPLE_SELL;
             }
             else if (tower.Type == TowerType.slow)
             {
-                double initialPrice = Tower.TowerPrice(TowerType.slow)/2;
-                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
-                else if (tower.TowerLvl == 2) _map.Dollars += 1.5 * initialPrice + initialPrice;
-                else if (tower.TowerLvl == 3) _map.Dollars += 3 * initialPrice + initialPrice;
+                if (tower.TowerLvl == 1) _map.Dollars += BalanceTowerSlow.TOWER_SLOW_SELL;
+                else if (tower.TowerLvl == 2) _map.Dollars += BalanceTowerSlow.TOWER2_SLOW_SELL;
+                else if (tower.TowerLvl == 3) _map.Dollars += BalanceTowerSlow.TOWER3_SLOW_SELL;
             }
             else if (tower.Type == TowerType.area)
             {
-                double initialPrice = Tower.TowerPrice(TowerType.area)/2;
-                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
-                else if (tower.TowerLvl == 2) _map.Dollars += 1.5 * initialPrice + initialPrice;
-                else if (tower.TowerLvl == 3) _map.Dollars += 3 * initialPrice + initialPrice;
+                if (tower.TowerLvl == 1) _map.Dollars += BalanceTowerArea.TOWER_AREA_SELL;
+                else if (tower.TowerLvl == 2) _map.Dollars += BalanceTowerArea.TOWER2_AREA_SELL;
+                else if (tower.TowerLvl == 3) _map.Dollars += BalanceTowerArea.TOWER3_AREA_SELL;
             }
             else if (tower.Type == TowerType.bank)
             {
-                double initialPrice = Tower.TowerPrice(TowerType.bank) / 2;
-                if (tower.TowerLvl == 1) _map.Dollars += initialPrice;
+                if (tower.TowerLvl == 1) _map.Dollars += BalanceTowerBank.TOWER_BANK_SELL;
+                else if (tower.TowerLvl == 2) _map.Dollars += BalanceTowerBank.TOWER2_BANK_SELL;
+                else if (tower.TowerLvl == 3) _map.Dollars += BalanceTowerBank.TOWER3_BANK_SELL;
             }
         }
         public void Upgrade(Tower upgradedTower)
@@ -187,73 +217,34 @@ namespace TrumpTower.LibraryTrumpTower
                 if (upgradedTower.Type == TowerType.simple)
                 {
                     if (upgradedTower.TowerLvl == 2)
-                    {
-                        upgradedTower.Damage = 13;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-
-                    }
+                        _map.Dollars -= BalanceTowerSimple.TOWER_SIMPLE_PRICE;
                     else if (upgradedTower.TowerLvl == 3)
-                    {
-                        upgradedTower.Damage = 20;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-
-                    }
+                        _map.Dollars -= BalanceTowerSimple.TOWER_SIMPLE_PRICE;
 
                 }
                 else if (upgradedTower.Type == TowerType.slow)
                 {
                     if (upgradedTower.TowerLvl == 2)
-                    {
-                        upgradedTower.Damage = 25;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-
-                    }
+                        _map.Dollars -= BalanceTowerSlow.TOWER_SLOW_PRICE;
                     else if (upgradedTower.TowerLvl == 3)
-                    {
-                        upgradedTower.Damage = 32;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-
-                    }
+                        _map.Dollars -= BalanceTowerSlow.TOWER_SLOW_PRICE;
                 }
                 else if (upgradedTower.Type == TowerType.area)
                 {
                     if (upgradedTower.TowerLvl == 2)
-                    {
-                        upgradedTower.Damage = 19;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-
-                    }
+                        _map.Dollars -= BalanceTowerArea.TOWER_AREA_PRICE;
                     else if (upgradedTower.TowerLvl == 3)
-                    {
-                        upgradedTower.Damage = 25;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-
-                    }
+                        _map.Dollars -= BalanceTowerArea.TOWER_AREA_PRICE;
                 }
                 else if (upgradedTower.Type == TowerType.bank)
                 {
-                    if(upgradedTower.TowerLvl == 2)
-                    {
-                        upgradedTower.Earnings = 300;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-                    }
-                    else if(upgradedTower.TowerLvl == 3)
-                    {
-                        upgradedTower.Earnings = 400;
-                        _map.Dollars -= Tower.TowerPrice(upgradedTower.Type) * 1.5;
-                    }
+                    if (upgradedTower.TowerLvl == 2)
+                        _map.Dollars -= BalanceTowerBank.TOWER_BANK_PRICE;
+                    else if (upgradedTower.TowerLvl == 3)
+                        _map.Dollars -= BalanceTowerBank.TOWER_BANK_PRICE;
                 }
             }
            
-        }
-
-        static public int TowerPrice(TowerType type)
-        {
-            if (type == TowerType.simple) return 200;
-            else if (type == TowerType.slow) return 300;
-            else if (type == TowerType.area) return 400;
-            else if (type == TowerType.bank) return 400;
-            return 0;
         }
 
         internal bool WithinReachOf(Vector2 target)

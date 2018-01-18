@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Audio;
 using LibraryTrumpTower.Constants;
 using LibraryTrumpTower;
 using System.Runtime.Serialization;
+using LibraryTrumpTower.Constants.BalanceGame.Enemies;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -18,6 +19,8 @@ namespace TrumpTower.LibraryTrumpTower
     {
         [DataMember]
         readonly Map _map;
+        [DataMember]
+        bool Initiliaze { get; set; } // for serialization
         [DataMember]
         readonly Wave _wave;
         [DataMember]
@@ -29,29 +32,9 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public readonly EnemyType _type;
         [DataMember]
-        public Move CurrentDirection { get; private set; }
-        [DataMember]
-        public double CurrentHp { get; private set; }
-        [DataMember]
-        public double MaxHp { get; private set; }
-        [DataMember]
-        readonly double _damage;
-        [DataMember]
-        readonly double _heal; // for the doc
-        [DataMember]
-        public double Speed { get; set; }
-        [DataMember]
-        public double DefaultSpeed { get; private set; }
-        [DataMember]
-        public int Bounty { get; private set; }
+        public Move CurrentDirection { get; private set; }       
         [DataMember]
         public int TimerBeforeStarting { get; set; }
-        [DataMember]
-        public double ActionRadius { get; private set; } // doc & mech units
-        [DataMember]
-        public double _reload; // doc & mech units
-        [DataMember]
-        public double _healCooldown; // doc only
         [DataMember]
         public bool _hasCast;
         [DataMember]
@@ -59,8 +42,82 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public Tower _towerBeingCast;
 
+        public double CurrentHp { get; private set; }
+        public double _reload { get; private set; }// doc & mech units}
+        public double Speed { get; set; }
+        public double MaxHp
+        {
+            get
+            {
+                if (_type == EnemyType.defaultSoldier) return BalanceEnemyDefaultSoldier.ENEMY_DEFAULT_SOLDIER_MAX_HP;
+                else if (_type == EnemyType.kamikaze) return BalanceEnemyKamikaze.ENEMY_KAMIKAZE_MAX_HP;
+                else if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_MAX_HP;
+                else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_MAX_HP;
+                else return 0;
+            }
+        }
+        public double _damage
+        {
+            get
+            {
+                if (_type == EnemyType.defaultSoldier) return BalanceEnemyDefaultSoldier.ENEMY_DEFAULT_SOLDIER_DAMAGE;
+                else if (_type == EnemyType.kamikaze) return BalanceEnemyKamikaze.ENEMY_KAMIKAZE_DAMAGE;
+                else if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_DAMAGE;
+                else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_DAMAGE;
+                else return 0;
+            }
+        }
+        public double DefaultSpeed
+        {
+            get
+            {
+                if (_type == EnemyType.defaultSoldier) return BalanceEnemyDefaultSoldier.ENEMY_DEFAULT_SOLDIER_DEFAULT_SPEED;
+                else if (_type == EnemyType.kamikaze) return BalanceEnemyKamikaze.ENEMY_KAMIKAZE_DEFAULT_SPEED;
+                else if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_DEFAULT_SPEED;
+                else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_DEFAULT_SPEED;
+                else return 0;
+            }
+        }
+        public int Bounty
+        {
+            get
+            {
+                if (_type == EnemyType.defaultSoldier) return BalanceEnemyDefaultSoldier.ENEMY_DEFAULT_SOLDIER_BOUNTY;
+                else if (_type == EnemyType.kamikaze) return BalanceEnemyKamikaze.ENEMY_KAMIKAZE_BOUNTY;
+                else if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_BOUNTY;
+                else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_BOUNTY;
+                else return 0;
+            }
+        }
+        public double ActionRadius // doc & mech units
+        {
+            get
+            {
+                if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_ACTION_RADIUS;
+                else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_ACTION_RADIUS;
+                else return 0;
+            }
+        }
+        public double _heal // for the doc
+        {
+            get
+            {
+                if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_HEAL;
+                else return 0;
+            }
+        }
+        public double _healCooldown // doc only
+        {
+            get
+            {
+                if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_HEAL_COOLDOWN;
+                else return 0;
+            }
+        }
+
         public Enemy(Map map, Wave wave, string name, EnemyType type)
         {
+            Initiliaze = false;
             _type = type;
             _map = map;
             _wave = wave;
@@ -68,45 +125,8 @@ namespace TrumpTower.LibraryTrumpTower
             _position = wave.Position;
             _moveToState = 0;
             _isCasting = false;
-
-            if (type == EnemyType.defaultSoldier)
+            if (type == EnemyType.saboteur)
             {
-                CurrentHp = 85;
-                MaxHp = 85;
-                _damage = 10;
-                Speed = 3;
-                DefaultSpeed = 3;
-                Bounty = 100;
-            } else if (type == EnemyType.kamikaze)
-            {
-                CurrentHp = 200;
-                MaxHp = 200;
-                _damage = Constant.MaxWallHp;
-                Speed = 2.2;
-                DefaultSpeed = 2.2;
-                Bounty = 200;
-            } else if (type == EnemyType.doctor)
-            {
-                CurrentHp = 120;
-                MaxHp = 120;
-                _damage = 5;
-                Speed = 3;
-                DefaultSpeed = 3;
-                Bounty = 150;
-                _heal = 20;
-                ActionRadius = 400;
-                _reload = 0;
-                _healCooldown = 3;
-            } else if(type == EnemyType.saboteur)
-            {
-                CurrentHp = 50;
-                MaxHp = 50;
-                _damage = 5;
-                Speed = 4;
-                DefaultSpeed = 4;
-                Bounty = 150;
-                ActionRadius = 500;
-                _reload = Constant.DisabledTower*60;
                 _hasCast = false;
                 _towerBeingCast = null;
             }
@@ -149,6 +169,22 @@ namespace TrumpTower.LibraryTrumpTower
 
         public void Update()
         {
+            // Deserialization
+            if (!Initiliaze)
+            {
+                CurrentHp = MaxHp;
+                Speed = DefaultSpeed;
+                if (_type == EnemyType.doctor)
+                {
+                    _reload = 0;
+                }
+                else if (_type == EnemyType.saboteur)
+                {
+                    _reload = BalanceEnemySaboteur.ENEMY_SABOTEUR_RELOADING;
+                }
+                Initiliaze = true;
+            }
+
             if (!IsStarting) TimerBeforeStarting--;
             else
             {
@@ -237,7 +273,7 @@ namespace TrumpTower.LibraryTrumpTower
                 }
                 else
                 {
-                    tower._reload = Constant.DisabledTower * 60;
+                    tower._reload = BalanceEnemySaboteur.ENEMY_SABOTEUR_RELOADING;
                 }
                 _hasCast = true; // this minion cannot disable turrets anymore 
                 _isCasting = false; // Resumes moving
@@ -253,8 +289,6 @@ namespace TrumpTower.LibraryTrumpTower
         }
 
         
-      
-
         internal bool IsReload => _reload <= 0;
         internal void Reloading() => _reload--;
 
@@ -307,20 +341,8 @@ namespace TrumpTower.LibraryTrumpTower
             _map.Dollars += Bounty;
             _wave.Enemies.Remove(this);
             _map.DeadEnemies.Add(this);
-
-
-
-
-
             if (_type == EnemyType.saboteur && _towerBeingCast != null) _towerBeingCast.IsCasted = false;
             // IS DISABLED
-
-
-
-
-
-
-
         }
 
         public void Die(bool Passedthebase)

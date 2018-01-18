@@ -1,3 +1,10 @@
-heberge-tech.fr:2232/phpmyadmin     trumptower/trumptower
+Site Web : 
+	- heberge-tech.fr:2232
+	- http://trumptower.heberge-tech.fr:2232/       
+	- ndc : TrumpTower2 
+	- mdp : TowerTrump
+Bdd : 
+	- heberge-tech.fr:2232/phpmyadmin     
+	- ndc : trumptower 
+	- mdp : trumptower
 
-heberge-tech.fr:2232       TrumpTower2/TowerTrump
