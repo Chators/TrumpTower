@@ -1545,7 +1545,7 @@ namespace TrumpTower
             Rectangle sourceRectanglee = new Rectangle(0, 0, 270, 33);
             spriteBatch.Draw(_backgroundDollars, new Vector2(5, 50), sourceRectanglee, Color.Black * 0.6f);
             spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 50), Color.White);
-            spriteBatch.DrawString(_imgNextWave, "Vagues " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
+            spriteBatch.DrawString(_imgNextWave, "Waves " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
             _waveSprite.Draw(GraphicsDevice, spriteBatch);
 
             #endregion

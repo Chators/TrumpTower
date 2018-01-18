@@ -11,11 +11,14 @@ using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.NuclexGui;
 using MonoGame.Extended.NuclexGui.Controls;
 using MonoGame.Extended.NuclexGui.Controls.Desktop;
+using RestSharp.Portable;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
+using Menu.BDD;
 using TrumpTower.LibraryTrumpTower;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -44,6 +47,7 @@ namespace Menu
         WorldButton _world1Button;
         WorldButton _world2Button;
         WorldButton _world3Button;
+        OptionsButtons _optionsButtons;
 
         //mouse pressed and mouse just pressed
         bool mpressed, prev_mpressed = false;
@@ -54,6 +58,7 @@ namespace Menu
         public MenuState state;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public Player _player;
 
         private readonly InputListenerComponent _inputManager;
         private readonly GuiManager _gui;
@@ -89,8 +94,8 @@ namespace Menu
 
             state = MenuState.MAIN;
 
-            Player a = new Player("Thibaud", "mdr", 2);
-            a.Serialize();
+            Player _player = new Player("Thibaud", "mdr", 2);
+            _player.Serialize();
 
             // First, we create an input manager.
             _inputManager = new InputListenerComponent(this);
@@ -114,14 +119,14 @@ namespace Menu
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             {
                 int attempts = 0;
                 while (true)
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        graphics.IsFullScreen = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -221,6 +226,17 @@ namespace Menu
             #endregion
             #endregion
 
+            #region BUTTON OPTIONS
+            numberOfButtons = 3;
+            indexOfButtons = new Dictionary<int, string>();
+            indexOfButtons[0] = "Import_Map";
+            indexOfButtons[1] = "Export_Map";
+            indexOfButtons[2] = "return";
+            buttonHeight = 100;
+            buttonWidth = 300;
+            _optionsButtons = new OptionsButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
+            #endregion
+
             IsMouseVisible = false;
             _gui.Screen = new GuiScreen(graphics.GraphicsDevice.DisplayMode.Width, graphics.GraphicsDevice.DisplayMode.Height);
             _gui.Screen.Desktop.Bounds = new UniRectangle(new UniScalar(0f, 0), new UniScalar(0f, 0), new UniScalar(1f, 0), new UniScalar(1f, 0));
@@ -250,6 +266,7 @@ namespace Menu
             _world1Button.LoadContent();
             _world2Button.LoadContent();
             _world3Button.LoadContent();
+            _optionsButtons.LoadContent();
 
             _imgTheBoss = Content.Load<Texture2D>("theboss");
             _announcementTrump = Content.Load<SoundEffect>("americaGreatAgain");
@@ -328,6 +345,8 @@ namespace Menu
                     _world2Button.Update(frame_time, mx, my, prev_mpressed, mpressed);
                 else if (state == MenuState.WORLD3)
                     _world3Button.Update(frame_time, mx, my, prev_mpressed, mpressed);
+                else if (state == MenuState.OPTIONS)
+                    _optionsButtons.Update(frame_time, mx, my, prev_mpressed, mpressed);
             }
 
             _animTrump.Update(graphics, gameTime);
@@ -368,6 +387,8 @@ namespace Menu
                 _world2Button.Draw(spriteBatch);
             else if (state == MenuState.WORLD3)
                 _world3Button.Draw(spriteBatch);
+            else if (state == MenuState.OPTIONS)
+                _optionsButtons.Draw(spriteBatch);
 
             _animTrump.Draw(spriteBatch, gameTime);
             _animKim.Draw(spriteBatch, gameTime);
@@ -400,7 +421,7 @@ namespace Menu
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
-                Title = "Vos maps",
+                Title = "Your Maps",
                 EnableDragging = true
             };
 
@@ -413,21 +434,21 @@ namespace Menu
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -100), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Suppr map"
+                Text = "Delete Map"
             };
 
             var ConfirmMapButton = new GuiButtonControl
             {
                 Name = "confirm",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -100), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Jouer"
+                Text = "Play"
             };
 
             var BackMapButton = new GuiButtonControl
             {
                 Name = "back",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 155), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             DeleteMapButton.Pressed += DeleteMap_Pressed;
@@ -514,7 +535,7 @@ namespace Menu
             {
                 Name = "window",
                 Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
-                Title = "Editeur de map",
+                Title = "Map Editor",
                 EnableDragging = true
             };
 
@@ -527,28 +548,28 @@ namespace Menu
             {
                 Name = "cancel",
                 Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -100), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Supprimer"
+                Text = "Delete"
             };
 
             var CreateNewMapEditorButton = new GuiButtonControl
             {
                 Name = "createNewMap",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -100), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Nouvelle"
+                Text = "New"
             };
 
             var ModifyMapEditorButton = new GuiButtonControl
             {
                 Name = "modifyMapEditor",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 155), new UniScalar(1.0f, -100), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Modifier"
+                Text = "Modify"
             };
 
             var BackMapEditorButton = new GuiButtonControl
             {
                 Name = "back",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 155), new UniScalar(1.0f, -40), new UniScalar(0f, 90), new UniScalar(0f, 30)),
-                Text = "Retour"
+                Text = "Return"
             };
 
             DeleteMapEditorButton.Pressed += DeleteMapEditor_Pressed;
@@ -633,6 +654,248 @@ namespace Menu
         }
 
         private void CancelWindowMapEditor_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+        #endregion
+
+        #region Window Download Map
+        public void DownloadMap_Pressed()
+        {
+            var Window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(270))),
+                Title = "Download Map on Internet",
+                EnableDragging = true
+            };
+
+            var ListMap = new GuiListControl()
+            {
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(1.0f, -20), new UniScalar(0f, 150)),
+            };
+
+            var DownloadButton = new GuiButtonControl
+            {
+                Name = "downloadMap",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -60), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Download"
+            };
+
+            var ReturnImportButton = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -60), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Return"
+            };
+
+            DownloadButton.Pressed += DownloadThisMap_Pressed;
+            ReturnImportButton.Pressed += CancelWindowDownloadMap_Pressed;
+
+            Window.Children.Add(ListMap);
+            List<string> AllName = Bdd.GetAllNameOfMap();
+            for (int i = 0; i < AllName.Count; i++)
+                ListMap.Items.Add(AllName[i]);
+            ListMap.SelectionMode = ListSelectionMode.Single;
+
+            Window.Children.Add(DownloadButton);
+            Window.Children.Add(ReturnImportButton);
+
+            _gui.Screen.Desktop.Children.Add(Window);
+        }
+
+        private void DownloadThisMap_Pressed(object sender, System.EventArgs e)
+        {
+            int? _nbName = null;
+
+            foreach (var control in ((GuiButtonControl)sender).Parent.Children)
+            {
+                if (control.GetType() == typeof(GuiListControl))
+                {
+                    GuiListControl input = (GuiListControl)control;
+                    if (input.SelectedItems.Count > 0)
+                        _nbName = input.SelectedItems[0];
+                }
+            }
+
+            if (_nbName != null)
+            {
+                List<string> AllName = Bdd.GetAllNameOfMap();
+                Bdd.DownLoadMap(AllName[(int)_nbName]);
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            }
+        }
+
+        private void CancelWindowDownloadMap_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+        #endregion
+
+        #region Window Upload Map
+        public void UploadMap_Pressed()
+        {
+            var Window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(260))),
+                Title = "Upload Map on Internet",
+                EnableDragging = true
+            };
+
+            var ListMap = new GuiListControl()
+            {
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(1.0f, -20), new UniScalar(0f, 150)),
+            };
+
+            var DownloadButton = new GuiButtonControl
+            {
+                Name = "downloadMap",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -60), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Upload"
+            };
+
+            var ReturnImportButton = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -60), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Return"
+            };
+
+            DownloadButton.Pressed += UploadThisMapBridge_Pressed;
+            ReturnImportButton.Pressed += CancelWindowUploadMap_Pressed;
+
+            Window.Children.Add(ListMap);
+
+            string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCustomMap);
+            for (int i = 0; i < filesInDirectory.Length; i++)
+                ListMap.Items.Add(filesInDirectory[i].Split('\\')[1].Split('.')[0]);
+            ListMap.SelectionMode = ListSelectionMode.Single;
+
+            Window.Children.Add(DownloadButton);
+            Window.Children.Add(ReturnImportButton);
+
+            _gui.Screen.Desktop.Children.Add(Window);
+        }
+
+        private void UploadThisMapBridge_Pressed(object sender, System.EventArgs e)
+        {
+            int? _nbName = null;
+            string nameMap = null;
+
+            foreach (var control in ((GuiButtonControl)sender).Parent.Children)
+            {
+                if (control.GetType() == typeof(GuiListControl))
+                {
+                    GuiListControl input = (GuiListControl)control;
+                    if (input.SelectedItems.Count > 0)
+                        _nbName = input.SelectedItems[0];
+                }
+            }
+
+            if (_nbName != null)
+            {
+                List<string> AllName = Bdd.GetAllNameOfMap();
+                nameMap = AllName[(int)_nbName];
+                _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+                UploadThisMap_Pressed(nameMap);
+            }
+        }
+
+        private void UploadThisMap_Pressed(string nameMap)
+        {
+            var Window = new GuiWindowControl
+            {
+                Name = "window",
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(270))),
+                Title = "Upload Map on Internet",
+                EnableDragging = true
+            };
+
+            var nameOfMap = new GuiInputControl
+            {
+                Name = "nameMap",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 40), new UniScalar(100), new UniScalar(25)),
+                Text = nameMap
+            };
+
+            var labelDifficult = new GuiLabelControl()
+            {
+                Name = "difficult",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 25), new UniScalar(1.0f, -20), new UniScalar(0f, 25)),
+                Text = "Indicate the difficulty of the map"
+            };
+
+            var ListDifficultMap = new GuiListControl()
+            {
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 48), new UniScalar(1.0f, -20), new UniScalar(150)),
+            };
+
+            var UploadMap = new GuiButtonControl
+            {
+                Name = "uploadMap",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(1.0f, -60), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Confirm"
+            };
+
+            var ReturnDifficultButton = new GuiButtonControl
+            {
+                Name = "cancel",
+                Bounds = new UniRectangle(new UniScalar(1.0f, -100), new UniScalar(1.0f, -60), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Return"
+            };
+
+            UploadMap.Pressed += SendAndUploadMap_Pressed;
+            ReturnDifficultButton.Pressed += CancelDifficultUploadMap_Pressed;
+
+            Window.Children.Add(labelDifficult);
+
+            Window.Children.Add(ListDifficultMap);
+            ListDifficultMap.Items.Add("Easy");
+            ListDifficultMap.Items.Add("Medium");
+            ListDifficultMap.Items.Add("Hard");
+            ListDifficultMap.SelectionMode = ListSelectionMode.Single;
+
+            Window.Children.Add(UploadMap);
+            Window.Children.Add(ReturnDifficultButton);
+
+            _gui.Screen.Desktop.Children.Add(Window);
+        }
+
+        private void SendAndUploadMap_Pressed(object sender, System.EventArgs e)
+        {
+            string nameMap = null;
+            int _difficultMap = 0;
+
+            foreach (var control in ((GuiButtonControl)sender).Parent.Children)
+            {
+                if (control.GetType() == typeof(GuiListControl))
+                {
+                    GuiListControl input = (GuiListControl)control;
+                    if (input.SelectedItems.Count > 0)
+                        _difficultMap = input.SelectedItems[0];
+                }
+                else if (control.GetType() == typeof(GuiInputControl))
+                {
+                    GuiInputControl inputSize = (GuiInputControl)control;
+                    if (control.Name == "nameMap") nameMap = inputSize.Text;
+                }
+            }
+            string mapDifficult;
+            if (_difficultMap == 0) mapDifficult = "easy";
+            else if (_difficultMap == 1) mapDifficult = "medium";
+            else mapDifficult = "hard";
+            Bdd.UploadMap(_player._name, nameMap, "", "", mapDifficult);
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+        }
+
+        private void CancelDifficultUploadMap_Pressed(object sender, System.EventArgs e)
+        {
+            _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
+            UploadMap_Pressed();
+        }
+
+        private void CancelWindowUploadMap_Pressed(object sender, System.EventArgs e)
         {
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
         }
