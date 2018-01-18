@@ -14,7 +14,7 @@ namespace LibraryTrumpTower.Constants.BalanceGame.Towers
 
         public static double TOWER_BANK_RELOADING = 10 * 60;
         public static int TOWER_BANK_DAMAGE = 13;
-        public static double TOWER_BANK_SCOPE = 800;
+        public static double TOWER_BANK_SCOPE = 0;
         public static double TOWER_BANK_ATTACK_SPEED = 1.2;
 
         public static double TOWER_BANK_BASE_PRICE = 400;
