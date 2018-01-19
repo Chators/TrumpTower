@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 using static Menu.Game1Menu;
+using Microsoft.Xna.Framework;
 
 namespace Menu.ButtonsMenu
 {
@@ -14,6 +17,7 @@ namespace Menu.ButtonsMenu
             if (!IndexOfButtons.ContainsValue("mode_campagne")) throw new ArgumentException("Dictionary must contain mode_campagne");
             if (!IndexOfButtons.ContainsValue("mode_custom")) throw new ArgumentException("Dictionary must contain mode_custom");
             if (!IndexOfButtons.ContainsValue("editeur_de_map")) throw new ArgumentException("Dictionary must contain creer_votre_map");
+            if (!IndexOfButtons.ContainsValue("website")) throw new ArgumentException("Dictionary must contain website");
             if (!IndexOfButtons.ContainsValue("options")) throw new ArgumentException("Dictionary must contain options");
             if (!IndexOfButtons.ContainsValue("quitter")) throw new ArgumentException("Dictionary must contain quit");
         }
@@ -30,7 +34,12 @@ namespace Menu.ButtonsMenu
             }
             else if (IndexOfButtons[i] == "editeur_de_map")
             {
+               
                 _ctx.MapEditor_Pressed();
+            }
+            else if(IndexOfButtons[i] == "website")
+            {
+               _ctx.LaunchSite("http://trumptower.heberge-tech.fr:2232/");
             }
             else if (IndexOfButtons[i] == "options")
             {

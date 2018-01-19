@@ -456,7 +456,7 @@ namespace TrumpTower
             button_texture_pause[0] =
                  Content.Load<Texture2D>("resume");
             button_texture_pause[1] =
-                Content.Load<Texture2D>("home");
+                Content.Load<Texture2D>("restart");
             button_texture_pause[2] =
                 Content.Load<Texture2D>("quit");
             button_texture_lost[0] =
@@ -999,6 +999,8 @@ namespace TrumpTower
             base.Update(gameTime);
         }
 
+      
+
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
             if (!realPause)
@@ -1247,12 +1249,14 @@ namespace TrumpTower
                                 }
                                 if (button_rectangle_lost[i] == button_rectangle_lost[1])
                                 {
-                                _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
                                 isLost = false;
                                 realPause = false;
                                 GameIsPaused = false;
                                 stratPause = 0;
                                 Map.WavesCounter = 0;
+                               /* foreach (Spawn spawn in _map.SpawnsEnemies)
+                                    Map.WavesTotals += spawn.Waves.Count;*/
                                 break;
 
                             }
