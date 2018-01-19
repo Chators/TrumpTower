@@ -1691,7 +1691,7 @@ namespace MapEditorTrumpTower
 
             var labelName = new GuiLabelControl()
             {
-                Text = "She doesn't have a name",
+                Text = "It doesn't have a name",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
