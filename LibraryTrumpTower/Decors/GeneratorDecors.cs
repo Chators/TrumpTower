@@ -24,7 +24,7 @@ namespace LibraryTrumpTower.Decors
                     if (map[i][j] == (int)MapTexture.grass) numberOfGrass++;
                 }
             }
-            int numberOfDecors = numberOfGrass/2;
+            int numberOfDecors = numberOfGrass/4;
 
             Random rdn = new Random();
             int x, x1;
