@@ -1512,12 +1512,47 @@ namespace TrumpTower
                         enemyHealthBar.Draw(spriteBatch, unit.Position, _imgPlane1);
                 }
                 }
-                #endregion
+            #endregion
 
             #endregion
 
             #region Towers
+            if (_hoveredTower != null)
+            {
+                if (_towerCompteur <= 0)
+                {
+                    if (_hoveredTower != _lastHoveredTower)
+                    {
+                        if (_hoveredTower.Type != TowerType.bank)
+                        {
+                            circleTower = createCircleText((int)_hoveredTower.Scope);
+                        }
+                    }
+                    _lastHoveredTower = _hoveredTower;
+                    if (_hoveredTower.Type != TowerType.bank)
+                    {
+                        spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2) + Constant.imgSizeMap / 2), (_hoveredTower.Position.Y - (circleTower.Height / 2) + Constant.imgSizeMap / 2)), null, Color.Red * 0.3f);
+                    }
+                    spriteBatch.Draw(rect, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 5, 0), Color.White * 0.7f);
+                    spriteBatch.Draw(_imgLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 128) - 5)), (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
+                    spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.TowerLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 48))), ((VirtualHeight / 13) / 2) - 5), Color.Black);
 
+
+                    if (_hoveredTower.Type != TowerType.bank)
+                    {
+                        spriteBatch.Draw(_imgTowerAttackSpeed, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 10, ((VirtualHeight / 13) - ((float)_map.WidthArrayMap / 64) * 64) - 5), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
+                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Damage, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 20 + (((float)_map.WidthArrayMap / 64) * 64), ((((float)_map.WidthArrayMap / 64) * 64) / 2) - 2), Color.Red);
+                        spriteBatch.Draw(_imgTowerDamages, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 10, 5), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
+                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower._attackSpeed + "/s", _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 20 + (((float)_map.WidthArrayMap / 64) * 64), ((VirtualHeight / 13) - ((((float)_map.WidthArrayMap / 64) * 64) / 2)) - 5), Color.Blue);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(_imgCoin, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 3, (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
+                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Earnings, _hoveredTower.Position + new Vector2((Constant.imgSizeMap + 3) + ((float)_map.WidthArrayMap / 64) * 64, (((VirtualHeight / 13) / 2) - 5)), Color.Blue);
+
+                    }
+                }
+            }
             foreach (Tower tower in _map.Towers)
             {
                 Texture2D _imgTower = null;
@@ -1628,42 +1663,7 @@ namespace TrumpTower
                 
             
             
-            if(_hoveredTower != null)
-            {
-                if(_towerCompteur <= 0)
-                {
-                    if (_hoveredTower != _lastHoveredTower)
-                    {
-                        if (_hoveredTower.Type != TowerType.bank)
-                        {
-                            circleTower = createCircleText((int)_hoveredTower.Scope);
-                        }
-                    }
-                    _lastHoveredTower = _hoveredTower;
-                    if (_hoveredTower.Type != TowerType.bank)
-                    {
-                        spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2) + Constant.imgSizeMap / 2), (_hoveredTower.Position.Y - (circleTower.Height / 2) + Constant.imgSizeMap / 2)), null, Color.Gray * 0.2f);
-                    }
-                    spriteBatch.Draw(rect, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+5,0),Color.White*0.7f);
-                    spriteBatch.Draw(_imgLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 128) - 5)), (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
-                    spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.TowerLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 48) )), ((VirtualHeight / 13) / 2)-5), Color.Black);
-
-
-                    if (_hoveredTower.Type != TowerType.bank)
-                    {
-                        spriteBatch.Draw(_imgTowerAttackSpeed, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 10, ((VirtualHeight / 13) - ((float)_map.WidthArrayMap / 64) * 64) - 5), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
-                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Damage, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 20 + (((float)_map.WidthArrayMap / 64) * 64), ((((float)_map.WidthArrayMap / 64) * 64) / 2) - 2), Color.Red);
-                        spriteBatch.Draw(_imgTowerDamages, _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 10, 5), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
-                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower._attackSpeed + "/s", _hoveredTower.Position + new Vector2(Constant.imgSizeMap + 20 + (((float)_map.WidthArrayMap / 64) * 64), ((VirtualHeight / 13) - ((((float)_map.WidthArrayMap / 64) * 64) / 2)) - 5), Color.Blue);
-                    }
-                    else
-                    {
-                        spriteBatch.Draw(_imgCoin, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+3, (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
-                        spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Earnings, _hoveredTower.Position + new Vector2((Constant.imgSizeMap+3)+((float)_map.WidthArrayMap/64)*64, (((VirtualHeight / 13) / 2) - 5)), Color.Blue);
-
-                    }
-                }
-            }
+            
             
 
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
