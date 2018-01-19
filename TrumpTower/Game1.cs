@@ -291,27 +291,6 @@ namespace TrumpTower
             // TODO: Add your initialization logic here
             isLost = false;
             #region Map INIT
-
-            /*_mapPoint = new int[,]
-            {
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,7 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,10,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,13,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,4 ,10,1 ,10,1 ,1 ,10,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,16,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,13,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,4 ,1 ,10,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,6 ,5 ,0 ,16,3 ,3 ,3 ,6 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,4 ,5 ,0 ,0 ,0 ,0 ,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,14,0 ,4 ,9 ,2 ,2 ,2 ,14,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,10,1 ,1 ,10,5 ,0 ,4 ,10,1 ,10,10,5 ,0 ,4 ,10,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,16,3 ,3 ,3 ,3 ,15,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
-            };
-            _map = new Map(_mapPoint);*/
             _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
 
             foreach (Spawn spawn in _map.SpawnsEnemies)
@@ -977,7 +956,6 @@ namespace TrumpTower
                 if (isMapCampagne)
                 {
                     // Deserialize class player
-                    //"../../Menu/bin/" + 
                     Player player = BinarySerializer.Deserialize<Player>(BinarySerializer.pathCurrentPlayer);
                     
                     // Verify currentCampagne and _lvlAccess
@@ -987,80 +965,6 @@ namespace TrumpTower
                         player.Serialize();
                     }
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
 
             if (nombre < 50) nombre += 4;
@@ -1357,6 +1261,8 @@ namespace TrumpTower
                                 GameIsPaused = false;
                                 stratPause = 0;
                                 Map.WavesCounter = 0;
+                                foreach (Spawn spawn in _map.SpawnsEnemies)
+                                    Map.WavesTotals += spawn.Waves.Count;
                                 break;
                             } 
                         }
@@ -1379,10 +1285,39 @@ namespace TrumpTower
                             {
                                 Exit();
                             }
-                            else if (button_rectangle_win[i] == button_rectangle_win[1])
+                            else if (button_rectangle_win[i] == button_rectangle_win[1]) // button nextMap
                             {
-                                //a faire mdr
-                                Exit();
+                                int nbMap = (int)Char.GetNumericValue(_map.Name[_map.Name.Length-1]);
+                                string _nameWorld = null;
+
+                                if (nbMap >= 1 && nbMap <= 5) _nameWorld = "World1";
+                                if (nbMap >= 6 && nbMap <= 10)
+                                {
+                                    _nameWorld = "World2";
+                                    nbMap -= 5;
+                                }
+                                if (nbMap >= 11 && nbMap <= 15)
+                                {
+                                    nbMap -= 10;
+                                    _nameWorld = "World3";
+                                }
+                                
+                                string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCampagneMap + "/" + _nameWorld);
+                                FileInfo file = new FileInfo(filesInDirectory[nbMap]);
+                                // On copie le fichier dans CurrentMap
+                                file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
+
+                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
+
+                                isLost = false;
+                                _isWon = false;
+                                realPause = false;
+                                GameIsPaused = false;
+                                stratPause = 0;
+                                Map.WavesCounter = 0;
+                                foreach (Spawn spawn in _map.SpawnsEnemies)
+                                    Map.WavesTotals += spawn.Waves.Count;
+                                break;
                             }
                         }
                     }
@@ -1856,6 +1791,7 @@ namespace TrumpTower
                 }
 
                 spriteBatch.Draw(button_texture_win[0], button_rectangle_win[0], button_color_win[0]);
+
                 spriteBatch.Draw(button_texture_win[1], button_rectangle_win[1], button_color_win[1]);
                 spriteBatch.Draw(_trumpWin, new Vector2(0, VirtualHeight-_trumpWin.Height), Color.White);
                
