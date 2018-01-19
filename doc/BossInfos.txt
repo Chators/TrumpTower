@@ -1,0 +1,5 @@
+Pour les bosses :
+
+BOSS1 - Un spawn avec une empty wave. Voir si on rajoute des unités
+
+BOSS2 - Deux spawns avec deux empty wave. Voir si on rajoute des unités

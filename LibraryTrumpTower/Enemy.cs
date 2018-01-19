@@ -87,6 +87,7 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_MAX_HP;
                 else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1) return BalanceBoss2.BOSS2_MAX_HP;
                 else if (_type == EnemyType.boss1) return BalanceBoss1.BOSS1_MAX_HP;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_MAX_HP;
                 else return 0;
             }
         }
@@ -100,6 +101,7 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_DAMAGE;
                 else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1) return BalanceBoss2.BOSS2_DAMAGE * (1 + Map._timesBeingRevived);
                 else if (_type == EnemyType.boss1) return BalanceBoss1.BOSS1_DAMAGE;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_DAMAGE;
                 else return 0;
             }
             set
@@ -117,6 +119,7 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_DEFAULT_SPEED;
                 else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1) return BalanceBoss2.BOSS2_DEFAULT_SPEED;
                 else if (_type == EnemyType.boss1) return BalanceBoss1.BOSS1_DEFAULT_SPEED;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_DEFAULT_SPEED;
                 else return 0;
             }
         }
@@ -179,31 +182,7 @@ namespace TrumpTower.LibraryTrumpTower
             else if (type == EnemyType.boss1) // Che Guevarra
             {
                 _WallBoss = Wallboss;
-            }
-            /*else if (type == EnemyType.boss3) // Kim Jung Un
-          {
-              CurrentHp = 200;
-              MaxHp = 200;
-              _damage = 30;
-              Speed = 4;
-              _reload = 2 * 60;
-              _defaultReload = 2 * 60;
-              _rangeBoss = 200;
-              _enrageTimer = 10 * 60;  // when Boss enrages, he does double dmg, speed etc..
-              _hasEnraged = false;
-              /*
-               * 
-               * Beaucoup d'add pour ce boss
-               * Idée qu'il grabbe une tourelle, ça l'arrête pendant 2 secs, puis il arrache la tourelle du sol. 
-               * Une corde qui va jusqu'à la tour et si on tire au sniper dessus, ca la casse et il n'arrache pas la tour.
-               * 
-               * Autre idée : La maison blanche est remplacée par un bouton nucléaire, il faut pas qu'il aille dessus
-               * 
-               * Autre idée : Son premier coup contre la base en range est une charge qui fait genre midlife à la base
-               * 
-               * Autre idée : Ptet un fameux QTE 
-               * *
-          }*/
+            }           
         }
 
         
@@ -277,6 +256,27 @@ namespace TrumpTower.LibraryTrumpTower
                     _isCastingBoss1 = false;
                     _timeBeforeEndofCastingCharge = 3 * 60; // When it comes to 0, boss1 charges, doubling his speed and dammage, build a wall to stop him
                     _rangeBoss = 200;
+                }
+                else if (_type == EnemyType.boss3) // Kim Jung Un
+                {
+                    _enrageTimer = BalanceBoss3.BOSS3_ENRAGE_TIMER;  // when Boss enrages, he does double dmg, speed etc..
+                    _hasEnraged = false;
+                    _reload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
+                    _rangeBoss = BalanceBoss3.BOSS3_RANGE;
+                    /*
+                     * 
+                     * Beaucoup d'add pour ce boss
+                     * Idée qu'il grabbe une tourelle, ça l'arrête pendant 2 secs, puis il arrache la tourelle du sol. 
+                     * Puis la lance contre la base qui inflige des dégats
+                     * Une corde qui va jusqu'à la tour et si on tire au sniper dessus, ca la casse et il n'arrache pas la tour.
+                     * 
+                     * Autre idée : La maison blanche est remplacée par un bouton nucléaire, il faut pas qu'il aille dessus
+                     * 
+                     * Autre idée : Son premier coup contre la base en range est une charge qui fait genre midlife à la base
+                     * 
+                     * Autre idée : Ptet un fameux QTE 
+                     * *
+                */
                 }
                 Initiliaze = true;
             }
@@ -361,8 +361,7 @@ namespace TrumpTower.LibraryTrumpTower
                 Die(); // Kills the remaining boss
             }
             _map.BossesDead.Clear(); // reclears the list to be sure.
-
-            // BalanceBoss2.BOSS2_TIMES_BEING_REVIVED++;
+         
             Map._timesBeingRevived++;
 
             _map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);

@@ -54,6 +54,7 @@
     <Compile Include="Constants\BalanceGame\BalanceMissile.cs" />
     <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss2.cs" />
     <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss1.cs" />
+    <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss3.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDefaultSoldier.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDoctor.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyKamikaze.cs" />
