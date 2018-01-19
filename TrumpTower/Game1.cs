@@ -309,8 +309,8 @@ namespace TrumpTower
             */
 
             //BOSS1
-            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
-
+            //Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
+            
             #endregion
 
             #region Graphics Device 
@@ -1919,8 +1919,8 @@ namespace TrumpTower
             }
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "wallBossAbility")
             {
+                spriteBatch.Draw(_imgBoss1Wall, new Vector2(newStateMouse.X - _imgBoss1Wall.Width / 2, newStateMouse.Y - _imgBoss1Wall.Height / 2), Color.White * 0.6f);
                 spriteBatch.Draw(_imgCursorTrowel, new Vector2(newStateMouse.X - _imgCursorTrowel.Width / 2, newStateMouse.Y - _imgCursorTrowel.Height / 2), Color.White);
-                spriteBatch.Draw(_imgBoss1Wall, new Vector2(newStateMouse.X - _imgBoss1Wall.Width/2, newStateMouse.Y - _imgBoss1Wall.Height/2), Color.White * 0.6f);
             }
             else
                 spriteBatch.Draw(_imgCursorDefault, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
