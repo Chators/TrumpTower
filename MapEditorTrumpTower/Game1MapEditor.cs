@@ -541,7 +541,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -90)), new UniVector(new UniScalar(400), new UniScalar(180))),
                 Title = "Map size",
                 EnableDragging = true
             };
@@ -650,7 +650,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(300), new UniScalar(200))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -150), new UniScalar(0.5f, -100)), new UniVector(new UniScalar(300), new UniScalar(200))),
                 Title = "Defining the health points of the base",
                 EnableDragging = true
             };
@@ -737,7 +737,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(300), new UniScalar(200))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -150), new UniScalar(0.5f, -100)), new UniVector(new UniScalar(300), new UniScalar(200))),
                 Title = "Spawn",
                 EnableDragging = true
             };
@@ -828,7 +828,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -150)), new UniVector(new UniScalar(400), new UniScalar(300))),
                 Title = "Spawn",
                 EnableDragging = true
             };
@@ -1067,7 +1067,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(500), new UniScalar(350))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -250), new UniScalar(0.5f, -175)), new UniVector(new UniScalar(500), new UniScalar(350))),
                 Title = "Wave",
                 EnableDragging = true
             };
@@ -1277,7 +1277,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(250))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -175)), new UniVector(new UniScalar(400), new UniScalar(250))),
                 Title = "Options Map",
                 EnableDragging = true
             };
@@ -1387,7 +1387,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(540), new UniScalar(220))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -270), new UniScalar(0.5f, -110)), new UniVector(new UniScalar(540), new UniScalar(220))),
                 Title = "Air Wave Menu",
                 EnableDragging = true
             };
@@ -1521,7 +1521,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -150)), new UniVector(new UniScalar(400), new UniScalar(300))),
                 Title = "Add Air Plane",
                 EnableDragging = true
             };
@@ -1678,7 +1678,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -90)), new UniVector(new UniScalar(400), new UniScalar(180))),
                 Title = "Save Map Error",
                 EnableDragging = true
             };
@@ -1691,7 +1691,7 @@ namespace MapEditorTrumpTower
 
             var labelName = new GuiLabelControl()
             {
-                Text = "She doesn't have a name",
+                Text = "It doesn't have a name",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(100), new UniScalar(25))
             };
 
@@ -1754,7 +1754,7 @@ namespace MapEditorTrumpTower
             var window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(180))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -90)), new UniVector(new UniScalar(400), new UniScalar(180))),
                 Title = "Existing map name",
                 EnableDragging = true
             };

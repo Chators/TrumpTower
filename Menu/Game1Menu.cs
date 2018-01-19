@@ -251,7 +251,7 @@ namespace Menu
             _gui.Screen.Desktop.Bounds = new UniRectangle(new UniScalar(0f, 0), new UniScalar(0f, 0), new UniScalar(1f, 0), new UniScalar(1f, 0));
             // Perform second-stage initialization
             _gui.Initialize();
-
+            
             // Animations=
             AnimSprites = new SimpleAnimationDefinition[1];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
@@ -442,7 +442,7 @@ namespace Menu
             var Window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -150)), new UniVector(new UniScalar(400), new UniScalar(300))),
                 Title = "Your Maps",
                 EnableDragging = true
             };
@@ -558,7 +558,7 @@ namespace Menu
             var Window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(300))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -150)), new UniVector(new UniScalar(400), new UniScalar(300))),
                 Title = "Map Editor",
                 EnableDragging = true
             };
@@ -689,7 +689,7 @@ namespace Menu
             var Window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(550), new UniScalar(270))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -225), new UniScalar(0.5f, -135)), new UniVector(new UniScalar(550), new UniScalar(270))),
                 Title = "Download Map on Internet",
                 EnableDragging = true
             };
@@ -697,6 +697,13 @@ namespace Menu
             var ListMap = new GuiListControl()
             {
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(1.0f, -20), new UniScalar(0f, 150)),
+            };
+
+            var labelNotConnect = new GuiLabelControl()
+            {
+                Name = "NotConnexion",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Please, check your internet connection !"
             };
 
             var DownloadButton = new GuiButtonControl
@@ -716,13 +723,20 @@ namespace Menu
             DownloadButton.Pressed += DownloadThisMap_Pressed;
             ReturnImportButton.Pressed += CancelWindowDownloadMap_Pressed;
 
-            Window.Children.Add(ListMap);
-            List<string> AllName = Bdd.GetAllNameOfMap();
-            List<string> AllAuthor = Bdd.GetAllAuthor();
-            List<string> AllDate = Bdd.GetAllDate();
-            for (int i = 0; i < AllName.Count; i++)
-                ListMap.Items.Add("Map name " + AllName[i] + " made by " + AllAuthor[i] + " the " + AllDate[i]);
-            ListMap.SelectionMode = ListSelectionMode.Single;
+            try
+            {
+                List<string> AllName = Bdd.GetAllNameOfMap();
+                List<string> AllAuthor = Bdd.GetAllAuthor();
+                List<string> AllDate = Bdd.GetAllDate();
+                Window.Children.Add(ListMap);
+                for (int i = 0; i < AllName.Count; i++)
+                    ListMap.Items.Add("Map name " + AllName[i] + " made by " + AllAuthor[i] + " the " + AllDate[i]);
+                ListMap.SelectionMode = ListSelectionMode.Single;
+            }
+            catch (Exception e)
+            {
+                Window.Children.Add(labelNotConnect);
+            }
 
             Window.Children.Add(DownloadButton);
             Window.Children.Add(ReturnImportButton);
@@ -764,7 +778,7 @@ namespace Menu
             var Window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(260))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -130)), new UniVector(new UniScalar(400), new UniScalar(260))),
                 Title = "Upload Map on Internet",
                 EnableDragging = true
             };
@@ -834,7 +848,7 @@ namespace Menu
             var Window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(270))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -200), new UniScalar(0.5f, -135)), new UniVector(new UniScalar(400), new UniScalar(270))),
                 Title = "Upload Map on Internet",
                 EnableDragging = true
             };
