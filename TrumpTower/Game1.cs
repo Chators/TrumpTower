@@ -199,6 +199,8 @@ namespace TrumpTower
 
         #endregion
 
+        Texture2D _imgHearth;
+
         #region Cursor
 
         public Texture2D ImgCursor { get; set; }
@@ -680,6 +682,8 @@ namespace TrumpTower
             MediaPlayer.IsRepeating = true;
 
             #endregion
+
+            _imgHearth = Content.Load<Texture2D>("hearth");
 
             grey = Content.Load<Texture2D>("grey");
 
@@ -1462,8 +1466,8 @@ namespace TrumpTower
             Wall _wall = _map.Wall;
             spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
 
-            HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f, 1.8f);
-            wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);
+            /*HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f, 1.8f);
+            wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);*/
 
             #endregion
 
@@ -1755,15 +1759,22 @@ namespace TrumpTower
 
             #endregion
 
+            #region Wall
+            HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 7.8f, 3f);
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
+            spriteBatch.Draw(_imgHearth, new Vector2(10, 90), Color.White);
+            wallHealthBar.Draw(spriteBatch, new Vector2(123,117), _imgWall);
+            #endregion
+
             #region Entity
             HealthBar entityBar = new HealthBar(_map.Entity.CurrentGauge, _map.Entity.MaxGauge, 7.8f, 3f);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
             Texture2D entityFace = null;
             if (_map.Entity.EntityFace == EntityFace.VeryAngry) entityFace = _imgVeryAngryFace;
             else if (_map.Entity.EntityFace == EntityFace.Angry) entityFace = _imgAngryFace;
             else if (_map.Entity.EntityFace == EntityFace.Happy) entityFace = _imgHappyFace;
-            spriteBatch.Draw(entityFace, new Vector2(10, 90), Color.White);
-            entityBar.Draw(spriteBatch, new Vector2(123, 117), _imgWall);
+            spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
+            entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
             #endregion
 
             #region Raid Units Air is Comming
@@ -1780,18 +1791,6 @@ namespace TrumpTower
             #endregion
 
 
-
-            #region HELP DEBOGAGE
-            //spriteBatch.DrawString(_gameOver, BalanceBoss2.BOSS2_DEFAULT_SPEED+"", new Vector2(100, 100), Color.Red);
-            /*
-            spriteBatch.DrawString(_spriteDollars, "Mouse X : " + newStateMouse.X, new Vector2(50, 107), Color.DarkRed);
-            spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 127), Color.DarkRed);
-            
-            spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 147), Color.DarkRed);
-            */
-
-            #endregion
-
             // ANIM EXPLOSION ABILITY
             foreach (SimpleAnimationDefinition def in AnimSprites )
             {
@@ -1799,14 +1798,14 @@ namespace TrumpTower
             }
             
             #region Pause
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 133), sourceRectanglee, Color.Black * 0.6f);
+            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 133+60), sourceRectanglee, Color.Black * 0.6f);
             if (stratPause < 5)
             {
-                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 140), Color.White);
+                spriteBatch.DrawString(_spriteDollars, "Pause :  " + stratPause + "/5", new Vector2(10, 140+60), Color.White);
             }
             else if (stratPause >= 5)
             {
-                if(!warning) spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 140), Color.Red);
+                if(!warning) spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 140+60), Color.Red);
                 {
                     if (nombre2 < 30)
                     {
@@ -1814,15 +1813,15 @@ namespace TrumpTower
                         {
                             for (int i = 0; i < nombre; i++)
                             {
-                                spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10 + (nombre / 7), 140), Color.Red);
+                                spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10 + (nombre / 7), 140+60), Color.Red);
                             }
 
-                            if (warning == true) spriteBatch.Draw(_imgWarning2, new Vector2(230 + (nombre / 7), 128), Color.White);
+                            if (warning == true) spriteBatch.Draw(_imgWarning2, new Vector2(230 + (nombre / 7), 128+60), Color.White);
                         }
                     }
                     else
                     {
-                        spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 140), Color.Red);
+                        spriteBatch.DrawString(_spriteDollars, "Pause : 5/5", new Vector2(10, 140+60), Color.Red);
                     }
                 }
             }
