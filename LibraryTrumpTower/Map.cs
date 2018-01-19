@@ -9,6 +9,7 @@ using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower;
 using System.Runtime.Serialization;
 using LibraryTrumpTower.Decors;
+using LibraryTrumpTower.Constants.BalanceGame.Bosses;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -50,6 +51,9 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public List<Enemy> AnimHeal { get; set; }
         [DataMember]
+        public List<Enemy> BossesDead { get; set; }
+
+        [DataMember]
         public List<Decor> Decors;
         [DataMember]
         public List<Tower> TowerDisabled;
@@ -61,7 +65,12 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public StickyRice StickyRice { get; set; }
         [DataMember]
+        public WallBoss WallBoss { get; set; }
+        [DataMember]
         public Entity Entity { get; set; }
+        [DataMember]
+        public bool Initialize { get; set; }
+        public static int _timesBeingRevived { get; set; }
         #endregion
 
         public Map(int[][] map)
@@ -78,6 +87,7 @@ namespace TrumpTower.LibraryTrumpTower
             Explosion = new Explosion(this);
             Sniper = new Sniper(this);
             StickyRice = new StickyRice(this);
+            WallBoss = new WallBoss(this);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
             DeadUnitsAir = new List<AirUnit>();
@@ -85,13 +95,22 @@ namespace TrumpTower.LibraryTrumpTower
             AnimHeal = new List<Enemy>();
             Decors = new List<Decor>();
             Entity = new Entity(this);
+            Initialize = false;
+            _timesBeingRevived = 0;
 
+            BossesDead = new List<Enemy>();
             WavesCounter = 0;
             WavesTotals = 0;
         }
 
         public void Update()
         {
+            if (!Initialize)
+            {
+                Map._timesBeingRevived = 0;
+                Initialize = true;
+            }
+
             List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
             {
@@ -265,6 +284,11 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseStickyRiceAbility(Vector2 position)
         {
             StickyRice.On(position);
+        }
+
+        public void UseWallBossAbility(Vector2 position)
+        {
+            WallBoss.PutWallBoss(position);
         }
 
         public void UseEntity()

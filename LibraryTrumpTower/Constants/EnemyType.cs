@@ -13,6 +13,9 @@ namespace LibraryTrumpTower.Constants
         doctor,
         saboteur,
         lobbyist,
-        boss
+        boss1,
+        boss2,
+        boss2_1,
+        boss3
     }
 }

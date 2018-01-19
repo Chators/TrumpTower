@@ -21,6 +21,7 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
         public int TimerBeforeStarting { get; set; }
         [DataMember]
         public bool IsStarting { get; private set; }
+        
         #endregion
 
         public Wave(Spawn spawn, List<Enemy> enemies, int timerBeforeStarting)
@@ -87,7 +88,7 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
         public void CreateEnemies(EnemyType enemyType, int number)
         {
             for (int i = 0; i < number; i++)
-                Enemies.Add(new Enemy(_spawn.Ctx, this, "lol", enemyType));
+                Enemies.Add(new Enemy(_spawn.Ctx, this, "lol", enemyType, _spawn.Ctx.WallBoss));
         }
 
         public void DeleteEnemies(EnemyType enemyType, List<Enemy> enemyAtDelete)

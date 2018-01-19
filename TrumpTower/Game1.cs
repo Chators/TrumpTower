@@ -1,6 +1,7 @@
 ﻿using LibraryTrumpTower;
 using LibraryTrumpTower.AirUnits;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.Constants.BalanceGame.Bosses;
 using LibraryTrumpTower.Constants.BalanceGame.Enemies;
 using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using LibraryTrumpTower.Decors;
@@ -132,6 +133,7 @@ namespace TrumpTower
         Texture2D _imgDoctor;
         Texture2D _imgSaboteur;
         Texture2D _imgSaboteur1;
+        
 
         #region Air Units
         Texture2D _imgPlane1;
@@ -190,6 +192,8 @@ namespace TrumpTower
 
         Texture2D _buttonMaki;
         Texture2D _circleStickyRice;
+
+        Texture2D _wallBoss;
         #endregion
 
         #endregion
@@ -295,6 +299,15 @@ namespace TrumpTower
 
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
+
+            /*BOSS2
+            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
+            Map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
+            */
+
+            //BOSS1
+            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
+
             #endregion
 
             #region Graphics Device 
@@ -311,7 +324,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = false;
+                        graphics.IsFullScreen = true;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -492,6 +505,7 @@ namespace TrumpTower
             _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
             _imgSaboteur = Content.Load<Texture2D>("Enemies/saboteur");
             _imgSaboteur1 = Content.Load<Texture2D>("Enemies/saboteur1");
+            
 
             #region Air Enemies
             _imgPlane1 = Content.Load<Texture2D>("Enemies/Air/plane1");
@@ -619,6 +633,13 @@ namespace TrumpTower
             _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "stickyRiceAbility", new Vector2(_positionMakiAbilityButton.X, _positionMakiAbilityButton.Y), _buttonMaki));
             _circleStickyRice = createCircleText((int)_map.StickyRice.Radius);
             #endregion
+
+            #region WallBoss
+            _wallBoss = Content.Load<Texture2D>("SpecialAbilities/wallboss");
+            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "wallBossAbility", new Vector2(_positionExplosionAbilityButton.X + 240, _positionExplosionAbilityButton.Y), _wallBoss));
+            Vector2 _positionWallBossAbilityButton = new Vector2(_positionMakiAbilityButton.X + 80, _positionMakiAbilityButton.Y);
+            #endregion
+
 
             #endregion
 
@@ -1450,6 +1471,10 @@ namespace TrumpTower
                 // CHANGE TEXTURE ENEMY
                 Texture2D _imgEnemy = null;
                 if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss1) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss2) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss2_1) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss3) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
                 else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
                 else if (enemy._type == EnemyType.saboteur && enemy._hasCast == false) _imgEnemy = _imgSaboteur1;
@@ -1658,6 +1683,11 @@ namespace TrumpTower
 
 
             #endregion
+            #region WallBoss
+
+            spriteBatch.Draw(_imgWall, _map.WallBoss.Position, Color.White);
+
+            #endregion
 
             #region Missiles
 
@@ -1742,7 +1772,7 @@ namespace TrumpTower
 
 
             #region HELP DEBOGAGE
-            spriteBatch.DrawString(_gameOver, _map.Name + "MDRRRRRRR", new Vector2(100, 100), Color.Red);
+            spriteBatch.DrawString(_gameOver, BalanceBoss2.BOSS2_DEFAULT_SPEED+"", new Vector2(100, 100), Color.Red);
             /*
             spriteBatch.DrawString(_spriteDollars, "Mouse X : " + newStateMouse.X, new Vector2(50, 107), Color.DarkRed);
             spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 127), Color.DarkRed);
@@ -1876,7 +1906,7 @@ namespace TrumpTower
             {
                 spriteBatch.Draw(_imgCursorDeliveryRice, new Vector2(newStateMouse.X - _imgCursorDeliveryRice.Width / 2, newStateMouse.Y - _imgCursorDeliveryRice.Height / 2), Color.White);
                 spriteBatch.Draw(_circleStickyRice, new Vector2(newStateMouse.X - (_circleStickyRice.Width / 2), newStateMouse.Y - (_circleStickyRice.Height / 2)), Color.White * 0.1f);
-            }
+            } 
             else
                 spriteBatch.Draw(_imgCursorDefault, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
 
