@@ -67,10 +67,14 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     spriteBatch.DrawString(_ctx.CooldownSprite, (int)_currentTimer / 60 + "", _positionText, Color.YellowGreen);
                 }
             }
-            if (_name == "wallBossAbility")
+
+            if (_ctx.Ctx.Map.Name == "mapCampagne5")
             {
-                reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
-                spriteBatch.Draw(_img, reloadedRect, color);
+                if (_name == "wallBossAbility")
+                {
+                    reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
+                    spriteBatch.Draw(_img, reloadedRect, color);
+                }
             }
 
             if (_name == "entityAbility")

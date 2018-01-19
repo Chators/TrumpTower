@@ -1292,8 +1292,8 @@ namespace TrumpTower
                                 GameIsPaused = false;
                                 stratPause = 0;
                                 Map.WavesCounter = 0;
-                                foreach (Spawn spawn in _map.SpawnsEnemies)
-                                    Map.WavesTotals += spawn.Waves.Count;
+                                /*foreach (Spawn spawn in _map.SpawnsEnemies)
+                                    Map.WavesTotals += spawn.Waves.Count;*/
                                 break;
                             } 
                         }

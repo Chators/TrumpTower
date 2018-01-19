@@ -26,6 +26,7 @@ MapCampagne12
 MapCampagne13
 MapCampagne14
 MapCampagne15
+puis renommer le fichier quand on place dans WorldXMapX.xml
 --------------------------------------------------------------	 SITE WEB    ---------------------------------------------------------------
 Site Web : 
 	- heberge-tech.fr:2232
