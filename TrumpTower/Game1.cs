@@ -311,7 +311,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = false;
+                        graphics.IsFullScreen = true;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -977,6 +977,8 @@ namespace TrumpTower
             if (!warning) nombre2 = 0;
             base.Update(gameTime);
         }
+
+      
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {

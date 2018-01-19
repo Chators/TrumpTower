@@ -49,7 +49,7 @@ namespace Menu
         WorldButton _world2Button;
         WorldButton _world3Button;
         OptionsButtons _optionsButtons;
-
+        Game1Menu _ctx;
         //mouse pressed and mouse just pressed
         bool mpressed, prev_mpressed = false;
         //mouse location in window
@@ -85,6 +85,7 @@ namespace Menu
         public Texture2D _imgVersus;
         private Texture2D _imgTrumpTower;
         public Texture2D _imgArrowRight;
+      
 
         public SimpleAnimationDefinition[] AnimSprites { get; private set; }
         #endregion
@@ -126,14 +127,14 @@ namespace Menu
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+           
             {
                 int attempts = 0;
                 while (true)
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        graphics.IsFullScreen = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -147,13 +148,14 @@ namespace Menu
             graphics.ApplyChanges();
 
             #region BUTTON MAIN
-            int numberOfButtons = 5;
+            int numberOfButtons = 6;
             Dictionary<int, string> indexOfButtons = new Dictionary<int, string>();
             indexOfButtons[0] = "mode_campagne";
             indexOfButtons[1] = "mode_custom";
             indexOfButtons[2] = "editeur_de_map";
             indexOfButtons[3] = "options";
             indexOfButtons[4] = "quitter";
+            indexOfButtons[5] = "website";
             int buttonHeight = 100;
             int buttonWidth = 300;
             _mainButtons = new MainButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
@@ -423,6 +425,21 @@ namespace Menu
         #region WINDOW
 
         #region Window MapPlay
+
+        public void Fullscreen()
+        {  
+             _ctx.graphics.IsFullScreen = false;
+        }
+        public  void LaunchSite(string url)
+        {
+            try
+            {
+                System.Diagnostics.ProcessStartInfo webPage = new System.Diagnostics.ProcessStartInfo(url);
+                System.Diagnostics.Process.Start(webPage);
+            }
+            catch { }
+        }
+
         public void MapPlay_Pressed()
         {
             var Window = new GuiWindowControl
@@ -476,6 +493,8 @@ namespace Menu
             _gui.Screen.Desktop.Children.Add(Window);
 
         }
+
+
 
         private void DeleteMap_Pressed(object sender, System.EventArgs e)
         {
