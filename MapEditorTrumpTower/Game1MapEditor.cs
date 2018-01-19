@@ -137,7 +137,7 @@ namespace MapEditorTrumpTower
                 {
                     try
                     {
-                        Window.IsBorderless = true;
+                        graphics.IsFullScreen = true;
                         graphics.ApplyChanges();
                         break;
                     }
