@@ -4,6 +4,7 @@ using LibraryTrumpTower.Constants;
 using LibraryTrumpTower.Constants.BalanceGame.Enemies;
 using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using LibraryTrumpTower.Decors;
+using Menu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -311,7 +312,7 @@ namespace TrumpTower
                 {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
             };
             _map = new Map(_mapPoint);*/
-            _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+            _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
 
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
@@ -331,7 +332,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        graphics.IsFullScreen = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -432,7 +433,6 @@ namespace TrumpTower
             #endregion
 
             warning = false;
-            graphics.IsFullScreen = true;
             base.Initialize();
 
             int WIDTH = (int)VirtualWidth / 12;
@@ -961,6 +961,106 @@ namespace TrumpTower
             {
                 _isWon = true;
 
+                // Verify if map is map Campagne
+                bool isMapCampagne = false;
+                int nbMapCampagne = 15;
+                int currentCampagne = 0;
+                for (int i = 1; i < nbMapCampagne + 1; i++)
+                {
+                    if (_map.Name == "mapCampagne" + i.ToString())
+                    {
+                        isMapCampagne = true;
+                        currentCampagne = i;
+                        break;
+                    }
+                }
+                if (isMapCampagne)
+                {
+                    // Deserialize class player
+                    //"../../Menu/bin/" + 
+                    Player player = BinarySerializer.Deserialize<Player>(BinarySerializer.pathCurrentPlayer);
+                    
+                    // Verify currentCampagne and _lvlAccess
+                    if (player._lvlAccess == currentCampagne)
+                    {
+                        player._lvlAccess++;
+                        player.Serialize();
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
 
             if (nombre < 50) nombre += 4;
@@ -1251,7 +1351,7 @@ namespace TrumpTower
                             }
                             else if (button_rectangle_lost[i] == button_rectangle_lost[1])
                             {
-                                _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
                                 isLost = false;
                                 realPause = false;
                                 GameIsPaused = false;
@@ -1336,7 +1436,7 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-        
+            
             #region Maps
 
             for (int y = 0; y < _map.HeightArrayMap; y++)
@@ -1681,10 +1781,10 @@ namespace TrumpTower
             }
             #endregion
 
-            
+
 
             #region HELP DEBOGAGE
-
+            spriteBatch.DrawString(_gameOver, _map.Name + "MDRRRRRRR", new Vector2(100, 100), Color.Red);
             /*
             spriteBatch.DrawString(_spriteDollars, "Mouse X : " + newStateMouse.X, new Vector2(50, 107), Color.DarkRed);
             spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 127), Color.DarkRed);

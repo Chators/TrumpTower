@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Menu.BDD;
 using TrumpTower.LibraryTrumpTower;
 using static System.Net.Mime.MediaTypeNames;
+using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace Menu
 {
@@ -95,9 +96,11 @@ namespace Menu
 
             state = MenuState.MAIN;
 
+            /*
             _player = new Player("Thibaud", "mdr", 8);
             _player.Serialize();
-
+            */
+            _player = BinarySerializer.Deserialize<Player>(BinarySerializer.pathCurrentPlayer);
             // First, we create an input manager.
             _inputManager = new InputListenerComponent(this);
             // Then, we create GUI.
