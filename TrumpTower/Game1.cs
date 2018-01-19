@@ -193,7 +193,7 @@ namespace TrumpTower
         Texture2D _buttonMaki;
         Texture2D _circleStickyRice;
 
-        Texture2D _wallBoss;
+        public Texture2D _wallBoss;
         #endregion
 
         #endregion
@@ -1776,7 +1776,7 @@ namespace TrumpTower
 
 
             #region HELP DEBOGAGE
-            spriteBatch.DrawString(_gameOver, BalanceBoss2.BOSS2_DEFAULT_SPEED+"", new Vector2(100, 100), Color.Red);
+            //spriteBatch.DrawString(_gameOver, BalanceBoss2.BOSS2_DEFAULT_SPEED+"", new Vector2(100, 100), Color.Red);
             /*
             spriteBatch.DrawString(_spriteDollars, "Mouse X : " + newStateMouse.X, new Vector2(50, 107), Color.DarkRed);
             spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 127), Color.DarkRed);

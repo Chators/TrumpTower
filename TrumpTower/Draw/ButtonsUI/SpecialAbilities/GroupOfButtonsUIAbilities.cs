@@ -90,10 +90,11 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     if (Ctx.Map.WallBoss._isUsed == false)
                     {
                         if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
-                            newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height)
+                            newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
+                            newStateKeyboard.IsKeyDown(Keys.R))
 
                         {
-                            if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released || newStateKeyboard.IsKeyDown(Keys.V) && lastStateKeyboard.IsKeyDown(Keys.V))
+                            if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released || newStateKeyboard.IsKeyDown(Keys.R) && lastStateKeyboard.IsKeyDown(Keys.R))
                             {
                                 ButtonActivated = button;
                             }
@@ -138,8 +139,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
 
                 if (ButtonActivated.Name == "wallBossAbility" && !Ctx.GameIsPaused)
                 {
-                    Ctx.Map.UseWallBossAbility(new Vector2(newStateMouse.X, newStateMouse.Y));
-
+                    Ctx.Map.UseWallBossAbility(new Vector2(newStateMouse.X - Ctx._wallBoss.Width/2, newStateMouse.Y - Ctx._wallBoss.Height/2));
                 }
 
                 ButtonActivated = null;
