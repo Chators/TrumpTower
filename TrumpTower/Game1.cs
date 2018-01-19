@@ -4,6 +4,7 @@ using LibraryTrumpTower.Constants;
 using LibraryTrumpTower.Constants.BalanceGame.Enemies;
 using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using LibraryTrumpTower.Decors;
+using Menu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -290,28 +291,7 @@ namespace TrumpTower
             // TODO: Add your initialization logic here
             isLost = false;
             #region Map INIT
-
-            /*_mapPoint = new int[,]
-            {
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,7 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,10,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,13,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,4 ,10,1 ,10,1 ,1 ,10,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,16,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,13,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,4 ,1 ,10,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,3 ,6 ,5 ,0 ,16,3 ,3 ,3 ,6 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,4 ,5 ,0 ,0 ,0 ,0 ,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,14,0 ,4 ,9 ,2 ,2 ,2 ,14,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,10,1 ,1 ,10,5 ,0 ,4 ,10,1 ,10,10,5 ,0 ,4 ,10,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,16,3 ,3 ,3 ,3 ,15,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,5 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,4 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 },
-                {1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,9 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,2 ,8 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 }
-            };
-            _map = new Map(_mapPoint);*/
-            _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+            _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
 
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
@@ -331,7 +311,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        graphics.IsFullScreen = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -432,7 +412,6 @@ namespace TrumpTower
             #endregion
 
             warning = false;
-            graphics.IsFullScreen = true;
             base.Initialize();
 
             int WIDTH = (int)VirtualWidth / 12;
@@ -961,6 +940,31 @@ namespace TrumpTower
             {
                 _isWon = true;
 
+                // Verify if map is map Campagne
+                bool isMapCampagne = false;
+                int nbMapCampagne = 15;
+                int currentCampagne = 0;
+                for (int i = 1; i < nbMapCampagne + 1; i++)
+                {
+                    if (_map.Name == "mapCampagne" + i.ToString())
+                    {
+                        isMapCampagne = true;
+                        currentCampagne = i;
+                        break;
+                    }
+                }
+                if (isMapCampagne)
+                {
+                    // Deserialize class player
+                    Player player = BinarySerializer.Deserialize<Player>(BinarySerializer.pathCurrentPlayer);
+                    
+                    // Verify currentCampagne and _lvlAccess
+                    if (player._lvlAccess == currentCampagne)
+                    {
+                        player._lvlAccess++;
+                        player.Serialize();
+                    }
+                }
             }
 
             if (nombre < 50) nombre += 4;
@@ -1257,12 +1261,14 @@ namespace TrumpTower
                             }
                             else if (button_rectangle_lost[i] == button_rectangle_lost[1])
                             {
-                                _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
                                 isLost = false;
                                 realPause = false;
                                 GameIsPaused = false;
                                 stratPause = 0;
                                 Map.WavesCounter = 0;
+                                foreach (Spawn spawn in _map.SpawnsEnemies)
+                                    Map.WavesTotals += spawn.Waves.Count;
                                 break;
                             } 
                         }
@@ -1285,10 +1291,56 @@ namespace TrumpTower
                             {
                                 Exit();
                             }
-                            else if (button_rectangle_win[i] == button_rectangle_win[1])
+                            else if (button_rectangle_win[i] == button_rectangle_win[1]) // button nextMap
                             {
-                                //a faire mdr
-                                Exit();
+                                // Verify if map is map Campagne
+                                bool isMapCampagne = false;
+                                int nbMapCampagne = 15;
+                                int currentCampagne = 0;
+                                for (int y = 1; y < nbMapCampagne + 1; y++)
+                                {
+                                    if (_map.Name == "mapCampagne" + y.ToString())
+                                    {
+                                        isMapCampagne = true;
+                                        currentCampagne = y;
+                                        break;
+                                    }
+                                }
+
+                                if (isMapCampagne && currentCampagne != 15)
+                                {
+                                    int nbMap = (int)Char.GetNumericValue(_map.Name[_map.Name.Length - 1]);
+                                    string _nameWorld = null;
+
+                                    if (nbMap >= 1 && nbMap <= 5) _nameWorld = "World1";
+                                    if (nbMap >= 6 && nbMap <= 10)
+                                    {
+                                        _nameWorld = "World2";
+                                        nbMap -= 5;
+                                    }
+                                    if (nbMap >= 11 && nbMap <= 15)
+                                    {
+                                        nbMap -= 10;
+                                        _nameWorld = "World3";
+                                    }
+
+                                    string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCampagneMap + "/" + _nameWorld);
+                                    FileInfo file = new FileInfo(filesInDirectory[nbMap]);
+                                    // On copie le fichier dans CurrentMap
+                                    file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
+
+                                    _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
+
+                                    isLost = false;
+                                    _isWon = false;
+                                    realPause = false;
+                                    GameIsPaused = false;
+                                    stratPause = 0;
+                                    Map.WavesCounter = 0;
+                                    foreach (Spawn spawn in _map.SpawnsEnemies)
+                                        Map.WavesTotals += spawn.Waves.Count;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1342,7 +1394,7 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-        
+            
             #region Maps
 
             for (int y = 0; y < _map.HeightArrayMap; y++)
@@ -1547,13 +1599,16 @@ namespace TrumpTower
                 {
                     if (_hoveredTower != _lastHoveredTower)
                     {
-                        if(_hoveredTower.Type != TowerType.bank)
-                        circleTower = createCircleText((int)_hoveredTower.Scope);
+                        if (_hoveredTower.Type != TowerType.bank)
+                        {
+                            circleTower = createCircleText((int)_hoveredTower.Scope);
+                        }
                     }
                     _lastHoveredTower = _hoveredTower;
-                    if(_hoveredTower.Type != TowerType.bank)
-                    spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2)+Constant.imgSizeMap/2), (_hoveredTower.Position.Y - (circleTower.Height / 2)+Constant.imgSizeMap/2)), null, Color.Gray * 0.2f);
-
+                    if (_hoveredTower.Type != TowerType.bank)
+                    {
+                        spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2) + Constant.imgSizeMap / 2), (_hoveredTower.Position.Y - (circleTower.Height / 2) + Constant.imgSizeMap / 2)), null, Color.Gray * 0.2f);
+                    }
                     spriteBatch.Draw(rect, _hoveredTower.Position + new Vector2(Constant.imgSizeMap+5,0),Color.White*0.7f);
                     spriteBatch.Draw(_imgLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 128) - 5)), (VirtualHeight / 13) / 3), null, Color.White, 0, new Vector2(0, 0), (float)_map.WidthArrayMap / (64), SpriteEffects.None, 0);
                     spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.TowerLvl, _hoveredTower.Position + new Vector2(((Constant.imgSizeMap - 10) + (VirtualWidth / 12) - ((((float)_map.WidthArrayMap / 64) * 48) )), ((VirtualHeight / 13) / 2)-5), Color.Black);
@@ -1572,12 +1627,6 @@ namespace TrumpTower
                         spriteBatch.DrawString(_spriteDollars, "" + _hoveredTower.Earnings, _hoveredTower.Position + new Vector2((Constant.imgSizeMap+3)+((float)_map.WidthArrayMap/64)*64, (((VirtualHeight / 13) / 2) - 5)), Color.Blue);
 
                     }
-                    if (_hoveredTower != _lastHoveredTower)
-                    {
-                        circleTower = createCircleText((int)_hoveredTower.Scope);
-                    }
-                    _lastHoveredTower = _hoveredTower;
-                    spriteBatch.Draw(circleTower, new Vector2((_hoveredTower.Position.X - (circleTower.Width / 2))+Constant.imgSizeMap/2, (_hoveredTower.Position.Y - (circleTower.Height / 2)) + Constant.imgSizeMap / 2), null, Color.White * 0.5f);
                 }
             }
             
@@ -1690,10 +1739,10 @@ namespace TrumpTower
             }
             #endregion
 
-            
+
 
             #region HELP DEBOGAGE
-
+            spriteBatch.DrawString(_gameOver, _map.Name + "MDRRRRRRR", new Vector2(100, 100), Color.Red);
             /*
             spriteBatch.DrawString(_spriteDollars, "Mouse X : " + newStateMouse.X, new Vector2(50, 107), Color.DarkRed);
             spriteBatch.DrawString(_spriteDollars, "Mouse Y : " + newStateMouse.Y, new Vector2(50, 127), Color.DarkRed);
@@ -1765,7 +1814,24 @@ namespace TrumpTower
                 }
 
                 spriteBatch.Draw(button_texture_win[0], button_rectangle_win[0], button_color_win[0]);
-                spriteBatch.Draw(button_texture_win[1], button_rectangle_win[1], button_color_win[1]);
+
+                // Verify if map is map Campagne
+                bool isMapCampagne = false;
+                int nbMapCampagne = 15;
+                int currentCampagne = 0;
+                for (int y = 1; y < nbMapCampagne + 1; y++)
+                {
+                    if (_map.Name == "mapCampagne" + y.ToString())
+                    {
+                        isMapCampagne = true;
+                        currentCampagne = y;
+                        break;
+                    }
+                }
+
+                if (isMapCampagne && currentCampagne != 15)
+                    spriteBatch.Draw(button_texture_win[1], button_rectangle_win[1], button_color_win[1]);
+
                 spriteBatch.Draw(_trumpWin, new Vector2(0, VirtualHeight-_trumpWin.Height), Color.White);
                
 

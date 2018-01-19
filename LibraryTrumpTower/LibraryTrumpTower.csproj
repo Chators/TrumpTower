@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -66,6 +66,7 @@
     <Compile Include="Constants\ManagerSound.cs" />
     <Compile Include="Constants\Move.cs" />
     <Compile Include="Constants\MapTexture.cs" />
+    <Compile Include="Constants\Player.cs" />
     <Compile Include="Constants\TowerType.cs" />
     <Compile Include="Decors\Decor.cs" />
     <Compile Include="Decors\GeneratorDecors.cs" />
