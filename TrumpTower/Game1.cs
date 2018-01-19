@@ -1226,12 +1226,14 @@ namespace TrumpTower
                                 }
                                 if (button_rectangle_lost[i] == button_rectangle_lost[1])
                                 {
-                                _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
                                 isLost = false;
                                 realPause = false;
                                 GameIsPaused = false;
                                 stratPause = 0;
                                 Map.WavesCounter = 0;
+                               /* foreach (Spawn spawn in _map.SpawnsEnemies)
+                                    Map.WavesTotals += spawn.Waves.Count;*/
                                 break;
 
                             }
