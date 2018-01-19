@@ -74,18 +74,22 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public bool _canChargeBoss1;
         [DataMember]
-        public double _rangeBoss;
+        public double _rangeBoss; // range from where bosses attack the base. At 0, they are sitting ontop the base. The higher this number, the further they'll stand
         [DataMember]
         public double _timeofVulnerability;
         [DataMember]
         public WallBoss _WallBoss { get; private set; }
         [DataMember]
         public double _timeBetweenDeaths = 3 * 60; // Bosses need to be both killed < _timeBetweenDeaths else they'll revive
-        
         [DataMember]
         public double _timeBeforeReviving = 5 * 60; // For Drawing Animation
         [DataMember]
-        public bool _bothBossesDown = false; // Win condition vs Boss 2
+        public double _enrageTimer;
+        [DataMember]
+        public bool _hasEnraged;
+        [DataMember]
+        public double _defaultReload;
+        
        
 
 
@@ -150,6 +154,7 @@ namespace TrumpTower.LibraryTrumpTower
                 _damage = _map.Wall.MaxHp / 4;
                 Speed = 1.5;
                 _reload = 2 * 60; // attacks every two seconds
+                _defaultReload = 2 * 60;
                 _isCharging = false;
                 _hasCharged = false;
                 _timeBeforeCharging = 6 * 60; // When it comes to 0, boss1 starts casting charge 
@@ -167,9 +172,31 @@ namespace TrumpTower.LibraryTrumpTower
                 _damage = 10 * (1 + _map._timesBeingRevived);
                 Speed = 3 * (1 + _map._timesBeingRevived);
                 _reload = 2 * 60; // Attacks every two seconds
-                _rangeBoss = 200;              
-
-               
+                _defaultReload = 2 * 60;
+                _rangeBoss = 200;                            
+            } else if (type == EnemyType.boss3) // Kim Jung Un
+            {
+                CurrentHp = 200;
+                MaxHp = 200;
+                _damage = 30;
+                Speed = 4;
+                _reload = 2 * 60;
+                _defaultReload = 2 * 60;
+                _rangeBoss = 200;
+                _enrageTimer = 10 * 60;  // when Boss enrages, he does double dmg, speed etc..
+                _hasEnraged = false;
+                /*
+                 * 
+                 * Beaucoup d'add pour ce boss
+                 * Idée qu'il grabbe une tourelle, ça l'arrête pendant 2 secs, puis il arrache la tourelle du sol. 
+                 * Une corde qui va jusqu'à la tour et si on tire au sniper dessus, ca la casse et il n'arrache pas la tour.
+                 * 
+                 * Autre idée : La maison blanche est remplacée par un bouton nucléaire, il faut pas qu'il aille dessus
+                 * 
+                 * Autre idée : Son premier coup contre la base en range est une charge qui fait genre midlife à la base
+                 * 
+                 * Autre idée : Ptet un fameux QTE 
+                 * */
             }
         }
 
@@ -232,18 +259,35 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead== false) UpdateMove();
                 UpdateBossTwins();
+            } else if (_type == EnemyType.boss3)
+            {
+                if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead == false) UpdateMove();
+                UpdateBoss3();
             }
         }
 
+        private void UpdateBoss3()
+        {
+            /*Faire une liste avec les tours à disposition
+             * 
+             * Choper une tourelle, la viser (le boss s'arrête) pendant genre 2 sec. 
+             * Si les 2 sec sont passées sans que la corde soit touchée par un tir de sniper, il arrache la tour du sol donc 
+             * objet turret est remove, le slot turret devient vide, comme lorsqu'on vend mais sans les thunes
+             * 
+             * Décrémenter l'enrage timer ou enrage()
+             * 
+             * 
+             * 
+             * */
+           
+        }
         private void UpdateBossTwins()
         {
             //Checks if any of them is dead
             // Revives if necessary ++ enraging
             //Checks if both dead to win
             UpdateAttackWallBoss();
-            CheckIfRevive();
-           
-            
+            CheckIfRevive();          
         }
 
         private void CheckIfRevive()
@@ -266,7 +310,7 @@ namespace TrumpTower.LibraryTrumpTower
       
         
 
-        private void ReviveBosses() // A revoir
+        private void ReviveBosses() 
         {
            
            foreach (Enemy enemy in _map.GetAllEnemies())
@@ -366,7 +410,7 @@ namespace TrumpTower.LibraryTrumpTower
                 else
                 {
                     _map.Wall.TakeHp(_damage);
-                    _reload = 2 * 60;
+                    _reload = _defaultReload;
                 }
             }
         }
