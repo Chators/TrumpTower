@@ -47,6 +47,70 @@ namespace Menu.BDD
             return nameMap;
         }
 
+        /* Permet de récuperer tous les dates dans la BDD return List<string> */
+        public static List<string> GetAllDate()
+        {
+            /* Permet de reintialiser les noms de map dans le fichier texte sur le serveur*/
+            string page = "http://trumptower.heberge-tech.fr:2232/getDate.php";
+            RestClient client = new RestClient(page);
+            RestRequest requete = new RestRequest();
+            client.Execute<string>(requete);
+
+            /* Recuperation des noms de map et mise en forme */
+            page = "http://trumptower.heberge-tech.fr:2232/date.txt";
+            client = new RestClient(page);
+            requete = new RestRequest();
+            Task<IRestResponse<string>> task = client.Execute<string>(requete);
+
+            string allNameMap = task.Result.Content;
+            List<string> nameMap = new List<string>();
+            string currentName = "";
+            for (int i = 0; i < allNameMap.Length; i++)
+            {
+                if (allNameMap[i] == Convert.ToChar(";"))
+                {
+                    nameMap.Add(currentName);
+                    currentName = "";
+                }
+                else
+                    currentName += allNameMap[i];
+            }
+
+            return nameMap;
+        }
+
+        /* Permet de récuperer tous les noms d'auteur dans la BDD return List<string> */
+        public static List<string> GetAllAuthor()
+        {
+            /* Permet de reintialiser les noms de map dans le fichier texte sur le serveur*/
+            string page = "http://trumptower.heberge-tech.fr:2232/getAutor.php";
+            RestClient client = new RestClient(page);
+            RestRequest requete = new RestRequest();
+            client.Execute<string>(requete);
+
+            /* Recuperation des noms de map et mise en forme */
+            page = "http://trumptower.heberge-tech.fr:2232/auteur.txt";
+            client = new RestClient(page);
+            requete = new RestRequest();
+            Task<IRestResponse<string>> task = client.Execute<string>(requete);
+
+            string allNameMap = task.Result.Content;
+            List<string> nameMap = new List<string>();
+            string currentName = "";
+            for (int i = 0; i < allNameMap.Length; i++)
+            {
+                if (allNameMap[i] == Convert.ToChar(";"))
+                {
+                    nameMap.Add(currentName);
+                    currentName = "";
+                }
+                else
+                    currentName += allNameMap[i];
+            }
+
+            return nameMap;
+        }
+
         /* Permet d'upload une map */
         public static void UploadMap(string pseudo, string nameMap, string mot_clefs, string description, string difficult)
         {
