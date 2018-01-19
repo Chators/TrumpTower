@@ -977,8 +977,8 @@ namespace TrumpTower
                 if (isMapCampagne)
                 {
                     // Deserialize class player
+                    //"../../Menu/bin/" + 
                     Player player = BinarySerializer.Deserialize<Player>(BinarySerializer.pathCurrentPlayer);
-                    Exit();
                     
                     // Verify currentCampagne and _lvlAccess
                     if (player._lvlAccess == currentCampagne)

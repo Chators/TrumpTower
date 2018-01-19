@@ -96,9 +96,11 @@ namespace Menu
 
             state = MenuState.MAIN;
 
+            /*
             _player = new Player("Thibaud", "mdr", 8);
             _player.Serialize();
-
+            */
+            _player = BinarySerializer.Deserialize<Player>(BinarySerializer.pathCurrentPlayer);
             // First, we create an input manager.
             _inputManager = new InputListenerComponent(this);
             // Then, we create GUI.
