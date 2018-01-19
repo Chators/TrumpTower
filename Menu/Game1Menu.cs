@@ -689,7 +689,7 @@ namespace Menu
             var Window = new GuiWindowControl
             {
                 Name = "window",
-                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(400), new UniScalar(270))),
+                Bounds = new UniRectangle(new UniVector(new UniScalar(0.5f, -100), new UniScalar(0.5f, -60)), new UniVector(new UniScalar(550), new UniScalar(270))),
                 Title = "Download Map on Internet",
                 EnableDragging = true
             };
@@ -718,8 +718,10 @@ namespace Menu
 
             Window.Children.Add(ListMap);
             List<string> AllName = Bdd.GetAllNameOfMap();
+            List<string> AllAuthor = Bdd.GetAllAuthor();
+            List<string> AllDate = Bdd.GetAllDate();
             for (int i = 0; i < AllName.Count; i++)
-                ListMap.Items.Add(AllName[i]);
+                ListMap.Items.Add("Map name " + AllName[i] + " made by " + AllAuthor[i] + " the " + AllDate[i]);
             ListMap.SelectionMode = ListSelectionMode.Single;
 
             Window.Children.Add(DownloadButton);
