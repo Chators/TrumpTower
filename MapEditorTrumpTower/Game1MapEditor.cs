@@ -156,7 +156,7 @@ namespace MapEditorTrumpTower
             // Perform second-stage initialization
             _gui.Initialize();
 
-            if (File.Exists(BinarySerializer.pathCurrentMapXml)) _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+            if (File.Exists(BinarySerializer.pathCurrentMapXml)) _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
             else Button2_Pressed();
 
             _lastRefresh = 0;

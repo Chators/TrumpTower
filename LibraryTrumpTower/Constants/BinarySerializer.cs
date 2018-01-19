@@ -11,6 +11,8 @@ namespace LibraryTrumpTower.Constants
         public static string pathMapXml = "MapXml";
         public static string pathCustomMap = "MapXml/CustomMap";
         public static string pathCampagneMap = "MapXml/CampagneMap";
+        public static string pathCurrentPlayer = "MapXml/CurrentPlayer.xml";
+        public static string pathFileCurrentPlayer = "CurrentPlayer.xml";
 
         public static void Serialize<T>(T obj, string name)
         {
@@ -28,8 +30,10 @@ namespace LibraryTrumpTower.Constants
         public static T Deserialize<T>(string path)
         {
             var serializer = new DataContractSerializer(typeof(T));
-            var reader = XmlReader.Create(pathMapXml + "/CurrentMap.xml");
-            return (T)serializer.ReadObject(reader);
+            var reader = XmlReader.Create(path);
+            object data = (T)serializer.ReadObject(reader);
+            reader.Close();
+            return (T)data;
         }
     }
 }
