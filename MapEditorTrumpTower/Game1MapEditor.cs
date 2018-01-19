@@ -97,6 +97,13 @@ namespace MapEditorTrumpTower
         int posMenuRight;
         int _lastRefresh;
 
+        #region mesure menu droite
+        double distanceUpMainTitle;
+        double distanceDownMainTitle;
+        double distanceDownTitle;
+        double distanceDownImg;
+        #endregion
+
         int _timerInfo;
         double _timerTransparancy;
 
@@ -130,7 +137,6 @@ namespace MapEditorTrumpTower
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
             Window.IsBorderless = true;
-
             {
                 int attempts = 0;
                 while (true)
@@ -164,6 +170,10 @@ namespace MapEditorTrumpTower
             _timerInfo = 0;
             _timerTransparancy = 1;
 
+            distanceUpMainTitle = 10;
+            distanceDownMainTitle = 80;
+            distanceDownTitle = 20;
+            distanceDownImg = 70;
             base.Initialize();
         }
 
@@ -397,13 +407,19 @@ namespace MapEditorTrumpTower
                 if (State.ActualState == StateType.Default)
                 {
                     int pos = posMenuRight + ((graphics.GraphicsDevice.Viewport.Width - posMenuRight) / 2);
-                    spriteBatch.Draw(_imgMenuTexture, new Vector2(pos - _imgMenuTexture.Width / 2, 5), Color.White);
-                    spriteBatch.Draw(_imgTextureUtile, new Vector2(pos - _imgTextureUtile.Width / 2, 40), Color.White);
-                    spriteBatch.Draw(_imgTextureDecors, new Vector2(pos - _imgTextureDecors.Width / 2, 170), Color.White);
-                    spriteBatch.Draw(_imgOutilDeSelection, new Vector2(pos - _imgOutilDeSelection.Width / 2, 480), Color.White);
-                    spriteBatch.Draw(_imgOptions, new Vector2(pos - _imgOptions.Width / 2, 610), Color.White);
-                    spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, 740), Color.White);
-                    spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, 870), Color.White);
+                    float positionCursor = 0;
+                    positionCursor = (float)distanceUpMainTitle;
+                    spriteBatch.Draw(_imgMenuTexture, new Vector2(pos - _imgMenuTexture.Width / 2, positionCursor), Color.White);
+                    positionCursor += _imgMenuTexture.Height + (float)distanceDownMainTitle;
+                    spriteBatch.Draw(_imgTextureUtile, new Vector2(pos - _imgTextureUtile.Width / 2, positionCursor), Color.White);
+                    positionCursor += 64 + _imgTextureUtile.Height + (float)distanceDownTitle + (float)distanceDownImg;
+                    spriteBatch.Draw(_imgOutilDeSelection, new Vector2(pos - _imgOutilDeSelection.Width / 2, positionCursor), Color.White);
+                    positionCursor += 64 + _imgOutilDeSelection.Height + (float)distanceDownTitle + (float)distanceDownImg;
+                    spriteBatch.Draw(_imgOptions, new Vector2(pos - _imgOptions.Width / 2, positionCursor), Color.White);
+                    positionCursor += 64 + _imgOptions.Height + (float)distanceDownTitle + (float)distanceDownImg;
+                    spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, positionCursor), Color.White);
+                    positionCursor += 64 + _imgValidation.Height + (float)distanceDownTitle + (float)distanceDownImg;
+                    spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, positionCursor), Color.White);
                     //spriteBatch.Draw(_imgInformation, new Vector2(posMenuRight + 115, 1000), Color.White);
 
                     Texture2D currentSelectionTexture = null;
@@ -1817,18 +1833,34 @@ namespace MapEditorTrumpTower
         public void InitMapCreator()
         {
             SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
-
+            /*
+            positionCursor = (float)distanceUpMainTitle;
+            spriteBatch.Draw(_imgMenuTexture, new Vector2(pos - _imgMenuTexture.Width / 2, positionCursor), Color.White);
+            positionCursor += _imgMenuTexture.Height + (float)distanceDownMainTitle;
+            spriteBatch.Draw(_imgTextureUtile, new Vector2(pos - _imgTextureUtile.Width / 2, positionCursor), Color.White);
+            positionCursor += 64 + _imgTextureUtile.Height + (float)distanceDownTitle + (float)distanceDownImg;
+            spriteBatch.Draw(_imgOutilDeSelection, new Vector2(pos - _imgOutilDeSelection.Width / 2, positionCursor), Color.White);
+            positionCursor += 64 + _imgOutilDeSelection.Height + (float)distanceDownTitle + (float)distanceDownImg;
+            spriteBatch.Draw(_imgOptions, new Vector2(pos - _imgOptions.Width / 2, positionCursor), Color.White);
+            positionCursor += 64 + _imgOptions.Height + (float)distanceDownTitle + (float)distanceDownImg;
+            spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, positionCursor), Color.White);
+            positionCursor += 64 + _imgValidation.Height + (float)distanceDownTitle + (float)distanceDownImg;
+            spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, positionCursor), Color.White);
+            */
+           
+            float positionCursor = (float)distanceUpMainTitle + _imgMenuTexture.Height + (float)distanceDownMainTitle + _imgTextureUtile.Height + (float)distanceDownTitle;
             #region Button Left Menu Default
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, 80), "1",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirt], _debug, MapTexture.dirt, new Vector2(posMenuRight + 10, positionCursor), "1",
                 new List<Keys>(new Keys[] { Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, 80), "2",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.grass], _debug, MapTexture.grass, new Vector2(posMenuRight + 80, positionCursor), "2",
                 new List<Keys>(new Keys[] { Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, 80), "3",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.emptyTower], _debug, MapTexture.emptyTower, new Vector2(posMenuRight + 150, positionCursor), "3",
                 new List<Keys>(new Keys[] { Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, 80), "4",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, positionCursor), "4",
                 new List<Keys>(new Keys[] { Keys.D4 })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 210), "CTRL+1",
+            /*
+            ²_buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 210), "CTRL+1",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D1 })));
             _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 210), "CTRL+2",
                 new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D2 })));
@@ -1854,18 +1886,21 @@ namespace MapEditorTrumpTower
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D3 })));
             _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 390), "SHIFT+4",
                 new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D4 })));
-
-            _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 520), "A",
+            */
+            positionCursor += 64 + (float)distanceDownImg + _imgTextureUtile.Height + (float)distanceDownTitle;
+            _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, positionCursor), "A",
                 new List<Keys>(new Keys[] { Keys.A })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 40, 650), "J",
+            positionCursor += 64 + (float)distanceDownImg + _imgOutilDeSelection.Height + (float)distanceDownTitle;
+            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 40, positionCursor), "J",
                 new List<Keys>(new Keys[] { Keys.J })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 110, 650), "K",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 110, positionCursor), "K",
                new List<Keys>(new Keys[] { Keys.K })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgTree, _debug, MapTexture.None, new Vector2(posMenuRight + 180, 650), "L",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgTree, _debug, MapTexture.None, new Vector2(posMenuRight + 180, positionCursor), "L",
                new List<Keys>(new Keys[] { Keys.L })));
 
-            _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, 780), "Entrer",
+            positionCursor += 64 + (float)distanceDownImg + _imgOptions.Height + (float)distanceDownTitle;
+            _buttonsTexture.Add(new ButtonTexture(this, _imgAccept, _debug, MapTexture.None, new Vector2(posMenuRight + 115, positionCursor), "Entrer",
                new List<Keys>(new Keys[] { Keys.Enter })));
 
             #endregion
