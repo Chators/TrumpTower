@@ -1287,37 +1287,54 @@ namespace TrumpTower
                             }
                             else if (button_rectangle_win[i] == button_rectangle_win[1]) // button nextMap
                             {
-                                int nbMap = (int)Char.GetNumericValue(_map.Name[_map.Name.Length-1]);
-                                string _nameWorld = null;
-
-                                if (nbMap >= 1 && nbMap <= 5) _nameWorld = "World1";
-                                if (nbMap >= 6 && nbMap <= 10)
+                                // Verify if map is map Campagne
+                                bool isMapCampagne = false;
+                                int nbMapCampagne = 15;
+                                int currentCampagne = 0;
+                                for (int y = 1; y < nbMapCampagne + 1; y++)
                                 {
-                                    _nameWorld = "World2";
-                                    nbMap -= 5;
+                                    if (_map.Name == "mapCampagne" + y.ToString())
+                                    {
+                                        isMapCampagne = true;
+                                        currentCampagne = y;
+                                        break;
+                                    }
                                 }
-                                if (nbMap >= 11 && nbMap <= 15)
+
+                                if (isMapCampagne && currentCampagne != 15)
                                 {
-                                    nbMap -= 10;
-                                    _nameWorld = "World3";
+                                    int nbMap = (int)Char.GetNumericValue(_map.Name[_map.Name.Length - 1]);
+                                    string _nameWorld = null;
+
+                                    if (nbMap >= 1 && nbMap <= 5) _nameWorld = "World1";
+                                    if (nbMap >= 6 && nbMap <= 10)
+                                    {
+                                        _nameWorld = "World2";
+                                        nbMap -= 5;
+                                    }
+                                    if (nbMap >= 11 && nbMap <= 15)
+                                    {
+                                        nbMap -= 10;
+                                        _nameWorld = "World3";
+                                    }
+
+                                    string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCampagneMap + "/" + _nameWorld);
+                                    FileInfo file = new FileInfo(filesInDirectory[nbMap]);
+                                    // On copie le fichier dans CurrentMap
+                                    file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
+
+                                    _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
+
+                                    isLost = false;
+                                    _isWon = false;
+                                    realPause = false;
+                                    GameIsPaused = false;
+                                    stratPause = 0;
+                                    Map.WavesCounter = 0;
+                                    foreach (Spawn spawn in _map.SpawnsEnemies)
+                                        Map.WavesTotals += spawn.Waves.Count;
+                                    break;
                                 }
-                                
-                                string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCampagneMap + "/" + _nameWorld);
-                                FileInfo file = new FileInfo(filesInDirectory[nbMap]);
-                                // On copie le fichier dans CurrentMap
-                                file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
-
-                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
-
-                                isLost = false;
-                                _isWon = false;
-                                realPause = false;
-                                GameIsPaused = false;
-                                stratPause = 0;
-                                Map.WavesCounter = 0;
-                                foreach (Spawn spawn in _map.SpawnsEnemies)
-                                    Map.WavesTotals += spawn.Waves.Count;
-                                break;
                             }
                         }
                     }
@@ -1792,7 +1809,23 @@ namespace TrumpTower
 
                 spriteBatch.Draw(button_texture_win[0], button_rectangle_win[0], button_color_win[0]);
 
-                spriteBatch.Draw(button_texture_win[1], button_rectangle_win[1], button_color_win[1]);
+                // Verify if map is map Campagne
+                bool isMapCampagne = false;
+                int nbMapCampagne = 15;
+                int currentCampagne = 0;
+                for (int y = 1; y < nbMapCampagne + 1; y++)
+                {
+                    if (_map.Name == "mapCampagne" + y.ToString())
+                    {
+                        isMapCampagne = true;
+                        currentCampagne = y;
+                        break;
+                    }
+                }
+
+                if (isMapCampagne && currentCampagne != 15)
+                    spriteBatch.Draw(button_texture_win[1], button_rectangle_win[1], button_color_win[1]);
+
                 spriteBatch.Draw(_trumpWin, new Vector2(0, VirtualHeight-_trumpWin.Height), Color.White);
                
 
