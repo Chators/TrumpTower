@@ -1267,6 +1267,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SpecialAbilities/wallBoss.png
+
 #begin Sound/PayAtCheckout.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -1332,4 +1333,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:restart.png
+
+#begin trowel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:trowel.png
+
+#begin SpecialAbilities/wall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpecialAbilities/wall.png
 

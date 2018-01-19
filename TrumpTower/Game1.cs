@@ -194,6 +194,7 @@ namespace TrumpTower
         Texture2D _circleStickyRice;
 
         public Texture2D _wallBoss;
+        Texture2D _imgBoss1Wall;
         #endregion
 
         #endregion
@@ -204,6 +205,8 @@ namespace TrumpTower
         Texture2D _imgCursorBomb;
         Texture2D _imgCursorDefault;
         Texture2D _imgCursorDeliveryRice;
+        Texture2D _imgCursorTrowel;
+
         #endregion
 
         #region Entity
@@ -638,6 +641,7 @@ namespace TrumpTower
             _wallBoss = Content.Load<Texture2D>("SpecialAbilities/wallboss");
             _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "wallBossAbility", new Vector2(_positionExplosionAbilityButton.X + 240, _positionExplosionAbilityButton.Y), _wallBoss));
             Vector2 _positionWallBossAbilityButton = new Vector2(_positionMakiAbilityButton.X + 80, _positionMakiAbilityButton.Y);
+            _imgBoss1Wall = Content.Load<Texture2D>("SpecialAbilities/wall");
             #endregion
 
 
@@ -650,6 +654,8 @@ namespace TrumpTower
             _imgCursorBomb = Content.Load<Texture2D>("cursorBomb");
             _imgCursorDefault = Content.Load<Texture2D>("cursor");
             _imgCursorDeliveryRice = Content.Load<Texture2D>("deliveryRice");
+            _imgCursorTrowel = Content.Load<Texture2D>("trowel");
+
             #endregion
 
             #region Entity
@@ -1910,7 +1916,12 @@ namespace TrumpTower
             {
                 spriteBatch.Draw(_imgCursorDeliveryRice, new Vector2(newStateMouse.X - _imgCursorDeliveryRice.Width / 2, newStateMouse.Y - _imgCursorDeliveryRice.Height / 2), Color.White);
                 spriteBatch.Draw(_circleStickyRice, new Vector2(newStateMouse.X - (_circleStickyRice.Width / 2), newStateMouse.Y - (_circleStickyRice.Height / 2)), Color.White * 0.1f);
-            } 
+            }
+            else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "wallBossAbility")
+            {
+                spriteBatch.Draw(_imgCursorTrowel, new Vector2(newStateMouse.X - _imgCursorTrowel.Width / 2, newStateMouse.Y - _imgCursorTrowel.Height / 2), Color.White);
+                spriteBatch.Draw(_imgBoss1Wall, new Vector2(newStateMouse.X - _imgBoss1Wall.Width/2, newStateMouse.Y - _imgBoss1Wall.Height/2), Color.White * 0.6f);
+            }
             else
                 spriteBatch.Draw(_imgCursorDefault, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
 
