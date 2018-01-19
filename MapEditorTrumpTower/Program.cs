@@ -15,7 +15,7 @@ namespace MapEditorTrumpTower
         [STAThread]
         static void Main()
         {
-            //Debugger.Launch();
+            Debugger.Launch();
             using (var game = new Game1MapEditor())
                 game.Run();
 

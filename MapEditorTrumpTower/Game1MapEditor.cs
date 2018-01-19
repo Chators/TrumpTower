@@ -193,7 +193,9 @@ namespace MapEditorTrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                if (name == "dirt" || name == "grass" || name == "emptyTower" || name == "notEmptyTower" || name == "myBase")
+                    _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                else if (name != "None") _imgMaps.Add(null);
             }
             #endregion
 
@@ -215,8 +217,6 @@ namespace MapEditorTrumpTower
             _imgTextureUtile = Content.Load<Texture2D>("NameMenu/Texture-Utile");
             _imgValidation = Content.Load<Texture2D>("NameMenu/Validation");
             _imgSelectionActuelle = Content.Load<Texture2D>("NameMenu/Selection-Actuelle");
-            _imgInformation = Content.Load<Texture2D>("NameMenu/information-button");
-            _imgEntity = Content.Load<Texture2D>("NameMenu/happyWorld");
             _imgTree = Content.Load<Texture2D>("NameMenu/tree");
             #endregion
 

@@ -481,7 +481,9 @@ namespace TrumpTower
             _imgMaps = new List<Texture2D>();
             foreach (string name in Enum.GetNames(typeof(MapTexture)))
             {
-                if (name != "None") _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                if (name == "dirt" || name == "grass" || name == "emptyTower" || name == "notEmptyTower" || name == "myBase")
+                    _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
+                else if (name != "null") _imgMaps.Add(null);
             }
 
             #endregion
@@ -761,9 +763,9 @@ namespace TrumpTower
             foreach (Tower tow in _map.Towers)
             {
                     if (newStateMouse.X > tow.Position.X &&
-                        newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
+                        newStateMouse.X < tow.Position.X + _imgMaps[1].Width &&
                         newStateMouse.Y > tow.Position.Y &&
-                        newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                        newStateMouse.Y < tow.Position.Y + _imgMaps[1].Height)
                     {  
                         _hoveredTower = tow;
                         break;
@@ -1028,9 +1030,9 @@ namespace TrumpTower
                         foreach (Vector2 position in emptyTowers)
                         {
                             if (newStateMouse.X > position.X * Constant.imgSizeMap &&
-                                newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[5].Width &&
+                                newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[1].Width &&
                                 newStateMouse.Y > position.Y * Constant.imgSizeMap &&
-                                newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[5].Height)
+                                newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[1].Height)
                             {
                                 _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
                                 _verif = true;
@@ -1133,9 +1135,9 @@ namespace TrumpTower
                             foreach (Tower tow in _map.Towers)
                             {
                                 if (newStateMouse.X > tow.Position.X &&
-                                    newStateMouse.X < tow.Position.X + _imgMaps[5].Width &&
+                                    newStateMouse.X < tow.Position.X + _imgMaps[1].Width &&
                                     newStateMouse.Y > tow.Position.Y &&
-                                    newStateMouse.Y < tow.Position.Y + _imgMaps[5].Height)
+                                    newStateMouse.Y < tow.Position.Y + _imgMaps[1].Height)
                                 {
                                     _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
                                     _verif2 = true;
