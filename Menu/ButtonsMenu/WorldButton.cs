@@ -54,8 +54,6 @@ namespace Menu.ButtonsMenu
                     Process.Start("TrumpTower");
                     _ctx.Exit();
                 }
-                else
-                    Console.WriteLine("LOOOL TU PEUX PAS JOUUERRRR");
             }
         }
     }

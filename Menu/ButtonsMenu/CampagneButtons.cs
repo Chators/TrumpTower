@@ -39,15 +39,11 @@ namespace Menu.ButtonsMenu
             {
                 if (_ctx._player._lvlAccess >= 6)
                     _ctx.state = MenuState.WORLD2;
-                else
-                    Console.WriteLine("VOUS NE POUVEZ PAS JOUER A LA MAP MDR");
             }
             else if (IndexOfButtons[i] == "World3/World-3")
             {
                 if (_ctx._player._lvlAccess >= 11)
                     _ctx.state = MenuState.WORLD3;
-                else
-                    Console.WriteLine("VOUS NE POUVEZ PAS JOUER A LA MAP MDR");
             }
             else if (IndexOfButtons[i] == "return")
             {
