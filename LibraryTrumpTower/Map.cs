@@ -48,6 +48,10 @@ namespace TrumpTower.LibraryTrumpTower
         public List<AirUnit> DeadUnitsAir { get; set; }
         [DataMember]
         public List<Enemy> AnimHeal { get; set; }
+        [DataMember]
+        public List<Enemy> BossesDead { get; set; }
+        [DataMember]
+        public int _timesBeingRevived = 0; // for boss 2, increasing their stats each time they revive
 
         [DataMember]
         public List<Tower> TowerDisabled;
@@ -82,7 +86,7 @@ namespace TrumpTower.LibraryTrumpTower
             DeadUnitsAir = new List<AirUnit>();
             TowerDisabled = new List<Tower>();
             AnimHeal = new List<Enemy>();
-
+            BossesDead = new List<Enemy>();
             WavesCounter = 0;
             WavesTotals = 0;
         }
