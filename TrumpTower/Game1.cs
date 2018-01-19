@@ -1220,11 +1220,17 @@ namespace TrumpTower
                                     realPause = false;
                                     break;
                                 }
-                                if (button_rectangle_pause[i] == button_rectangle_pause[1])
+                                if (button_rectangle_lost[i] == button_rectangle_lost[1])
                                 {
-                                    Exit();
-                                    
-                                }
+                                _map = BinarySerializer.Deserialize<Map>("CurrentMap.xml");
+                                isLost = false;
+                                realPause = false;
+                                GameIsPaused = false;
+                                stratPause = 0;
+                                Map.WavesCounter = 0;
+                                break;
+
+                            }
                                 if (button_rectangle_pause[i] == button_rectangle_pause[2])
                                 {
                                     Exit();
