@@ -311,7 +311,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        Window.IsBorderless = true;
+                        Window.IsBorderless = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -443,7 +443,7 @@ namespace TrumpTower
             button_texture_pause[0] =
                  Content.Load<Texture2D>("resume");
             button_texture_pause[1] =
-                Content.Load<Texture2D>("home");
+                Content.Load<Texture2D>("restart");
             button_texture_pause[2] =
                 Content.Load<Texture2D>("quit");
             button_texture_lost[0] =
