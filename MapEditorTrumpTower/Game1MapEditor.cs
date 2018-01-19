@@ -129,7 +129,7 @@ namespace MapEditorTrumpTower
             Window.Title = "TT Map Editor";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            Window.IsBorderless = true;
 
             {
                 int attempts = 0;
@@ -137,7 +137,7 @@ namespace MapEditorTrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        Window.IsBorderless = true;
                         graphics.ApplyChanges();
                         break;
                     }

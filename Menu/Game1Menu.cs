@@ -134,7 +134,7 @@ namespace Menu
                 {
                     try
                     {
-                        graphics.IsFullScreen = false;
+                        Window.IsBorderless = true;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -426,10 +426,7 @@ namespace Menu
 
         #region Window MapPlay
 
-        public void Fullscreen()
-        {  
-             _ctx.graphics.IsFullScreen = false;
-        }
+ 
         public  void LaunchSite(string url)
         {
             try

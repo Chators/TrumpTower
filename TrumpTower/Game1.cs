@@ -311,7 +311,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        Window.IsBorderless = true;
                         graphics.ApplyChanges();
                         break;
                     }
