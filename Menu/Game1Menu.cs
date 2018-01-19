@@ -699,6 +699,13 @@ namespace Menu
                 Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(1.0f, -20), new UniScalar(0f, 150)),
             };
 
+            var labelNotConnect = new GuiLabelControl()
+            {
+                Name = "NotConnexion",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 30), new UniScalar(0f, 90), new UniScalar(0f, 30)),
+                Text = "Please, check your internet connection !"
+            };
+
             var DownloadButton = new GuiButtonControl
             {
                 Name = "downloadMap",
@@ -716,13 +723,20 @@ namespace Menu
             DownloadButton.Pressed += DownloadThisMap_Pressed;
             ReturnImportButton.Pressed += CancelWindowDownloadMap_Pressed;
 
-            Window.Children.Add(ListMap);
-            List<string> AllName = Bdd.GetAllNameOfMap();
-            List<string> AllAuthor = Bdd.GetAllAuthor();
-            List<string> AllDate = Bdd.GetAllDate();
-            for (int i = 0; i < AllName.Count; i++)
-                ListMap.Items.Add("Map name " + AllName[i] + " made by " + AllAuthor[i] + " the " + AllDate[i]);
-            ListMap.SelectionMode = ListSelectionMode.Single;
+            try
+            {
+                List<string> AllName = Bdd.GetAllNameOfMap();
+                List<string> AllAuthor = Bdd.GetAllAuthor();
+                List<string> AllDate = Bdd.GetAllDate();
+                Window.Children.Add(ListMap);
+                for (int i = 0; i < AllName.Count; i++)
+                    ListMap.Items.Add("Map name " + AllName[i] + " made by " + AllAuthor[i] + " the " + AllDate[i]);
+                ListMap.SelectionMode = ListSelectionMode.Single;
+            }
+            catch (Exception e)
+            {
+                Window.Children.Add(labelNotConnect);
+            }
 
             Window.Children.Add(DownloadButton);
             Window.Children.Add(ReturnImportButton);
