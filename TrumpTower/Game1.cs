@@ -515,8 +515,19 @@ namespace TrumpTower
                 }
             }
 
-            _imgMaps = _imgThemesMaps["World_Jungle"];
-            _imgDecors = _imgThemesMaps["World_Jungle"];
+            if (_map != null)
+            {
+                if (_map.ThemeOfMap != ThemeMap.None)
+                {
+                    _imgMaps = _imgThemesMaps[nameof(_map.ThemeOfMap)];
+                    _imgDecors = _imgThemesMaps[nameof(_map.ThemeOfMap)];
+                }
+                else
+                {
+                    _imgMaps = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
+                    _imgDecors = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
+                }
+            }
 
             #endregion
 

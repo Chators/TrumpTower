@@ -13,6 +13,13 @@ using LibraryTrumpTower.Constants.BalanceGame.Bosses;
 
 namespace TrumpTower.LibraryTrumpTower
 {
+    public enum ThemeMap
+    {
+        World_Jungle,
+        World_Snow,
+        World_City,
+        None
+    }
     [DataContract(IsReference = true)]
     public class Map
     {
@@ -26,6 +33,8 @@ namespace TrumpTower.LibraryTrumpTower
 
         [DataMember]
         public string Name { get; set; }
+        [DataMember]
+        public ThemeMap ThemeOfMap { get; set; }
         [DataMember]
         public int[][] MapArray { get; private set; }
         [DataMember]
@@ -96,6 +105,7 @@ namespace TrumpTower.LibraryTrumpTower
             Decors = new List<Decor>();
             Entity = new Entity(this);
             Initialize = false;
+            ThemeOfMap = ThemeMap.World_Jungle;
             _timesBeingRevived = 0;
 
             BossesDead = new List<Enemy>();
