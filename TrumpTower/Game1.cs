@@ -1961,7 +1961,6 @@ namespace TrumpTower
                 spriteBatch.DrawString(_gameOver, "police blink : " + policeBlink, new Vector2(100, 300), Color.Red);
                 spriteBatch.DrawString(_gameOver, "police blink2 : " + policeBlink2, new Vector2(100, 400), Color.Red);*/
             }
-
             #region Cursor
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")

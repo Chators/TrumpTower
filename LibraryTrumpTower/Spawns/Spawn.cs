@@ -72,30 +72,39 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             }
             Vector2 positionWall = Ctx.Wall.Position;
             List<User> usersShortestPosition = userSpawn.OnSFaitUnPtitDijkstra(usersDic, userWall);
-            ShortestWay = new List<Vector2>();
 
-            foreach(User user in usersShortestPosition)
-                ShortestWay.Add(user._position*new Vector2(Constant.imgSizeMap, Constant.imgSizeMap));
-
-            List<Vector2> optimiseShortestWay = new List<Vector2>();
-            optimiseShortestWay.Add(ShortestWay[0]);
-            Move lastDirection = Move.none;
-            Move newDirection = Move.none;
-            for (int i = 0; i < ShortestWay.Count; i++)
+            // Si ils ne sont pas relié
+            if (usersShortestPosition != null)
             {
-                Vector2 position = ShortestWay[i];
-                if (position.X > optimiseShortestWay[optimiseShortestWay.Count-1].X) newDirection = Move.down;
-                else if (position.X < optimiseShortestWay[optimiseShortestWay.Count-1].X) newDirection = Move.top;
-                else if (position.Y > optimiseShortestWay[optimiseShortestWay.Count-1].X) newDirection = Move.right;
-                else if (position.Y < optimiseShortestWay[optimiseShortestWay.Count-1].X) newDirection = Move.left;
+                ShortestWay = new List<Vector2>();
 
-                if (lastDirection == newDirection)
-                    optimiseShortestWay[optimiseShortestWay.Count - 1] = position;
-                else
-                    optimiseShortestWay.Add(position);
-                lastDirection = newDirection;
+                foreach (User user in usersShortestPosition)
+                    ShortestWay.Add(user._position * new Vector2(Constant.imgSizeMap, Constant.imgSizeMap));
+
+                List<Vector2> optimiseShortestWay = new List<Vector2>();
+                optimiseShortestWay.Add(ShortestWay[0]);
+                Move lastDirection = Move.none;
+                Move newDirection = Move.none;
+                for (int i = 0; i < ShortestWay.Count; i++)
+                {
+                    Vector2 position = ShortestWay[i];
+                    if (position.X > optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.down;
+                    else if (position.X < optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.top;
+                    else if (position.Y > optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.right;
+                    else if (position.Y < optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.left;
+
+                    if (lastDirection == newDirection)
+                        optimiseShortestWay[optimiseShortestWay.Count - 1] = position;
+                    else
+                        optimiseShortestWay.Add(position);
+                    lastDirection = newDirection;
+                }
+                ShortestWay = optimiseShortestWay;
             }
-            ShortestWay = optimiseShortestWay;
+            else
+            {
+                ShortestWay = null;
+            }
         }
 
         #region pathFinding
