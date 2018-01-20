@@ -41,7 +41,9 @@ namespace TrumpTower
         float lowLife;
         bool lowLifeBool;
         bool lowLifeBool2;
-        Texture2D lowLifeIndicator;
+        //Texture2D lowLifeIndicator;
+        Texture2D[] LowLifeIndicator = new Texture2D[4];
+        
         int playLowLife;
         
 
@@ -486,7 +488,11 @@ namespace TrumpTower
 
 
             #endregion
-
+            for (int i = 0; i < 4; i++)
+            {
+                LowLifeIndicator[i] = Content.Load<Texture2D>("low_life"+i);
+            }
+            
             #region Maps
 
             _imgMaps = new List<Texture2D>();
@@ -696,7 +702,7 @@ namespace TrumpTower
 
             #endregion
 
-            lowLifeIndicator = Content.Load<Texture2D>("low_Life");
+           // lowLifeIndicator = Content.Load<Texture2D>("low_Life");
 
             _imgHearth = Content.Load<Texture2D>("hearth");
 
@@ -1482,13 +1488,8 @@ namespace TrumpTower
             foreach (Decor decor in _map.Decors)
                 spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X - _imgDecors[decor._numberDecor].Width, decor._position.Y - _imgDecors[decor._numberDecor].Height), Color.White);
             #endregion
-            /* spriteBatch.DrawString(_gameOver, ""+lowLifeIndicator.Height, new Vector2(0,300), Color.Red);
-             spriteBatch.DrawString(_gameOver, "" + lowLifeIndicator.Width, new Vector2(0, 400), Color.Red);
+            
 
-             spriteBatch.DrawString(_gameOver, "" + VirtualHeight, new Vector2(0, 500), Color.Red);
-             spriteBatch.DrawString(_gameOver, "" + VirtualWidth, new Vector2(0, 600), Color.Red);
-             */
-           
             if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
                 if(playLowLife == 1 )
@@ -1496,7 +1497,13 @@ namespace TrumpTower
                     MediaPlayer.Volume = 0.01f;
                     ManagerSound.PlayLowLife();
                 }
-                spriteBatch.Draw(lowLifeIndicator, new Vector2(0, 0), Color.White * lowLife);
+              
+                
+                    spriteBatch.Draw(LowLifeIndicator[0], new Vector2(0, 0), Color.White * lowLife);
+                    spriteBatch.Draw(LowLifeIndicator[1], new Vector2(VirtualWidth - LowLifeIndicator[1].Width, 0), Color.White * lowLife);
+                    spriteBatch.Draw(LowLifeIndicator[2], new Vector2(0, VirtualHeight - LowLifeIndicator[2].Height), Color.White * lowLife);
+                    spriteBatch.Draw(LowLifeIndicator[3], new Vector2(0, 0), Color.White * lowLife);
+
             }
 
             #region StickRice
