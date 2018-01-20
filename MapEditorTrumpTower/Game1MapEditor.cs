@@ -43,6 +43,8 @@ namespace MapEditorTrumpTower
         KeyboardState lastStateKeyboard;
 
         public List<Texture2D> _imgMaps;
+        private Dictionary<string, List<Texture2D>> _imgThemesMaps;
+        private Dictionary<string, List<Texture2D>> _imgThemesDecorsMaps;
         public Map _map;
 
         public SelectorTexture SelectTexture { get; private set; }
@@ -197,23 +199,32 @@ namespace MapEditorTrumpTower
             // TODO: use this.Content to load your game content here
 
             #region Load Map
-            _imgMaps = new List<Texture2D>();
-            foreach (string name in Enum.GetNames(typeof(MapTexture)))
-            {
-                if (name == "dirt" || name == "grass" || name == "emptyTower" || name == "notEmptyTower" || name == "myBase")
-                    _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
-                else if (name != "None") _imgMaps.Add(null);
-            }
-            #endregion
+            _imgThemesMaps = new Dictionary<string, List<Texture2D>>();
+            _imgThemesMaps["World_Jungle"] = new List<Texture2D>();
+            _imgThemesMaps["World_Snow"] = new List<Texture2D>();
+            _imgThemesMaps["World_City"] = new List<Texture2D>();
 
+            _imgThemesDecorsMaps = new Dictionary<string, List<Texture2D>>();
+            _imgThemesDecorsMaps["World_Jungle"] = new List<Texture2D>();
+            _imgThemesDecorsMaps["World_Snow"] = new List<Texture2D>();
+            _imgThemesDecorsMaps["World_City"] = new List<Texture2D>();
 
-            #region Load Decors 
-            _imgDecors = new List<Texture2D>();
-            _imgDecors.Add(null);
-            for (int i = 1; i < 9; i++)
+            foreach (string nameWorld in _imgThemesMaps.Keys)
             {
-                _imgDecors.Add(Content.Load<Texture2D>("Map/decor/decor" + i));
+                foreach (string name in Enum.GetNames(typeof(MapTexture)))
+                {
+                    if (name == "dirt" || name == "grass" || name == "emptyTower" || name == "notEmptyTower" || name == "myBase")
+                        _imgThemesMaps[nameWorld].Add(Content.Load<Texture2D>("Map/" + nameWorld + "/" + name));
+                    else if (name != "None") _imgThemesMaps[nameWorld].Add(null);
+                }
+                for (int y = 1; y < 9; y++)
+                {
+                    _imgThemesDecorsMaps[nameWorld].Add(Content.Load<Texture2D>("Map/" + nameWorld + "/decor/decor" + y));
+                }
             }
+
+            _imgMaps = _imgThemesMaps["World_Jungle"];
+            _imgDecors = _imgThemesMaps["World_Jungle"];
             #endregion
 
             #region Load Name Menu
