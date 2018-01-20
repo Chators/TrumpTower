@@ -691,7 +691,7 @@ namespace TrumpTower
             ManagerSound.LoadContent(Content);
             // MUSIQUE 
             MediaPlayer.Play(ManagerSound.Song1);
-            MediaPlayer.Volume = 0.02f;
+            MediaPlayer.Volume = 0.05f;
             MediaPlayer.IsRepeating = true;
 
             #endregion
@@ -772,6 +772,7 @@ namespace TrumpTower
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
 
             //update_buttons();
+
 
             if (lowLifeBool && !lowLifeBool2) lowLife += 0.5f / 30;
             if (lowLife >= 1) lowLifeBool = false; lowLifeBool2 = true;
@@ -1492,6 +1493,7 @@ namespace TrumpTower
             {
                 if(playLowLife == 1 )
                 {
+                    MediaPlayer.Volume = 0.01f;
                     ManagerSound.PlayLowLife();
                 }
                 spriteBatch.Draw(lowLifeIndicator, new Vector2(0, 0), Color.White * lowLife);
