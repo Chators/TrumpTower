@@ -162,7 +162,14 @@ namespace MapEditorTrumpTower
             // Perform second-stage initialization
             _gui.Initialize();
 
-            if (File.Exists(BinarySerializer.pathCurrentMapXml)) _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
+            if (File.Exists(BinarySerializer.pathCurrentMapXml))
+            {
+                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
+                foreach (Spawn spawn in _map.SpawnsEnemies)
+                {
+                    foreach (Wave wave in spawn.Waves) Map.WavesTotals++;
+                }
+            }
             else Button2_Pressed();
 
             _lastRefresh = 0;
@@ -337,11 +344,6 @@ namespace MapEditorTrumpTower
                     _buttonTexture.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
                 }
 
-                /*if (newStateKeyboard.IsKeyDown(Keys.I) && !lastStateKeyboard.IsKeyDown(Keys.I))
-                {
-                    _timerInfo = 10 * 60;
-                    _timerTransparancy = 1;
-                }*/
                 if (newStateKeyboard.IsKeyDown(Keys.L) && !lastStateKeyboard.IsKeyDown(Keys.L))
                     _map.Decors = GeneratorDecors.Generate(_map.MapArray);
                 else if (newStateKeyboard.IsKeyDown(Keys.J) && !lastStateKeyboard.IsKeyDown(Keys.J))
@@ -420,7 +422,6 @@ namespace MapEditorTrumpTower
                     spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, positionCursor), Color.White);
                     positionCursor += 64 + _imgValidation.Height + (float)distanceDownTitle + (float)distanceDownImg;
                     spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, positionCursor), Color.White);
-                    //spriteBatch.Draw(_imgInformation, new Vector2(posMenuRight + 115, 1000), Color.White);
 
                     Texture2D currentSelectionTexture = null;
                     if (SelectTexture.Texture == MapTexture.None)
@@ -501,26 +502,6 @@ namespace MapEditorTrumpTower
                 spriteBatch.Draw(_flagNorthKorea, new Vector2(10, 50), Color.White);
                 spriteBatch.DrawString(_imgNextWave, "Waves " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
                 #endregion
-
-                /*string infoSelection = "";
-                if (SelectTexture.Texture == MapTexture.None)
-                    infoSelection = Constant.SELECTION_INFO;
-                else if (SelectTexture.Texture == MapTexture.dirt)
-                    infoSelection = Constant.ROAD_INFO;
-                else if (SelectTexture.Texture == MapTexture.myBase)
-                    infoSelection = Constant.WHITE_HOUSE_INFO;
-                else if (SelectTexture.Texture == MapTexture.emptyTower)
-                    infoSelection = Constant.EMPTY_TOWER_INFO;
-                else
-                    infoSelection = Constant.OTHER_INFO;
-                if (_timerInfo > 0)
-                {
-                    if (_timerInfo < 10 * 10)
-                        _timerTransparancy -= 0.01;
-                    Vector2 sizeString = _imgString.MeasureString(infoSelection);
-                    spriteBatch.DrawString(_imgString, infoSelection, new Vector2(VirtualWidth / 2 - sizeString.X / 2, VirtualHeight / 2), Color.Red * (float)_timerTransparancy);
-                    _timerInfo--;
-                }*/
 
                 #region Entity
                 spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
@@ -986,6 +967,9 @@ namespace MapEditorTrumpTower
 
             _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
             Spawn_Pressed(new Vector2(_posX, _posY));
+
+            // Spawn_Pressed ne s'actualise pas si on ne change pas la position de la souris aller savoir pourquoi ...
+            _gui.InputCapturer.InputReceiver.InjectMouseMove(0.0001f,0.0001f);
         }
 
         private void DeleteWave_Pressed(object sender, System.EventArgs e)
@@ -1833,20 +1817,6 @@ namespace MapEditorTrumpTower
         public void InitMapCreator()
         {
             SelectTexture = new SelectorTexture(this, _map, _imgCloakTexture);
-            /*
-            positionCursor = (float)distanceUpMainTitle;
-            spriteBatch.Draw(_imgMenuTexture, new Vector2(pos - _imgMenuTexture.Width / 2, positionCursor), Color.White);
-            positionCursor += _imgMenuTexture.Height + (float)distanceDownMainTitle;
-            spriteBatch.Draw(_imgTextureUtile, new Vector2(pos - _imgTextureUtile.Width / 2, positionCursor), Color.White);
-            positionCursor += 64 + _imgTextureUtile.Height + (float)distanceDownTitle + (float)distanceDownImg;
-            spriteBatch.Draw(_imgOutilDeSelection, new Vector2(pos - _imgOutilDeSelection.Width / 2, positionCursor), Color.White);
-            positionCursor += 64 + _imgOutilDeSelection.Height + (float)distanceDownTitle + (float)distanceDownImg;
-            spriteBatch.Draw(_imgOptions, new Vector2(pos - _imgOptions.Width / 2, positionCursor), Color.White);
-            positionCursor += 64 + _imgOptions.Height + (float)distanceDownTitle + (float)distanceDownImg;
-            spriteBatch.Draw(_imgValidation, new Vector2(pos - _imgValidation.Width / 2, positionCursor), Color.White);
-            positionCursor += 64 + _imgValidation.Height + (float)distanceDownTitle + (float)distanceDownImg;
-            spriteBatch.Draw(_imgSelectionActuelle, new Vector2(pos - _imgSelectionActuelle.Width / 2, positionCursor), Color.White);
-            */
            
             float positionCursor = (float)distanceUpMainTitle + _imgMenuTexture.Height + (float)distanceDownMainTitle + _imgTextureUtile.Height + (float)distanceDownTitle;
             #region Button Left Menu Default
@@ -1859,34 +1829,6 @@ namespace MapEditorTrumpTower
             _buttonsTexture.Add(new ButtonTexture(this, _imgWall, _debug, MapTexture.myBase, new Vector2(posMenuRight + 220, positionCursor), "4",
                 new List<Keys>(new Keys[] { Keys.D4 })));
 
-            /*
-            ²_buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtDownGrassUp], _debug, MapTexture.dirtDownGrassUp, new Vector2(posMenuRight + 10, 210), "CTRL+1",
-                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtRightGrassLeft], _debug, MapTexture.dirtRightGrassLeft, new Vector2(posMenuRight + 80, 210), "CTRL+2",
-                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtUpGrassDown], _debug, MapTexture.dirtUpGrassDown, new Vector2(posMenuRight + 150, 210), "CTRL+3",
-                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtLeftGrassRight], _debug, MapTexture.dirtLeftGrassRight, new Vector2(posMenuRight + 220, 210), "CTRL+4",
-                new List<Keys>(new Keys[] { Keys.LeftControl, Keys.D4 })));
-
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftDown], _debug, MapTexture.bigDirtCornerLeftDown, new Vector2(posMenuRight + 10, 300), "ALT+1",
-                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightDown], _debug, MapTexture.bigDirtCornerRightDown, new Vector2(posMenuRight + 80, 300), "ALT+2",
-                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerRightUp], _debug, MapTexture.bigDirtCornerRightUp, new Vector2(posMenuRight + 150, 300), "ALT+3",
-                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.bigDirtCornerLeftUp], _debug, MapTexture.bigDirtCornerLeftUp, new Vector2(posMenuRight + 220, 300), "ALT+4",
-                new List<Keys>(new Keys[] { Keys.LeftAlt, Keys.D4 })));
-
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftDown], _debug, MapTexture.dirtCornerLeftDown, new Vector2(posMenuRight + 10, 390), "SHIFT+1",
-                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D1 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightDown], _debug, MapTexture.dirtCornerRightDown, new Vector2(posMenuRight + 80, 390), "SHIFT+2",
-                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D2 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerRightUp], _debug, MapTexture.dirtCornerRightUp, new Vector2(posMenuRight + 150, 390), "SHIFT+3",
-                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D3 })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgMaps[(int)MapTexture.dirtCornerLeftUp], _debug, MapTexture.dirtCornerLeftUp, new Vector2(posMenuRight + 220, 390), "SHIFT+4",
-                new List<Keys>(new Keys[] { Keys.LeftShift, Keys.D4 })));
-            */
             positionCursor += 64 + (float)distanceDownImg + _imgTextureUtile.Height + (float)distanceDownTitle;
             _buttonsTexture.Add(new ButtonTexture(this, _imgNoSelect, _debug, MapTexture.None, new Vector2(posMenuRight + 115, positionCursor), "A",
                 new List<Keys>(new Keys[] { Keys.A })));
