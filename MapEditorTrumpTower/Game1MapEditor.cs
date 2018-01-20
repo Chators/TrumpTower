@@ -294,10 +294,9 @@ namespace MapEditorTrumpTower
             if (State.ActualState == StateType.Default)
             {
                 // On actualise toutes les 5 secondes
-                if (_lastRefresh + 5 == gameTime.TotalGameTime.Seconds)
+                if (_lastRefresh + 15 == gameTime.TotalGameTime.Seconds)
                 {
                     _lastRefresh = gameTime.TotalGameTime.Seconds;
-
                     if (_map.Wall != null)
                     {
                         for (int i = 0; i < _map.SpawnsEnemies.Count; i++)
@@ -305,7 +304,6 @@ namespace MapEditorTrumpTower
                     }
                 }
             }
-
             #region Update HandleInput
             newStateMouse = Mouse.GetState();
             newStateMouse = new MouseState((int)(newStateMouse.X * (VirtualWidth / GraphicsDevice.Viewport.Width)),

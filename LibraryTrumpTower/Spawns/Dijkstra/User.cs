@@ -52,37 +52,62 @@ namespace LibraryTrumpTower.Spawns.Dijkstra
 
         public List<User> OnSFaitUnPtitDijkstra(Dictionary<string, User> allUser, User targetUser)
         {
+            bool isConnexe = false;
+
             List<List<User>> userConnexe = allUser[CompleteName].GetAllContactsWithDepth(new List<User> { allUser[CompleteName] }, new List<User>(), new List<User>(), new List<List<User>>());
+            // On cherche si l'utilisateur est connexe
+            for (int i = 0; i < userConnexe.Count; i++)
+            {
+                List<User> userTmp = userConnexe[i];
+                for (int y = 0; y < userTmp.Count; y++)
+                {
+                    if (userTmp[y] == targetUser)
+                    {
+                        isConnexe = true;
+                        break;
+                    }
+
+                }
+            }
             Console.WriteLine();
 
-            Dictionary<User, bool> visited = new Dictionary<User, bool>();
-            for (int i = 0; i < userConnexe.Count; i++)
+            if (isConnexe)
             {
-                for (int j = 0; j < userConnexe[i].Count; j++)
-                    visited.Add(userConnexe[i][j], false);
-            }
-            visited[allUser[CompleteName]] = false;
+                Dictionary<User, bool> visited = new Dictionary<User, bool>();
+                for (int i = 0; i < userConnexe.Count; i++)
+                {
+                    for (int j = 0; j < userConnexe[i].Count; j++)
+                        visited.Add(userConnexe[i][j], false);
+                }
+                visited[allUser[CompleteName]] = false;
 
-            Dictionary<User, int> weight = new Dictionary<User, int>();
-            for (int i = 0; i < userConnexe.Count; i++)
+                Dictionary<User, int> weight = new Dictionary<User, int>();
+                for (int i = 0; i < userConnexe.Count; i++)
+                {
+                    for (int j = 0; j < userConnexe[i].Count; j++)
+                        weight.Add(userConnexe[i][j], -1);
+                }
+                weight[allUser[CompleteName]] = 0;
+
+                Dictionary<User, User> antecedent = new Dictionary<User, User>();
+                for (int i = 0; i < userConnexe.Count; i++)
+                {
+                    for (int j = 0; j < userConnexe[i].Count; j++)
+                        antecedent.Add(userConnexe[i][j], null);
+                }
+                antecedent[allUser[CompleteName]] = null;
+
+                User userDeparture = allUser[CompleteName];
+                User userTarget = allUser[targetUser.CompleteName];
+
+
+
+                return allUser[CompleteName].GetTheShortestWay(visited, weight, antecedent, userDeparture, userDeparture, userTarget);
+            }
+            else
             {
-                for (int j = 0; j < userConnexe[i].Count; j++)
-                    weight.Add(userConnexe[i][j], -1);
+                return null;
             }
-            weight[allUser[CompleteName]] = 0;
-
-            Dictionary<User, User> antecedent = new Dictionary<User, User>();
-            for (int i = 0; i < userConnexe.Count; i++)
-            {
-                for (int j = 0; j < userConnexe[i].Count; j++)
-                    antecedent.Add(userConnexe[i][j], null);
-            }
-            antecedent[allUser[CompleteName]] = null;
-
-            User userDeparture = allUser[CompleteName];
-            User userTarget = allUser[targetUser.CompleteName];
-
-            return allUser[CompleteName].GetTheShortestWay(visited, weight, antecedent, userDeparture, userDeparture, userTarget);
         }
 
         private List<List<User>> GetAllContactsWithDepth(List<User> notVisited, List<User> notVisitedMoreDepth, List<User> visited, List<List<User>> arrayOfArrayWithDepth, int depthLevel = 0)
