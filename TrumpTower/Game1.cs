@@ -38,7 +38,13 @@ namespace TrumpTower
         SpriteBatch spriteBatch;
         int nombre;
         int nombre2;
+        float lowLife;
+        bool lowLifeBool;
+        bool lowLifeBool2;
+        Texture2D lowLifeIndicator;
+        int playLowLife;
         
+
 
         #region Win condition
         bool _isWon;
@@ -298,6 +304,11 @@ namespace TrumpTower
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            // float lowLifeFloat = Convert.ToSingle(lowLife);
+            playLowLife = 0;
+            lowLifeBool = true;
+            lowLifeBool2 = false;
+            lowLife = 0.1f;
             isLost = false;
             #region Map INIT
             _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
@@ -680,10 +691,12 @@ namespace TrumpTower
             ManagerSound.LoadContent(Content);
             // MUSIQUE 
             MediaPlayer.Play(ManagerSound.Song1);
-            MediaPlayer.Volume = 0.05f;
+            MediaPlayer.Volume = 0.02f;
             MediaPlayer.IsRepeating = true;
 
             #endregion
+
+            lowLifeIndicator = Content.Load<Texture2D>("low_Life");
 
             _imgHearth = Content.Load<Texture2D>("hearth");
 
@@ -760,6 +773,23 @@ namespace TrumpTower
 
             //update_buttons();
 
+            if (lowLifeBool && !lowLifeBool2) lowLife += 0.5f / 30;
+            if (lowLife >= 1) lowLifeBool = false; lowLifeBool2 = true;
+            if (lowLifeBool2 && !lowLifeBool) lowLife -= 0.5f / 30;
+            if (lowLife <= 0) lowLifeBool = true; lowLifeBool2 = false;
+
+            if(_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
+            {
+                playLowLife += 1;
+                if(playLowLife == 205)
+                {
+                    playLowLife = 0;
+                }
+            }
+            //float lowLifeFloat = Convert.ToSingle(lowLife);
+
+
+
             foreach (Tower tow in _map.Towers)
             {
                     if (newStateMouse.X > tow.Position.X &&
@@ -793,6 +823,8 @@ namespace TrumpTower
                     }
                 }
             }
+
+            
 
             if (isLost && !_isWon)
             {
@@ -845,7 +877,7 @@ namespace TrumpTower
                 GameIsPaused = false;
 
             }
-
+          
             if (!GameIsPaused && realPause == false)
             {
                 if (_map.Wall.IsDead())
@@ -1431,7 +1463,8 @@ namespace TrumpTower
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scale);
-            
+           
+
             #region Maps
 
             for (int y = 0; y < _map.HeightArrayMap; y++)
@@ -1448,6 +1481,21 @@ namespace TrumpTower
             foreach (Decor decor in _map.Decors)
                 spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X - _imgDecors[decor._numberDecor].Width, decor._position.Y - _imgDecors[decor._numberDecor].Height), Color.White);
             #endregion
+            /* spriteBatch.DrawString(_gameOver, ""+lowLifeIndicator.Height, new Vector2(0,300), Color.Red);
+             spriteBatch.DrawString(_gameOver, "" + lowLifeIndicator.Width, new Vector2(0, 400), Color.Red);
+
+             spriteBatch.DrawString(_gameOver, "" + VirtualHeight, new Vector2(0, 500), Color.Red);
+             spriteBatch.DrawString(_gameOver, "" + VirtualWidth, new Vector2(0, 600), Color.Red);
+             */
+           
+            if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
+            {
+                if(playLowLife == 1 )
+                {
+                    ManagerSound.PlayLowLife();
+                }
+                spriteBatch.Draw(lowLifeIndicator, new Vector2(0, 0), Color.White * lowLife);
+            }
 
             #region StickRice
             if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
@@ -1798,7 +1846,8 @@ namespace TrumpTower
             {
                 foreach (SimpleAnimationSprite animatedSprite in def.AnimatedSprite) animatedSprite.Draw(gameTime, false);
             }
-            
+         
+          
             #region Pause
             spriteBatch.Draw(_backgroundDollars, new Vector2(5, 133+60), sourceRectanglee, Color.Black * 0.6f);
             if (stratPause < 5)
@@ -1898,7 +1947,7 @@ namespace TrumpTower
                 spriteBatch.Draw(button_texture_lost[1], button_rectangle_lost[1], button_color_lost[1]);
                 spriteBatch.Draw(_sadTrump, new Vector2(0, VirtualHeight - _sadTrump.Height), Color.White);
                
-               /* spriteBatch.DrawString(_gameOver, "is won : " + _isWon, new Vector2(100, 100), Color.Red);
+               /*spriteBatch.DrawString(_gameOver, "is won : " + _isWon, new Vector2(100, 100), Color.Red);
                 spriteBatch.DrawString(_gameOver, "is lost : " + isLost, new Vector2(100, 200), Color.Red);
                 spriteBatch.DrawString(_gameOver, "police blink : " + policeBlink, new Vector2(100, 300), Color.Red);
                 spriteBatch.DrawString(_gameOver, "police blink2 : " + policeBlink2, new Vector2(100, 400), Color.Red);*/

@@ -85,6 +85,9 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitYouWin;
         private static SoundEffectInstance YouWin;
 
+        private static SoundEffect InitLowLife;
+        private static SoundEffectInstance LowLife;
+
         static public void LoadContent(ContentManager Content)
         {
             InitRiceSplash = Content.Load<SoundEffect>("Sound/riceSplash");
@@ -111,8 +114,15 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitGameOver = Content.Load<SoundEffect>("Sound/game_over");
             InitPayAtCheckout = Content.Load<SoundEffect>("Sound/PayAtCheckout");
             InitYouWin = Content.Load<SoundEffect>("Sound/you_win");
+            InitLowLife = Content.Load<SoundEffect>("Sound/low_life_sound");
         }
 
+        public static void PlayLowLife()
+        {
+            LowLife = InitLowLife.CreateInstance();
+            LowLife.Volume = 1f;
+            LowLife.Play();
+        }
         public static void PlayPayAtCheckout()
         {
             PayAtCheckout = InitPayAtCheckout.CreateInstance();
