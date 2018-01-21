@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibraryTrumpTower.Constants.BalanceGame.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,14 @@ namespace LibraryTrumpTower.SpecialEvents
 
         internal override void UpdateBonus()
         {
-            Console.Write("AddBonus");
+            Events.Map.Dollars += BalanceEvent1.EVENT1_BONUS_DOLLARS;
             ManagerSound.PlayYouWin();
             //throw new NotImplementedException();
         }
 
         internal override void UpdateMalus()
         {
-            Console.WriteLine("AddMalus");
+            Events.Map.Dollars += BalanceEvent1.EVENT1_MALUS_DOLLARS;
             ManagerSound.PlayGameOver();
             //throw new NotImplementedException();
         }

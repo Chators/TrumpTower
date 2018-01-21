@@ -36,6 +36,12 @@ namespace TrumpTower.LibraryTrumpTower
             CurrentHp -= dammage;
         }
 
+        public void HealHp(double heal)
+        {
+            CurrentHp += heal;
+            if (CurrentHp > MaxHp) CurrentHp = MaxHp;
+        }
+
         public bool IsDead()
         {
             return (CurrentHp <= 0);
