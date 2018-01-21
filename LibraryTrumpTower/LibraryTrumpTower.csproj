@@ -58,6 +58,10 @@
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDoctor.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyKamikaze.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemySaboteur.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvent1.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvent2.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvent3.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvents.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerArea.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerBank.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSimple.cs" />
@@ -86,6 +90,11 @@
     <Compile Include="SpecialAbilities\Sniper.cs" />
     <Compile Include="SpecialAbilities\StickyRice.cs" />
     <Compile Include="SpecialAbilities\WallBoss.cs" />
+    <Compile Include="SpecialEvents\Event.cs" />
+    <Compile Include="SpecialEvents\Event1.cs" />
+    <Compile Include="SpecialEvents\Event2.cs" />
+    <Compile Include="SpecialEvents\Event3.cs" />
+    <Compile Include="SpecialEvents\Events.cs" />
     <Compile Include="Tower.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
