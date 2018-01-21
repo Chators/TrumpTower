@@ -16,24 +16,10 @@ namespace LibraryTrumpTower
         private Map Map { get; set; }
         private List<Event> EventAvailable { get; set; }
         public bool IsActivate { get; set; } // event is in progress
-        public Event CurrentEvent
-        {
-            get
-            {
-                if (!IsActivate)
-                {
-                    CurrentEvent = null;
-                    return CurrentEvent;
-                }
-                else return CurrentEvent;
-            }
-            set
-            {
-                CurrentEvent = value;
-            }
-        } 
-        private int Reloading { get; set; } // time to realod
+        public Event CurrentEvent{ get; set; } 
+        public int Reloading { get; set; } // time to realod
         private Random Random { get; set; }
+        public bool IsActivateFirstTime { get; set; }
 
         private int PercentChanceOfAppearing { get; set; }
         private int TimeToReloading { get; set; }
@@ -49,6 +35,7 @@ namespace LibraryTrumpTower
             TimeToReloading = timeToReloading;
             Random = new Random();
             IsActivate = false;
+            IsActivateFirstTime = false;
             Reloading = TimeToReloading;
         }
 
@@ -79,7 +66,8 @@ namespace LibraryTrumpTower
                     if (nbRdn < PercentChanceOfAppearing)
                     {
                         IsActivate = true;
-                        nbRdn = Random.Next(0, EventAvailable.Count);
+                        IsActivateFirstTime = true;
+                        nbRdn = Random.Next(0, EventAvailable.Count-1);
                         CurrentEvent = EventAvailable[nbRdn];
                         CurrentEvent.Reset();
                     }

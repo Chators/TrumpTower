@@ -340,7 +340,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        graphics.IsFullScreen = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -770,6 +770,11 @@ namespace TrumpTower
            
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
+            if (!GameIsPaused)
+            {
+                _map.Update();
+                _waveSprite.Update(Map.WaveIsComming);
+            }
 
             #region Prepare and Execut HandleInput
 
@@ -785,8 +790,6 @@ namespace TrumpTower
 
             KeyboardState newStateKeyboard = Keyboard.GetState();
             HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
-
-            if (newStateKeyboard.IsKeyDown(Keys.B) && lastStateKeyboard.IsKeyUp(Keys.B)) _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
             lastStateMouse = newStateMouse;
             lastStateKeyboard = newStateKeyboard;
 
@@ -797,6 +800,16 @@ namespace TrumpTower
             my = newStateMouse.Y;
             prev_mpressed = mpressed;
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
+
+            #region Events
+            if (_map.Events.IsActivateFirstTime)
+            {
+                GameIsPaused = true;
+                _map.Events.IsActivateFirstTime = false;
+                ManagerSound.PlayPauseIn();
+                _groupOfButtonsUITimer.ButtonActivated = _groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"];
+            }
+            #endregion
 
             if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
@@ -901,10 +914,7 @@ namespace TrumpTower
             }
             
             if (stratPause > 5)
-            {
                 GameIsPaused = false;
-
-            }
           
             if (!GameIsPaused && realPause == false)
             {
@@ -912,13 +922,7 @@ namespace TrumpTower
                 {
                     isLost = true;
                     GameIsPaused = true;
-                    //Exit(); // If base loses hp, game will exit.
-
                 }
-
-                _map.Update();
-
-                _waveSprite.Update(Map.WaveIsComming);
 
                 AnimationsDollars.Update((int)_map.Dollars);
 
@@ -944,10 +948,6 @@ namespace TrumpTower
                         animatedSprite.Update(gameTime);
                     }
                 }
-                /*
-                double positionX = target.X + (imgTarget.Width / 2) - (_imgLife.Width / 2) * _sizeBar;
-                double positionY = target.Y - _imgLife.Height * _sizeBar;
-                */
 
                 #region Anim Heal
                 for (int i = 0; i < _map.AnimHeal.Count; i++)
@@ -1075,6 +1075,7 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
+            // Not Pause
             if (!realPause)
             {
                 #region Towers
@@ -1295,11 +1296,20 @@ namespace TrumpTower
                 #endregion
 
                 #endregion
-                
-                    _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
+                if (!GameIsPaused)
+                {
+                    #region Events
+                    if (_map.Events.IsActivate && newStateKeyboard.IsKeyDown(Keys.S) && !lastStateKeyboard.IsKeyDown(Keys.S))
+                        _map.Events.AddGauge();
+                    #endregion
+                }
+
+                _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
                 _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
             }
+            // Pause
             if (realPause && !isLost && !_isWon)
             {
                 
@@ -1327,8 +1337,6 @@ namespace TrumpTower
                                 GameIsPaused = false;
                                 stratPause = 0;
                                 Map.WavesCounter = 0;
-                               /* foreach (Spawn spawn in _map.SpawnsEnemies)
-                                    Map.WavesTotals += spawn.Waves.Count;*/
                                 break;
 
                             }
@@ -1340,6 +1348,7 @@ namespace TrumpTower
                         }
                     }
             }
+            // Is Lost
             if (isLost && !_isWon)
             {
                 if (newStateMouse.LeftButton == ButtonState.Pressed &&
@@ -1372,6 +1381,7 @@ namespace TrumpTower
                     }
                 }
             }
+            // IsWon
             if(_isWon && !isLost)
             {
                 if (newStateMouse.LeftButton == ButtonState.Pressed &&
@@ -1458,17 +1468,14 @@ namespace TrumpTower
             if (newStateKeyboard.IsKeyDown(Keys.Space) && lastStateKeyboard.IsKeyUp(Keys.Space))
             {
                 if ( warning== false)
-                {
                     warning = true;
-                }
                 else if (warning)
-                {
                     warning = false;
-                }
 
             }
 
-            #region it enlever vie unite
+            #region CHEATCODE
+            // inflige 10 hp
             if (newStateKeyboard.IsKeyDown(Keys.N) && lastStateKeyboard.IsKeyUp(Keys.N))
             {
                 List<Enemy> enemies = _map.GetAllEnemies();
@@ -1476,6 +1483,16 @@ namespace TrumpTower
                 {
                     enemy.TakeHp(10);
                 }
+            }
+            // reduce time to reload events
+            if (newStateKeyboard.IsKeyDown(Keys.V) && lastStateKeyboard.IsKeyUp(Keys.V))
+                _map.Events.Reloading = 0;
+
+            // For look info hp
+            if (newStateKeyboard.IsKeyDown(Keys.B) && lastStateKeyboard.IsKeyUp(Keys.B))
+            {
+                _map.Wall.ChangeHp((int)_map.Wall.MaxHp);
+                _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
             }
             #endregion
         }

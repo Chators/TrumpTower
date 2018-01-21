@@ -41,6 +41,7 @@ namespace LibraryTrumpTower.SpecialEvents
         internal void Reset()
         {
             CurrentGauge = 0;
+            CurrentTime = TimeBeforeOver;
         }
     }
 }
