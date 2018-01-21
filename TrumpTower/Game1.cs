@@ -770,7 +770,7 @@ namespace TrumpTower
            
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
-            if (!GameIsPaused)
+            if (!GameIsPaused && realPause == false)
             {
                 _map.Update();
                 _waveSprite.Update(Map.WaveIsComming);
@@ -1537,20 +1537,6 @@ namespace TrumpTower
             }
             #endregion
 
-            #region StickRice
-            if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
-                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
-            if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
-            {
-                Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlaneTurbo.Width, _imgPlaneTurbo.Height);
-                Vector2 origin = new Vector2(_imgPlaneTurbo.Width / 2, _imgPlaneTurbo.Height / 2);
-                Vector2 direction = _map.StickyRice.PositionPlaneOfRice - new Vector2(VirtualWidth + _imgPlaneTurbo.Width, _map.StickyRice.PositionPlaneOfRice.Y);
-                direction.Normalize();
-                float _rotate = (float)Math.Atan2(-direction.X, direction.Y);
-                spriteBatch.Draw(_imgPlaneTurbo, _map.StickyRice.PositionPlaneOfRice, null, Color.White, _rotate, origin, 1.0f, SpriteEffects.None, 1);
-            }
-            #endregion
-
             #region Wall
 
             Wall _wall = _map.Wall;
@@ -1860,6 +1846,20 @@ namespace TrumpTower
                 Texture2D entityFace = _imgVeryAngryFace;
                 spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
                 entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
+            }
+            #endregion
+
+            #region StickRice
+            if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
+                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
+            if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
+            {
+                Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlaneTurbo.Width, _imgPlaneTurbo.Height);
+                Vector2 origin = new Vector2(_imgPlaneTurbo.Width / 2, _imgPlaneTurbo.Height / 2);
+                Vector2 direction = _map.StickyRice.PositionPlaneOfRice - new Vector2(VirtualWidth + _imgPlaneTurbo.Width, _map.StickyRice.PositionPlaneOfRice.Y);
+                direction.Normalize();
+                float _rotate = (float)Math.Atan2(-direction.X, direction.Y);
+                spriteBatch.Draw(_imgPlaneTurbo, _map.StickyRice.PositionPlaneOfRice, null, Color.White, _rotate, origin, 1.0f, SpriteEffects.None, 1);
             }
             #endregion
 

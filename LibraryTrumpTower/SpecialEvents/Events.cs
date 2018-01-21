@@ -71,7 +71,7 @@ namespace LibraryTrumpTower
                     {
                         IsActivate = true;
                         IsActivateFirstTime = true;
-                        nbRdn = Random.Next(0, EventAvailable.Count-1);
+                        nbRdn = Random.Next(0, (EventAvailable.Count));
                         CurrentEvent = EventAvailable[nbRdn];
                         CurrentEvent.Reset();
                     }

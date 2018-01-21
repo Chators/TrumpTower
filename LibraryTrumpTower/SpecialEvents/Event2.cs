@@ -20,7 +20,6 @@ namespace LibraryTrumpTower.SpecialEvents
             Wall wall = Events.Map.Wall;
             wall.HealHp(wall.MaxHp - (BalanceEvent2.EVENT2_BONUS_HP_HEAL_IN_PERCENT * wall.MaxHp / 100));
             ManagerSound.PlayYouWin();
-            //throw new NotImplementedException();
         }
 
         internal override void UpdateMalus()
@@ -28,7 +27,6 @@ namespace LibraryTrumpTower.SpecialEvents
             Wall wall = Events.Map.Wall;
             wall.TakeHp(wall.MaxHp - (BalanceEvent2.EVENT2_MALUS_HP_DAMAGE_IN_PERCENT * wall.MaxHp / 100));
             ManagerSound.PlayGameOver();
-            //throw new NotImplementedException();
         }
     }
 }
