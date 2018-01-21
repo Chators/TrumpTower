@@ -17,9 +17,9 @@ namespace TrumpTower.LibraryTrumpTower
     {
         World_Jungle,
         World_Snow,
-        World_City,
-        None
+        World_City
     }
+
     [DataContract(IsReference = true)]
     public class Map
     {

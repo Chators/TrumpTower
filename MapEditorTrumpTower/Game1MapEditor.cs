@@ -86,8 +86,6 @@ namespace MapEditorTrumpTower
         private Texture2D _imgTextureUtile;
         private Texture2D _imgValidation;
         private Texture2D _imgSelectionActuelle;
-        private Texture2D _imgInformation;
-        private Texture2D _imgEntity;
         private Texture2D _imgTree;
         private Texture2D _imgChangeTheme;
 
@@ -107,9 +105,6 @@ namespace MapEditorTrumpTower
         double distanceDownTitle;
         double distanceDownImg;
         #endregion
-
-        int _timerInfo;
-        double _timerTransparancy;
 
         public Game1MapEditor()
         {
@@ -178,13 +173,13 @@ namespace MapEditorTrumpTower
 
             _lastRefresh = 0;
             posMenuRight = GraphicsDevice.Viewport.Width * 85 / 100;
-            _timerInfo = 0;
-            _timerTransparancy = 1;
+
 
             distanceUpMainTitle = 10;
             distanceDownMainTitle = 80;
             distanceDownTitle = 20;
             distanceDownImg = 70;
+
             base.Initialize();
         }
 
@@ -227,22 +222,26 @@ namespace MapEditorTrumpTower
 
             if (_map != null)
             {
-                if (_map.ThemeOfMap != ThemeMap.None)
+                try
                 {
-                    _imgMaps = _imgThemesMaps[nameof(_map.ThemeOfMap)];
-                    _imgDecors = _imgThemesMaps[nameof(_map.ThemeOfMap)];
+                    string nameMap = Enum.GetName(typeof(ThemeMap), _map.ThemeOfMap);
+                    _imgMaps = _imgThemesMaps[nameMap];
+                    _imgDecors = _imgThemesDecorsMaps[nameMap];
                 }
-                else
+                // if map is old
+                catch
                 {
+                    _map.ThemeOfMap = ThemeMap.World_Jungle;
                     _imgMaps = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
-                    _imgDecors = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
+                    _imgDecors = _imgThemesDecorsMaps[nameof(ThemeMap.World_Jungle)];
                 }
             }
             else
             {
                 _imgMaps = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
-                _imgDecors = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
+                _imgDecors = _imgThemesDecorsMaps[nameof(ThemeMap.World_Jungle)];
             }
+
             #endregion
 
             #region Load Name Menu
@@ -379,20 +378,7 @@ namespace MapEditorTrumpTower
                 else if (newStateKeyboard.IsKeyDown(Keys.J) && !lastStateKeyboard.IsKeyDown(Keys.J))
                     ManagerAirPlane_Pressed();
                 else if (newStateKeyboard.IsKeyDown(Keys.K) && !lastStateKeyboard.IsKeyDown(Keys.K))
-                {
-                    /*string[] themesMap = Enum.GetNames(typeof(ThemeMap));
-                    int compteur = 0;
-                    foreach(string theme in themesMap)
-                    {
-                        if (theme == nameof(_map.ThemeOfMap))
-                        {
-                            compteur++;
-                            break;
-                        }
-                        compteur++;
-                    }*/
                     ChangeTheme(Extensions.Next<ThemeMap>(_map.ThemeOfMap));
-                }
                 else if (newStateKeyboard.IsKeyDown(Keys.Enter) && !lastStateKeyboard.IsKeyDown(Keys.Enter))
                 {
                     // On reactualise tous les chemins des spawns
@@ -500,7 +486,7 @@ namespace MapEditorTrumpTower
                 #endregion
 
                 #region Draw Debug
-                //spriteBatch.DrawString(_debug, SelectTexture.Texture + "", new Vector2(150, 150), Color.Red);
+                spriteBatch.DrawString(_debug, _map.ThemeOfMap+"", new Vector2(150, 150), Color.Red);
                 //spriteBatch.DrawString(_debug, CurrentActionCreatePath + "", new Vector2(150, 200), Color.Red);
                 #endregion
 

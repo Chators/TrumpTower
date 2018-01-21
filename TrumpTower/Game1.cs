@@ -62,7 +62,6 @@ namespace TrumpTower
 
         #region Maps
 
-        int[,] _mapPoint;
         Map _map;
         List<Texture2D> _imgMaps;
         Dictionary<string, List<Texture2D>> _imgThemesMaps = new Dictionary<string, List<Texture2D>>();
@@ -286,8 +285,6 @@ namespace TrumpTower
 
         public bool warning;
         Texture2D _imgWarning2;
-
-        Texture2D _spriteHeal;
 
         #endregion
 
@@ -517,18 +514,20 @@ namespace TrumpTower
 
             if (_map != null)
             {
-                if (_map.ThemeOfMap != ThemeMap.None)
+                try
                 {
-                    _imgMaps = _imgThemesMaps[nameof(_map.ThemeOfMap)];
-                    _imgDecors = _imgThemesMaps[nameof(_map.ThemeOfMap)];
+                    string nameMap = Enum.GetName(typeof(ThemeMap), _map.ThemeOfMap);
+                    _imgMaps = _imgThemesMaps[nameMap];
+                    _imgDecors = _imgThemesDecorsMaps[nameMap];
                 }
-                else
+                // if map is old
+                catch
                 {
+                    _map.ThemeOfMap = ThemeMap.World_Jungle;
                     _imgMaps = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
-                    _imgDecors = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
+                    _imgDecors = _imgThemesDecorsMaps[nameof(ThemeMap.World_Jungle)];
                 }
             }
-
             #endregion
 
 

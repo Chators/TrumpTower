@@ -49,7 +49,6 @@ namespace Menu
         WorldButton _world2Button;
         WorldButton _world3Button;
         OptionsButtons _optionsButtons;
-        Game1Menu _ctx;
         //mouse pressed and mouse just pressed
         bool mpressed, prev_mpressed = false;
         //mouse location in window
@@ -733,7 +732,7 @@ namespace Menu
                     ListMap.Items.Add("Map name " + AllName[i] + " made by " + AllAuthor[i] + " the " + AllDate[i]);
                 ListMap.SelectionMode = ListSelectionMode.Single;
             }
-            catch (Exception e)
+            catch
             {
                 Window.Children.Add(labelNotConnect);
             }
