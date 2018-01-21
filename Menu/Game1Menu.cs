@@ -58,6 +58,8 @@ namespace Menu
         public MenuState state;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        KeyboardState newStateKeyboard;
+        KeyboardState lastStateKeyboard;
         public Player _player;
 
         private readonly InputListenerComponent _inputManager;
@@ -327,10 +329,27 @@ namespace Menu
             _inputManager.Update(gameTime);
 
             if (gameTime.TotalGameTime > TimeSpan.FromSeconds(1) && MediaPlayer.State != MediaState.Playing) ActiveMusique();
+
+            #region CheatCode
+            newStateKeyboard = Keyboard.GetState();
+            if (newStateKeyboard.IsKeyDown(Keys.W) && !lastStateKeyboard.IsKeyDown(Keys.W) && _player._lvlAccess != 15)
+            {
+                _player._lvlAccess++;
+                _player.Serialize();
+            }
+            else if (newStateKeyboard.IsKeyDown(Keys.X) && !lastStateKeyboard.IsKeyDown(Keys.X) && _player._lvlAccess != 1)
+            {
+                _player._lvlAccess--;
+                _player.Serialize();
+            }
+            lastStateKeyboard = newStateKeyboard;
+            #endregion
+
             // get elapsed frame time in seconds
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // update mouse variables
             mouse_state = Mouse.GetState();
+
             mx = mouse_state.X;
             my = mouse_state.Y;
             prev_mpressed = mpressed;

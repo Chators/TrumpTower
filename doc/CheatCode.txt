@@ -1,0 +1,3 @@
+---------------------------------------------------------------------- Menu Principal -----------------------------------------------------------------------
+W : Augmente de 1 le Level Access du joueur
+X : Diminue de 1 le LeveL Access du joueur
