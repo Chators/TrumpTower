@@ -340,7 +340,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = false;
+                        graphics.IsFullScreen = true;
                         graphics.ApplyChanges();
                         break;
                     }
