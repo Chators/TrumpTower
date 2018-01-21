@@ -13,7 +13,6 @@ namespace Menu.Animation
     {
         TimeSpan lastNextTime = TimeSpan.FromSeconds(0);
         const int nextTime = 20;
-        float _moveAnim = 0.1f;
 
         public VersusAnimation(Game1Menu ctx, Texture2D texture, Vector2 position, bool inAnimation, float transparancy, Color color, SoundEffect announcement) : base(ctx, texture, position, inAnimation, transparancy, color, announcement)
         {
@@ -21,16 +20,7 @@ namespace Menu.Animation
 
         public override void Update(GraphicsDeviceManager graphics, GameTime gameTime)
         {
-            /*if (lastNextTime.Seconds + 20 > gameTime.TotalGameTime.Seconds)
-            {
-                lastNextTime = gameTime.TotalGameTime;
-                InAnimation = true;
-            }
-            if (InAnimation)
-            {
-                UpdateMove();
-            }
-            UpdateMove();*/
+
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

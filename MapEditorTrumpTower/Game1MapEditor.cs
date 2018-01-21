@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -43,6 +44,8 @@ namespace MapEditorTrumpTower
         KeyboardState lastStateKeyboard;
 
         public List<Texture2D> _imgMaps;
+        private Dictionary<string, List<Texture2D>> _imgThemesMaps;
+        private Dictionary<string, List<Texture2D>> _imgThemesDecorsMaps;
         public Map _map;
 
         public SelectorTexture SelectTexture { get; private set; }
@@ -83,9 +86,8 @@ namespace MapEditorTrumpTower
         private Texture2D _imgTextureUtile;
         private Texture2D _imgValidation;
         private Texture2D _imgSelectionActuelle;
-        private Texture2D _imgInformation;
-        private Texture2D _imgEntity;
         private Texture2D _imgTree;
+        private Texture2D _imgChangeTheme;
 
         private SpriteFont _imgString;
         private Texture2D _imgHappyFace;
@@ -103,9 +105,6 @@ namespace MapEditorTrumpTower
         double distanceDownTitle;
         double distanceDownImg;
         #endregion
-
-        int _timerInfo;
-        double _timerTransparancy;
 
         public Game1MapEditor()
         {
@@ -174,13 +173,13 @@ namespace MapEditorTrumpTower
 
             _lastRefresh = 0;
             posMenuRight = GraphicsDevice.Viewport.Width * 85 / 100;
-            _timerInfo = 0;
-            _timerTransparancy = 1;
+
 
             distanceUpMainTitle = 10;
             distanceDownMainTitle = 80;
             distanceDownTitle = 20;
             distanceDownImg = 70;
+
             base.Initialize();
         }
 
@@ -197,23 +196,52 @@ namespace MapEditorTrumpTower
             // TODO: use this.Content to load your game content here
 
             #region Load Map
-            _imgMaps = new List<Texture2D>();
-            foreach (string name in Enum.GetNames(typeof(MapTexture)))
-            {
-                if (name == "dirt" || name == "grass" || name == "emptyTower" || name == "notEmptyTower" || name == "myBase")
-                    _imgMaps.Add(Content.Load<Texture2D>("Map/" + name));
-                else if (name != "None") _imgMaps.Add(null);
-            }
-            #endregion
+            _imgThemesMaps = new Dictionary<string, List<Texture2D>>();
+            _imgThemesMaps["World_Jungle"] = new List<Texture2D>();
+            _imgThemesMaps["World_Snow"] = new List<Texture2D>();
+            _imgThemesMaps["World_City"] = new List<Texture2D>();
 
+            _imgThemesDecorsMaps = new Dictionary<string, List<Texture2D>>();
+            _imgThemesDecorsMaps["World_Jungle"] = new List<Texture2D>();
+            _imgThemesDecorsMaps["World_Snow"] = new List<Texture2D>();
+            _imgThemesDecorsMaps["World_City"] = new List<Texture2D>();
 
-            #region Load Decors 
-            _imgDecors = new List<Texture2D>();
-            _imgDecors.Add(null);
-            for (int i = 1; i < 9; i++)
+            foreach (string nameWorld in _imgThemesMaps.Keys)
             {
-                _imgDecors.Add(Content.Load<Texture2D>("Map/decor/decor" + i));
+                foreach (string name in Enum.GetNames(typeof(MapTexture)))
+                {
+                    if (name == "dirt" || name == "grass" || name == "emptyTower" || name == "notEmptyTower" || name == "myBase")
+                        _imgThemesMaps[nameWorld].Add(Content.Load<Texture2D>("Map/" + nameWorld + "/" + name));
+                    else if (name != "None") _imgThemesMaps[nameWorld].Add(null);
+                }
+                for (int y = 1; y < 9; y++)
+                {
+                    _imgThemesDecorsMaps[nameWorld].Add(Content.Load<Texture2D>("Map/" + nameWorld + "/decor/decor" + y));
+                }
             }
+
+            if (_map != null)
+            {
+                try
+                {
+                    string nameMap = Enum.GetName(typeof(ThemeMap), _map.ThemeOfMap);
+                    _imgMaps = _imgThemesMaps[nameMap];
+                    _imgDecors = _imgThemesDecorsMaps[nameMap];
+                }
+                // if map is old
+                catch
+                {
+                    _map.ThemeOfMap = ThemeMap.World_Jungle;
+                    _imgMaps = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
+                    _imgDecors = _imgThemesDecorsMaps[nameof(ThemeMap.World_Jungle)];
+                }
+            }
+            else
+            {
+                _imgMaps = _imgThemesMaps[nameof(ThemeMap.World_Jungle)];
+                _imgDecors = _imgThemesDecorsMaps[nameof(ThemeMap.World_Jungle)];
+            }
+
             #endregion
 
             #region Load Name Menu
@@ -225,6 +253,7 @@ namespace MapEditorTrumpTower
             _imgValidation = Content.Load<Texture2D>("NameMenu/Validation");
             _imgSelectionActuelle = Content.Load<Texture2D>("NameMenu/Selection-Actuelle");
             _imgTree = Content.Load<Texture2D>("NameMenu/tree");
+            _imgChangeTheme = Content.Load<Texture2D>("NameMenu/changeTheme");
             #endregion
 
             _imgAccept = Content.Load<Texture2D>("accept");
@@ -344,10 +373,12 @@ namespace MapEditorTrumpTower
 
                 if (newStateKeyboard.IsKeyDown(Keys.L) && !lastStateKeyboard.IsKeyDown(Keys.L))
                     _map.Decors = GeneratorDecors.Generate(_map.MapArray);
-                else if (newStateKeyboard.IsKeyDown(Keys.J) && !lastStateKeyboard.IsKeyDown(Keys.J))
+                else if (newStateKeyboard.IsKeyDown(Keys.H) && !lastStateKeyboard.IsKeyDown(Keys.H))
                     MapSetting_Pressed();
-                else if (newStateKeyboard.IsKeyDown(Keys.K) && !lastStateKeyboard.IsKeyDown(Keys.K))
+                else if (newStateKeyboard.IsKeyDown(Keys.J) && !lastStateKeyboard.IsKeyDown(Keys.J))
                     ManagerAirPlane_Pressed();
+                else if (newStateKeyboard.IsKeyDown(Keys.K) && !lastStateKeyboard.IsKeyDown(Keys.K))
+                    ChangeTheme(Extensions.Next<ThemeMap>(_map.ThemeOfMap));
                 else if (newStateKeyboard.IsKeyDown(Keys.Enter) && !lastStateKeyboard.IsKeyDown(Keys.Enter))
                 {
                     // On reactualise tous les chemins des spawns
@@ -455,7 +486,7 @@ namespace MapEditorTrumpTower
                 #endregion
 
                 #region Draw Debug
-                //spriteBatch.DrawString(_debug, SelectTexture.Texture + "", new Vector2(150, 150), Color.Red);
+                spriteBatch.DrawString(_debug, _map.ThemeOfMap+"", new Vector2(150, 150), Color.Red);
                 //spriteBatch.DrawString(_debug, CurrentActionCreatePath + "", new Vector2(150, 200), Color.Red);
                 #endregion
 
@@ -1832,11 +1863,13 @@ namespace MapEditorTrumpTower
                 new List<Keys>(new Keys[] { Keys.A })));
 
             positionCursor += 64 + (float)distanceDownImg + _imgOutilDeSelection.Height + (float)distanceDownTitle;
-            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 40, positionCursor), "J",
-                new List<Keys>(new Keys[] { Keys.J })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 110, positionCursor), "K",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgClipBoards, _debug, MapTexture.None, new Vector2(posMenuRight + 10, positionCursor), "H",
+                new List<Keys>(new Keys[] { Keys.H })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgPlane1, _debug, MapTexture.None, new Vector2(posMenuRight + 80, positionCursor), "J",
+               new List<Keys>(new Keys[] { Keys.J })));
+            _buttonsTexture.Add(new ButtonTexture(this, _imgChangeTheme, _debug, MapTexture.None, new Vector2(posMenuRight + 150, positionCursor), "K",
                new List<Keys>(new Keys[] { Keys.K })));
-            _buttonsTexture.Add(new ButtonTexture(this, _imgTree, _debug, MapTexture.None, new Vector2(posMenuRight + 180, positionCursor), "L",
+            _buttonsTexture.Add(new ButtonTexture(this, _imgTree, _debug, MapTexture.None, new Vector2(posMenuRight + 220, positionCursor), "L",
                new List<Keys>(new Keys[] { Keys.L })));
 
             positionCursor += 64 + (float)distanceDownImg + _imgOptions.Height + (float)distanceDownTitle;
@@ -1854,6 +1887,12 @@ namespace MapEditorTrumpTower
 
             State.ActualState = StateType.Default;
         }
-
+        public void ChangeTheme(ThemeMap newTheme)
+        {
+            _map.ThemeOfMap = newTheme;
+            string nameTheme = Enum.GetName(typeof(ThemeMap), newTheme);
+            _imgMaps = _imgThemesMaps[nameTheme];
+            _imgDecors = _imgThemesDecorsMaps[nameTheme];
+        }
     }
 }
