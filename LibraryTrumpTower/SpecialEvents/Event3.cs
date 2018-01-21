@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibraryTrumpTower.Constants.BalanceGame.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,16 +16,18 @@ namespace LibraryTrumpTower.SpecialEvents
 
         internal override void UpdateBonus()
         {
-            Console.Write("AddBonus");
+            BalanceEvent3.EVENT3_IS_BONUS = true;
+            Events.EventTimerEffect = BalanceEvent3.EVENT3_TIME_ACTIF;
+            BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT = BalanceEvent3.EVENT3_BONUS_SPEED_IN_PERCENT;
             ManagerSound.PlayYouWin();
-            //throw new NotImplementedException();
         }
 
         internal override void UpdateMalus()
         {
-            Console.WriteLine("AddMalus");
+            BalanceEvent3.EVENT3_IS_BONUS = false;
+            Events.EventTimerEffect = BalanceEvent3.EVENT3_TIME_ACTIF;
+            BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT = BalanceEvent3.EVENT3_MALUS_SPEED_IN_PERCENT;
             ManagerSound.PlayGameOver();
-            //throw new NotImplementedException();
         }
     }
 }

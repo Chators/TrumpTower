@@ -24,6 +24,9 @@ namespace LibraryTrumpTower
         private int PercentChanceOfAppearing { get; set; }
         private int TimeToReloading { get; set; }
 
+        // For Event3
+        public int EventTimerEffect { get; set; }
+
         public Events (Map map, int percentOfChanceOfAppearing, int timeToReloading)
         {
             Map = map;
@@ -37,6 +40,7 @@ namespace LibraryTrumpTower
             IsActivate = false;
             IsActivateFirstTime = false;
             Reloading = TimeToReloading;
+            EventTimerEffect = 0;
         }
 
         public void Update()
@@ -73,6 +77,14 @@ namespace LibraryTrumpTower
                     }
                     Reloading = TimeToReloading;
                 }
+            }
+
+            // For Event3
+            if (EventTimerEffect > 0)
+            {
+                EventTimerEffect--;
+                if (EventTimerEffect <= 0)
+                    BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT = 0;
             }
         }
 
