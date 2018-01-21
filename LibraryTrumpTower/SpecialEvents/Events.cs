@@ -15,8 +15,8 @@ namespace LibraryTrumpTower
     {
         private Map Map { get; set; }
         private List<Event> EventAvailable { get; set; }
-        private bool IsActivate { get; set; } // event is in progress
-        internal Event CurrentEvent
+        public bool IsActivate { get; set; } // event is in progress
+        public Event CurrentEvent
         {
             get
             {

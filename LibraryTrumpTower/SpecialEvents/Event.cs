@@ -9,12 +9,12 @@ namespace LibraryTrumpTower.SpecialEvents
     public abstract class Event
     {
         internal Events Events { get; set; }
-        internal int CurrentTime { get; private set; }
-        internal double CurrentGauge { get; private set; }
+        public int CurrentTime { get; private set; }
+        public double CurrentGauge { get; private set; }
 
-        internal int TimeBeforeOver { get; private set; }
+        public int TimeBeforeOver { get; private set; }
         internal double PointsByPressureEffect { get; set; }
-        internal double MaxGauge { get; private set; }
+        public double MaxGauge { get; private set; }
 
         public Event (Events events, int timeBeforeOver, double maxGauge, double pointsByPressureEffect)
         {

@@ -41,7 +41,6 @@ namespace TrumpTower
         float lowLife;
         bool lowLifeBool;
         bool lowLifeBool2;
-        //Texture2D lowLifeIndicator;
         Texture2D[] LowLifeIndicator = new Texture2D[4];
         
         int playLowLife;
@@ -1510,8 +1509,8 @@ namespace TrumpTower
             foreach (Decor decor in _map.Decors)
                 spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X - _imgDecors[decor._numberDecor].Width, decor._position.Y - _imgDecors[decor._numberDecor].Height), Color.White);
             #endregion
-            
 
+            #region Life Indicator
             if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
                 spriteBatch.Draw(LowLifeIndicator[0], new Vector2(0, 0), Color.White * lowLife);
@@ -1519,6 +1518,7 @@ namespace TrumpTower
                 spriteBatch.Draw(LowLifeIndicator[2], new Vector2(0, VirtualHeight - LowLifeIndicator[2].Height), Color.White * lowLife);
                 spriteBatch.Draw(LowLifeIndicator[3], new Vector2(0, 0), Color.White * lowLife);
             }
+            #endregion
 
             #region StickRice
             if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
@@ -1538,9 +1538,6 @@ namespace TrumpTower
 
             Wall _wall = _map.Wall;
             spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
-
-            /*HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f, 1.8f);
-            wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);*/
 
             #endregion
 
@@ -1770,10 +1767,9 @@ namespace TrumpTower
 
 
             #endregion
+
             #region WallBoss
-
             spriteBatch.Draw(_imgWall, _map.WallBoss.Position, Color.White);
-
             #endregion
 
             #region Missiles
@@ -1832,22 +1828,22 @@ namespace TrumpTower
 
             #endregion
 
-            #region Wall
+            #region Wall Health Bar
             HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 7.8f, 3f);
             spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
             spriteBatch.Draw(_imgHearth, new Vector2(10, 90), Color.White);
             wallHealthBar.Draw(spriteBatch, new Vector2(123,117), _imgWall);
             #endregion
 
-            #region Entity
-            HealthBar entityBar = new HealthBar(_map.Entity.CurrentGauge, _map.Entity.MaxGauge, 7.8f, 3f);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
-            Texture2D entityFace = null;
-            if (_map.Entity.EntityFace == EntityFace.VeryAngry) entityFace = _imgVeryAngryFace;
-            else if (_map.Entity.EntityFace == EntityFace.Angry) entityFace = _imgAngryFace;
-            else if (_map.Entity.EntityFace == EntityFace.Happy) entityFace = _imgHappyFace;
-            spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
-            entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
+            #region Events
+            if (_map.Events.IsActivate)
+            {
+                HealthBar entityBar = new HealthBar(_map.Events.CurrentEvent.CurrentGauge, _map.Events.CurrentEvent.MaxGauge, 7.8f, 3f);
+                spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
+                Texture2D entityFace = _imgVeryAngryFace;
+                spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
+                entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
+            }
             #endregion
 
             #region Raid Units Air is Comming
