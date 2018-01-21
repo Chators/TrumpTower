@@ -725,8 +725,6 @@ namespace TrumpTower
 
             #endregion
 
-           // lowLifeIndicator = Content.Load<Texture2D>("low_Life");
-
             _imgHearth = Content.Load<Texture2D>("hearth");
 
             grey = Content.Load<Texture2D>("grey");
@@ -789,6 +787,7 @@ namespace TrumpTower
             KeyboardState newStateKeyboard = Keyboard.GetState();
             HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
+            if (newStateKeyboard.IsKeyDown(Keys.B) && lastStateKeyboard.IsKeyUp(Keys.B)) _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
             lastStateMouse = newStateMouse;
             lastStateKeyboard = newStateKeyboard;
 
@@ -800,26 +799,26 @@ namespace TrumpTower
             prev_mpressed = mpressed;
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
 
-            //update_buttons();
-
-
-            if (lowLifeBool && !lowLifeBool2) lowLife += 0.5f / 30;
-            if (lowLife >= 1) lowLifeBool = false; lowLifeBool2 = true;
-            if (lowLifeBool2 && !lowLifeBool) lowLife -= 0.5f / 30;
-            if (lowLife <= 0) lowLifeBool = true; lowLifeBool2 = false;
-
-            if(_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
+            if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
+                if (lowLifeBool && !lowLifeBool2) lowLife += 0.005f;
+                if (lowLife >= 0.4)
+                {
+                    MediaPlayer.Volume = 0.01f;
+                    ManagerSound.PlayLowLife();
+                    lowLifeBool = false;
+                }
+                lowLifeBool2 = true;
+                if (lowLifeBool2 && !lowLifeBool) lowLife -= 0.005f;
+                if (lowLife <= 0) lowLifeBool = true;
+                lowLifeBool2 = false;
+
                 playLowLife += 1;
                 if(playLowLife == 205)
                 {
                     playLowLife = 0;
                 }
             }
-            //float lowLifeFloat = Convert.ToSingle(lowLife);
-
-
-
             foreach (Tower tow in _map.Towers)
             {
                     if (newStateMouse.X > tow.Position.X &&
@@ -1515,18 +1514,10 @@ namespace TrumpTower
 
             if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
-                if(playLowLife == 1 )
-                {
-                    MediaPlayer.Volume = 0.01f;
-                    ManagerSound.PlayLowLife();
-                }
-              
-                
-                    spriteBatch.Draw(LowLifeIndicator[0], new Vector2(0, 0), Color.White * lowLife);
-                    spriteBatch.Draw(LowLifeIndicator[1], new Vector2(VirtualWidth - LowLifeIndicator[1].Width, 0), Color.White * lowLife);
-                    spriteBatch.Draw(LowLifeIndicator[2], new Vector2(0, VirtualHeight - LowLifeIndicator[2].Height), Color.White * lowLife);
-                    spriteBatch.Draw(LowLifeIndicator[3], new Vector2(0, 0), Color.White * lowLife);
-
+                spriteBatch.Draw(LowLifeIndicator[0], new Vector2(0, 0), Color.White * lowLife);
+                spriteBatch.Draw(LowLifeIndicator[1], new Vector2(VirtualWidth - LowLifeIndicator[1].Width, 0), Color.White * lowLife);
+                spriteBatch.Draw(LowLifeIndicator[2], new Vector2(0, VirtualHeight - LowLifeIndicator[2].Height), Color.White * lowLife);
+                spriteBatch.Draw(LowLifeIndicator[3], new Vector2(0, 0), Color.White * lowLife);
             }
 
             #region StickRice
