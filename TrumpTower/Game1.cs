@@ -41,7 +41,6 @@ namespace TrumpTower
         float lowLife;
         bool lowLifeBool;
         bool lowLifeBool2;
-        //Texture2D lowLifeIndicator;
         Texture2D[] LowLifeIndicator = new Texture2D[4];
         
         int playLowLife;
@@ -341,7 +340,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        graphics.IsFullScreen = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -771,6 +770,11 @@ namespace TrumpTower
            
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
+            if (!GameIsPaused)
+            {
+                _map.Update();
+                _waveSprite.Update(Map.WaveIsComming);
+            }
 
             #region Prepare and Execut HandleInput
 
@@ -786,8 +790,6 @@ namespace TrumpTower
 
             KeyboardState newStateKeyboard = Keyboard.GetState();
             HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
-
-            if (newStateKeyboard.IsKeyDown(Keys.B) && lastStateKeyboard.IsKeyUp(Keys.B)) _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
             lastStateMouse = newStateMouse;
             lastStateKeyboard = newStateKeyboard;
 
@@ -798,6 +800,16 @@ namespace TrumpTower
             my = newStateMouse.Y;
             prev_mpressed = mpressed;
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
+
+            #region Events
+            if (_map.Events.IsActivateFirstTime)
+            {
+                GameIsPaused = true;
+                _map.Events.IsActivateFirstTime = false;
+                ManagerSound.PlayPauseIn();
+                _groupOfButtonsUITimer.ButtonActivated = _groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"];
+            }
+            #endregion
 
             if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
@@ -902,10 +914,7 @@ namespace TrumpTower
             }
             
             if (stratPause > 5)
-            {
                 GameIsPaused = false;
-
-            }
           
             if (!GameIsPaused && realPause == false)
             {
@@ -913,13 +922,7 @@ namespace TrumpTower
                 {
                     isLost = true;
                     GameIsPaused = true;
-                    //Exit(); // If base loses hp, game will exit.
-
                 }
-
-                _map.Update();
-
-                _waveSprite.Update(Map.WaveIsComming);
 
                 AnimationsDollars.Update((int)_map.Dollars);
 
@@ -945,10 +948,6 @@ namespace TrumpTower
                         animatedSprite.Update(gameTime);
                     }
                 }
-                /*
-                double positionX = target.X + (imgTarget.Width / 2) - (_imgLife.Width / 2) * _sizeBar;
-                double positionY = target.Y - _imgLife.Height * _sizeBar;
-                */
 
                 #region Anim Heal
                 for (int i = 0; i < _map.AnimHeal.Count; i++)
@@ -1076,6 +1075,7 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
+            // Not Pause
             if (!realPause)
             {
                 #region Towers
@@ -1296,11 +1296,20 @@ namespace TrumpTower
                 #endregion
 
                 #endregion
-                
-                    _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
+                if (!GameIsPaused)
+                {
+                    #region Events
+                    if (_map.Events.IsActivate && newStateKeyboard.IsKeyDown(Keys.S) && !lastStateKeyboard.IsKeyDown(Keys.S))
+                        _map.Events.AddGauge();
+                    #endregion
+                }
+
+                _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
                 _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
             }
+            // Pause
             if (realPause && !isLost && !_isWon)
             {
                 
@@ -1328,8 +1337,6 @@ namespace TrumpTower
                                 GameIsPaused = false;
                                 stratPause = 0;
                                 Map.WavesCounter = 0;
-                               /* foreach (Spawn spawn in _map.SpawnsEnemies)
-                                    Map.WavesTotals += spawn.Waves.Count;*/
                                 break;
 
                             }
@@ -1341,6 +1348,7 @@ namespace TrumpTower
                         }
                     }
             }
+            // Is Lost
             if (isLost && !_isWon)
             {
                 if (newStateMouse.LeftButton == ButtonState.Pressed &&
@@ -1373,6 +1381,7 @@ namespace TrumpTower
                     }
                 }
             }
+            // IsWon
             if(_isWon && !isLost)
             {
                 if (newStateMouse.LeftButton == ButtonState.Pressed &&
@@ -1459,17 +1468,14 @@ namespace TrumpTower
             if (newStateKeyboard.IsKeyDown(Keys.Space) && lastStateKeyboard.IsKeyUp(Keys.Space))
             {
                 if ( warning== false)
-                {
                     warning = true;
-                }
                 else if (warning)
-                {
                     warning = false;
-                }
 
             }
 
-            #region it enlever vie unite
+            #region CHEATCODE
+            // inflige 10 hp
             if (newStateKeyboard.IsKeyDown(Keys.N) && lastStateKeyboard.IsKeyUp(Keys.N))
             {
                 List<Enemy> enemies = _map.GetAllEnemies();
@@ -1477,6 +1483,16 @@ namespace TrumpTower
                 {
                     enemy.TakeHp(10);
                 }
+            }
+            // reduce time to reload events
+            if (newStateKeyboard.IsKeyDown(Keys.V) && lastStateKeyboard.IsKeyUp(Keys.V))
+                _map.Events.Reloading = 0;
+
+            // For look info hp
+            if (newStateKeyboard.IsKeyDown(Keys.B) && lastStateKeyboard.IsKeyUp(Keys.B))
+            {
+                _map.Wall.ChangeHp((int)_map.Wall.MaxHp);
+                _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
             }
             #endregion
         }
@@ -1510,8 +1526,8 @@ namespace TrumpTower
             foreach (Decor decor in _map.Decors)
                 spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X - _imgDecors[decor._numberDecor].Width, decor._position.Y - _imgDecors[decor._numberDecor].Height), Color.White);
             #endregion
-            
 
+            #region Life Indicator
             if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
                 spriteBatch.Draw(LowLifeIndicator[0], new Vector2(0, 0), Color.White * lowLife);
@@ -1519,6 +1535,7 @@ namespace TrumpTower
                 spriteBatch.Draw(LowLifeIndicator[2], new Vector2(0, VirtualHeight - LowLifeIndicator[2].Height), Color.White * lowLife);
                 spriteBatch.Draw(LowLifeIndicator[3], new Vector2(0, 0), Color.White * lowLife);
             }
+            #endregion
 
             #region StickRice
             if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
@@ -1538,9 +1555,6 @@ namespace TrumpTower
 
             Wall _wall = _map.Wall;
             spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
-
-            /*HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 1.8f, 1.8f);
-            wallHealthBar.Draw(spriteBatch, _wall.Position, _imgWall);*/
 
             #endregion
 
@@ -1770,10 +1784,9 @@ namespace TrumpTower
 
 
             #endregion
+
             #region WallBoss
-
             spriteBatch.Draw(_imgWall, _map.WallBoss.Position, Color.White);
-
             #endregion
 
             #region Missiles
@@ -1832,22 +1845,22 @@ namespace TrumpTower
 
             #endregion
 
-            #region Wall
+            #region Wall Health Bar
             HealthBar wallHealthBar = new HealthBar(_wall.CurrentHp, _wall.MaxHp, 7.8f, 3f);
             spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
             spriteBatch.Draw(_imgHearth, new Vector2(10, 90), Color.White);
             wallHealthBar.Draw(spriteBatch, new Vector2(123,117), _imgWall);
             #endregion
 
-            #region Entity
-            HealthBar entityBar = new HealthBar(_map.Entity.CurrentGauge, _map.Entity.MaxGauge, 7.8f, 3f);
-            spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
-            Texture2D entityFace = null;
-            if (_map.Entity.EntityFace == EntityFace.VeryAngry) entityFace = _imgVeryAngryFace;
-            else if (_map.Entity.EntityFace == EntityFace.Angry) entityFace = _imgAngryFace;
-            else if (_map.Entity.EntityFace == EntityFace.Happy) entityFace = _imgHappyFace;
-            spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
-            entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
+            #region Events
+            if (_map.Events.IsActivate)
+            {
+                HealthBar entityBar = new HealthBar(_map.Events.CurrentEvent.CurrentGauge, _map.Events.CurrentEvent.MaxGauge, 7.8f, 3f);
+                spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
+                Texture2D entityFace = _imgVeryAngryFace;
+                spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
+                entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
+            }
             #endregion
 
             #region Raid Units Air is Comming

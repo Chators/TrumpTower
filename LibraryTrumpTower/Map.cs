@@ -10,6 +10,7 @@ using LibraryTrumpTower;
 using System.Runtime.Serialization;
 using LibraryTrumpTower.Decors;
 using LibraryTrumpTower.Constants.BalanceGame.Bosses;
+using LibraryTrumpTower.Constants.BalanceGame.Events;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -79,6 +80,7 @@ namespace TrumpTower.LibraryTrumpTower
         public Entity Entity { get; set; }
         [DataMember]
         public bool Initialize { get; set; }
+        public Events Events { get; set; }
         public static int _timesBeingRevived { get; set; }
         #endregion
 
@@ -104,6 +106,7 @@ namespace TrumpTower.LibraryTrumpTower
             AnimHeal = new List<Enemy>();
             Decors = new List<Decor>();
             Entity = new Entity(this);
+            Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
             Initialize = false;
             ThemeOfMap = ThemeMap.World_Jungle;
             _timesBeingRevived = 0;
@@ -117,6 +120,7 @@ namespace TrumpTower.LibraryTrumpTower
         {
             if (!Initialize)
             {
+                Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
                 Map._timesBeingRevived = 0;
                 Initialize = true;
             }
@@ -149,6 +153,7 @@ namespace TrumpTower.LibraryTrumpTower
             Sniper.Update();
             StickyRice.Update();
             Entity.Update();
+            Events.Update();
         }
 
         public int GetTypeArray(int x, int y)

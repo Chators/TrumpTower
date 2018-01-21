@@ -13,6 +13,7 @@ using System.Runtime.Serialization;
 using LibraryTrumpTower.Constants.BalanceGame.Enemies;
 using LibraryTrumpTower.SpecialAbilities;
 using LibraryTrumpTower.Constants.BalanceGame.Bosses;
+using LibraryTrumpTower.Constants.BalanceGame.Events;
 
 namespace TrumpTower.LibraryTrumpTower
 {
@@ -76,7 +77,16 @@ namespace TrumpTower.LibraryTrumpTower
         public double _defaultReload { get; private set; }
         public double CurrentHp { get; private set; }
         public double _reload { get; private set; }// doc & mech units}
-        public double Speed { get; set; }
+        public double Speed
+        {
+            get
+            {
+                if (BalanceEvent3.EVENT3_IS_BONUS)
+                    return Speed - (BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT * Speed / 100);
+                return Speed + (BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT * Speed / 100);
+            }
+            set { Speed = value; }
+        }
         public double MaxHp
         {
             get
