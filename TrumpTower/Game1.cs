@@ -24,6 +24,7 @@ using TrumpTower.Drawing;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
+using TrumpTower.SceneDialogue;
 
 namespace TrumpTower
 {
@@ -287,6 +288,13 @@ namespace TrumpTower
         public bool warning;
         Texture2D _imgWarning2;
 
+        #region SCENE
+        MainScene _mainDialogue;
+        Texture2D _trump;
+        Texture2D _kim;
+        Texture2D _text1;
+        #endregion
+
         #endregion
 
         public Game1()
@@ -450,6 +458,8 @@ namespace TrumpTower
             Color[] data = new Color[WIDTH * HEIGHT];
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
             rect.SetData(data);
+
+            
         }
 
 
@@ -745,6 +755,20 @@ namespace TrumpTower
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
             // HEALTH BAR ON ENEMIES AND WALL
             HealthBar.LoadContent(Content);
+
+
+            #region SCENE
+            _text1 = Content.Load<Texture2D>("text/text1");
+            _trump = Content.Load<Texture2D>("text/trump");
+            _kim = Content.Load<Texture2D>("text/kim");
+            _mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump, _kim);
+            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+            _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+            _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+            #endregion
         }
 
         /// <summary>
@@ -770,6 +794,10 @@ namespace TrumpTower
            
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
+            #region SCENE 
+            _mainDialogue.Update(gameTime);
+            #endregion
+
             if (!GameIsPaused && realPause == false)
             {
                 _map.Update();
@@ -1075,6 +1103,10 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
+            #region SCENE 
+            _mainDialogue.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+            #endregion
+
             // Not Pause
             if (!realPause)
             {
@@ -2012,7 +2044,13 @@ namespace TrumpTower
 
 
             #endregion
-         
+
+
+
+            #region SCENE 
+            _mainDialogue.Draw(spriteBatch);
+            #endregion
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
