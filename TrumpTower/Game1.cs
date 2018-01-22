@@ -756,11 +756,13 @@ namespace TrumpTower
             HealthBar.LoadContent(Content);
 
 
+            _trump = Content.Load<Texture2D>("text/trump");
+
             #region SCENE
             if (_map.Name == "MapCampagne1")
             {
                 _text1 = Content.Load<Texture2D>("text/text1");
-                _trump = Content.Load<Texture2D>("text/trump");
+                
                 _kim = Content.Load<Texture2D>("text/kim");
                 _mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump, _kim);
                 _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
