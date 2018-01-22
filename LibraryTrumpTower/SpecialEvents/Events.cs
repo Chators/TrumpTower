@@ -14,7 +14,7 @@ namespace LibraryTrumpTower
     public class Events
     {
         public Map Map { get; set; }
-        private List<Event> EventAvailable { get; set; }
+        public List<Event> EventAvailable { get; set; }
         public bool IsActivate { get; set; } // event is in progress
         public Event CurrentEvent{ get; set; } 
         public int Reloading { get; set; } // time to realod

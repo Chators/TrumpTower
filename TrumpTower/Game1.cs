@@ -24,6 +24,7 @@ using TrumpTower.Drawing;
 using TrumpTower.LibraryTrumpTower;
 using TrumpTower.LibraryTrumpTower.Constants;
 using TrumpTower.LibraryTrumpTower.Spawns;
+using TrumpTower.SceneDialogue;
 
 namespace TrumpTower
 {
@@ -287,6 +288,14 @@ namespace TrumpTower
         public bool warning;
         Texture2D _imgWarning2;
 
+        #region SCENE
+        public MainScene _mainDialogue;
+        Texture2D _trump;
+        Texture2D _kim;
+        Texture2D _text1;
+        #endregion
+
+        List<Texture2D> _textEvents;
         #endregion
 
         public Game1()
@@ -745,6 +754,85 @@ namespace TrumpTower
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
             // HEALTH BAR ON ENEMIES AND WALL
             HealthBar.LoadContent(Content);
+
+
+            #region SCENE
+            if (_map.Name == "MapCampagne1")
+            {
+                _text1 = Content.Load<Texture2D>("text/text1");
+                _trump = Content.Load<Texture2D>("text/trump");
+                _kim = Content.Load<Texture2D>("text/kim");
+                _mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump, _kim);
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+            }
+            else if (_map.Name == "MapCampagne2")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne3")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne4")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne5")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne6")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne7")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne8")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne9")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne10")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne11")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne12")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne13")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne14")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne15")
+            {
+
+            }
+
+            #endregion
+
+            _textEvents = new List<Texture2D>();
+            _textEvents.Add(Content.Load<Texture2D>("text/Events/textEvent1"));
+            _textEvents.Add(Content.Load<Texture2D>("text/Events/textEvent2"));
+            _textEvents.Add(Content.Load<Texture2D>("text/Events/textEvent3"));
         }
 
         /// <summary>
@@ -770,6 +858,11 @@ namespace TrumpTower
            
             frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
             // TODO: Add your update logic here
+            #region SCENE 
+            if (_mainDialogue != null)
+                _mainDialogue.Update(gameTime);
+            #endregion
+
             if (!GameIsPaused && realPause == false)
             {
                 _map.Update();
@@ -802,12 +895,15 @@ namespace TrumpTower
             mpressed = mouse_state.LeftButton == ButtonState.Pressed;
 
             #region Events
-            if (_map.Events.IsActivateFirstTime)
+            if (_map.Events != null)
             {
-                GameIsPaused = true;
-                _map.Events.IsActivateFirstTime = false;
-                ManagerSound.PlayPauseIn();
-                _groupOfButtonsUITimer.ButtonActivated = _groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"];
+                if (_map.Events.IsActivateFirstTime)
+                {
+                    _mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump);
+                    _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _textEvents[_map.Events.EventAvailable.IndexOf(_map.Events.CurrentEvent)]));
+                    _map.Events.IsActivateFirstTime = false;
+                    _groupOfButtonsUITimer.ButtonActivated = _groupOfButtonsUITimer.ButtonsUIArray["pauseTimer"];
+                }
             }
             #endregion
 
@@ -1075,245 +1171,252 @@ namespace TrumpTower
 
         protected void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            // Not Pause
-            if (!realPause)
+            #region SCENE 
+            if (_mainDialogue != null)
+                _mainDialogue.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+            #endregion
+
+            if (_mainDialogue == null)
             {
-                #region Towers
-
-                #region Buy Tower
-
-                List<Vector2> emptyTowers = _map.SearchPositionTextureInArray(MapTexture.emptyTower);
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                    lastStateMouse.LeftButton == ButtonState.Released)
+                // Not Pause
+                if (!realPause)
                 {
-                    if (_verif3 == false  && _groupOfButtonsUIAbilities.ButtonActivated == null)
+                    #region Towers
+
+                    #region Buy Tower
+
+                    List<Vector2> emptyTowers = _map.SearchPositionTextureInArray(MapTexture.emptyTower);
+                    if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                        lastStateMouse.LeftButton == ButtonState.Released)
                     {
-                        foreach (Vector2 position in emptyTowers)
+                        if (_verif3 == false && _groupOfButtonsUIAbilities.ButtonActivated == null)
                         {
-                            if (newStateMouse.X > position.X * Constant.imgSizeMap &&
-                                newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[1].Width &&
-                                newStateMouse.Y > position.Y * Constant.imgSizeMap &&
-                                newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[1].Height)
+                            foreach (Vector2 position in emptyTowers)
                             {
-                                _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
-                                _verif = true;
-                                _verif3 = true;
-                            }
-                        }
-                    }
-                }
-
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                lastStateMouse.LeftButton == ButtonState.Released)
-                {
-                    if (_towerSelector != new Vector2(-1000, -1000))
-                    {
-
-                        if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
-                        newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
-                        newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
-                        {
-                            if (_map.Dollars >= BalanceTowerSimple.TOWER_SIMPLE_BASE_PRICE)
-                            {
-                                _map.CreateTower(new Tower(_map, TowerType.simple, 1, _towerSelector));
-                                _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                                _map.Dollars -= BalanceTowerSimple.TOWER_SIMPLE_BASE_PRICE;
-                                _towerSelector = new Vector2(-1000, -1000);
-                                _verif3 = false;
-                                _verif4 = true;
-                            }
-                        }
-                        else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
-                        newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
-                        newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
-                        {
-                            if (_map.Dollars >= BalanceTowerSlow.TOWER_SLOW_BASE_PRICE)
-                            {
-                                _map.CreateTower(new Tower(_map, TowerType.slow, 1, _towerSelector));
-                                _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                                _map.Dollars -= BalanceTowerSlow.TOWER_SLOW_BASE_PRICE;
-                                _towerSelector = new Vector2(-1000, -1000);
-                                _verif3 = false;
-                                _verif4 = true;
-                            }
-                        }
-                        else if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
-                        newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
-                        newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
-                        {
-                            if (_map.Dollars >= BalanceTowerArea.TOWER_AREA_BASE_PRICE)
-                            {
-                                _map.CreateTower(new Tower(_map, TowerType.area, 1, _towerSelector));
-                                _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                                _map.Dollars -= BalanceTowerArea.TOWER_AREA_BASE_PRICE;
-                                _towerSelector = new Vector2(-1000, -1000);
-                                _verif3 = false;
-                                _verif4 = true;
-                            }
-                        }
-                        else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
-                        newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
-                        newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
-                        {
-                            if (_map.Dollars >= BalanceTowerBank.TOWER_BANK_BASE_PRICE)
-                            {
-                                _map.CreateTower(new Tower(_map, TowerType.bank, 1, _towerSelector));
-                                _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
-                                _map.Dollars -= BalanceTowerBank.TOWER_BANK_BASE_PRICE;
-                                _towerSelector = new Vector2(-1000, -1000);
-                                _verif3 = false;
-                                _verif4 = true;
-                            }
-                        }
-                        else if (_verif == false)
-                        {
-                            _towerSelector = new Vector2(-1000, -1000);
-                            _verif3 = false;
-                        }
-                        _verif = false;
-                    }
-                    else
-                    {
-                        _verif3 = false;
-                    }
-                }
-
-                #endregion
-
-                #region Upgrade or sell Towers
-
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                lastStateMouse.LeftButton == ButtonState.Released)
-                {
-                    if (_towerSelector == new Vector2(-1000, -1000))
-                    {
-                        if (_verif4 == false)
-                        {
-                            foreach (Tower tow in _map.Towers)
-                            {
-                                if (newStateMouse.X > tow.Position.X &&
-                                    newStateMouse.X < tow.Position.X + _imgMaps[1].Width &&
-                                    newStateMouse.Y > tow.Position.Y &&
-                                    newStateMouse.Y < tow.Position.Y + _imgMaps[1].Height)
+                                if (newStateMouse.X > position.X * Constant.imgSizeMap &&
+                                    newStateMouse.X < position.X * Constant.imgSizeMap + _imgMaps[1].Width &&
+                                    newStateMouse.Y > position.Y * Constant.imgSizeMap &&
+                                    newStateMouse.Y < position.Y * Constant.imgSizeMap + _imgMaps[1].Height)
                                 {
-                                    _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
-                                    _verif2 = true;
-                                    _myTow = tow;
+                                    _towerSelector = new Vector2(position.X * Constant.imgSizeMap, position.Y * Constant.imgSizeMap);
+                                    _verif = true;
                                     _verif3 = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                    lastStateMouse.LeftButton == ButtonState.Released)
+                    {
+                        if (_towerSelector != new Vector2(-1000, -1000))
+                        {
+
+                            if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
+                            newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
+                            newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
+                            newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                            {
+                                if (_map.Dollars >= BalanceTowerSimple.TOWER_SIMPLE_BASE_PRICE)
+                                {
+                                    _map.CreateTower(new Tower(_map, TowerType.simple, 1, _towerSelector));
+                                    _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                                    _map.Dollars -= BalanceTowerSimple.TOWER_SIMPLE_BASE_PRICE;
+                                    _towerSelector = new Vector2(-1000, -1000);
+                                    _verif3 = false;
                                     _verif4 = true;
                                 }
                             }
-                        }
-                    }
-                }
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                lastStateMouse.LeftButton == ButtonState.Released)
-                {
-                    if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
-                    {
-                        if (newStateMouse.X > _towerSelectorUpgrade.X &&
-                        newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
-                        newStateMouse.Y > _towerSelectorUpgrade.Y - Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
-                        {
-                            if (_myTow.Position == _towerSelectorUpgrade)
+                            else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
+                            newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                            newStateMouse.Y > _towerSelector.Y - Constant.imgSizeMap &&
+                            newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
                             {
-                                double priceTower = 0;
-                                if (_myTow.Type == TowerType.simple) priceTower = BalanceTowerSimple.TOWER_SIMPLE_BASE_PRICE;
-                                if (_myTow.Type == TowerType.slow) priceTower = BalanceTowerSlow.TOWER_SLOW_BASE_PRICE;
-                                if (_myTow.Type == TowerType.area) priceTower = BalanceTowerArea.TOWER_AREA_BASE_PRICE;
-                                if (_myTow.Type == TowerType.bank) priceTower = BalanceTowerBank.TOWER_BANK_BASE_PRICE;
-                                if (_map.Dollars >= priceTower * 1.5 && _myTow.TowerLvl < 3)
+                                if (_map.Dollars >= BalanceTowerSlow.TOWER_SLOW_BASE_PRICE)
                                 {
-                                    _myTow.Upgrade(_myTow);
-                                    ManagerSound.PlayPowerUp();
-                                    _verif4 = false;
-                                    _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                                    _map.CreateTower(new Tower(_map, TowerType.slow, 1, _towerSelector));
+                                    _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                                    _map.Dollars -= BalanceTowerSlow.TOWER_SLOW_BASE_PRICE;
+                                    _towerSelector = new Vector2(-1000, -1000);
+                                    _verif3 = false;
+                                    _verif4 = true;
                                 }
                             }
-                            
-                        }
-                        else if (newStateMouse.X > _towerSelectorUpgrade.X &&
-                        newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
-                        newStateMouse.Y > _towerSelectorUpgrade.Y + Constant.imgSizeMap &&
-                        newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
-                        {
-                            if (_myTow.Position == _towerSelectorUpgrade)
+                            else if (newStateMouse.X > _towerSelector.X - Constant.imgSizeMap &&
+                            newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) - Constant.imgSizeMap &&
+                            newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
+                            newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
                             {
-                                _map.Towers.Remove(_myTow);
-                                _map.ChangeLocation((int)_myTow.Position.X / Constant.imgSizeMap, (int)_myTow.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
-                                _myTow.Sell(_myTow);
-                                ManagerSound.PlaySell();
-                                _verif4 = false;
+                                if (_map.Dollars >= BalanceTowerArea.TOWER_AREA_BASE_PRICE)
+                                {
+                                    _map.CreateTower(new Tower(_map, TowerType.area, 1, _towerSelector));
+                                    _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                                    _map.Dollars -= BalanceTowerArea.TOWER_AREA_BASE_PRICE;
+                                    _towerSelector = new Vector2(-1000, -1000);
+                                    _verif3 = false;
+                                    _verif4 = true;
+                                }
+                            }
+                            else if (newStateMouse.X > _towerSelector.X + Constant.imgSizeMap &&
+                            newStateMouse.X < (_towerSelector.X + Constant.imgSizeMap) + Constant.imgSizeMap &&
+                            newStateMouse.Y > _towerSelector.Y + Constant.imgSizeMap &&
+                            newStateMouse.Y < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                            {
+                                if (_map.Dollars >= BalanceTowerBank.TOWER_BANK_BASE_PRICE)
+                                {
+                                    _map.CreateTower(new Tower(_map, TowerType.bank, 1, _towerSelector));
+                                    _map.ChangeLocation((int)_towerSelector.X / Constant.imgSizeMap, (int)_towerSelector.Y / Constant.imgSizeMap, (int)MapTexture.notEmptyTower);
+                                    _map.Dollars -= BalanceTowerBank.TOWER_BANK_BASE_PRICE;
+                                    _towerSelector = new Vector2(-1000, -1000);
+                                    _verif3 = false;
+                                    _verif4 = true;
+                                }
+                            }
+                            else if (_verif == false)
+                            {
+                                _towerSelector = new Vector2(-1000, -1000);
                                 _verif3 = false;
                             }
-                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                            _verif = false;
                         }
-                        else if (_verif2 == false)
+                        else
                         {
-                            _towerSelectorUpgrade = new Vector2(-1000, -1000);
-                            _verif4 = false;
+                            _verif3 = false;
                         }
-                        _verif2 = false;
                     }
-                    else
+
+                    #endregion
+
+                    #region Upgrade or sell Towers
+
+                    if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                    lastStateMouse.LeftButton == ButtonState.Released)
                     {
-                        _verif4 = false;
-                    }
-                }
-                if (newStateMouse.RightButton == ButtonState.Pressed &&
-                        lastStateMouse.RightButton == ButtonState.Released)
-                {
-                    foreach (Tower tower in _map.Towers)
-                    {
-                        if (newStateMouse.X > tower.Position.X &&
-                    newStateMouse.X < (tower.Position.X + Constant.imgSizeMap) &&
-                    newStateMouse.Y > tower.Position.Y &&
-                    newStateMouse.Y < (tower.Position.Y + Constant.imgSizeMap)
-                    && tower.Type == TowerType.bank)
+                        if (_towerSelector == new Vector2(-1000, -1000))
                         {
-                            for (int j = 0; j < _map.Towers.Count; j++)
+                            if (_verif4 == false)
                             {
-                                if (_map.Towers[j].Position == tower.Position)
+                                foreach (Tower tow in _map.Towers)
                                 {
-                                    Tower tower2 = _map.Towers[j];
-                                    if (tower2.Reload <= 0)
+                                    if (newStateMouse.X > tow.Position.X &&
+                                        newStateMouse.X < tow.Position.X + _imgMaps[1].Width &&
+                                        newStateMouse.Y > tow.Position.Y &&
+                                        newStateMouse.Y < tow.Position.Y + _imgMaps[1].Height)
                                     {
-                                        _map.Dollars += tower2.Earnings;
-                                        tower2.Reload = BalanceTowerBank.TOWER_BANK_RELOADING;
-                                        ManagerSound.PlaySell();
+                                        _towerSelectorUpgrade = new Vector2(tow.Position.X, tow.Position.Y);
+                                        _verif2 = true;
+                                        _myTow = tow;
+                                        _verif3 = true;
+                                        _verif4 = true;
                                     }
                                 }
                             }
                         }
                     }
-                }
+                    if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                    lastStateMouse.LeftButton == ButtonState.Released)
+                    {
+                        if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
+                        {
+                            if (newStateMouse.X > _towerSelectorUpgrade.X &&
+                            newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
+                            newStateMouse.Y > _towerSelectorUpgrade.Y - Constant.imgSizeMap &&
+                            newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) - Constant.imgSizeMap)
+                            {
+                                if (_myTow.Position == _towerSelectorUpgrade)
+                                {
+                                    double priceTower = 0;
+                                    if (_myTow.Type == TowerType.simple) priceTower = BalanceTowerSimple.TOWER_SIMPLE_BASE_PRICE;
+                                    if (_myTow.Type == TowerType.slow) priceTower = BalanceTowerSlow.TOWER_SLOW_BASE_PRICE;
+                                    if (_myTow.Type == TowerType.area) priceTower = BalanceTowerArea.TOWER_AREA_BASE_PRICE;
+                                    if (_myTow.Type == TowerType.bank) priceTower = BalanceTowerBank.TOWER_BANK_BASE_PRICE;
+                                    if (_map.Dollars >= priceTower * 1.5 && _myTow.TowerLvl < 3)
+                                    {
+                                        _myTow.Upgrade(_myTow);
+                                        ManagerSound.PlayPowerUp();
+                                        _verif4 = false;
+                                        _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                                    }
+                                }
 
-                #endregion
+                            }
+                            else if (newStateMouse.X > _towerSelectorUpgrade.X &&
+                            newStateMouse.X < (_towerSelectorUpgrade.X + Constant.imgSizeMap) &&
+                            newStateMouse.Y > _towerSelectorUpgrade.Y + Constant.imgSizeMap &&
+                            newStateMouse.Y < (_towerSelectorUpgrade.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
+                            {
+                                if (_myTow.Position == _towerSelectorUpgrade)
+                                {
+                                    _map.Towers.Remove(_myTow);
+                                    _map.ChangeLocation((int)_myTow.Position.X / Constant.imgSizeMap, (int)_myTow.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
+                                    _myTow.Sell(_myTow);
+                                    ManagerSound.PlaySell();
+                                    _verif4 = false;
+                                    _verif3 = false;
+                                }
+                                _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                            }
+                            else if (_verif2 == false)
+                            {
+                                _towerSelectorUpgrade = new Vector2(-1000, -1000);
+                                _verif4 = false;
+                            }
+                            _verif2 = false;
+                        }
+                        else
+                        {
+                            _verif4 = false;
+                        }
+                    }
+                    if (newStateMouse.RightButton == ButtonState.Pressed &&
+                            lastStateMouse.RightButton == ButtonState.Released)
+                    {
+                        foreach (Tower tower in _map.Towers)
+                        {
+                            if (newStateMouse.X > tower.Position.X &&
+                        newStateMouse.X < (tower.Position.X + Constant.imgSizeMap) &&
+                        newStateMouse.Y > tower.Position.Y &&
+                        newStateMouse.Y < (tower.Position.Y + Constant.imgSizeMap)
+                        && tower.Type == TowerType.bank)
+                            {
+                                for (int j = 0; j < _map.Towers.Count; j++)
+                                {
+                                    if (_map.Towers[j].Position == tower.Position)
+                                    {
+                                        Tower tower2 = _map.Towers[j];
+                                        if (tower2.Reload <= 0)
+                                        {
+                                            _map.Dollars += tower2.Earnings;
+                                            tower2.Reload = BalanceTowerBank.TOWER_BANK_RELOADING;
+                                            ManagerSound.PlaySell();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                #endregion
-
-                if (!GameIsPaused)
-                {
-                    #region Events
-                    if (_map.Events.IsActivate && newStateKeyboard.IsKeyDown(Keys.S) && !lastStateKeyboard.IsKeyDown(Keys.S))
-                        _map.Events.AddGauge();
                     #endregion
+
+                    #endregion
+
+                    if (!GameIsPaused && _map.Events != null)
+                    {
+                        #region Events
+                        if (_map.Events.IsActivate && newStateKeyboard.IsKeyDown(Keys.S) && !lastStateKeyboard.IsKeyDown(Keys.S))
+                            _map.Events.AddGauge();
+                        #endregion
+                    }
+
+                    _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
+
+                    _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
                 }
+                // Pause
+                if (realPause && !isLost && !_isWon)
+                {
 
-                _groupOfButtonsUITimer.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
 
-                _groupOfButtonsUIAbilities.HandleInput(newStateMouse, lastStateMouse, newStateKeyboard, lastStateKeyboard);
-            }
-            // Pause
-            if (realPause && !isLost && !_isWon)
-            {
-                
-                
                     if (newStateMouse.LeftButton == ButtonState.Pressed &&
                         lastStateMouse.LeftButton == ButtonState.Released)
                     {
@@ -1331,15 +1434,15 @@ namespace TrumpTower
                                 }
                                 if (button_rectangle_lost[i] == button_rectangle_lost[1])
                                 {
-                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
-                                isLost = false;
-                                realPause = false;
-                                GameIsPaused = false;
-                                stratPause = 0;
-                                Map.WavesCounter = 0;
-                                break;
+                                    _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
+                                    isLost = false;
+                                    realPause = false;
+                                    GameIsPaused = false;
+                                    stratPause = 0;
+                                    Map.WavesCounter = 0;
+                                    break;
 
-                            }
+                                }
                                 if (button_rectangle_pause[i] == button_rectangle_pause[2])
                                 {
                                     Exit();
@@ -1347,154 +1450,155 @@ namespace TrumpTower
                             }
                         }
                     }
-            }
-            // Is Lost
-            if (isLost && !_isWon)
-            {
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                        lastStateMouse.LeftButton == ButtonState.Released)
-                {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        if (newStateMouse.X > button_rectangle_lost[i].X &&
-                                    newStateMouse.X < button_rectangle_lost[i].X + BUTTON_WIDTH &&
-                                    newStateMouse.Y > button_rectangle_lost[i].Y &&
-                                    newStateMouse.Y < button_rectangle_lost[i].Y + BUTTON_HEIGHT)
-                        {
-                            if (button_rectangle_lost[i] == button_rectangle_lost[0])
-                            {
-                                Exit();
-                            }
-                            else if (button_rectangle_lost[i] == button_rectangle_lost[1])
-                            {
-                                _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
-                                isLost = false;
-                                realPause = false;
-                                GameIsPaused = false;
-                                stratPause = 0;
-                                Map.WavesCounter = 0;
-                                /*foreach (Spawn spawn in _map.SpawnsEnemies)
-                                    Map.WavesTotals += spawn.Waves.Count;*/
-                                break;
-                            } 
-                        }
-                    }
                 }
-            }
-            // IsWon
-            if(_isWon && !isLost)
-            {
-                if (newStateMouse.LeftButton == ButtonState.Pressed &&
-                        lastStateMouse.LeftButton == ButtonState.Released)
+                // Is Lost
+                if (isLost && !_isWon)
                 {
-                    for (int i = 0; i < 2; i++)
+                    if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                            lastStateMouse.LeftButton == ButtonState.Released)
                     {
-                        if (newStateMouse.X > button_rectangle_win[i].X &&
-                                    newStateMouse.X < button_rectangle_win[i].X + BUTTON_WIDTH &&
-                                    newStateMouse.Y > button_rectangle_win[i].Y &&
-                                    newStateMouse.Y < button_rectangle_win[i].Y + BUTTON_HEIGHT)
+                        for (int i = 0; i < 2; i++)
                         {
-                            if (button_rectangle_win[i] == button_rectangle_win[0])
+                            if (newStateMouse.X > button_rectangle_lost[i].X &&
+                                        newStateMouse.X < button_rectangle_lost[i].X + BUTTON_WIDTH &&
+                                        newStateMouse.Y > button_rectangle_lost[i].Y &&
+                                        newStateMouse.Y < button_rectangle_lost[i].Y + BUTTON_HEIGHT)
                             {
-                                Exit();
-                            }
-                            else if (button_rectangle_win[i] == button_rectangle_win[1]) // button nextMap
-                            {
-                                // Verify if map is map Campagne
-                                bool isMapCampagne = false;
-                                int nbMapCampagne = 15;
-                                int currentCampagne = 0;
-                                for (int y = 1; y < nbMapCampagne + 1; y++)
+                                if (button_rectangle_lost[i] == button_rectangle_lost[0])
                                 {
-                                    if (_map.Name == "mapCampagne" + y.ToString())
-                                    {
-                                        isMapCampagne = true;
-                                        currentCampagne = y;
-                                        break;
-                                    }
+                                    Exit();
                                 }
-
-                                if (isMapCampagne && currentCampagne != 15)
+                                else if (button_rectangle_lost[i] == button_rectangle_lost[1])
                                 {
-                                    int nbMap = (int)Char.GetNumericValue(_map.Name[_map.Name.Length - 1]);
-                                    string _nameWorld = null;
-
-                                    if (nbMap >= 1 && nbMap <= 5) _nameWorld = "World1";
-                                    if (nbMap >= 6 && nbMap <= 10)
-                                    {
-                                        _nameWorld = "World2";
-                                        nbMap -= 5;
-                                    }
-                                    if (nbMap >= 11 && nbMap <= 15)
-                                    {
-                                        nbMap -= 10;
-                                        _nameWorld = "World3";
-                                    }
-
-                                    string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCampagneMap + "/" + _nameWorld);
-                                    FileInfo file = new FileInfo(filesInDirectory[nbMap]);
-                                    // On copie le fichier dans CurrentMap
-                                    file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
-
                                     _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
-
                                     isLost = false;
-                                    _isWon = false;
                                     realPause = false;
                                     GameIsPaused = false;
                                     stratPause = 0;
                                     Map.WavesCounter = 0;
-                                    foreach (Spawn spawn in _map.SpawnsEnemies)
-                                        Map.WavesTotals += spawn.Waves.Count;
+                                    /*foreach (Spawn spawn in _map.SpawnsEnemies)
+                                        Map.WavesTotals += spawn.Waves.Count;*/
                                     break;
                                 }
                             }
                         }
                     }
                 }
-            }
-            if (newStateKeyboard.IsKeyDown(Keys.Escape) && lastStateKeyboard.IsKeyUp(Keys.Escape))
-            {
-                if (realPause == false)
+                // IsWon
+                if (_isWon && !isLost)
                 {
-                    realPause = true;
+                    if (newStateMouse.LeftButton == ButtonState.Pressed &&
+                            lastStateMouse.LeftButton == ButtonState.Released)
+                    {
+                        for (int i = 0; i < 2; i++)
+                        {
+                            if (newStateMouse.X > button_rectangle_win[i].X &&
+                                        newStateMouse.X < button_rectangle_win[i].X + BUTTON_WIDTH &&
+                                        newStateMouse.Y > button_rectangle_win[i].Y &&
+                                        newStateMouse.Y < button_rectangle_win[i].Y + BUTTON_HEIGHT)
+                            {
+                                if (button_rectangle_win[i] == button_rectangle_win[0])
+                                {
+                                    Exit();
+                                }
+                                else if (button_rectangle_win[i] == button_rectangle_win[1]) // button nextMap
+                                {
+                                    // Verify if map is map Campagne
+                                    bool isMapCampagne = false;
+                                    int nbMapCampagne = 15;
+                                    int currentCampagne = 0;
+                                    for (int y = 1; y < nbMapCampagne + 1; y++)
+                                    {
+                                        if (_map.Name == "mapCampagne" + y.ToString())
+                                        {
+                                            isMapCampagne = true;
+                                            currentCampagne = y;
+                                            break;
+                                        }
+                                    }
+
+                                    if (isMapCampagne && currentCampagne != 15)
+                                    {
+                                        int nbMap = (int)Char.GetNumericValue(_map.Name[_map.Name.Length - 1]);
+                                        string _nameWorld = null;
+
+                                        if (nbMap >= 1 && nbMap <= 5) _nameWorld = "World1";
+                                        if (nbMap >= 6 && nbMap <= 10)
+                                        {
+                                            _nameWorld = "World2";
+                                            nbMap -= 5;
+                                        }
+                                        if (nbMap >= 11 && nbMap <= 15)
+                                        {
+                                            nbMap -= 10;
+                                            _nameWorld = "World3";
+                                        }
+
+                                        string[] filesInDirectory = Directory.GetFileSystemEntries(BinarySerializer.pathCampagneMap + "/" + _nameWorld);
+                                        FileInfo file = new FileInfo(filesInDirectory[nbMap]);
+                                        // On copie le fichier dans CurrentMap
+                                        file.CopyTo(BinarySerializer.pathCurrentMapXml, true);
+
+                                        _map = BinarySerializer.Deserialize<Map>(BinarySerializer.pathCurrentMapXml);
+
+                                        isLost = false;
+                                        _isWon = false;
+                                        realPause = false;
+                                        GameIsPaused = false;
+                                        stratPause = 0;
+                                        Map.WavesCounter = 0;
+                                        foreach (Spawn spawn in _map.SpawnsEnemies)
+                                            Map.WavesTotals += spawn.Waves.Count;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                else if (realPause)
+                if (newStateKeyboard.IsKeyDown(Keys.Escape) && lastStateKeyboard.IsKeyUp(Keys.Escape))
                 {
-                    realPause = false;
+                    if (realPause == false)
+                    {
+                        realPause = true;
+                    }
+                    else if (realPause)
+                    {
+                        realPause = false;
+                    }
+
                 }
-
-            }
-            if (newStateKeyboard.IsKeyDown(Keys.Space) && lastStateKeyboard.IsKeyUp(Keys.Space))
-            {
-                if ( warning== false)
-                    warning = true;
-                else if (warning)
-                    warning = false;
-
-            }
-
-            #region CHEATCODE
-            // inflige 10 hp
-            if (newStateKeyboard.IsKeyDown(Keys.N) && lastStateKeyboard.IsKeyUp(Keys.N))
-            {
-                List<Enemy> enemies = _map.GetAllEnemies();
-                foreach (Enemy enemy in enemies)
+                if (newStateKeyboard.IsKeyDown(Keys.Space) && lastStateKeyboard.IsKeyUp(Keys.Space))
                 {
-                    enemy.TakeHp(10);
-                }
-            }
-            // reduce time to reload events
-            if (newStateKeyboard.IsKeyDown(Keys.V) && lastStateKeyboard.IsKeyUp(Keys.V))
-                _map.Events.Reloading = 0;
+                    if (warning == false)
+                        warning = true;
+                    else if (warning)
+                        warning = false;
 
-            // For look info hp
-            if (newStateKeyboard.IsKeyDown(Keys.B) && lastStateKeyboard.IsKeyUp(Keys.B))
-            {
-                _map.Wall.ChangeHp((int)_map.Wall.MaxHp);
-                _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
+                }
+
+                #region CHEATCODE
+                // inflige 10 hp
+                if (newStateKeyboard.IsKeyDown(Keys.N) && lastStateKeyboard.IsKeyUp(Keys.N))
+                {
+                    List<Enemy> enemies = _map.GetAllEnemies();
+                    foreach (Enemy enemy in enemies)
+                    {
+                        enemy.TakeHp(10);
+                    }
+                }
+                // reduce time to reload events
+                if (newStateKeyboard.IsKeyDown(Keys.V) && lastStateKeyboard.IsKeyUp(Keys.V))
+                    _map.Events.Reloading = 0;
+
+                // For look info hp
+                if (newStateKeyboard.IsKeyDown(Keys.B) && lastStateKeyboard.IsKeyUp(Keys.B))
+                {
+                    _map.Wall.ChangeHp((int)_map.Wall.MaxHp);
+                    _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
+                }
+                #endregion
             }
-            #endregion
         }
 
 
@@ -1839,13 +1943,16 @@ namespace TrumpTower
             #endregion
 
             #region Events
-            if (_map.Events.IsActivate)
+            if (_map.Events != null)
             {
-                HealthBar entityBar = new HealthBar(_map.Events.CurrentEvent.CurrentGauge, _map.Events.CurrentEvent.MaxGauge, 7.8f, 3f);
-                spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
-                Texture2D entityFace = _imgVeryAngryFace;
-                spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
-                entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
+                if (_map.Events.IsActivate)
+                {
+                    HealthBar entityBar = new HealthBar(_map.Events.CurrentEvent.CurrentGauge, _map.Events.CurrentEvent.MaxGauge, 7.8f, 3f);
+                    spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
+                    Texture2D entityFace = _imgVeryAngryFace;
+                    spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
+                    entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
+                }
             }
             #endregion
 
@@ -2012,7 +2119,14 @@ namespace TrumpTower
 
 
             #endregion
-         
+
+
+
+            #region SCENE 
+            if (_mainDialogue != null)
+                _mainDialogue.Draw(spriteBatch);
+            #endregion
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
