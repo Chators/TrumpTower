@@ -18,14 +18,12 @@ namespace LibraryTrumpTower.SpecialEvents
         {
             Events.Map.Dollars += BalanceEvent1.EVENT1_BONUS_DOLLARS;
             ManagerSound.PlayYouWin();
-            //throw new NotImplementedException();
         }
 
         internal override void UpdateMalus()
         {
             Events.Map.Dollars += BalanceEvent1.EVENT1_MALUS_DOLLARS;
             ManagerSound.PlayGameOver();
-            //throw new NotImplementedException();
         }
     }
 }

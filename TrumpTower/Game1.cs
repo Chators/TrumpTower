@@ -757,16 +757,76 @@ namespace TrumpTower
 
 
             #region SCENE
-            _text1 = Content.Load<Texture2D>("text/text1");
-            _trump = Content.Load<Texture2D>("text/trump");
-            _kim = Content.Load<Texture2D>("text/kim");
-            _mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump, _kim);
-            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
-            _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
-            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
-            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
-            _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
-            _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+            if (_map.Name == "MapCampagne1")
+            {
+                _text1 = Content.Load<Texture2D>("text/text1");
+                _trump = Content.Load<Texture2D>("text/trump");
+                _kim = Content.Load<Texture2D>("text/kim");
+                _mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump, _kim);
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+            }
+            else if (_map.Name == "MapCampagne2")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne3")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne4")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne5")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne6")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne7")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne8")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne9")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne10")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne11")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne12")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne13")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne14")
+            {
+
+            }
+            else if (_map.Name == "MapCampagne15")
+            {
+
+            }
+
             #endregion
 
             _textEvents = new List<Texture2D>();
