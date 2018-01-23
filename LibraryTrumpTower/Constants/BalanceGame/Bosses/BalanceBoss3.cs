@@ -14,5 +14,6 @@ namespace LibraryTrumpTower.Constants.BalanceGame.Bosses
         public static double BOSS3_DEFAULT_RELOAD = 2 * 60;
         public static double BOSS3_RANGE = 200;
         public static double BOSS3_ENRAGE_TIMER = 10 * 60; // when boss enrages, he doubles dmg, speed...  
+        public static double BOSS3_ACTION_RADIUS = 300;
     }
 }

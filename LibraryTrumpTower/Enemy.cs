@@ -71,6 +71,8 @@ namespace TrumpTower.LibraryTrumpTower
         public double _enrageTimer;
         [DataMember]
         public bool _hasEnraged;
+        public bool _isCastingBoss3;
+        
 
 
         public double _defaultReload { get; private set; }
@@ -134,12 +136,13 @@ namespace TrumpTower.LibraryTrumpTower
                 else return 0;
             }
         }
-        public double ActionRadius // doc & mech units
+        public double ActionRadius // doc & mech units & boss3
         {
             get
             {
                 if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_ACTION_RADIUS;
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_ACTION_RADIUS;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_ACTION_RADIUS;
                 else return 0;
             }
         }
@@ -263,6 +266,8 @@ namespace TrumpTower.LibraryTrumpTower
                     _hasEnraged = false;
                     _reload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
                     _rangeBoss = BalanceBoss3.BOSS3_RANGE;
+                    _isCastingBoss3 = false;
+                    
                     /*
                      * 
                      * Beaucoup d'add pour ce boss
@@ -276,6 +281,11 @@ namespace TrumpTower.LibraryTrumpTower
                      * 
                      * Autre idée : Ptet un fameux QTE 
                      * *
+                     * 
+                     * 
+                     * _isCasting = true quand il s'arrête pour target une tour.
+                     * Action Radius defines the radius from he choses a tower to target
+                     * _hasEnraged => doubles dmg 
                 */
                 }
                 Initiliaze = true;
