@@ -222,6 +222,8 @@ namespace TrumpTower
 
         #region Events
         private Texture2D _imgTrumpet;
+        private float _blinkEvents = 0.5f;
+        private float _blinkEventsVar = 0.005f;
         #endregion
         Texture2D grey;
         
@@ -1939,10 +1941,13 @@ namespace TrumpTower
                 if (_map.Events.IsActivate)
                 {
                     HealthBar entityBar = new HealthBar(_map.Events.CurrentEvent.CurrentGauge, _map.Events.CurrentEvent.MaxGauge, 7.8f, 3f);
-                    spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
+                    spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * _blinkEventsVar);
                     spriteBatch.Draw(_imgTrumpet, new Vector2(10, 150), Color.White);
                     entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
                 }
+                if (_blinkEvents >= 0.6) _blinkEventsVar = -0.005f;
+                else if (_blinkEvents <= 0.2) _blinkEventsVar = 0.005f;
+                _blinkEvents += _blinkEventsVar;
             }
             #endregion
 
@@ -2021,6 +2026,7 @@ namespace TrumpTower
 
             }
             #endregion
+
             if (_isWon)
             {
                 spriteBatch.Draw(grey, new Vector2(0, 0), Color.Black);
@@ -2085,6 +2091,7 @@ namespace TrumpTower
                 spriteBatch.DrawString(_gameOver, "police blink : " + policeBlink, new Vector2(100, 300), Color.Red);
                 spriteBatch.DrawString(_gameOver, "police blink2 : " + policeBlink2, new Vector2(100, 400), Color.Red);*/
             }
+
             #region Cursor
 
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")

@@ -16,6 +16,7 @@ namespace TrumpTower.Drawing
         double _maxHp;
         double _sizeBarX;
         double _sizeBarY;
+        float _blink;
 
         public HealthBar(double currentHp, double maxHp, double sizeBarX, double sizeBarY)
         {
