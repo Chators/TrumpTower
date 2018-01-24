@@ -129,25 +129,46 @@ namespace TrumpTower.LibraryTrumpTower
         {
             if (IsReload) _isDisabled = false;
 
-            foreach (Enemy myEnemy in _enemies)
-            {
-                /* Algo de visée */
-                double hpEnemy = myEnemy.CurrentHp;
-                foreach (Missile missile in _map.Missiles)
-                {
-                    if (missile.Target == myEnemy) hpEnemy -= missile.Damage;
-                }
-                
+            bool kamikazeClose = false;
 
-                if (WithinReachOf(myEnemy.Position) && hpEnemy > 0)
-                { 
-                    if (!IsDisabled)
-                        SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(myEnemy.Position.X + 32, myEnemy.Position.Y + 32));
-                    if (IsReload)
-                        UpdateShoot(myEnemy); 
-                    break;
+            if (_type == TowerType.slow)
+            {
+                foreach (Enemy enemy in _enemies)
+                {
+                    if (enemy._type == EnemyType.kamikaze && WithinReachOf(enemy.Position) && !enemy.IsDead)
+                    {
+                        if (!IsDisabled)
+                            SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(enemy.Position.X + 32, enemy.Position.Y + 32));
+                        if (IsReload)
+                            UpdateShoot(enemy);
+                        kamikazeClose = true;
+                        break;
+                    }
                 }
             }
+
+            if (!kamikazeClose) // for towertype.slow
+            {
+                foreach (Enemy myEnemy in _enemies)
+                {
+                    /* Algo de visée */
+                    double hpEnemy = myEnemy.CurrentHp;
+                    foreach (Missile missile in _map.Missiles)
+                    {
+                        if (missile.Target == myEnemy) hpEnemy -= missile.Damage;
+                    }
+
+                    if (WithinReachOf(myEnemy.Position) && hpEnemy > 0)
+                    {
+                        if (!IsDisabled)
+                            SetRotate(new Vector2(Position.X + 32, Position.Y + 32), new Vector2(myEnemy.Position.X + 32, myEnemy.Position.Y + 32));
+                        if (IsReload)
+                            UpdateShoot(myEnemy);
+                        break;
+                    }
+                }
+            }
+
             Reloading();
         }
         
