@@ -90,7 +90,8 @@ namespace MapEditorTrumpTower
         private Texture2D _imgChangeTheme;
 
         private SpriteFont _imgString;
-        private Texture2D _imgHappyFace;
+        private Texture2D _imgTrumpet;
+
         #region gameState
         public GameState State { get; set; }
         public ActionCreatePath CurrentActionCreatePath { get; set; }
@@ -270,7 +271,7 @@ namespace MapEditorTrumpTower
             _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
             _imgSaboteur = Content.Load<Texture2D>("Enemies/saboteur");
 
-            _imgHappyFace = Content.Load<Texture2D>("Entity/happy");
+            _imgTrumpet = Content.Load<Texture2D>("Events/trumpet");
             #region Load Dollars
             _imgDollars = Content.Load<Texture2D>("Dollars/dollarsImg");
             _spriteDollars = Content.Load<SpriteFont>("Dollars/dollars");
@@ -533,7 +534,7 @@ namespace MapEditorTrumpTower
 
                 #region Events
                 spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
-                spriteBatch.Draw(_imgHappyFace, new Vector2(10, 90), Color.White);
+                spriteBatch.Draw(_imgTrumpet, new Vector2(10, 90), Color.White);
                 #endregion
 
                 spriteBatch.End();

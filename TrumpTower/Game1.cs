@@ -220,11 +220,8 @@ namespace TrumpTower
 
         #endregion
 
-        #region Entity
-        Texture2D _imgHappyFace;
-        Texture2D _imgAngryFace;
-        Texture2D _imgVeryAngryFace;
-        Texture2D _imgButtonDollars;
+        #region Events
+        private Texture2D _imgTrumpet;
         #endregion
         Texture2D grey;
         
@@ -710,17 +707,9 @@ namespace TrumpTower
 
             #endregion
 
-            #region Entity
-            _imgHappyFace = Content.Load<Texture2D>("Entity/happy");
-            _imgAngryFace = Content.Load<Texture2D>("Entity/angry");
-            _imgVeryAngryFace = Content.Load<Texture2D>("Entity/mad");
-            _imgButtonDollars = Content.Load<Texture2D>("Entity/money");
-
-            #region Entity Button
+            #region Events
+            _imgTrumpet = Content.Load<Texture2D>("Events/trumpet");
             Vector2 _positionEntityButton = new Vector2(VirtualWidth - 15, _positionSniperAbilityButton.Y);
-            _groupOfButtonsUIAbilities.CreateButtonUI(new ButtonUIAbility(_groupOfButtonsUIAbilities, "entityAbility", new Vector2(_positionEntityButton.X - _imgButtonDollars.Width, _positionEntityButton.Y), _imgButtonDollars));
-            #endregion
-
             #endregion
 
             #region Sound
@@ -1951,8 +1940,7 @@ namespace TrumpTower
                 {
                     HealthBar entityBar = new HealthBar(_map.Events.CurrentEvent.CurrentGauge, _map.Events.CurrentEvent.MaxGauge, 7.8f, 3f);
                     spriteBatch.Draw(_backgroundDollars, new Vector2(5, 150), sourceRectanglee, Color.Black * 0.6f);
-                    Texture2D entityFace = _imgVeryAngryFace;
-                    spriteBatch.Draw(entityFace, new Vector2(10, 150), Color.White);
+                    spriteBatch.Draw(_imgTrumpet, new Vector2(10, 150), Color.White);
                     entityBar.Draw(spriteBatch, new Vector2(123, 177), _imgWall);
                 }
             }
