@@ -76,13 +76,6 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     spriteBatch.Draw(_img, reloadedRect, color);
                 }
             }
-
-            if (_name == "entityAbility")
-            {
-                if (_ctx.Ctx.Map.Dollars < _ctx.Ctx.Map.Entity.PriceImproveGauge) color = Color.Gray * 0.6f;
-                reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
-                spriteBatch.Draw(_img, reloadedRect, color);
-            }
         }
 
         public string Name => _name;

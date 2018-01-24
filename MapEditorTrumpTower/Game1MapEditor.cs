@@ -486,7 +486,7 @@ namespace MapEditorTrumpTower
                 #endregion
 
                 #region Draw Debug
-                spriteBatch.DrawString(_debug, _map.ThemeOfMap+"", new Vector2(150, 150), Color.Red);
+                //spriteBatch.DrawString(_debug, _map.ThemeOfMap+"", new Vector2(150, 150), Color.Red);
                 //spriteBatch.DrawString(_debug, CurrentActionCreatePath + "", new Vector2(150, 200), Color.Red);
                 #endregion
 
@@ -502,7 +502,6 @@ namespace MapEditorTrumpTower
                     spriteBatch.Draw(_imgWall, _wall.Position, Color.White);
                 }
                 #endregion
-
 
                 foreach (Decor decor in _map.Decors)
                     spriteBatch.Draw(_imgDecors[decor._numberDecor], new Vector2(decor._position.X - _imgDecors[decor._numberDecor].Width, decor._position.Y - _imgDecors[decor._numberDecor].Height), Color.White);
@@ -532,7 +531,7 @@ namespace MapEditorTrumpTower
                 spriteBatch.DrawString(_imgNextWave, "Waves " + Map.WavesCounter + "/" + Map.WavesTotals, new Vector2(50, 57), Color.White);
                 #endregion
 
-                #region Entity
+                #region Events
                 spriteBatch.Draw(_backgroundDollars, new Vector2(5, 90), sourceRectanglee, Color.Black * 0.6f);
                 spriteBatch.Draw(_imgHappyFace, new Vector2(10, 90), Color.White);
                 #endregion
@@ -1337,19 +1336,6 @@ namespace MapEditorTrumpTower
                 Text = _map.Dollars + ""
             };
 
-            var labelGauge = new GuiLabelControl()
-            {
-                Text = "Entity Gauge Speed ( Min " + Constant.MINLOSTGAUGE+ ", Max " + Constant.MAXLOSTGAUGE + ", decimal number)",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 135), new UniScalar(100), new UniScalar(25))
-            };
-
-            var Gauge = new GuiInputControl
-            {
-                Name = "lostGauge",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 10), new UniScalar(0.0f, 160), new UniScalar(100), new UniScalar(25)),
-                Text = (float)_map.Entity.LostGauge + ""
-            };
-
             var button1 = new GuiButtonControl
             {
                 Name = "confirm",
@@ -1370,8 +1356,6 @@ namespace MapEditorTrumpTower
             window.Children.Add(nameMap);
             window.Children.Add(labelDollarsMap);
             window.Children.Add(dollarsMap);
-            window.Children.Add(labelGauge);
-            window.Children.Add(Gauge);
             window.Children.Add(button1);
             window.Children.Add(button2);
 
@@ -1400,11 +1384,9 @@ namespace MapEditorTrumpTower
             }
 
             if ((_nameMap.Length >= Constant.MinNameMap && _nameMap.Length <= Constant.MaxNameMap) &&
-                (_dollarsMap >= Constant.MinDollarsMap && _dollarsMap <= Constant.MaxDollarsMap) &&
-                (_lostGauge >= Constant.MINLOSTGAUGE && _lostGauge <= Constant.MAXLOSTGAUGE))
+                (_dollarsMap >= Constant.MinDollarsMap && _dollarsMap <= Constant.MaxDollarsMap))
             {
                 _map.SettingTheMap(_nameMap, _dollarsMap);
-                _map.Entity.LostGauge = _lostGauge;
                 _gui.Screen.Desktop.Children.Remove(((GuiButtonControl)sender).Parent);
             }
         }

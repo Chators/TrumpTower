@@ -77,8 +77,6 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public WallBoss WallBoss { get; set; }
         [DataMember]
-        public Entity Entity { get; set; }
-        [DataMember]
         public bool Initialize { get; set; }
         public Events Events { get; set; }
         public static int _timesBeingRevived { get; set; }
@@ -105,7 +103,6 @@ namespace TrumpTower.LibraryTrumpTower
             TowerDisabled = new List<Tower>();
             AnimHeal = new List<Enemy>();
             Decors = new List<Decor>();
-            Entity = new Entity(this);
             Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
             Initialize = false;
             ThemeOfMap = ThemeMap.World_Jungle;
@@ -152,7 +149,6 @@ namespace TrumpTower.LibraryTrumpTower
             Explosion.Update();
             Sniper.Update();
             StickyRice.Update();
-            Entity.Update();
             Events.Update();
         }
 
@@ -304,11 +300,6 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseWallBossAbility(Vector2 position)
         {
             WallBoss.PutWallBoss(position);
-        }
-
-        public void UseEntity()
-        {
-            Entity.PayEntity();
         }
 
         public void SettingTheMap (string name, int dollars)
