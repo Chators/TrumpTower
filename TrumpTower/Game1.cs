@@ -865,7 +865,7 @@ namespace TrumpTower
                 _mainDialogue.Update(gameTime);
             #endregion
 
-            if (!GameIsPaused && realPause == false)
+            if (!GameIsPaused && realPause == false && !isLost && !_isWon)
             {
                 _map.Update();
                 _waveSprite.Update(Map.WaveIsComming);
