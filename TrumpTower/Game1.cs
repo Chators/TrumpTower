@@ -5,6 +5,7 @@ using LibraryTrumpTower.Constants.BalanceGame.Bosses;
 using LibraryTrumpTower.Constants.BalanceGame.Enemies;
 using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using LibraryTrumpTower.Decors;
+using LibraryTrumpTower.SpecialAbilities;
 using Menu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -331,7 +332,9 @@ namespace TrumpTower
 
             //BOSS1
             //Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
-            
+
+            //BOSS3
+            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss3, 1);
             #endregion
 
             #region Graphics Device 
@@ -1656,6 +1659,8 @@ namespace TrumpTower
 
             #region Earthly Enemies 
             List<Enemy> _enemies = _map.GetAllEnemies();
+            List<ChainBoss> _chainBoss = null;
+            Enemy boss3 = null;
             foreach (Enemy enemy in _enemies)
             {
                 float angle = 0;
@@ -1669,7 +1674,12 @@ namespace TrumpTower
                 else if (enemy._type == EnemyType.boss1) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.boss2) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.boss2_1) _imgEnemy = _imgEnemy1;
-                else if (enemy._type == EnemyType.boss3) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss3)
+                {
+                    boss3 = enemy;
+                    _imgEnemy = _imgEnemy1;
+                    _chainBoss = Map.GetAllChainBoss(enemy);
+                }
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
                 else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
                 else if (enemy._type == EnemyType.saboteur && enemy._hasCast == false) _imgEnemy = _imgSaboteur1;
@@ -1680,7 +1690,13 @@ namespace TrumpTower
                 HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f, 1f);
                 enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy);
             }
-
+            if (_chainBoss != null)
+            {
+                foreach (ChainBoss chain in _chainBoss)
+                {
+                    for (int i = 0; i < 4; i++) Line.DrawLine(spriteBatch, boss3.Position, chain._position, Color.White);
+                }
+            }
             #endregion
 
             #region Air Enemies

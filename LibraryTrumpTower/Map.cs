@@ -315,5 +315,13 @@ namespace TrumpTower.LibraryTrumpTower
             Name = name;
             Dollars = dollars;
         }
+
+        public List<ChainBoss> GetAllChainBoss (Enemy boss3)
+        {
+            List<ChainBoss> chainBoss = CurrentChainsBoss;
+            if (boss3.CurrentChain != null) chainBoss.Add(boss3.CurrentChain);
+            foreach (ChainBoss chain in boss3.HangingChain) chainBoss.Add(chain);
+            return chainBoss;
+        }
     }
 }

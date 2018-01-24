@@ -28,6 +28,7 @@ namespace LibraryTrumpTower.SpecialAbilities
         public Wall Wall { get; set; }
         public ChainBossState CurrentState { get; set; }
         public Map Ctx { get; set; }
+        public Enemy Boss3 { get; set; }
 
         public ChainBoss(Map ctx, double maxHp, Vector2 position, Tower towerTarget, double speed, Wall wall, double damage)
         {
