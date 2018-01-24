@@ -81,7 +81,9 @@ namespace TrumpTower.LibraryTrumpTower
 
         public List<Vector2> AreaExplosion { get; set; }
         public Events Events { get; set; }
+        public List<ChainBoss> CurrentChainsBoss { get; set; }
         public static int _timesBeingRevived { get; set; }
+
         #endregion
 
         public Map(int[][] map)
@@ -122,6 +124,7 @@ namespace TrumpTower.LibraryTrumpTower
                 Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
                 Map._timesBeingRevived = 0;
                 AreaExplosion = new List<Vector2>();
+                CurrentChainsBoss = new List<ChainBoss>();
                 Initialize = true;
             }
 
@@ -148,6 +151,8 @@ namespace TrumpTower.LibraryTrumpTower
                 Missile myMissile = Missiles[i];
                 myMissile.Update();
             }
+
+            foreach (ChainBoss chain in CurrentChainsBoss) chain.Update();
 
             Explosion.Update();
             Sniper.Update();

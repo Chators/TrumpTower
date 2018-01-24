@@ -98,6 +98,7 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_MAX_HP;
                 else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1) return BalanceBoss2.BOSS2_MAX_HP;
                 else if (_type == EnemyType.boss1) return BalanceBoss1.BOSS1_MAX_HP;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_MAX_HP;
                 else return 0;
             }
         }
@@ -111,6 +112,7 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_DAMAGE;
                 else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1) return BalanceBoss2.BOSS2_DAMAGE * (1 + Map._timesBeingRevived);
                 else if (_type == EnemyType.boss1) return BalanceBoss1.BOSS1_DAMAGE;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_DAMAGE;
                 else return 0;
             }
             set
@@ -128,6 +130,7 @@ namespace TrumpTower.LibraryTrumpTower
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_DEFAULT_SPEED;
                 else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1) return BalanceBoss2.BOSS2_DEFAULT_SPEED;
                 else if (_type == EnemyType.boss1) return BalanceBoss1.BOSS1_DEFAULT_SPEED;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_DEFAULT_SPEED;
                 else return 0;
             }
         }
@@ -148,6 +151,7 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 if (_type == EnemyType.doctor) return BalanceEnemyDoctor.ENEMY_DOCTOR_ACTION_RADIUS;
                 else if (_type == EnemyType.saboteur) return BalanceEnemySaboteur.ENEMY_SABOTEUR_ACTION_RADIUS;
+                else if (_type == EnemyType.boss3) return BalanceBoss3.BOSS3_ACTION_RADIUS;
                 else return 0;
             }
         }
@@ -168,8 +172,11 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
-
-
+        public Boss3State StateBoss3 { get; set; }
+        public double TimeBeforeLaunch { get; set; }
+        public Tower TargetTower { get; set; }
+        public ChainBoss CurrentChain { get; set; }
+        public List<ChainBoss> HangingChain { get; set; }
 
         public Enemy(Map map, Wave wave, string name, EnemyType type, WallBoss Wallboss)
         {
@@ -258,6 +265,7 @@ namespace TrumpTower.LibraryTrumpTower
             // Deserialization
             if (!Initiliaze)
             {
+                StateBoss3 = Boss3State.NONE;
                 CurrentHp = MaxHp;
                 if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1) Speed = DefaultSpeed * (1 + Map._timesBeingRevived);
                 else { Speed = DefaultSpeed; }
@@ -289,6 +297,17 @@ namespace TrumpTower.LibraryTrumpTower
                     _timeBeforeEndofCastingCharge = 3 * 60; // When it comes to 0, boss1 charges, doubling his speed and dammage, build a wall to stop him
                     _rangeBoss = 200;
                 }
+                else if (_type == EnemyType.boss3)
+                {
+                    _reload = 0;
+                    _defaultReload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
+                    StateBoss3 = Boss3State.WALK;
+                    _rangeBoss = 200;
+                    TargetTower = null;
+                    CurrentChain = null;
+                    HangingChain = new List<ChainBoss>();
+                }
+
                 Initiliaze = true;
             }
 
@@ -315,7 +334,7 @@ namespace TrumpTower.LibraryTrumpTower
                 UpdateBossTwins();
             } else if (_type == EnemyType.boss3)
             {
-                if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead == false) UpdateMove();
+                if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead == false && StateBoss3 == Boss3State.WALK) UpdateMove();
                 UpdateBoss3();
             }
         }
@@ -333,8 +352,76 @@ namespace TrumpTower.LibraryTrumpTower
              * 
              * 
              * */
-           
+            
+            if (StateBoss3 == Boss3State.WALK)
+            {
+                foreach (ChainBoss chain in HangingChain)
+                {
+                    if (!WithinReach(Position, chain._position, BalanceBoss3.BOSS3_CHAIN_BREAK_RANGE))
+                    {
+                        chain.CurrentState = ChainBoss.ChainBossState.STALLED;
+                        _map.CurrentChainsBoss.Add(chain);
+                        HangingChain.Remove(chain);
+                    }
+                }
+            }
+
+            if (_reload < 0 && StateBoss3 == Boss3State.WALK)
+            {
+                foreach (Tower tower in _map.Towers)
+                {
+                    if (WithinReach(Position, tower.Position, ActionRadius))
+                    {
+                        TimeBeforeLaunch = BalanceBoss3.BOSS3_TIME_BEFORE_LAUNCH;
+                        TargetTower = tower;
+                        StateBoss3 = Boss3State.CAST;
+                        break;
+                    }
+                }
+            }
+
+            if (StateBoss3 == Boss3State.CAST)
+            {
+                if (CurrentChain != null)
+                {
+                    if (CurrentChain.IsDead())
+                    {
+                        CurrentChain = null;
+                        StateBoss3 = Boss3State.WALK;
+                    }
+                }
+
+                TimeBeforeLaunch--;
+                if (TimeBeforeLaunch <= 0)
+                {
+                    CurrentChain = new ChainBoss(_map, BalanceBoss3.BOSS3_CHAIN_MAX_HP, _position, TargetTower, BalanceBoss3.BOSS3_CHAIN_SPEED, _map.Wall, BalanceBoss3.BOSS3_CHAIN_DAMAGE);
+                    StateBoss3 = Boss3State.LAUNCHITSCHAIN;
+                }
+            }
+
+            // A FINIR
+            if (StateBoss3 == Boss3State.LAUNCHITSCHAIN)
+            {
+                if (CurrentChain != null)
+                {
+                    if (CurrentChain.IsDead())
+                    {
+                        CurrentChain = null;
+                        StateBoss3 = Boss3State.WALK;
+                    }
+                    else CurrentChain.Update();
+                }
+
+                if (CurrentChain.IsArrived())
+                {
+                    HangingChain.Add(CurrentChain);
+                    CurrentChain = null;
+                    StateBoss3 = Boss3State.WALK;
+                }
+            }
         }
+
+        #region Boss2
         private void UpdateBossTwins()
         {
             //Checks if any of them is dead
@@ -361,9 +448,6 @@ namespace TrumpTower.LibraryTrumpTower
             }
         }
 
-      
-        
-
         private void ReviveBosses() 
         {
            
@@ -379,13 +463,9 @@ namespace TrumpTower.LibraryTrumpTower
             _map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
             _map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
         }
-            
+        #endregion
 
-       
-
-       
-
-
+        #region Boss1
         private void UpdateBoss1()
         {
             if (_timeBeforeCharging > 0) _timeBeforeCharging--;
@@ -410,6 +490,7 @@ namespace TrumpTower.LibraryTrumpTower
             BalanceBoss1.BOSS1_DAMAGE *= 2;
             Speed = Speed * 5;
         }
+        #endregion
 
         private void UpdateAttackWall()
         {

@@ -54,6 +54,7 @@
     <Compile Include="Constants\BalanceGame\BalanceMissile.cs" />
     <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss2.cs" />
     <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss1.cs" />
+    <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss3.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDefaultSoldier.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDoctor.cs" />
     <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyKamikaze.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSimple.cs" />
     <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSlow.cs" />
     <Compile Include="Constants\BinarySerializer.cs" />
+    <Compile Include="Constants\Boss3State.cs" />
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="Constants\EnemyType.cs" />
     <Compile Include="Constants\Extensions.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Spawns\Dijkstra\User.cs" />
     <Compile Include="Spawns\Spawn.cs" />
     <Compile Include="Spawns\Wave.cs" />
+    <Compile Include="SpecialAbilities\ChainBoss.cs" />
     <Compile Include="SpecialAbilities\Explosion.cs" />
     <Compile Include="SpecialAbilities\Sniper.cs" />
     <Compile Include="SpecialAbilities\StickyRice.cs" />
