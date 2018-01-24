@@ -1,5 +1,6 @@
 ﻿using LibraryTrumpTower.Constants;
 using LibraryTrumpTower.Constants.BalanceGame;
+using LibraryTrumpTower.Constants.BalanceGame.Towers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -48,12 +49,12 @@ namespace TrumpTower.LibraryTrumpTower
                 {
                     Target.TakeHp(_damage);
                     if (Target.IsDead) Target.Die();
-                   
                 }
                 else if(_tower.Type == TowerType.area)
                 {
                     List<Enemy> _enemies = new List<Enemy>();
                     List<Enemy> _currentEnemies = _map.GetAllEnemies();
+                    _map.AreaExplosion.Add(Target.Position);
 
                     foreach (Enemy enemy in _currentEnemies)
                     {
@@ -61,7 +62,6 @@ namespace TrumpTower.LibraryTrumpTower
                         {
                             enemy.TakeHp(_damage);
                             if (enemy.IsDead) enemy.Die();
-                            
                         }
                     }
                 }

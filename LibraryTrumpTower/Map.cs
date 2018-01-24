@@ -78,6 +78,8 @@ namespace TrumpTower.LibraryTrumpTower
         public WallBoss WallBoss { get; set; }
         [DataMember]
         public bool Initialize { get; set; }
+
+        public List<Vector2> AreaExplosion { get; set; }
         public Events Events { get; set; }
         public static int _timesBeingRevived { get; set; }
         #endregion
@@ -119,6 +121,7 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
                 Map._timesBeingRevived = 0;
+                AreaExplosion = new List<Vector2>();
                 Initialize = true;
             }
 

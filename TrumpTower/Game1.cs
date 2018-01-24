@@ -380,12 +380,13 @@ namespace TrumpTower
             //_drawTower = null;
             
             // Animations
-            AnimSprites = new SimpleAnimationDefinition[5];
+            AnimSprites = new SimpleAnimationDefinition[6];
             AnimSprites[0] = new SimpleAnimationDefinition(this, this, "animExplosion", new Point(100, 100), new Point(9, 9), 150, false);
             AnimSprites[1] = new SimpleAnimationDefinition(this, this, "Enemies/animBlood", new Point(64, 64), new Point(6, 1), 20, false);
             AnimSprites[2] = new SimpleAnimationDefinition(this, this, "Enemies/air/animPlaneExplosion", new Point(128, 128), new Point(4, 4), 20, false);
             AnimSprites[3] = new SimpleAnimationDefinition(this, this, "Enemies/animThunderSaboteur", new Point(350, 105), new Point(5, 2), 12, true);
             AnimSprites[4] = new SimpleAnimationDefinition(this, this, "Enemies/heal", new Point(192, 192), new Point(5, 5), 100, false);
+            AnimSprites[5] = new SimpleAnimationDefinition(this, this, "animSmallExplosion", new Point(80, 80), new Point(1, 4), 18, false);
 
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.Initialize();
 
@@ -743,6 +744,7 @@ namespace TrumpTower
 
             // ANIMATION EXPLOSION ABILITY
             foreach (SimpleAnimationDefinition anim in this.AnimSprites) anim.LoadContent(spriteBatch);
+            
             // HEALTH BAR ON ENEMIES AND WALL
             HealthBar.LoadContent(Content);
 
@@ -1067,6 +1069,15 @@ namespace TrumpTower
                     _map.DeadEnemies.Remove(deadEnemy);
                 }
 
+                #endregion
+
+                #region Anim Small Explosion
+                for (int i = 0; i < _map.AreaExplosion.Count; i++)
+                {
+                    Vector2 position = _map.AreaExplosion[i];
+                    AnimSprites[5].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[5], (int)position.X, (int)position.Y));
+                    _map.AreaExplosion.Remove(position);
+                }
                 #endregion
 
                 #region Anim Explosion Plane
