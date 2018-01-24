@@ -71,7 +71,8 @@ namespace TrumpTower.LibraryTrumpTower
         public double _enrageTimer;
         [DataMember]
         public bool _hasEnraged;
-        public bool _isCastingBoss3;
+        
+        public bool _isEnraged;
         
 
 
@@ -264,29 +265,10 @@ namespace TrumpTower.LibraryTrumpTower
                 {
                     _enrageTimer = BalanceBoss3.BOSS3_ENRAGE_TIMER;  // when Boss enrages, he does double dmg, speed etc..
                     _hasEnraged = false;
+                    _isEnraged = false;
                     _reload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
                     _rangeBoss = BalanceBoss3.BOSS3_RANGE;
-                    _isCastingBoss3 = false;
-                    
-                    /*
-                     * 
-                     * Beaucoup d'add pour ce boss
-                     * Idée qu'il grabbe une tourelle, ça l'arrête pendant 2 secs, puis il arrache la tourelle du sol. 
-                     * Puis la lance contre la base qui inflige des dégats
-                     * Une corde qui va jusqu'à la tour et si on tire au sniper dessus, ca la casse et il n'arrache pas la tour.
-                     * 
-                     * Autre idée : La maison blanche est remplacée par un bouton nucléaire, il faut pas qu'il aille dessus
-                     * 
-                     * Autre idée : Son premier coup contre la base en range est une charge qui fait genre midlife à la base
-                     * 
-                     * Autre idée : Ptet un fameux QTE 
-                     * *
-                     * 
-                     * 
-                     * _isCasting = true quand il s'arrête pour target une tour.
-                     * Action Radius defines the radius from he choses a tower to target
-                     * _hasEnraged => doubles dmg 
-                */
+                                                        
                 }
                 Initiliaze = true;
             }
@@ -321,19 +303,48 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateBoss3()
         {
-            /*Faire une liste avec les tours à disposition
+
+
+            /* POUR THIBAUD : 
+             *  CheckTurretsBoss3 lance une fonction qu'il a pour argument une tourelle. De là tu pourras créer une chaîne.
              * 
-             * Choper une tourelle, la viser (le boss s'arrête) pendant genre 2 sec. 
-             * Si les 2 sec sont passées sans que la corde soit touchée par un tir de sniper, il arrache la tour du sol donc 
-             * objet turret est remove, le slot turret devient vide, comme lorsqu'on vend mais sans les thunes
-             * 
-             * Décrémenter l'enrage timer ou enrage()
-             * 
-             * 
-             * 
-             * */
-           
+             *
+                  
+                     * Idée qu'il grabbe une tourelle, ça l'arrête pendant 2 secs, puis il arrache la tourelle du sol. 
+                     * Puis la lance contre la base qui inflige des dégats
+                     * Une corde qui va jusqu'à la tour et si on tire au sniper dessus, ca la casse et il n'arrache pas la tour.
+                     * 
+                     * Autre idée : La maison blanche est remplacée par un bouton nucléaire, il faut pas qu'il aille dessus
+                     * 
+                     * Autre idée : Son premier coup contre la base en range est une charge qui fait genre midlife à la base
+                     * 
+                     
+                    
+                     * Action Radius defines the radius from he choses a tower to target
+                    
+                */
+            IsEnragingBoss3();
+            CheckTurretsBoss3(GetTowers(_position, ActionRadius)); //Similar to the saboteur, returns a turret to cast his chain.
         }
+        // After 7 sec, boss enrages, doubling his damage and speed but only once.
+        //
+        //
+        private void IsEnragingBoss3()
+        {
+            if(_hasEnraged == false && _isEnraged == false)
+            {
+               if( _enrageTimer > 0) _enrageTimer--;
+               else if (_enrageTimer <= 0)
+                {
+                    Speed = Speed * 2;
+                    _damage = _damage * 2;
+                    _isEnraged = true;
+                    _hasEnraged = true;
+                }
+            }
+        }
+
+            
         private void UpdateBossTwins()
         {
             //Checks if any of them is dead
@@ -510,6 +521,25 @@ namespace TrumpTower.LibraryTrumpTower
             
              * La tour est disable pendant un certain temps puis revient à la normale.
              */
+        }
+
+        public void CheckTurretsBoss3(List<Tower> _towersToDisable)
+        {
+            
+                foreach(Tower tower in _towersToDisable)
+                {
+                    StartCastingBoss3(tower); // Starts his chain to break the turret. 
+                // It's a foreach so if two turrets are in range, he'll chain both. this is intentional.
+                 
+                }           
+        }
+
+        public void StartCastingBoss3(Tower tower)
+        {
+            // After one or two seconds, the turret is broken. 
+            // Create a chain and if that chain is broken, the tower is saved
+            // Idea : Maybe we can't rebuild a turret from this spot if the turret is broken
+            // 
         }
         
         public void StartCasting(Tower tower)
