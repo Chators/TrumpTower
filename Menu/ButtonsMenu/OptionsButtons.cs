@@ -13,6 +13,7 @@ namespace Menu.ButtonsMenu
         {
             if (!IndexOfButtons.ContainsValue("Import_Map")) throw new ArgumentException("Dictionary must contain Import_Map");
             if (!IndexOfButtons.ContainsValue("Export_Map")) throw new ArgumentException("Dictionary must contain Export_Map");
+            if (!IndexOfButtons.ContainsValue("how_to_play")) throw new ArgumentException("Dictionary must contain how_to_play");
             if (!IndexOfButtons.ContainsValue("return")) throw new ArgumentException("Dictionary must contain return");
         }
 
@@ -26,10 +27,14 @@ namespace Menu.ButtonsMenu
             {
                 _ctx.UploadMap_Pressed();
             }
+            else if (IndexOfButtons[i] == "how_to_play")
+            {
+                _ctx.LaunchSite("http://trumptower.heberge-tech.fr:2232/how_to_play.php");
+            }
             else if (IndexOfButtons[i] == "return")
             {
                 _ctx.state = MenuState.MAIN;
-            }
+            }            
         }
     }
 }
