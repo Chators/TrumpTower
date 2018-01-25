@@ -50,13 +50,13 @@ namespace TrumpTower.SceneDialogue
 
         public void HandleInput(MouseState newStateMouse, MouseState lastStateMouse, KeyboardState newStateKeyboard, KeyboardState lastStateKeyboard)
         {
-            if (newStateKeyboard.IsKeyDown(Keys.Enter) && lastStateKeyboard.IsKeyUp(Keys.Enter) && CurrentSceneIsFinish == false)
+            if ( ( (newStateKeyboard.IsKeyDown(Keys.Enter) && lastStateKeyboard.IsKeyUp(Keys.Enter)) || (newStateKeyboard.IsKeyDown(Keys.S) && lastStateKeyboard.IsKeyUp(Keys.S)) ) && CurrentSceneIsFinish == false)
             {
                 AllDialogue[CurrentDialogue].Transparancy = 1;
                 CurrentSceneIsFinish = true;
                 ManagerSound.PlayPauseOut();
             }
-            else if (newStateKeyboard.IsKeyDown(Keys.Enter) && lastStateKeyboard.IsKeyUp(Keys.Enter))
+            else if ((newStateKeyboard.IsKeyDown(Keys.Enter) && lastStateKeyboard.IsKeyUp(Keys.Enter)) || (newStateKeyboard.IsKeyDown(Keys.S) && lastStateKeyboard.IsKeyUp(Keys.S)))
             {
                 if (CurrentDialogue == AllDialogue.Count - 1)
                 {
