@@ -411,6 +411,7 @@ namespace TrumpTower.LibraryTrumpTower
                     StateBoss3 = Boss3State.TURNTOWER;
                     _map.Towers.Remove(TargetTower);
                     CurrentChain.CurrentState = ChainBoss.ChainBossState.TURN;
+                    _map.ChangeLocation((int)TargetTower.Position.X / Constant.imgSizeMap, (int)TargetTower.Position.Y / Constant.imgSizeMap, (int)MapTexture.grass);
                     ManagerSound.PlayGangnamStyle();
                 }
             }
