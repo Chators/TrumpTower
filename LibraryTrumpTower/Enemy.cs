@@ -282,11 +282,11 @@ namespace TrumpTower.LibraryTrumpTower
                     _defaultReload = 2 * 60;
                     _isCharging = false;
                     _hasCharged = false;
-                    _timeBeforeCharging = BalanceBoss1.BOSS1_TIME_BEFORE_CHARGING;
+                    _timeBeforeCharging = 6 * 60; // When it comes to 0, boss1 starts casting charge 
                     _isVulnerable = false;
-                    _timeofVulnerability = BalanceBoss1.BOSS1_TIME_OF_VULNERABILITY;
+                    _timeofVulnerability = 3 * 60; // Time where boss doesnt move and take *2 dmg before resuming actions.
                     _isCastingBoss1 = false;
-                    _timeBeforeEndofCastingCharge = BalanceBoss1.BOSS1_TIME_BEFORE_END_OF_CASTING_CHARGE;
+                    _timeBeforeEndofCastingCharge = 3 * 60; // When it comes to 0, boss1 charges, doubling his speed and dammage, build a wall to stop him
                     _rangeBoss = 200;
                 }
                 Initiliaze = true;
@@ -426,15 +426,14 @@ namespace TrumpTower.LibraryTrumpTower
             //Then _isCharging goes false.
             // Boss resumes normal speed and dmg after a few seconds of stun where he takes double dmg.
             // Keeps _hasCharged = true so he doesnt resume charging 
-            if (_isVulnerable == false && _WallBoss._isBreached == false)
+            if (_isCharging == true && _WallBoss._isBreached == false)
             {
                 if (WithinReach(Position, _WallBoss.Position, _WallBoss.Radius))
                 {
-                    if (_isCharging == true)
-                    {
+                    
                         Speed = Speed / 5;
                         BalanceBoss1.BOSS1_DAMAGE /= 2;
-                    }
+                    
                     _isCharging = false;
                     _WallBoss._isBreached = true;
                     ManagerSound.PlayWallBreak();
