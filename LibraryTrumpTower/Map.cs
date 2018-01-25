@@ -57,7 +57,7 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public List<AirUnitsCollection> AirUnits { get; set; }
         [DataMember]
-        public List<AirUnit> DeadUnitsAir { get; set; }
+        public List<Vector2> DeadUnitsAir { get; set; }
         [DataMember]
         public List<Enemy> AnimHeal { get; set; }
         [DataMember]
@@ -82,6 +82,7 @@ namespace TrumpTower.LibraryTrumpTower
         public List<Vector2> AreaExplosion { get; set; }
         public Events Events { get; set; }
         public static int _timesBeingRevived { get; set; }
+
         #endregion
 
         public Map(int[][] map)
@@ -101,7 +102,7 @@ namespace TrumpTower.LibraryTrumpTower
             WallBoss = new WallBoss(this);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
-            DeadUnitsAir = new List<AirUnit>();
+            DeadUnitsAir = new List<Vector2>();
             TowerDisabled = new List<Tower>();
             AnimHeal = new List<Enemy>();
             Decors = new List<Decor>();
@@ -124,6 +125,22 @@ namespace TrumpTower.LibraryTrumpTower
                 AreaExplosion = new List<Vector2>();
                 Initialize = true;
             }
+
+
+
+            foreach (Enemy enemy in GetAllEnemies2())
+            {
+                if (enemy._type == EnemyType.boss3)
+                {
+                    if (enemy.CurrentChain != null)
+                    {
+                        enemy.CurrentChain.Update();
+                        break;
+                    }
+                }
+            }
+
+
 
             List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
@@ -148,6 +165,8 @@ namespace TrumpTower.LibraryTrumpTower
                 Missile myMissile = Missiles[i];
                 myMissile.Update();
             }
+
+            
 
             Explosion.Update();
             Sniper.Update();

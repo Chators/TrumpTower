@@ -50,6 +50,7 @@
     <Compile Include="Draw\ButtonsUI\SpecialAbilities\GroupOfButtonsUIAbilities.cs" />
     <Compile Include="Draw\HealthBar.cs" />
     <Compile Include="Draw\ButtonsUI\GameTImer\ButtonUITimer.cs" />
+    <Compile Include="Draw\Line.cs" />
     <Compile Include="Draw\WaveIsCommingImg.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />

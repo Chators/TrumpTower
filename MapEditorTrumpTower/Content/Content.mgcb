@@ -978,3 +978,33 @@
 /processorParam:TextureFormat=Color
 /build:Events/trumpet.png
 
+#begin Sound/boss3LaunchingChain.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/boss3LaunchingChain.wav
+
+#begin Sound/boss3StalledChain.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/boss3StalledChain.wav
+
+#begin Sound/boss3GangnamStyle.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/boss3GangnamStyle.wav
+
+#begin Sound/boss3ExplosionC4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/boss3ExplosionC4.wav
+
+#begin Sound/boss3Laught.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/boss3Laught.wav
+

@@ -149,7 +149,7 @@ namespace Menu
             graphics.ApplyChanges();
 
             #region BUTTON MAIN
-            int numberOfButtons = 6;
+            int numberOfButtons = 7;
             Dictionary<int, string> indexOfButtons = new Dictionary<int, string>();
             indexOfButtons[0] = "mode_campagne";
             indexOfButtons[1] = "mode_custom";
@@ -157,6 +157,7 @@ namespace Menu
             indexOfButtons[3] = "options";
             indexOfButtons[4] = "quitter";
             indexOfButtons[5] = "website";
+            indexOfButtons[6] = "how_to";
             int buttonHeight = 100;
             int buttonWidth = 300;
             _mainButtons = new MainButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
@@ -326,7 +327,7 @@ namespace Menu
             // TODO: Add your update logic here
             try { _inputManager.Update(gameTime); }
             catch { }
-            _inputManager.Update(gameTime);
+            //_inputManager.Update(gameTime);
 
             if (gameTime.TotalGameTime > TimeSpan.FromSeconds(1) && MediaPlayer.State != MediaState.Playing) ActiveMusique();
 

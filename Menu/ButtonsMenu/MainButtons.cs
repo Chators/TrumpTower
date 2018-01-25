@@ -20,6 +20,8 @@ namespace Menu.ButtonsMenu
             if (!IndexOfButtons.ContainsValue("website")) throw new ArgumentException("Dictionary must contain website");
             if (!IndexOfButtons.ContainsValue("options")) throw new ArgumentException("Dictionary must contain options");
             if (!IndexOfButtons.ContainsValue("quitter")) throw new ArgumentException("Dictionary must contain quit");
+            if (!IndexOfButtons.ContainsValue("how_to")) throw new ArgumentException("Dictionary must contain how_to");
+
         }
 
         public override void take_action_on_button(int i)
@@ -48,6 +50,10 @@ namespace Menu.ButtonsMenu
             else if (IndexOfButtons[i] == "quitter")
             {
                 _ctx.Exit();
+            }else if(IndexOfButtons[i] == "how_to")
+            {
+                _ctx.LaunchSite("http://trumptower.heberge-tech.fr:2232/how_to_play.php");
+
             }
 
         }
