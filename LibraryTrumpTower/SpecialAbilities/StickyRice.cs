@@ -77,9 +77,12 @@ namespace LibraryTrumpTower.SpecialAbilities
             for (int i = 0; i < enemies.Count; i++)
             {
                 Enemy enemy = enemies[i];
-                double reduce = (enemy.Speed * SpeedReduceInPercent / 100);
-                enemy.Speed = reduce;
-                AffectedEnemies.Add(enemy);
+                if (enemy._type != Constants.EnemyType.boss1)
+                {
+                    double reduce = (enemy.Speed * SpeedReduceInPercent / 100);
+                    enemy.Speed = reduce;
+                    AffectedEnemies.Add(enemy);
+                }
             }
 
             if (InProgress <= 0)
