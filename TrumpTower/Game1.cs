@@ -905,7 +905,7 @@ namespace TrumpTower
             if (_map.Wall.CurrentHp <= _map.Wall.MaxHp / 4)
             {
                 if (lowLifeBool && !lowLifeBool2) lowLife += 0.005f;
-                if (lowLife >= 0.4)
+                if (lowLife >= 0.4 && !isLost)
                 {
                     MediaPlayer.Volume = 0.01f;
                     ManagerSound.PlayLowLife();
