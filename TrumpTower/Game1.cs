@@ -1870,7 +1870,7 @@ namespace TrumpTower
                 if (_myTow.Type == TowerType.slow) priceTower = BalanceTowerSlow.TOWER_SLOW_BASE_PRICE;
                 if (_myTow.Type == TowerType.area) priceTower = BalanceTowerArea.TOWER_AREA_BASE_PRICE;
                 if (_myTow.Type == TowerType.bank) priceTower = BalanceTowerBank.TOWER_BANK_BASE_PRICE;
-                spriteBatch.DrawString(_upgradeFont, priceTower*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.White);
+                spriteBatch.DrawString(_upgradeFont, priceTower*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.Blue);
 
                 if(_map.Dollars < priceTower * 1.5)
                 {
