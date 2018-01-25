@@ -52,7 +52,7 @@ namespace Menu.ButtonsMenu
                 _ctx.Exit();
             }else if(IndexOfButtons[i] == "how_to")
             {
-                _ctx.LaunchSite("http://trumptower.heberge-tech.fr:2232/how_to_play");
+                _ctx.LaunchSite("http://trumptower.heberge-tech.fr:2232/how_to_play.php");
 
             }
 
