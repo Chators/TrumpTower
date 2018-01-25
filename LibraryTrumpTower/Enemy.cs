@@ -73,7 +73,8 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public bool _hasEnraged;
 
-
+        public double _defaultReloadSpecial { get; set; }
+        public double _reloadSpecial { get; set; }
         public double _defaultReload { get; private set; }
         public double CurrentHp { get; private set; }
         public double _reload { get; private set; }// doc & mech units}
@@ -300,6 +301,8 @@ namespace TrumpTower.LibraryTrumpTower
                 {
                     _reload = 0;
                     _defaultReload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
+                    _reloadSpecial = 0;
+                    _defaultReloadSpecial = BalanceBoss3.BOSS3_DEFAULT_RELOAD_SPECIAL;
                     StateBoss3 = Boss3State.WALK;
                     _rangeBoss = 200;
                     TargetTower = null;
@@ -334,12 +337,13 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead == false && StateBoss3 == Boss3State.WALK) UpdateMove();
                 UpdateBoss3();
+                UpdateAttackWallBoss();
             }
         }
 
         private void UpdateBoss3()
         {
-            if (_reload <= 0 && StateBoss3 == Boss3State.WALK)
+            if (_reloadSpecial <= 0 && StateBoss3 == Boss3State.WALK)
             {
                 foreach (Tower tower in _map.Towers)
                 {
@@ -371,7 +375,7 @@ namespace TrumpTower.LibraryTrumpTower
                 if (TimeBeforeLaunch <= 0)
                 {
                     CurrentChain = new ChainBoss(_map, BalanceBoss3.BOSS3_CHAIN_MAX_HP, _position, TargetTower, _map.Wall, BalanceBoss3.BOSS3_CHAIN_DAMAGE, this);
-                    _reload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
+                    _reloadSpecial = BalanceBoss3.BOSS3_DEFAULT_RELOAD_SPECIAL;
                     StateBoss3 = Boss3State.LAUNCHITSCHAIN;
                     ManagerSound.PlayLaunchingChain();
                 }
@@ -407,6 +411,7 @@ namespace TrumpTower.LibraryTrumpTower
                     StateBoss3 = Boss3State.TURNTOWER;
                     _map.Towers.Remove(TargetTower);
                     CurrentChain.CurrentState = ChainBoss.ChainBossState.TURN;
+                    _map.ChangeLocation((int)TargetTower.Position.X / Constant.imgSizeMap, (int)TargetTower.Position.Y / Constant.imgSizeMap, (int)MapTexture.grass);
                     ManagerSound.PlayGangnamStyle();
                 }
             }
@@ -441,7 +446,7 @@ namespace TrumpTower.LibraryTrumpTower
                     ManagerSound.PlayExplosionC4();
                 }
             }
-            Reloading();
+            _reloadSpecial--;
         }
 
         #region Boss2
@@ -563,9 +568,10 @@ namespace TrumpTower.LibraryTrumpTower
         {
             if (WithinReach(Position, _map.Wall.Position, _rangeBoss))
             {
-                if (_reload != 0) _reload--;
+                if (_reload > 0) _reload--;
                 else
                 {
+                    ManagerSound.PlayPunch();
                     _map.Wall.TakeHp(_damage);
                     _reload = _defaultReload;
                 }

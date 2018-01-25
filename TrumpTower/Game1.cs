@@ -331,16 +331,24 @@ namespace TrumpTower
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
 
-            /*BOSS2
-            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
-            Map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
-            */
+            //BOSS2
+            if (_map.Name == "MapCampagne10")
+            {
+                Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
+                Map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
+            }
 
             //BOSS1
-            //Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
+            if (_map.Name == "MapCampagne5")
+            {
+                Map.SpawnsEnemies[0].Waves[3].CreateEnemies(EnemyType.boss1, 1);
+            }
 
             //BOSS3
-            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss3, 1);
+            if (_map.Name == "MapCampagne15")
+            {
+                Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss3, 1);
+            }
             #endregion
 
             #region Graphics Device 
@@ -1108,7 +1116,8 @@ namespace TrumpTower
                 for (int i = 0; i < _map.TowerDisabled.Count; i++)
                 {
                     Tower tower = _map.TowerDisabled[i];
-                    AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, (int)BalanceEnemySaboteur.ENEMY_SABOTEUR_RELOADING));
+                    
+                     AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, ((int)BalanceEnemySaboteur.ENEMY_SABOTEUR_RELOADING / 60)));                   
                     _map.TowerDisabled.Remove(tower);
                 }
                 #endregion

@@ -1633,6 +1633,7 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/boss3LaunchingChain.wav
+
 #begin Towers/bank_empty1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1668,7 +1669,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/boss3Laught.wav
-
 
 #begin Towers/bank_empty2.png
 /importer:TextureImporter
@@ -1759,4 +1759,10 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/wallBreak.wav
+
+#begin Sound/punch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/punch.wav
 

@@ -1008,3 +1008,9 @@
 /processorParam:Quality=Best
 /build:Sound/boss3Laught.wav
 
+#begin Sound/punch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/punch.wav
+
