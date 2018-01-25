@@ -16,6 +16,6 @@ namespace LibraryTrumpTower.Constants.BalanceGame.Bosses
         public static double BOSS1_DAMAGE = 250; // Was supposed to 4shots the base. set Wall HP to 1000...
         public static double BOSS1_DEFAULT_SPEED = 2;
         public static double BOSS1_DEFAULT_RELOAD = 2 * 60;
-        public static double BOSS1_RANGE = 200;
+        public static double BOSS1_RANGE = 100;
     }
 }

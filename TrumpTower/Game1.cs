@@ -46,7 +46,9 @@ namespace TrumpTower
         Texture2D[] LowLifeIndicator = new Texture2D[4];
         
         int playLowLife;
-        
+
+        Texture2D _imgChe;
+        Texture2D _imgCheStunt;
 
 
         #region Win condition
@@ -208,6 +210,8 @@ namespace TrumpTower
 
         Texture2D _buttonMaki;
         Texture2D _circleStickyRice;
+
+        
 
         public Texture2D _wallBoss;
         Texture2D _imgBoss1Wall;
@@ -579,7 +583,9 @@ namespace TrumpTower
             _imgDoctor = Content.Load<Texture2D>("Enemies/doctor");
             _imgSaboteur = Content.Load<Texture2D>("Enemies/saboteur");
             _imgSaboteur1 = Content.Load<Texture2D>("Enemies/saboteur1");
-            
+            _imgChe = Content.Load<Texture2D>("Enemies/Che");
+            _imgCheStunt = Content.Load<Texture2D>("Enemies/CheStunt");
+
 
             #region Air Enemies
             _imgPlane1 = Content.Load<Texture2D>("Enemies/Air/plane1");
@@ -1692,7 +1698,17 @@ namespace TrumpTower
                 // CHANGE TEXTURE ENEMY
                 Texture2D _imgEnemy = null;
                 if (enemy._type == EnemyType.defaultSoldier) _imgEnemy = _imgEnemy1;
-                else if (enemy._type == EnemyType.boss1) _imgEnemy = _imgEnemy1;
+                else if (enemy._type == EnemyType.boss1)
+                {
+                    if (enemy._isVulnerable == false)
+                    {
+                        _imgEnemy = _imgChe;
+                    }
+                    else if(enemy._isVulnerable == true)
+                    {
+                        _imgEnemy = _imgCheStunt;
+                    }
+                }
                 else if (enemy._type == EnemyType.boss2) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.boss2_1) _imgEnemy = _imgEnemy1;
                 else if (enemy._type == EnemyType.boss3)
