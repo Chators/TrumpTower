@@ -16,8 +16,8 @@ namespace LibraryTrumpTower.Constants.BalanceGame.Bosses
         public static double BOSS3_TIME_BEFORE_LAUNCH = 4*60;
 
         public static double BOSS3_CHAIN_MAX_HP = 100;
-        public static double BOSS3_CHAIN_DAMAGE = 100;
-        public static double BOSS3_CHAIN_SPEED = 1.2;
+        public static double BOSS3_CHAIN_DAMAGE = 10;
+        public static double BOSS3_CHAIN_SPEED = 25;
         public static double BOSS3_CHAIN_BREAK_RANGE = 900;
     }
 }

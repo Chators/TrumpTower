@@ -111,7 +111,7 @@ namespace LibraryTrumpTower.AirUnits
             ManagerSound.PlayDestroyUnitAir();
             Ctx.Ctx.Dollars += Bounty;
             Ctx.Array.Remove(this);
-            Ctx.Ctx.DeadUnitsAir.Add(this);
+            Ctx.Ctx.DeadUnitsAir.Add(Position);
         }
 
         public void Die(bool PassedTheBase)
@@ -119,7 +119,7 @@ namespace LibraryTrumpTower.AirUnits
             ManagerSound.PlayDestroyUnitAir();
             if (!PassedTheBase) Ctx.Ctx.Dollars += Bounty;
             Ctx.Array.Remove(this);
-            Ctx.Ctx.DeadUnitsAir.Add(this);
+            Ctx.Ctx.DeadUnitsAir.Add(Position);
         }
 
         public bool IsStarting => TimerBeforeStarting <= 0;

@@ -12,6 +12,9 @@ namespace LibraryTrumpTower.Constants
         WALK,
         CAST,
         LAUNCHITSCHAIN,
+        PULL,
+        TURNTOWER,
+        THROWTOWER,
         NONE
     }
 }

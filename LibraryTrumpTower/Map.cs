@@ -57,7 +57,7 @@ namespace TrumpTower.LibraryTrumpTower
         [DataMember]
         public List<AirUnitsCollection> AirUnits { get; set; }
         [DataMember]
-        public List<AirUnit> DeadUnitsAir { get; set; }
+        public List<Vector2> DeadUnitsAir { get; set; }
         [DataMember]
         public List<Enemy> AnimHeal { get; set; }
         [DataMember]
@@ -81,7 +81,6 @@ namespace TrumpTower.LibraryTrumpTower
 
         public List<Vector2> AreaExplosion { get; set; }
         public Events Events { get; set; }
-        public List<ChainBoss> CurrentChainsBoss { get; set; }
         public static int _timesBeingRevived { get; set; }
 
         #endregion
@@ -103,7 +102,7 @@ namespace TrumpTower.LibraryTrumpTower
             WallBoss = new WallBoss(this);
             DeadEnemies = new List<Enemy>();
             AirUnits = new List<AirUnitsCollection>();
-            DeadUnitsAir = new List<AirUnit>();
+            DeadUnitsAir = new List<Vector2>();
             TowerDisabled = new List<Tower>();
             AnimHeal = new List<Enemy>();
             Decors = new List<Decor>();
@@ -124,9 +123,24 @@ namespace TrumpTower.LibraryTrumpTower
                 Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
                 Map._timesBeingRevived = 0;
                 AreaExplosion = new List<Vector2>();
-                CurrentChainsBoss = new List<ChainBoss>();
                 Initialize = true;
             }
+
+
+
+            foreach (Enemy enemy in GetAllEnemies2())
+            {
+                if (enemy._type == EnemyType.boss3)
+                {
+                    if (enemy.CurrentChain != null)
+                    {
+                        enemy.CurrentChain.Update();
+                        break;
+                    }
+                }
+            }
+
+
 
             List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
@@ -152,19 +166,7 @@ namespace TrumpTower.LibraryTrumpTower
                 myMissile.Update();
             }
 
-            List<ChainBoss> chain = null;
-            foreach (Enemy enemy in GetAllEnemies2())
-            {
-                if (enemy._type == EnemyType.boss3)
-                {
-                    chain = GetAllChainBoss(enemy);
-                    break;
-                }
-            }
-            if (chain != null)
-            {
-                for (int i = 0; i < chain.Count; i++) chain[i].Update();
-            }
+            
 
             Explosion.Update();
             Sniper.Update();
@@ -326,17 +328,6 @@ namespace TrumpTower.LibraryTrumpTower
         {
             Name = name;
             Dollars = dollars;
-        }
-
-        public List<ChainBoss> GetAllChainBoss (Enemy boss3)
-        {
-            List<ChainBoss> chainBoss = new List<ChainBoss>();//CurrentChainsBoss;
-            if (boss3.CurrentChain != null) chainBoss.Add(boss3.CurrentChain);
-            if (boss3.HangingChain != null)
-            {
-                foreach (ChainBoss chain in boss3.HangingChain) chainBoss.Add(chain);
-            }
-            return chainBoss;
         }
     }
 }

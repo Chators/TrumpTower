@@ -88,8 +88,28 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitLowLife;
         private static SoundEffectInstance LowLife;
 
+        private static SoundEffect InitLaunchingChain;
+        private static SoundEffectInstance LaunchingChain;
+
+        private static SoundEffect InitStalledChain;
+        private static SoundEffectInstance StalledChain;
+
+        private static SoundEffect InitGangnamStyle;
+        private static SoundEffectInstance GangnamStyle;
+
+        private static SoundEffect InitExplosionC4;
+        private static SoundEffectInstance ExplosionC4;
+
+        private static SoundEffect InitGragasLaught;
+        private static SoundEffectInstance GragasLaught;
+
         static public void LoadContent(ContentManager Content)
         {
+            InitGragasLaught = Content.Load<SoundEffect>("Sound/boss3Laught");
+            InitExplosionC4 = Content.Load<SoundEffect>("Sound/boss3ExplosionC4");
+            InitGangnamStyle = Content.Load<SoundEffect>("Sound/boss3GangnamStyle");
+            InitLaunchingChain = Content.Load<SoundEffect>("Sound/boss3LaunchingChain");
+            InitStalledChain = Content.Load<SoundEffect>("Sound/boss3StalledChain");
             InitRiceSplash = Content.Load<SoundEffect>("Sound/riceSplash");
             InitRice = Content.Load<SoundEffect>("Sound/rice");
             InitPlaneTurbo = Content.Load<SoundEffect>("Sound/soundPlaneTurbo");
@@ -115,6 +135,41 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitPayAtCheckout = Content.Load<SoundEffect>("Sound/PayAtCheckout");
             InitYouWin = Content.Load<SoundEffect>("Sound/you_win");
             InitLowLife = Content.Load<SoundEffect>("Sound/low_life_sound");
+        }
+
+        public static void PlayGragasLaught()
+        {
+            GragasLaught = InitGragasLaught.CreateInstance();
+            GragasLaught.Volume = 1f;
+            GragasLaught.Play();
+        }
+
+        public static void PlayExplosionC4()
+        {
+            ExplosionC4 = InitExplosionC4.CreateInstance();
+            ExplosionC4.Volume = 1f;
+            ExplosionC4.Play();
+        }
+
+        public static void PlayGangnamStyle()
+        {
+            GangnamStyle = InitGangnamStyle.CreateInstance();
+            GangnamStyle.Volume = 1f;
+            GangnamStyle.Play();
+        }
+
+        public static void PlayLaunchingChain()
+        {
+            LaunchingChain = InitLaunchingChain.CreateInstance();
+            LaunchingChain.Volume = 1f;
+            LaunchingChain.Play();
+        }
+
+        public static void PlayStalledChain()
+        {
+            StalledChain = InitStalledChain.CreateInstance();
+            StalledChain.Volume = 1f;
+            StalledChain.Play();
         }
 
         public static void PlayLowLife()

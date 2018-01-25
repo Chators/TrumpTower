@@ -351,7 +351,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = false;
+                        graphics.IsFullScreen = true;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -1086,8 +1086,8 @@ namespace TrumpTower
                 #region Anim Explosion Plane
                 for (int i = 0; i < _map.DeadUnitsAir.Count; i++)
                 {
-                    AirUnit deadUnit = _map.DeadUnitsAir[i];
-                    AnimSprites[2].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[2], (int)deadUnit.Position.X - 30, (int)deadUnit.Position.Y - 30));
+                    Vector2 deadUnit = _map.DeadUnitsAir[i];
+                    AnimSprites[2].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[2], (int)deadUnit.X - 30, (int)deadUnit.Y - 30));
                     _map.DeadUnitsAir.Remove(deadUnit);
                 }
                 #endregion
@@ -1659,7 +1659,6 @@ namespace TrumpTower
 
             #region Earthly Enemies 
             List<Enemy> _enemies = _map.GetAllEnemies();
-            List<ChainBoss> _chainBoss = null;
             Enemy boss3 = null;
             Texture2D _imgBoss3 = null;
             foreach (Enemy enemy in _enemies)
@@ -1680,7 +1679,6 @@ namespace TrumpTower
                     boss3 = enemy;
                     _imgEnemy = _imgEnemy1;
                     _imgBoss3 = _imgEnemy;
-                    _chainBoss = Map.GetAllChainBoss(enemy);
                 }
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
                 else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
@@ -1692,18 +1690,7 @@ namespace TrumpTower
                 HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f, 1f);
                 enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy);
             }
-            if (_chainBoss != null)
-            {
-                foreach (ChainBoss chain in _chainBoss)
-                {
-                    Color colorChain = Color.Red;
-                    Vector2 positionBoss = boss3.Position + new Vector2(_imgBoss3.Width / 2, _imgBoss3.Height / 2);
-                    Line.DrawLine(spriteBatch, positionBoss, chain._position, colorChain);
-                    Line.DrawLine(spriteBatch, positionBoss, chain._position + new Vector2(64, 0), colorChain);
-                    Line.DrawLine(spriteBatch, positionBoss, chain._position + new Vector2(0, 64), colorChain);
-                    Line.DrawLine(spriteBatch, positionBoss, chain._position + new Vector2(64, 64), colorChain);
-                }
-            }
+            
             #endregion
 
             #region Air Enemies
@@ -1901,6 +1888,68 @@ namespace TrumpTower
 
 
             #endregion
+
+            if (boss3 != null)
+            {
+                if (boss3.CurrentChain != null)
+                {
+
+                    if (boss3.StateBoss3 == Boss3State.THROWTOWER || boss3.StateBoss3 == Boss3State.TURNTOWER)
+                    {
+                        #region Choose Tower
+                        Tower tower = boss3.TargetTower;
+                        Texture2D _imgTowerBoss = null;
+                        if (tower.Type == TowerType.simple)
+                        {
+                            if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower1;
+                            else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower1_2;
+                            else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower1_3;
+                        }
+                        else if (tower.Type == TowerType.slow)
+                        {
+                            if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower2;
+                            else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower2_2;
+                            else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower2_3;
+                        }
+                        else if (tower.Type == TowerType.area)
+                        {
+                            if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower3;
+                            else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower3_2;
+                            else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower3_3;
+                        }
+                        else if (tower.Type == TowerType.bank)
+                        {
+                            if (tower.Reload > 0)
+                            {
+                                if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower4_empty;
+                                else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower4_empty;
+                                else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower4_empty;
+                            }
+                            else if (tower.Reload <= 0)
+                            {
+
+                                if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower4;
+                                else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower4;
+                                else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower4;
+                            }
+                        }
+                        #endregion
+                        spriteBatch.Draw(_imgMaps[(int)MapTexture.notEmptyTower], boss3.CurrentChain._position, Color.White);
+                        spriteBatch.Draw(_imgTowerBoss, boss3.CurrentChain._position, Color.White);
+                    }
+
+                    if (boss3.StateBoss3 != Boss3State.THROWTOWER)
+                    {
+                        Color colorChain = Color.Red;
+                        Vector2 positionBoss = boss3.Position + new Vector2(_imgBoss3.Width / 2, _imgBoss3.Height / 2);
+                        Line.DrawLine(spriteBatch, positionBoss, boss3.CurrentChain._position, colorChain);
+                        Line.DrawLine(spriteBatch, positionBoss, boss3.CurrentChain._position + new Vector2(64, 0), colorChain);
+                        Line.DrawLine(spriteBatch, positionBoss, boss3.CurrentChain._position + new Vector2(0, 64), colorChain);
+                        Line.DrawLine(spriteBatch, positionBoss, boss3.CurrentChain._position + new Vector2(64, 64), colorChain);
+
+                    }
+                }
+            }
 
             #region WallBoss
             spriteBatch.Draw(_imgWall, _map.WallBoss.Position, Color.White);

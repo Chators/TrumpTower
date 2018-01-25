@@ -176,7 +176,6 @@ namespace TrumpTower.LibraryTrumpTower
         public double TimeBeforeLaunch { get; set; }
         public Tower TargetTower { get; set; }
         public ChainBoss CurrentChain { get; set; }
-        public List<ChainBoss> HangingChain { get; set; }
 
         public Enemy(Map map, Wave wave, string name, EnemyType type, WallBoss Wallboss)
         {
@@ -305,7 +304,6 @@ namespace TrumpTower.LibraryTrumpTower
                     _rangeBoss = 200;
                     TargetTower = null;
                     CurrentChain = null;
-                    HangingChain = new List<ChainBoss>();
                 }
 
                 Initiliaze = true;
@@ -341,42 +339,24 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateBoss3()
         {
-            if (StateBoss3 == Boss3State.WALK)
-            {
-                for (int i = 0; i < HangingChain.Count; i++)
-                {
-                    ChainBoss chain = HangingChain[i];
-                    if (!WithinReach(Position, chain._position, BalanceBoss3.BOSS3_CHAIN_BREAK_RANGE))
-                    {
-                        chain.CurrentState = ChainBoss.ChainBossState.STALLED;
-                        _map.Towers.Remove(chain.TowerTarget);
-                        _map.CurrentChainsBoss.Add(chain);
-                        HangingChain.Remove(chain);
-                    }
-                }
-            }
-
             if (_reload <= 0 && StateBoss3 == Boss3State.WALK)
             {
                 foreach (Tower tower in _map.Towers)
                 {
                     bool alreadyCaptured = false;
-                    foreach (ChainBoss chain in _map.CurrentChainsBoss)
-                    {
-                        if (chain.TowerTarget == tower) alreadyCaptured = true;
-                    }
 
                     if (WithinReach(Position, tower.Position, ActionRadius) && !alreadyCaptured)
                     {
                         TimeBeforeLaunch = BalanceBoss3.BOSS3_TIME_BEFORE_LAUNCH;
                         TargetTower = tower;
                         StateBoss3 = Boss3State.CAST;
+                        ManagerSound.PlayGragasLaught();
                         break;
                     }
                 }
             }
 
-            if (StateBoss3 == Boss3State.CAST)
+            else if (StateBoss3 == Boss3State.CAST)
             {
                 if (CurrentChain != null)
                 {
@@ -390,24 +370,75 @@ namespace TrumpTower.LibraryTrumpTower
                 TimeBeforeLaunch--;
                 if (TimeBeforeLaunch <= 0)
                 {
-                    CurrentChain = new ChainBoss(_map, BalanceBoss3.BOSS3_CHAIN_MAX_HP, _position, TargetTower, _map.Wall, BalanceBoss3.BOSS3_CHAIN_DAMAGE);
+                    CurrentChain = new ChainBoss(_map, BalanceBoss3.BOSS3_CHAIN_MAX_HP, _position, TargetTower, _map.Wall, BalanceBoss3.BOSS3_CHAIN_DAMAGE, this);
                     _reload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
                     StateBoss3 = Boss3State.LAUNCHITSCHAIN;
+                    ManagerSound.PlayLaunchingChain();
                 }
             }
 
-            if (StateBoss3 == Boss3State.LAUNCHITSCHAIN)
+            else if (StateBoss3 == Boss3State.LAUNCHITSCHAIN)
             {
                 if (CurrentChain.IsDead())
                 {
                     CurrentChain = null;
                     StateBoss3 = Boss3State.WALK;
                 }
-                else if (CurrentChain.IsArrived())
+
+                if (CurrentChain.IsArrived())
                 {
-                    HangingChain.Add(CurrentChain);
+                    TimeBeforeLaunch = BalanceBoss3.BOSS3_TIME_BEFORE_LAUNCH;
+                    StateBoss3 = Boss3State.PULL;
+                    ManagerSound.PlayStalledChain();
+                }
+            }
+
+            else if (StateBoss3 == Boss3State.PULL)
+            {
+                if (CurrentChain.IsDead())
+                {
                     CurrentChain = null;
                     StateBoss3 = Boss3State.WALK;
+                }
+
+                TimeBeforeLaunch--;
+                if (TimeBeforeLaunch <= 0)
+                {
+                    StateBoss3 = Boss3State.TURNTOWER;
+                    _map.Towers.Remove(TargetTower);
+                    CurrentChain.CurrentState = ChainBoss.ChainBossState.TURN;
+                    ManagerSound.PlayGangnamStyle();
+                }
+            }
+
+            else if (StateBoss3 == Boss3State.TURNTOWER)
+            {
+                if (CurrentChain.IsDead())
+                {
+                    CurrentChain = null;
+                    StateBoss3 = Boss3State.WALK;
+                }
+
+                if (CurrentChain.Position4 == 4)
+                {
+                    StateBoss3 = Boss3State.THROWTOWER;
+                    CurrentChain.CurrentState = ChainBoss.ChainBossState.STALLED;
+                }
+            }
+            else if (StateBoss3 == Boss3State.THROWTOWER)
+            {
+                if (CurrentChain.IsDead())
+                {
+                    CurrentChain = null;
+                    StateBoss3 = Boss3State.WALK;
+                }
+
+                if (CurrentChain.CurrentState == ChainBoss.ChainBossState.NONE)
+                {
+                    _map.DeadUnitsAir.Add(CurrentChain._position);
+                    CurrentChain = null;
+                    StateBoss3 = Boss3State.WALK;
+                    ManagerSound.PlayExplosionC4();
                 }
             }
             Reloading();
