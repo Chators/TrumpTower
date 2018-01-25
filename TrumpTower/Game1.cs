@@ -1927,16 +1927,16 @@ namespace TrumpTower
                         {
                             if (tower.Reload > 0)
                             {
-                                if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower4_empty;
-                                else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower4_empty;
-                                else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower4_empty;
+                                if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower4_empty_1;
+                                else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower4_empty_2;
+                                else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower4_empty_3;
                             }
                             else if (tower.Reload <= 0)
                             {
 
-                                if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower4;
-                                else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower4;
-                                else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower4;
+                                if (tower.TowerLvl == 1) _imgTowerBoss = _imgTower4_1;
+                                else if (tower.TowerLvl == 2) _imgTowerBoss = _imgTower4_2;
+                                else if (tower.TowerLvl == 3) _imgTowerBoss = _imgTower4_3;
                             }
                         }
                         #endregion
