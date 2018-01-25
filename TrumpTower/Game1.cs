@@ -331,16 +331,24 @@ namespace TrumpTower
             foreach (Spawn spawn in _map.SpawnsEnemies)
                 Map.WavesTotals += spawn.Waves.Count;
 
-            /*BOSS2
-            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
-            Map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
-            */
+            //BOSS2
+            if (_map.Name == "MapCampagne10")
+            {
+                Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
+                Map.SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
+            }
 
             //BOSS1
-            //Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
+            if (_map.Name == "MapCampagne5")
+            {
+                Map.SpawnsEnemies[0].Waves[3].CreateEnemies(EnemyType.boss1, 1);
+            }
 
             //BOSS3
-            Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss3, 1);
+            if (_map.Name == "MapCampagne15")
+            {
+                Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss3, 1);
+            }
             #endregion
 
             #region Graphics Device 
