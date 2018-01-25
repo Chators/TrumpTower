@@ -86,7 +86,6 @@ namespace Menu
         public Texture2D _imgVersus;
         private Texture2D _imgTrumpTower;
         public Texture2D _imgArrowRight;
-      
 
         public SimpleAnimationDefinition[] AnimSprites { get; private set; }
         #endregion
@@ -149,7 +148,7 @@ namespace Menu
             graphics.ApplyChanges();
 
             #region BUTTON MAIN
-            int numberOfButtons = 7;
+            int numberOfButtons = 6;
             Dictionary<int, string> indexOfButtons = new Dictionary<int, string>();
             indexOfButtons[0] = "mode_campagne";
             indexOfButtons[1] = "mode_custom";
@@ -157,7 +156,6 @@ namespace Menu
             indexOfButtons[3] = "options";
             indexOfButtons[4] = "quitter";
             indexOfButtons[5] = "website";
-            indexOfButtons[6] = "how_to";
             int buttonHeight = 100;
             int buttonWidth = 300;
             _mainButtons = new MainButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
@@ -238,11 +236,12 @@ namespace Menu
             #endregion
 
             #region BUTTON OPTIONS
-            numberOfButtons = 3;
+            numberOfButtons = 4;
             indexOfButtons = new Dictionary<int, string>();
             indexOfButtons[0] = "Import_Map";
             indexOfButtons[1] = "Export_Map";
-            indexOfButtons[2] = "return";
+            indexOfButtons[2] = "how_to_play";
+            indexOfButtons[3] = "return";
             buttonHeight = 100;
             buttonWidth = 300;
             _optionsButtons = new OptionsButtons(this, numberOfButtons, indexOfButtons, buttonHeight, buttonWidth);
