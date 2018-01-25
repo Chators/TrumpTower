@@ -8,8 +8,8 @@ namespace LibraryTrumpTower.Constants.BalanceGame
 {
     public static class BalanceExplosion
     {
-        public static int EXPLOSION_DAMAGE = 10;
-        public static int EXPLOSION_COOLDOWN = 15 * 60;
-        public static int EXPLOSION_RADIUS = 800;
+        public static int EXPLOSION_DAMAGE = 150;
+        public static int EXPLOSION_COOLDOWN = 20 * 60;
+        public static int EXPLOSION_RADIUS = 500;
     }
 }

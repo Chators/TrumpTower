@@ -27,8 +27,8 @@ namespace LibraryTrumpTower.SpecialAbilities
         }
         public double Damage
         {
-            get { return BalanceSniper.SNIPER_COST; }
-            private set { BalanceSniper.SNIPER_COST = (int)value; }
+            get { return BalanceSniper.SNIPER_DAMAGE; }
+            private set { BalanceSniper.SNIPER_DAMAGE = (int)value; }
         }
 
         #endregion
