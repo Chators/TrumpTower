@@ -160,6 +160,7 @@ namespace TrumpTower
         #region Wall
 
         Texture2D _imgWall;
+        Texture2D _imgWall2;
 
         #endregion
 
@@ -552,6 +553,7 @@ namespace TrumpTower
             #region Wall
 
             _imgWall = Content.Load<Texture2D>("wall");
+            _imgWall2 = Content.Load<Texture2D>("wall2");
 
             #endregion
 
@@ -1852,13 +1854,7 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgTower4_1, _towerSelector, null, Color.White * 0.5f);
             }
 
-            
-                
-            
-            
-            
-            
-
+       
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
@@ -1888,7 +1884,7 @@ namespace TrumpTower
             #endregion
 
             #region WallBoss
-            spriteBatch.Draw(_imgWall, _map.WallBoss.Position, Color.White);
+            spriteBatch.Draw(_imgWall2, _map.WallBoss.Position, Color.White);
             #endregion
 
             #region Missiles
@@ -2127,7 +2123,7 @@ namespace TrumpTower
             }
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "wallBossAbility")
             {
-                spriteBatch.Draw(_imgBoss1Wall, new Vector2(newStateMouse.X - _imgBoss1Wall.Width / 2, newStateMouse.Y - _imgBoss1Wall.Height / 2), Color.White * 0.6f);
+                spriteBatch.Draw(_imgWall2, new Vector2(newStateMouse.X - _imgBoss1Wall.Width / 2, newStateMouse.Y - _imgBoss1Wall.Height / 2), Color.White * 0.6f);
                 spriteBatch.Draw(_imgCursorTrowel, new Vector2(newStateMouse.X - _imgCursorTrowel.Width / 2, newStateMouse.Y - _imgCursorTrowel.Height / 2), Color.White);
             }
             else
