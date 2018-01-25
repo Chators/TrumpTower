@@ -152,7 +152,19 @@ namespace TrumpTower.LibraryTrumpTower
                 myMissile.Update();
             }
 
-            foreach (ChainBoss chain in CurrentChainsBoss) chain.Update();
+            List<ChainBoss> chain = null;
+            foreach (Enemy enemy in GetAllEnemies2())
+            {
+                if (enemy._type == EnemyType.boss3)
+                {
+                    chain = GetAllChainBoss(enemy);
+                    break;
+                }
+            }
+            if (chain != null)
+            {
+                for (int i = 0; i < chain.Count; i++) chain[i].Update();
+            }
 
             Explosion.Update();
             Sniper.Update();
@@ -318,9 +330,12 @@ namespace TrumpTower.LibraryTrumpTower
 
         public List<ChainBoss> GetAllChainBoss (Enemy boss3)
         {
-            List<ChainBoss> chainBoss = CurrentChainsBoss;
+            List<ChainBoss> chainBoss = new List<ChainBoss>();//CurrentChainsBoss;
             if (boss3.CurrentChain != null) chainBoss.Add(boss3.CurrentChain);
-            foreach (ChainBoss chain in boss3.HangingChain) chainBoss.Add(chain);
+            if (boss3.HangingChain != null)
+            {
+                foreach (ChainBoss chain in boss3.HangingChain) chainBoss.Add(chain);
+            }
             return chainBoss;
         }
     }

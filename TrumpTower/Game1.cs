@@ -351,7 +351,7 @@ namespace TrumpTower
                 {
                     try
                     {
-                        graphics.IsFullScreen = true;
+                        graphics.IsFullScreen = false;
                         graphics.ApplyChanges();
                         break;
                     }
@@ -1661,6 +1661,7 @@ namespace TrumpTower
             List<Enemy> _enemies = _map.GetAllEnemies();
             List<ChainBoss> _chainBoss = null;
             Enemy boss3 = null;
+            Texture2D _imgBoss3 = null;
             foreach (Enemy enemy in _enemies)
             {
                 float angle = 0;
@@ -1678,6 +1679,7 @@ namespace TrumpTower
                 {
                     boss3 = enemy;
                     _imgEnemy = _imgEnemy1;
+                    _imgBoss3 = _imgEnemy;
                     _chainBoss = Map.GetAllChainBoss(enemy);
                 }
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
@@ -1694,7 +1696,12 @@ namespace TrumpTower
             {
                 foreach (ChainBoss chain in _chainBoss)
                 {
-                    for (int i = 0; i < 4; i++) Line.DrawLine(spriteBatch, boss3.Position, chain._position, Color.White);
+                    Color colorChain = Color.Red;
+                    Vector2 positionBoss = boss3.Position + new Vector2(_imgBoss3.Width / 2, _imgBoss3.Height / 2);
+                    Line.DrawLine(spriteBatch, positionBoss, chain._position, colorChain);
+                    Line.DrawLine(spriteBatch, positionBoss, chain._position + new Vector2(64, 0), colorChain);
+                    Line.DrawLine(spriteBatch, positionBoss, chain._position + new Vector2(0, 64), colorChain);
+                    Line.DrawLine(spriteBatch, positionBoss, chain._position + new Vector2(64, 64), colorChain);
                 }
             }
             #endregion

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LibraryTrumpTower.Constants.BalanceGame.Bosses;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,14 +31,14 @@ namespace LibraryTrumpTower.SpecialAbilities
         public Map Ctx { get; set; }
         public Enemy Boss3 { get; set; }
 
-        public ChainBoss(Map ctx, double maxHp, Vector2 position, Tower towerTarget, double speed, Wall wall, double damage)
+        public ChainBoss(Map ctx, double maxHp, Vector2 position, Tower towerTarget, Wall wall, double damage)
         {
             Ctx = ctx;
             MaxHp = maxHp;
             CurrentHp = MaxHp;
             _position = position;
             TowerTarget = towerTarget;
-            Speed = speed;
+            Speed = BalanceBoss3.BOSS3_CHAIN_SPEED;
             Wall = wall;
             Damage = damage;
             CurrentState = ChainBossState.LAUNCH;
@@ -48,12 +49,16 @@ namespace LibraryTrumpTower.SpecialAbilities
             if (CurrentState == ChainBossState.LAUNCH)
             {
                 UpdateMove(TowerTarget.Position);
-                if (WithinReach(_position, TowerTarget.Position, Speed)) CurrentState = ChainBossState.HANGING;
-            }
-            if (CurrentState == ChainBossState.STALLED)
-            {
-                UpdateMove(Wall.Position);
                 if (WithinReach(_position, TowerTarget.Position, Speed))
+                {
+                    _position = TowerTarget.Position;
+                    CurrentState = ChainBossState.HANGING;
+                }
+            }
+            else if (CurrentState == ChainBossState.STALLED)
+            {
+                UpdateMove(Ctx.Wall.Position);
+                if (WithinReach(_position, Ctx.Wall.Position, Speed))
                 {
                     Wall.TakeHp(Damage);
                     Ctx.CurrentChainsBoss.Remove(this);
@@ -61,7 +66,7 @@ namespace LibraryTrumpTower.SpecialAbilities
             }
         }
 
-        public void UpdateMove(Vector2 positionTarget)
+        private void UpdateMove(Vector2 positionTarget)
         {
             if (WithinReach(_position, positionTarget, Speed)) _position = positionTarget;
 

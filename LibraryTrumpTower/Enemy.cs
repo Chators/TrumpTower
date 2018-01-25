@@ -341,36 +341,32 @@ namespace TrumpTower.LibraryTrumpTower
 
         private void UpdateBoss3()
         {
-            /*Faire une liste avec les tours à disposition
-             * 
-             * Choper une tourelle, la viser (le boss s'arrête) pendant genre 2 sec. 
-             * Si les 2 sec sont passées sans que la corde soit touchée par un tir de sniper, il arrache la tour du sol donc 
-             * objet turret est remove, le slot turret devient vide, comme lorsqu'on vend mais sans les thunes
-             * 
-             * Décrémenter l'enrage timer ou enrage()
-             * 
-             * 
-             * 
-             * */
-            
             if (StateBoss3 == Boss3State.WALK)
             {
-                foreach (ChainBoss chain in HangingChain)
+                for (int i = 0; i < HangingChain.Count; i++)
                 {
+                    ChainBoss chain = HangingChain[i];
                     if (!WithinReach(Position, chain._position, BalanceBoss3.BOSS3_CHAIN_BREAK_RANGE))
                     {
                         chain.CurrentState = ChainBoss.ChainBossState.STALLED;
+                        _map.Towers.Remove(chain.TowerTarget);
                         _map.CurrentChainsBoss.Add(chain);
                         HangingChain.Remove(chain);
                     }
                 }
             }
 
-            if (_reload < 0 && StateBoss3 == Boss3State.WALK)
+            if (_reload <= 0 && StateBoss3 == Boss3State.WALK)
             {
                 foreach (Tower tower in _map.Towers)
                 {
-                    if (WithinReach(Position, tower.Position, ActionRadius))
+                    bool alreadyCaptured = false;
+                    foreach (ChainBoss chain in _map.CurrentChainsBoss)
+                    {
+                        if (chain.TowerTarget == tower) alreadyCaptured = true;
+                    }
+
+                    if (WithinReach(Position, tower.Position, ActionRadius) && !alreadyCaptured)
                     {
                         TimeBeforeLaunch = BalanceBoss3.BOSS3_TIME_BEFORE_LAUNCH;
                         TargetTower = tower;
@@ -394,31 +390,27 @@ namespace TrumpTower.LibraryTrumpTower
                 TimeBeforeLaunch--;
                 if (TimeBeforeLaunch <= 0)
                 {
-                    CurrentChain = new ChainBoss(_map, BalanceBoss3.BOSS3_CHAIN_MAX_HP, _position, TargetTower, BalanceBoss3.BOSS3_CHAIN_SPEED, _map.Wall, BalanceBoss3.BOSS3_CHAIN_DAMAGE);
+                    CurrentChain = new ChainBoss(_map, BalanceBoss3.BOSS3_CHAIN_MAX_HP, _position, TargetTower, _map.Wall, BalanceBoss3.BOSS3_CHAIN_DAMAGE);
+                    _reload = BalanceBoss3.BOSS3_DEFAULT_RELOAD;
                     StateBoss3 = Boss3State.LAUNCHITSCHAIN;
                 }
             }
 
-            // A FINIR
             if (StateBoss3 == Boss3State.LAUNCHITSCHAIN)
             {
-                if (CurrentChain != null)
+                if (CurrentChain.IsDead())
                 {
-                    if (CurrentChain.IsDead())
-                    {
-                        CurrentChain = null;
-                        StateBoss3 = Boss3State.WALK;
-                    }
-                    else CurrentChain.Update();
+                    CurrentChain = null;
+                    StateBoss3 = Boss3State.WALK;
                 }
-
-                if (CurrentChain.IsArrived())
+                else if (CurrentChain.IsArrived())
                 {
                     HangingChain.Add(CurrentChain);
                     CurrentChain = null;
                     StateBoss3 = Boss3State.WALK;
                 }
             }
+            Reloading();
         }
 
         #region Boss2
