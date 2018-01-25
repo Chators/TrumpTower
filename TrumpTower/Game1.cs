@@ -1972,7 +1972,7 @@ namespace TrumpTower
 
             #region StickRice
             if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
-                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
+                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.Blue * 0.3f);
             if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
             {
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlaneTurbo.Width, _imgPlaneTurbo.Height);
@@ -2116,14 +2116,14 @@ namespace TrumpTower
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
             {
                 spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
-                spriteBatch.Draw(_circleExplosion, new Vector2(newStateMouse.X - (_circleExplosion.Width / 2), newStateMouse.Y - (_circleExplosion.Height / 2)), Color.White * 0.1f);
+                spriteBatch.Draw(_circleExplosion, new Vector2(newStateMouse.X - (_circleExplosion.Width / 2), newStateMouse.Y - (_circleExplosion.Height / 2)), Color.Blue * 0.1f);
             }
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "sniperAbility")
                 spriteBatch.Draw(_cursorTarget, new Vector2(newStateMouse.X - _cursorTarget.Width / 2, newStateMouse.Y - _cursorTarget.Height / 2), Color.White);
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "stickyRiceAbility")
             {
                 spriteBatch.Draw(_imgCursorDeliveryRice, new Vector2(newStateMouse.X - _imgCursorDeliveryRice.Width / 2, newStateMouse.Y - _imgCursorDeliveryRice.Height / 2), Color.White);
-                spriteBatch.Draw(_circleStickyRice, new Vector2(newStateMouse.X - (_circleStickyRice.Width / 2), newStateMouse.Y - (_circleStickyRice.Height / 2)), Color.White * 0.1f);
+                spriteBatch.Draw(_circleStickyRice, new Vector2(newStateMouse.X - (_circleStickyRice.Width / 2), newStateMouse.Y - (_circleStickyRice.Height / 2)), Color.Blue * 0.1f);
             }
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "wallBossAbility")
             {
