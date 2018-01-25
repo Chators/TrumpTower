@@ -166,8 +166,6 @@ namespace TrumpTower.LibraryTrumpTower
                 myMissile.Update();
             }
 
-            
-
             Explosion.Update();
             Sniper.Update();
             StickyRice.Update();

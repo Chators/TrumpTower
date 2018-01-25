@@ -1095,11 +1095,14 @@ namespace TrumpTower
                 #endregion
 
                 #region Anim Small Explosion
-                for (int i = 0; i < _map.AreaExplosion.Count; i++)
+                if (_map.AreaExplosion != null)
                 {
-                    Vector2 position = _map.AreaExplosion[i];
-                    AnimSprites[5].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[5], (int)position.X, (int)position.Y));
-                    _map.AreaExplosion.Remove(position);
+                    for (int i = 0; i < _map.AreaExplosion.Count; i++)
+                    {
+                        Vector2 position = _map.AreaExplosion[i];
+                        AnimSprites[5].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[5], (int)position.X, (int)position.Y));
+                        _map.AreaExplosion.Remove(position);
+                    }
                 }
                 #endregion
 
