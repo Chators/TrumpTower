@@ -327,7 +327,7 @@ namespace Menu
             // TODO: Add your update logic here
             try { _inputManager.Update(gameTime); }
             catch { }
-            _inputManager.Update(gameTime);
+            //_inputManager.Update(gameTime);
 
             if (gameTime.TotalGameTime > TimeSpan.FromSeconds(1) && MediaPlayer.State != MediaState.Playing) ActiveMusique();
 
