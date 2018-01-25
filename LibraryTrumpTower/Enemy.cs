@@ -437,6 +437,7 @@ namespace TrumpTower.LibraryTrumpTower
                     }
                     _isCharging = false;
                     _WallBoss._isBreached = true;
+                    ManagerSound.PlayWallBreak();
                     _isVulnerable = true;
                     _hasCharged = true;
                 }

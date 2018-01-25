@@ -161,6 +161,7 @@ namespace TrumpTower
 
         Texture2D _imgWall;
         Texture2D _imgWall2;
+        Texture2D _imgBrokenWall;
 
         #endregion
 
@@ -336,7 +337,7 @@ namespace TrumpTower
 
             //BOSS1
             //Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
-            
+
             #endregion
 
             #region Graphics Device 
@@ -554,6 +555,7 @@ namespace TrumpTower
 
             _imgWall = Content.Load<Texture2D>("wall");
             _imgWall2 = Content.Load<Texture2D>("wall2");
+            _imgBrokenWall = Content.Load<Texture2D>("brokenWall");
 
             #endregion
 
@@ -1884,7 +1886,15 @@ namespace TrumpTower
             #endregion
 
             #region WallBoss
-            spriteBatch.Draw(_imgWall2, _map.WallBoss.Position, Color.White);
+            if (_map.WallBoss._isBreached == false)
+            {
+                spriteBatch.Draw(_imgWall2, _map.WallBoss.Position, Color.White);
+            }
+            else if (_map.WallBoss._isBreached == true)
+            {
+                spriteBatch.Draw(_imgBrokenWall, _map.WallBoss.Position, Color.White);
+               
+            }
             #endregion
 
             #region Missiles
