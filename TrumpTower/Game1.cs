@@ -101,8 +101,12 @@ namespace TrumpTower
         Texture2D _imgTower2_3;
         Texture2D _imgTower3_3;
         Texture2D _imgWrong;
-        Texture2D _imgTower4;
-        Texture2D _imgTower4_empty;
+        Texture2D _imgTower4_1;
+        Texture2D _imgTower4_empty_1;
+        Texture2D _imgTower4_2;
+        Texture2D _imgTower4_empty_2;
+        Texture2D _imgTower4_3;
+        Texture2D _imgTower4_empty_3;
 
 
         #endregion
@@ -583,8 +587,12 @@ namespace TrumpTower
             _imgTower1_3 = Content.Load<Texture2D>("Towers/tower1_3");
             _imgTower2_3 = Content.Load<Texture2D>("Towers/tower2_3");
             _imgTower3_3 = Content.Load<Texture2D>("Towers/tower3_3");
-            _imgTower4 = Content.Load<Texture2D>("Towers/bank");
-            _imgTower4_empty = Content.Load<Texture2D>("Towers/bank_empty");
+            _imgTower4_1 = Content.Load<Texture2D>("Towers/bank1");
+            _imgTower4_empty_1 = Content.Load<Texture2D>("Towers/bank_empty1");
+            _imgTower4_2 = Content.Load<Texture2D>("Towers/bank2");
+            _imgTower4_empty_2 = Content.Load<Texture2D>("Towers/bank_empty2");
+            _imgTower4_3 = Content.Load<Texture2D>("Towers/bank3");
+            _imgTower4_empty_3 = Content.Load<Texture2D>("Towers/bank_empty3");
 
             #endregion
             _upgradeFont = Content.Load<SpriteFont>("Towers/dollars");
@@ -1763,16 +1771,16 @@ namespace TrumpTower
                 {
                     if (tower.Reload > 0)
                     {
-                        if (tower.TowerLvl == 1) _imgTower = _imgTower4_empty;
-                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4_empty;
-                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4_empty;
+                        if (tower.TowerLvl == 1) _imgTower = _imgTower4_empty_1;
+                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4_empty_2;
+                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4_empty_3;
                     }
                     else if(tower.Reload <= 0)
                     {
                         
-                        if (tower.TowerLvl == 1) _imgTower = _imgTower4;
-                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4;
-                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4;
+                        if (tower.TowerLvl == 1) _imgTower = _imgTower4_1;
+                        else if (tower.TowerLvl == 2) _imgTower = _imgTower4_2;
+                        else if (tower.TowerLvl == 3) _imgTower = _imgTower4_3;
                     }
                     if(tower.Reload == 0)
                     {
@@ -1794,7 +1802,7 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgTower3, _towerSelector + new Vector2(-Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
                 spriteBatch.Draw(_imgSelector, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
-                spriteBatch.Draw(_imgTower4, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
+                spriteBatch.Draw(_imgTower4_1, _towerSelector + new Vector2(Constant.imgSizeMap, Constant.imgSizeMap), null, Color.White);
 
 
                 if (_map.Dollars < BalanceTowerSimple.TOWER_SIMPLE_BASE_PRICE)
@@ -1841,7 +1849,7 @@ namespace TrumpTower
                         my > _towerSelector.Y + Constant.imgSizeMap &&
                         my < (_towerSelector.Y + Constant.imgSizeMap) + Constant.imgSizeMap)
             {
-                spriteBatch.Draw(_imgTower4, _towerSelector, null, Color.White * 0.5f);
+                spriteBatch.Draw(_imgTower4_1, _towerSelector, null, Color.White * 0.5f);
             }
 
             
