@@ -8,10 +8,11 @@ namespace LibraryTrumpTower.Constants.BalanceGame.Bosses
 {
     public static class BalanceBoss3
     {
-        public static double BOSS3_MAX_HP = 2000;
+        public static double BOSS3_MAX_HP = 20000000;
         public static double BOSS3_DEFAULT_SPEED = 1.5;
-        public static double BOSS3_DEFAULT_RELOAD = 18 * 60;
-        public static double BOSS3_DAMAGE = 1000; // Was supposed to 4shots the base. set Wall HP to 400...
+        public static double BOSS3_DEFAULT_RELOAD_SPECIAL = 2 * 60;
+        public static double BOSS3_DEFAULT_RELOAD = 2 * 60;
+        public static double BOSS3_DAMAGE = 5; // Was supposed to 4shots the base. set Wall HP to 400...
         public static double BOSS3_ACTION_RADIUS = 300;
         public static double BOSS3_TIME_BEFORE_LAUNCH = 4*60;
 
