@@ -290,11 +290,11 @@ namespace TrumpTower.LibraryTrumpTower
                     _defaultReload = 2 * 60;
                     _isCharging = false;
                     _hasCharged = false;
-                    _timeBeforeCharging = 6 * 60; // When it comes to 0, boss1 starts casting charge 
+                    _timeBeforeCharging = BalanceBoss1.BOSS1_TIME_BEFORE_CHARGING; // When it comes to 0, boss1 starts casting charge 
                     _isVulnerable = false;
-                    _timeofVulnerability = 3 * 60; // Time where boss doesnt move and take *2 dmg before resuming actions.
+                    _timeofVulnerability = BalanceBoss1.BOSS1_TIME_OF_VULNERABILITY; // Time where boss doesnt move and take *2 dmg before resuming actions.
                     _isCastingBoss1 = false;
-                    _timeBeforeEndofCastingCharge = 3 * 60; // When it comes to 0, boss1 charges, doubling his speed and dammage, build a wall to stop him
+                    _timeBeforeEndofCastingCharge = BalanceBoss1.BOSS1_TIME_BEFORE_END_OF_CASTING_CHARGE; // When it comes to 0, boss1 charges, doubling his speed and dammage, build a wall to stop him
                     _rangeBoss = 200;
                 }
                 else if (_type == EnemyType.boss3)
@@ -505,13 +505,15 @@ namespace TrumpTower.LibraryTrumpTower
         private void ChargeBoss1() // Stops moving for couple of secs, before truly charging
         {
             _isCastingBoss1 = true;
-
+            if(_timeBeforeEndofCastingCharge == 60)
+            ManagerSound.PlayChe();
             if (_timeBeforeEndofCastingCharge == 0) ChargingBoss1();
             else if (_timeBeforeEndofCastingCharge > 0) _timeBeforeEndofCastingCharge--;
         }
 
         private void ChargingBoss1() // Is charging
         {
+            
             _hasCharged = true;
             _isCharging = true;
             _isCastingBoss1 = false;

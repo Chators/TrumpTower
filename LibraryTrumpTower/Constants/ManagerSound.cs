@@ -109,9 +109,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitPunch;
         private static SoundEffectInstance Punch;
 
+        private static SoundEffect InitChe;
+        private static SoundEffectInstance Che; 
+
         static public void LoadContent(ContentManager Content)
         {
             InitPunch = Content.Load<SoundEffect>("Sound/punch");
+            InitChe = Content.Load<SoundEffect>("Sound/cheCharging");
             InitGragasLaught = Content.Load<SoundEffect>("Sound/boss3Laught");
             InitExplosionC4 = Content.Load<SoundEffect>("Sound/boss3ExplosionC4");
             InitGangnamStyle = Content.Load<SoundEffect>("Sound/boss3GangnamStyle");
@@ -157,6 +161,14 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             GragasLaught = InitGragasLaught.CreateInstance();
             GragasLaught.Volume = 1f;
             GragasLaught.Play();
+        }
+
+
+        public static void PlayChe()
+        {
+            Che = InitChe.CreateInstance();
+            Che.Volume = 1f;
+            Che.Play();
         }
 
         public static void PlayExplosionC4()

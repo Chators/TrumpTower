@@ -1790,3 +1790,9 @@
 /processorParam:TextureFormat=Color
 /build:Enemies/cheStunt.png
 
+#begin Sound/cheCharging.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/cheCharging.wav
+
