@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,19 +45,58 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AirUnits\AirUnit.cs" />
+    <Compile Include="AirUnits\AirUnitsCollection.cs" />
+    <Compile Include="AirUnits\PlaneType.cs" />
+    <Compile Include="Constants\BalanceGame\Abilities\BalanceExplosion.cs" />
+    <Compile Include="Constants\BalanceGame\Abilities\BalanceSniper.cs" />
+    <Compile Include="Constants\BalanceGame\Abilities\BalanceStickyRice.cs" />
+    <Compile Include="Constants\BalanceGame\BalanceMissile.cs" />
+    <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss2.cs" />
+    <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss1.cs" />
+    <Compile Include="Constants\BalanceGame\Bosses\BalanceBoss3.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDefaultSoldier.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyDoctor.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemyKamikaze.cs" />
+    <Compile Include="Constants\BalanceGame\Enemies\BalanceEnemySaboteur.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvent1.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvent2.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvent3.cs" />
+    <Compile Include="Constants\BalanceGame\Events\BalanceEvents.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerArea.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerBank.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSimple.cs" />
+    <Compile Include="Constants\BalanceGame\Towers\BalanceTowerSlow.cs" />
+    <Compile Include="Constants\BinarySerializer.cs" />
+    <Compile Include="Constants\Boss3State.cs" />
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="Constants\EnemyType.cs" />
+    <Compile Include="Constants\Extensions.cs" />
     <Compile Include="Constants\ManagerSound.cs" />
     <Compile Include="Constants\Move.cs" />
     <Compile Include="Constants\MapTexture.cs" />
+    <Compile Include="Constants\Player.cs" />
     <Compile Include="Constants\TowerType.cs" />
+    <Compile Include="Decors\Decor.cs" />
+    <Compile Include="Decors\GeneratorDecors.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Missile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spawns\Dijkstra\Relationship.cs" />
+    <Compile Include="Spawns\Dijkstra\User.cs" />
     <Compile Include="Spawns\Spawn.cs" />
     <Compile Include="Spawns\Wave.cs" />
+    <Compile Include="SpecialAbilities\ChainBoss.cs" />
     <Compile Include="SpecialAbilities\Explosion.cs" />
+    <Compile Include="SpecialAbilities\Sniper.cs" />
+    <Compile Include="SpecialAbilities\StickyRice.cs" />
+    <Compile Include="SpecialAbilities\WallBoss.cs" />
+    <Compile Include="SpecialEvents\Event.cs" />
+    <Compile Include="SpecialEvents\Event1.cs" />
+    <Compile Include="SpecialEvents\Event2.cs" />
+    <Compile Include="SpecialEvents\Event3.cs" />
+    <Compile Include="SpecialEvents\Events.cs" />
     <Compile Include="Tower.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>

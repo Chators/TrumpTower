@@ -1,30 +1,44 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LibraryTrumpTower;
+using LibraryTrumpTower.Spawns.Dijkstra;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace TrumpTower.LibraryTrumpTower.Spawns
 {
+    [DataContract(IsReference = true)]
     public class Spawn
     {
-        Map _ctx;
+        #region Fields
+        [DataMember]
+        public Map Ctx { get; private set; }
+        [DataMember]
         public Vector2 Position { get; private set; }
+        [DataMember]
         public List<Wave> Waves { get; private set; }
-        public List<Vector2> ShortestWay { get; private set; }
-        public int[,] MapArray { get { return _ctx.MapArray; } }
+        [DataMember]
+        public List<Vector2> ShortestWay { get; set; }
+        [DataMember]
+        public int[][] MapArray { get { return Ctx.MapArray; } }
+        #endregion
 
         public Spawn(Map ctx, Vector2 position, List<Wave> waves)
         {
-            _ctx = ctx;
+            Ctx = ctx;
             Position = position;
 
             if (waves == null) Waves = new List<Wave>();
             else Waves = waves;
 
-            ShortestWay = SeekShortestWay(_ctx.MapArray, _ctx.Wall, Position);
+            if (ctx.Wall != null)
+                ResetShortestWay();
+            else
+                ShortestWay = null;
         }
 
         public void Update()
@@ -38,74 +52,100 @@ namespace TrumpTower.LibraryTrumpTower.Spawns
             Map.WavesTotals++;
         }
 
-        #region pathFinding
-        private List<Vector2> SeekShortestWay(int[,] mapArray, Wall wall, Vector2 currentPosition, Move lastDirection = Move.none)
+        public void DeleteWave(int nb)
         {
-            List<Vector2> _shortestWay = new List<Vector2>();
+            Waves.RemoveAt(nb);
+            Map.WavesTotals--;
+        }
 
-            while (!_shortestWay.Contains(wall.Position))
+        public Wall Wall => Ctx.Wall;
+
+        public void ResetShortestWay()
+        {
+            Dictionary<string, User> usersDic = CreateGraph(Ctx.MapArray);
+            User userSpawn = null;
+            User userWall = null;
+            foreach(User user in usersDic.Values)
             {
-                // On détermine les directions possible
-                List<Move> possiblesDirections = SeekClosePossiblesDirections(mapArray, currentPosition, lastDirection);
+                if (new Vector2(user._position.X * Constant.imgSizeMap, user._position.Y * Constant.imgSizeMap) == Position) userSpawn = user;
+                if (new Vector2(user._position.X * Constant.imgSizeMap, user._position.Y * Constant.imgSizeMap) == Ctx.Wall.Position) userWall = user;
+            }
+            Vector2 positionWall = Ctx.Wall.Position;
+            List<User> usersShortestPosition = userSpawn.OnSFaitUnPtitDijkstra(usersDic, userWall);
 
-                // Si on a plus d'une possibilité
-                if (possiblesDirections.Count > 1)
+            // Si ils ne sont pas relié
+            if (usersShortestPosition != null)
+            {
+                ShortestWay = new List<Vector2>();
+
+                foreach (User user in usersShortestPosition)
+                    ShortestWay.Add(user._position * new Vector2(Constant.imgSizeMap, Constant.imgSizeMap));
+
+                List<Vector2> optimiseShortestWay = new List<Vector2>();
+                optimiseShortestWay.Add(ShortestWay[0]);
+                Move lastDirection = Move.none;
+                Move newDirection = Move.none;
+                for (int i = 0; i < ShortestWay.Count; i++)
                 {
-                    _shortestWay.Add(currentPosition);
-                    for (int i = 0; i < possiblesDirections.Count; i++)
-                    {
-                        Vector2 tryPosition = new Vector2(currentPosition.X, currentPosition.Y);
-                        if (possiblesDirections[i] == Move.down) tryPosition.Y += Constant.imgSizeMap;
-                        if (possiblesDirections[i] == Move.top) tryPosition.Y -= Constant.imgSizeMap;
-                        if (possiblesDirections[i] == Move.right) tryPosition.X += Constant.imgSizeMap;
-                        if (possiblesDirections[i] == Move.left) tryPosition.X -= Constant.imgSizeMap;
+                    Vector2 position = ShortestWay[i];
+                    if (position.X > optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.down;
+                    else if (position.X < optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.top;
+                    else if (position.Y > optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.right;
+                    else if (position.Y < optimiseShortestWay[optimiseShortestWay.Count - 1].X) newDirection = Move.left;
 
-                        List<Vector2> tryPath = SeekShortestWay(mapArray, wall, tryPosition, possiblesDirections[i]);
-                        if (tryPath != null) _shortestWay.AddRange(tryPath);
-                    }
+                    if (lastDirection == newDirection)
+                        optimiseShortestWay[optimiseShortestWay.Count - 1] = position;
+                    else
+                        optimiseShortestWay.Add(position);
+                    lastDirection = newDirection;
                 }
-                else if (possiblesDirections.Count == 1)
+                ShortestWay = optimiseShortestWay;
+            }
+            else
+            {
+                ShortestWay = null;
+            }
+        }
+
+        #region pathFinding
+        List<User> UsersList { get; set; }
+
+        #region formation graphe
+
+        private Dictionary<string, User> CreateGraph(int[][] mapArray)
+        {
+            Dictionary<string, User> Users = new Dictionary<string, User>();
+            int mdrctropmoche = 0;
+            // D'abord on rentre tous les noeuds
+            for (int y = 0; y < Ctx.HeightArrayMap; y++)
+            {
+                for (int x = 0; x < Ctx.WidthArrayMap; x++)
                 {
-                    // On enregistre la bonne direction
-                    Move goodDirection = possiblesDirections[0];
-                    // Si on change de direction on enregistre dans la tableau
-                    if (lastDirection != goodDirection) _shortestWay.Add(currentPosition);
-                    // On avance le curseur
-                    if (goodDirection == Move.down) currentPosition.Y += Constant.imgSizeMap;
-                    if (goodDirection == Move.top) currentPosition.Y -= Constant.imgSizeMap;
-                    if (goodDirection == Move.right) currentPosition.X += Constant.imgSizeMap;
-                    if (goodDirection == Move.left) currentPosition.X -= Constant.imgSizeMap;
-
-                    lastDirection = goodDirection;
+                    if (mapArray[y][x] == (int)MapTexture.dirt)
+                        Users[mdrctropmoche.ToString()] = new User(mdrctropmoche + "", "", "", new Vector2(x, y));
+                    mdrctropmoche++;
                 }
-                else
-                {
-                    if (currentPosition == wall.Position)
-                    {
-                        _shortestWay.Add(currentPosition);
-                        return _shortestWay;
-                    }
-                    return null;
-                }
-
             }
 
-            return _shortestWay;
+            // Après on les lie ensemble
+            foreach (User user in Users.Values)
+            //for (int i = 0; i < Users.Count; i++)
+            {
+                //User user = Users[i];
+                Vector2 positionUser = user._position;
+                foreach (User userTarget in Users.Values)
+                //for (int j = 0; j < Users.Count; j++)
+                {
+                    if (positionUser + new Vector2(1, 0) == userTarget._position) user.AddRelationship(userTarget);
+                    if (positionUser + new Vector2(0, 1) == userTarget._position) user.AddRelationship(userTarget);
+                    if (positionUser + new Vector2(-1, 0) == userTarget._position) user.AddRelationship(userTarget);
+                    if (positionUser + new Vector2(0, -1) == userTarget._position) user.AddRelationship(userTarget);
+                }
+            }
+            return Users;
         }
 
-        private List<Move> SeekClosePossiblesDirections(int[,] mapArray, Vector2 currentPosition, Move lastPosition)
-        {
-            int X = (int)currentPosition.X / Constant.imgSizeMap;
-            int Y = (int)currentPosition.Y / Constant.imgSizeMap;
-            List<Move> possiblesDirections = new List<Move>();
-
-            if (Y + 1 < mapArray.GetLength(0) && mapArray[Y + 1, X] == (int)MapTexture.dirt && lastPosition != Move.top) possiblesDirections.Add(Move.down);
-            if (Y - 1 >= 0 && mapArray[Y - 1, X] == (int)MapTexture.dirt && lastPosition != Move.down) possiblesDirections.Add(Move.top);
-            if (X + 1 < mapArray.GetLength(1) && mapArray[Y, X + 1] == (int)MapTexture.dirt && lastPosition != Move.left) possiblesDirections.Add(Move.right);
-            if (X - 1 >= 0 && mapArray[Y, X - 1] == (int)MapTexture.dirt && lastPosition != Move.right) possiblesDirections.Add(Move.left);
-
-            return possiblesDirections;
-        }
+        #endregion
 
         #endregion
     }

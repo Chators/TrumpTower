@@ -28,24 +28,52 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
             Color color = Color.White;
             if (_ctx.ButtonHover == this) color = Color.LightSlateGray;
             if (_ctx.ButtonActivated == this) color = Color.LightSlateGray;
+            Rectangle reloadedRect = new Rectangle();
 
-            if(_name == "explosionAbility")
+            if (_name == "explosionAbility")
             {
-                Rectangle reloadedRect;
                 double _currentTimer = _ctx.Explosion.CurrentTimer;
                 // Si ce n'est pas rechargé
-                if (_currentTimer > 0)
-                {
-                    color = Color.Gray * 0.6f;
-                    reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _ctx.Ctx.ImgExplosionButton.Width, _ctx.Ctx.ImgExplosionButton.Height);
-                }
-                else reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _ctx.Ctx.ImgExplosionButton.Width, _ctx.Ctx.ImgExplosionButton.Height);
+                if (_currentTimer > 0) color = Color.Gray * 0.6f;
+                reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
                 spriteBatch.Draw(_img, reloadedRect, color);
+
                 if (_currentTimer > 0)
                 {
-                    Console.WriteLine(_ctx.CooldownSprite.Texture.Width);
                     Vector2 _positionText = new Vector2(reloadedRect.Location.X + (_img.Width / 2) - 19, reloadedRect.Location.Y + (_img.Height / 2) - 8);
                     spriteBatch.DrawString(_ctx.CooldownSprite, _ctx.Explosion.CurrentTimer / 60 + "", _positionText, Color.YellowGreen);
+                }
+            }
+
+
+            if(_name == "sniperAbility")
+            {
+                if (_ctx.Ctx.Map.Dollars < _ctx.Ctx.Map.Sniper.Cost || !_ctx.Ctx.Map.Sniper.IsReload) color = Color.Gray * 0.6f;
+                reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
+                spriteBatch.Draw(_img, reloadedRect, color);
+            }
+
+            if (_name == "stickyRiceAbility")
+            {
+                double _currentTimer = _ctx.Ctx.Map.StickyRice.CurrentTimer;
+                // Si ce n'est pas rechargé
+                if (_currentTimer > 0) color = Color.Gray * 0.6f;
+                reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
+                spriteBatch.Draw(_img, reloadedRect, color);
+
+                if (_currentTimer > 0)
+                {
+                    Vector2 _positionText = new Vector2(reloadedRect.Location.X + (_img.Width / 2) - 19, reloadedRect.Location.Y + (_img.Height / 2) - 8);
+                    spriteBatch.DrawString(_ctx.CooldownSprite, (int)_currentTimer / 60 + "", _positionText, Color.YellowGreen);
+                }
+            }
+
+            if (_ctx.Ctx.Map.Name == "MapCampagne5")
+            {
+                if (_name == "wallBossAbility")
+                {
+                    reloadedRect = new Rectangle((int)_position.X, (int)_position.Y, _img.Width, _img.Height);
+                    spriteBatch.Draw(_img, reloadedRect, color);
                 }
             }
         }

@@ -5,102 +5,143 @@ using TrumpTower.LibraryTrumpTower.Spawns;
 using Microsoft.Xna.Framework;
 using LibraryTrumpTower.SpecialAbilities;
 using LibraryTrumpTower.Constants;
+using LibraryTrumpTower.AirUnits;
+using LibraryTrumpTower;
+using System.Runtime.Serialization;
+using LibraryTrumpTower.Decors;
+using LibraryTrumpTower.Constants.BalanceGame.Bosses;
+using LibraryTrumpTower.Constants.BalanceGame.Events;
 
 namespace TrumpTower.LibraryTrumpTower
 {
+    public enum ThemeMap
+    {
+        World_Jungle,
+        World_Snow,
+        World_City
+    }
+
+    [DataContract(IsReference = true)]
     public class Map
     {
+        #region Fields
+
         public static int TimerNextWave;
-
-        public int[,] MapArray { get; private set; }
-        public List<Spawn> SpawnsEnemies { get; private set; }
-        public Wall Wall { get; private set; }
-        public double Dollars { get; set; }
-        public int WidthArrayMap { get; private set; }
-        public int HeightArrayMap { get; private set; }
-        public List<Tower> Towers { get; private set; }
-        public List<Missile> Missiles { get; set; }
-        public List<Enemy> DeadEnemies { get; set; }
-
         // WAVE
         public static int WavesCounter { get; set; }
         public static int WavesTotals { get; set; }
         public static Wave WaveIsComming { get; set; }
 
-        // SPECIAL ABILITIES
-        public Explosion Explosion { get; set; }
+        [DataMember]
+        public string Name { get; set; }
+        [DataMember]
+        public ThemeMap ThemeOfMap { get; set; }
+        [DataMember]
+        public int[][] MapArray { get; private set; }
+        [DataMember]
+        public List<Spawn> SpawnsEnemies { get; private set; }
+        [DataMember]
+        public List<Enemy> DeadEnemies { get; set; }
+        [DataMember]
+        public Wall Wall { get; private set; }
+        [DataMember]
+        public double Dollars { get; set; }
+        [DataMember]
+        public int WidthArrayMap { get; private set; }
+        [DataMember]
+        public int HeightArrayMap { get; private set; }
+        [DataMember]
+        public List<Tower> Towers { get; private set; }
+        [DataMember]
+        public List<Missile> Missiles { get; set; }
+        [DataMember]
+        public List<AirUnitsCollection> AirUnits { get; set; }
+        [DataMember]
+        public List<Vector2> DeadUnitsAir { get; set; }
+        [DataMember]
+        public List<Enemy> AnimHeal { get; set; }
+        [DataMember]
+        public List<Enemy> BossesDead { get; set; }
 
-        public Map(int[,] map)
+        [DataMember]
+        public List<Decor> Decors;
+        [DataMember]
+        public List<Tower> TowerDisabled;
+        // SPECIAL ABILITIES
+        [DataMember]
+        public Explosion Explosion { get; set; }
+        [DataMember]
+        public Sniper Sniper { get; set; }
+        [DataMember]
+        public StickyRice StickyRice { get; set; }
+        [DataMember]
+        public WallBoss WallBoss { get; set; }
+        [DataMember]
+        public bool Initialize { get; set; }
+
+        public List<Vector2> AreaExplosion { get; set; }
+        public Events Events { get; set; }
+        public static int _timesBeingRevived { get; set; }
+
+        #endregion
+
+        public Map(int[][] map)
         {
+            Name = null;
             MapArray = map;
-            WidthArrayMap = map.GetLength(1);
-            HeightArrayMap = map.GetLength(0);
+            WidthArrayMap = map[0].Length;
+            HeightArrayMap = map.Length;
             SpawnsEnemies = new List<Spawn>();
-            Wall = new Wall(this, 500000, new Vector2(0 * Constant.imgSizeMap, 10 * Constant.imgSizeMap));
+            Wall = null;
             Dollars = 200;
             Towers = new List<Tower>();
             Missiles = new List<Missile>();
             Explosion = new Explosion(this);
+            Sniper = new Sniper(this);
+            StickyRice = new StickyRice(this);
+            WallBoss = new WallBoss(this);
             DeadEnemies = new List<Enemy>();
+            AirUnits = new List<AirUnitsCollection>();
+            DeadUnitsAir = new List<Vector2>();
+            TowerDisabled = new List<Tower>();
+            AnimHeal = new List<Enemy>();
+            Decors = new List<Decor>();
+            Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
+            Initialize = false;
+            ThemeOfMap = ThemeMap.World_Jungle;
+            _timesBeingRevived = 0;
 
+            BossesDead = new List<Enemy>();
             WavesCounter = 0;
             WavesTotals = 0;
-
-            //
-            // Create Wave TESTTTTTTTTTTTTTTTTTTSSS
-            //
-            // VAGUE SUR LA PREMIERE ROUTE 
-
-            // CREATE 2 SPAWN
-            CreateSpawn(new Spawn(this, new Vector2(28 * Constant.imgSizeMap, 2 * Constant.imgSizeMap), new List<Wave>()));
-            CreateSpawn(new Spawn(this, new Vector2(28 * Constant.imgSizeMap, 6 * Constant.imgSizeMap), new List<Wave>()));
-
-            // WAVE 1 FOR TOWER GREEN
-            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 6 * 60));
-            SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-
-            // WAVE 2 FOR TOWER YELLOW
-            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 15 * 60));
-            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[1], "base", Wall, EnemyType.defaultSoldier));
-
-            // WAVE 3 FOR EXPLOSION
-            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 24 * 60));
-            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[2].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[2], "base", Wall, EnemyType.defaultSoldier));
-
-            // WAVE REAL GAME
-            // WAVE 1
-            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 40 * 60));
-            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.kamikaze));
-            for (int i = 0; i < 10; i++) SpawnsEnemies[0].Waves[3].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[3], "base", Wall, EnemyType.defaultSoldier));
-            // WAVE 2
-            SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 43 * 60));
-            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.kamikaze));
-            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-            SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.kamikaze));
-            for (int i = 0; i < 4; i++) SpawnsEnemies[1].Waves[0].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[0], "base", Wall, EnemyType.defaultSoldier));
-            // WAVE 3
-            SpawnsEnemies[0].CreateWave(new Wave(SpawnsEnemies[0], new List<Enemy>(), 50 * 60));
-            for (int i = 0; i < 30; i++) SpawnsEnemies[0].Waves[4].CreateEnemy(new Enemy(this, SpawnsEnemies[0].Waves[4], "base", Wall, EnemyType.kamikaze));
-            // WAVE 4
-            SpawnsEnemies[1].CreateWave(new Wave(SpawnsEnemies[1], new List<Enemy>(), 54 * 60));
-            for (int i = 0; i < 10; i++) SpawnsEnemies[1].Waves[1].CreateEnemy(new Enemy(this, SpawnsEnemies[1].Waves[1], "base", Wall, EnemyType.defaultSoldier));
         }
 
         public void Update()
         {
+            if (!Initialize)
+            {
+                Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
+                Map._timesBeingRevived = 0;
+                AreaExplosion = new List<Vector2>();
+                Initialize = true;
+            }
+
+
+
+            foreach (Enemy enemy in GetAllEnemies2())
+            {
+                if (enemy._type == EnemyType.boss3)
+                {
+                    if (enemy.CurrentChain != null)
+                    {
+                        enemy.CurrentChain.Update();
+                        break;
+                    }
+                }
+            }
+
+
+
             List<Wave> _waves = new List<Wave>();
             foreach (Spawn spawn in SpawnsEnemies)
             {
@@ -117,6 +158,8 @@ namespace TrumpTower.LibraryTrumpTower
 
             foreach (Tower tower in Towers) tower.Update(GetAllEnemies());
 
+            foreach (AirUnitsCollection unitsCollection in AirUnits) unitsCollection.Update();
+
             for (int i = 0; i < Missiles.Count; i++)
             {
                 Missile myMissile = Missiles[i];
@@ -124,12 +167,14 @@ namespace TrumpTower.LibraryTrumpTower
             }
 
             Explosion.Update();
-
+            Sniper.Update();
+            StickyRice.Update();
+            Events.Update();
         }
 
         public int GetTypeArray(int x, int y)
         {
-            return MapArray[y, x];
+            return MapArray[y][x];
         }
 
         public List<Enemy> GetAllEnemies()
@@ -145,6 +190,44 @@ namespace TrumpTower.LibraryTrumpTower
             return allEnemies;
         }
 
+        public List<Enemy> GetAllEnemies2()
+        {
+            List<Enemy> allEnemies2 = new List<Enemy>();
+            foreach (Spawn spawn in SpawnsEnemies)
+            {
+                foreach (Wave wave in spawn.Waves)
+                {
+                    allEnemies2.InsertRange(allEnemies2.Count, wave.Enemies);
+                }
+            }
+            return allEnemies2;
+        }
+
+        public List<AirUnit> GetAllAirEnemies()
+        {
+            List<AirUnit> allAirUnits = new List<AirUnit>();
+            foreach (AirUnitsCollection airUnitsCollection in AirUnits)
+            {
+                foreach (AirUnit unit in airUnitsCollection.Array)
+                {
+                    if (unit.IsStarting) allAirUnits.Add(unit);
+                }
+            }
+            return allAirUnits;
+        }
+        public List<AirUnit> GetAllAirEnemies2()
+        {
+            List<AirUnit> allAirUnits2 = new List<AirUnit>();
+            foreach (AirUnitsCollection airUnitsCollection in AirUnits)
+            {
+                foreach (AirUnit unit in airUnitsCollection.Array)
+                {
+                    allAirUnits2.Add(unit);
+                }
+            }
+            return allAirUnits2;
+        }
+
         public List<Vector2> SearchPositionTextureInArray(MapTexture nameTexture)
         {
             List<Vector2> arrayEmptyTower = new List<Vector2>();
@@ -152,7 +235,7 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 for (int x = 0; x < WidthArrayMap; x++)
                 {
-                    if (MapArray[y, x] == (int)nameTexture) arrayEmptyTower.Add(new Vector2(x, y));
+                    if (MapArray[y][x] == (int)nameTexture) arrayEmptyTower.Add(new Vector2(x, y));
                 }
             }
             return arrayEmptyTower;
@@ -164,15 +247,47 @@ namespace TrumpTower.LibraryTrumpTower
         /// <param name="x">position x</param>
         /// <param name="y">position y</param>
         /// <param name="number">number of texture (example dirt = 0)</param>
-        public void ChangeLocation(int x, int y, int number) => MapArray[y, x] = number;
+        public void ChangeLocation(int x, int y, int number) => MapArray[y][x] = number;
 
-        private void CreateSpawn(Spawn spawn)
+        public Vector2 SearchCase (int mouseX, int mouseY, int SizePixelMap)
+        {
+            for (int y = 0; y < WidthArrayMap; y++)
+            {
+                for (int x = 0; x < WidthArrayMap; x++)
+                {
+                    // Si on a la souris qui pointe sur un élèment
+                    if (mouseX > x * Constant.imgSizeMap && mouseX < x * Constant.imgSizeMap + Constant.imgSizeMap &&
+                        mouseY > y * Constant.imgSizeMap && mouseY < y * Constant.imgSizeMap + Constant.imgSizeMap)
+                    {
+                        return new Vector2(x, y);
+                    }
+                }
+            }
+            return Vector2.Zero;
+        }
+
+        public void CreateBase(Wall wall)
+        {
+            Wall = wall;
+        }
+
+        public void CreateSpawn(Spawn spawn)
         {
             foreach (Spawn _spawn in SpawnsEnemies)
             {
                 if (spawn.Position == _spawn.Position) throw new ArgumentException("Spawn already existing");
             }
             SpawnsEnemies.Add(spawn);
+        }
+
+        public void DeleteSpawn(Spawn spawn)
+        {
+            SpawnsEnemies.Remove(spawn);
+        }
+
+        public void DeleteAirWave(AirUnitsCollection unitsCollection)
+        {
+            AirUnits.Remove(unitsCollection);
         }
 
         public Tower CreateTower(Tower tower)
@@ -190,6 +305,27 @@ namespace TrumpTower.LibraryTrumpTower
         public void UseExplosionAbility(Vector2 position)
         {
             Explosion.AttackOn(position);
+        }
+
+        public void UseSniperAbility(Vector2 position)
+        {
+            Sniper.AttackOn(position);
+        }
+
+        public void UseStickyRiceAbility(Vector2 position)
+        {
+            StickyRice.On(position);
+        }
+
+        public void UseWallBossAbility(Vector2 position)
+        {
+            WallBoss.PutWallBoss(position);
+        }
+
+        public void SettingTheMap (string name, int dollars)
+        {
+            Name = name;
+            Dollars = dollars;
         }
     }
 }

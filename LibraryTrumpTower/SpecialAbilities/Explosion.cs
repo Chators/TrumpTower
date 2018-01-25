@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LibraryTrumpTower.Constants.BalanceGame;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TrumpTower.LibraryTrumpTower;
@@ -9,22 +11,38 @@ using TrumpTower.LibraryTrumpTower.Constants;
 
 namespace LibraryTrumpTower.SpecialAbilities
 {
+    [DataContract(IsReference = true)]
     public class Explosion
     {
+        #region Fields
+        [DataMember]
         Map _ctx;
-        public int Cooldown { get; private set; }
+        [DataMember]
         public int CurrentTimer { get; private set; }
-        public double Radius { get; private set; }
-        public double Damage { get; private set; }
+        [DataMember]
         private Vector2 Position { get; set; }
+        public double Damage
+        {
+            get { return BalanceExplosion.EXPLOSION_DAMAGE; }
+            private set { BalanceExplosion.EXPLOSION_DAMAGE = (int)value; }
+        }
+        public double Radius
+        {
+            get { return BalanceExplosion.EXPLOSION_RADIUS; }
+            private set { BalanceExplosion.EXPLOSION_RADIUS = (int)value; }
+        }
+        public int Cooldown
+        {
+            get { return BalanceExplosion.EXPLOSION_COOLDOWN; }
+            private set { BalanceExplosion.EXPLOSION_COOLDOWN = value; }
+        }
+
+        #endregion
 
         public Explosion (Map ctx)
         {
             _ctx = ctx;
-            Cooldown = 15 * 60;
             CurrentTimer = 0;
-            Radius = 800;
-            Damage = 30;
             Position = new Vector2(-1000, -1000);
         }
 

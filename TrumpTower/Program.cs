@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace TrumpTower
 {
@@ -14,8 +15,11 @@ namespace TrumpTower
         [STAThread]
         static void Main()
         {
+            Debugger.Launch();
             using (var game = new Game1())
                 game.Run();
+
+            Process.Start("Menu");
         }
     }
 #endif

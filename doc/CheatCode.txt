@@ -1,0 +1,9 @@
+---------------------------------------------------------------------- Menu Principal -------------------------------------------------------------------------
+Peut servir à accèder à changer le level access du joueur pour essayer de jouer à un niveau superieure
+ATTENTION si par exemple on a cliqué sur World 2 et qu'on diminue le level access il y aura un bug DONC dans ce cas il faut sortir du monde 2 et là la touche marche correctement !
+W : Augmente de 1 le Level Access du joueur
+X : Diminue de 1 le LeveL Access du joueur
+---------------------------------------------------------------------- In Game --------------------------------------------------------------------------------
+B : Réduit les points de vie de la maison blanche à (-25% - 5)
+N : Inflige 10 points de dégats à toutes les unités visible
+V : Réduit le temps de recharge pour un évènement spécial à 0
