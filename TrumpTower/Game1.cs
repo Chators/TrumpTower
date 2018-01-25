@@ -1116,7 +1116,8 @@ namespace TrumpTower
                 for (int i = 0; i < _map.TowerDisabled.Count; i++)
                 {
                     Tower tower = _map.TowerDisabled[i];
-                    AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, (int)BalanceEnemySaboteur.ENEMY_SABOTEUR_RELOADING));
+                    
+                     AnimSprites[3].AnimatedSprite.Add(new SimpleAnimationSprite(AnimSprites[3], (int)tower.Position.X - 148, (int)tower.Position.Y - 30, ((int)BalanceEnemySaboteur.ENEMY_SABOTEUR_RELOADING / 60)));                   
                     _map.TowerDisabled.Remove(tower);
                 }
                 #endregion
