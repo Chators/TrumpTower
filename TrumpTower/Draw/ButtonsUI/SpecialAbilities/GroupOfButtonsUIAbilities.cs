@@ -84,7 +84,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                     }
                     ButtonHover = button;
                 }
-                if (Ctx.Map.Name == "mapCampagne5")
+                if (Ctx.Map.Name == "MapCampagne5")
                 {
                     button = ButtonsUIArray["wallBossAbility"];
                     if (Ctx.Map.WallBoss._isUsed == false)

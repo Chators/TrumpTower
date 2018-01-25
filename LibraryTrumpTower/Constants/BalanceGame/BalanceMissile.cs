@@ -8,6 +8,6 @@ namespace LibraryTrumpTower.Constants.BalanceGame
 {
     public static class BalanceMissile
     {
-        public static double MISSILE_SPEED = 10;
+        public static double MISSILE_SPEED = 14;
     }
 }

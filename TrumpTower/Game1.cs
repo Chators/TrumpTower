@@ -160,6 +160,8 @@ namespace TrumpTower
         #region Wall
 
         Texture2D _imgWall;
+        Texture2D _imgWall2;
+        Texture2D _imgBrokenWall;
 
         #endregion
 
@@ -335,7 +337,7 @@ namespace TrumpTower
 
             //BOSS1
             //Map.SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss1, 1);
-            
+
             #endregion
 
             #region Graphics Device 
@@ -552,6 +554,8 @@ namespace TrumpTower
             #region Wall
 
             _imgWall = Content.Load<Texture2D>("wall");
+            _imgWall2 = Content.Load<Texture2D>("wall2");
+            _imgBrokenWall = Content.Load<Texture2D>("brokenWall");
 
             #endregion
 
@@ -1852,13 +1856,7 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgTower4_1, _towerSelector, null, Color.White * 0.5f);
             }
 
-            
-                
-            
-            
-            
-            
-
+       
             if (_towerSelectorUpgrade != new Vector2(-1000, -1000))
             {
                 spriteBatch.Draw(_imgSelector, _towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 5)), null, Color.White);
@@ -1870,7 +1868,7 @@ namespace TrumpTower
                 if (_myTow.Type == TowerType.slow) priceTower = BalanceTowerSlow.TOWER_SLOW_BASE_PRICE;
                 if (_myTow.Type == TowerType.area) priceTower = BalanceTowerArea.TOWER_AREA_BASE_PRICE;
                 if (_myTow.Type == TowerType.bank) priceTower = BalanceTowerBank.TOWER_BANK_BASE_PRICE;
-                spriteBatch.DrawString(_upgradeFont, priceTower*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.White);
+                spriteBatch.DrawString(_upgradeFont, priceTower*1.5 +"$" ,_towerSelectorUpgrade + new Vector2(0, -(Constant.imgSizeMap + 30)), Color.Blue);
 
                 if(_map.Dollars < priceTower * 1.5)
                 {
@@ -1888,7 +1886,15 @@ namespace TrumpTower
             #endregion
 
             #region WallBoss
-            spriteBatch.Draw(_imgWall, _map.WallBoss.Position, Color.White);
+            if (_map.WallBoss._isBreached == false)
+            {
+                spriteBatch.Draw(_imgWall2, _map.WallBoss.Position, Color.White);
+            }
+            else if (_map.WallBoss._isBreached == true)
+            {
+                spriteBatch.Draw(_imgBrokenWall, _map.WallBoss.Position, Color.White);
+               
+            }
             #endregion
 
             #region Missiles
@@ -1972,7 +1978,7 @@ namespace TrumpTower
 
             #region StickRice
             if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
-                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.White * 0.3f);
+                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.Blue * 0.3f);
             if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
             {
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlaneTurbo.Width, _imgPlaneTurbo.Height);
@@ -2116,18 +2122,18 @@ namespace TrumpTower
             if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "explosionAbility")
             {
                 spriteBatch.Draw(_imgCursorBomb, new Vector2(newStateMouse.X, newStateMouse.Y), Color.White);
-                spriteBatch.Draw(_circleExplosion, new Vector2(newStateMouse.X - (_circleExplosion.Width / 2), newStateMouse.Y - (_circleExplosion.Height / 2)), Color.White * 0.1f);
+                spriteBatch.Draw(_circleExplosion, new Vector2(newStateMouse.X - (_circleExplosion.Width / 2), newStateMouse.Y - (_circleExplosion.Height / 2)), Color.Blue * 0.1f);
             }
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "sniperAbility")
                 spriteBatch.Draw(_cursorTarget, new Vector2(newStateMouse.X - _cursorTarget.Width / 2, newStateMouse.Y - _cursorTarget.Height / 2), Color.White);
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "stickyRiceAbility")
             {
                 spriteBatch.Draw(_imgCursorDeliveryRice, new Vector2(newStateMouse.X - _imgCursorDeliveryRice.Width / 2, newStateMouse.Y - _imgCursorDeliveryRice.Height / 2), Color.White);
-                spriteBatch.Draw(_circleStickyRice, new Vector2(newStateMouse.X - (_circleStickyRice.Width / 2), newStateMouse.Y - (_circleStickyRice.Height / 2)), Color.White * 0.1f);
+                spriteBatch.Draw(_circleStickyRice, new Vector2(newStateMouse.X - (_circleStickyRice.Width / 2), newStateMouse.Y - (_circleStickyRice.Height / 2)), Color.Blue * 0.1f);
             }
             else if (_groupOfButtonsUIAbilities.ButtonActivated != null && _groupOfButtonsUIAbilities.ButtonActivated.Name == "wallBossAbility")
             {
-                spriteBatch.Draw(_imgBoss1Wall, new Vector2(newStateMouse.X - _imgBoss1Wall.Width / 2, newStateMouse.Y - _imgBoss1Wall.Height / 2), Color.White * 0.6f);
+                spriteBatch.Draw(_imgWall2, new Vector2(newStateMouse.X - _imgBoss1Wall.Width / 2, newStateMouse.Y - _imgBoss1Wall.Height / 2), Color.White * 0.6f);
                 spriteBatch.Draw(_imgCursorTrowel, new Vector2(newStateMouse.X - _imgCursorTrowel.Width / 2, newStateMouse.Y - _imgCursorTrowel.Height / 2), Color.White);
             }
             else

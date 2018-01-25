@@ -426,17 +426,17 @@ namespace TrumpTower.LibraryTrumpTower
             //Then _isCharging goes false.
             // Boss resumes normal speed and dmg after a few seconds of stun where he takes double dmg.
             // Keeps _hasCharged = true so he doesnt resume charging 
-            if (_isVulnerable == false && _WallBoss._isBreached == false)
+            if (_isCharging == true && _WallBoss._isBreached == false)
             {
                 if (WithinReach(Position, _WallBoss.Position, _WallBoss.Radius))
                 {
-                    if (_isCharging == true)
-                    {
+                    
                         Speed = Speed / 5;
                         BalanceBoss1.BOSS1_DAMAGE /= 2;
-                    }
+                    
                     _isCharging = false;
                     _WallBoss._isBreached = true;
+                    ManagerSound.PlayWallBreak();
                     _isVulnerable = true;
                     _hasCharged = true;
                 }

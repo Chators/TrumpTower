@@ -88,9 +88,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitLowLife;
         private static SoundEffectInstance LowLife;
 
+        private static SoundEffect InitWallBreak;
+        private static SoundEffectInstance WallBreak;
+
         static public void LoadContent(ContentManager Content)
         {
             InitRiceSplash = Content.Load<SoundEffect>("Sound/riceSplash");
+            InitWallBreak = Content.Load<SoundEffect>("Sound/wallBreak");
             InitRice = Content.Load<SoundEffect>("Sound/rice");
             InitPlaneTurbo = Content.Load<SoundEffect>("Sound/soundPlaneTurbo");
             InitManDie = Content.Load<SoundEffect>("Sound/songManDie");
@@ -211,6 +215,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             PauseOut = InitPauseOut.CreateInstance();
             PauseOut.Volume = 0.3f;
             PauseOut.Play();
+        }
+
+        public static void PlayWallBreak()
+        {
+            WallBreak = InitWallBreak.CreateInstance();
+            WallBreak.Volume = 0.3f;
+            WallBreak.Play();
         }
 
         public static void PlayTowerShoot()

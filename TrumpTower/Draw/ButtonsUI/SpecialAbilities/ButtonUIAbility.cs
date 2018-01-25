@@ -68,7 +68,7 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 }
             }
 
-            if (_ctx.Ctx.Map.Name == "mapCampagne5")
+            if (_ctx.Ctx.Map.Name == "MapCampagne5")
             {
                 if (_name == "wallBossAbility")
                 {
