@@ -15,7 +15,7 @@ namespace TrumpTower
         [STAThread]
         static void Main()
         {
-            Debugger.Launch();
+            //Debugger.Launch();
             using (var game = new Game1())
                 game.Run();
 
