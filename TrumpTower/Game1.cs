@@ -149,6 +149,7 @@ namespace TrumpTower
         Texture2D _imgDoctor;
         Texture2D _imgSaboteur;
         Texture2D _imgSaboteur1;
+        Texture2D _imgKimJungUn;
         
 
         #region Air Units
@@ -585,7 +586,7 @@ namespace TrumpTower
             _imgSaboteur1 = Content.Load<Texture2D>("Enemies/saboteur1");
             _imgChe = Content.Load<Texture2D>("Enemies/Che");
             _imgCheStunt = Content.Load<Texture2D>("Enemies/CheStunt");
-
+            _imgKimJungUn = Content.Load<Texture2D>("Enemies/kimJung");
 
             #region Air Enemies
             _imgPlane1 = Content.Load<Texture2D>("Enemies/Air/plane1");
@@ -1717,8 +1718,8 @@ namespace TrumpTower
                 else if (enemy._type == EnemyType.boss3)
                 {
                     boss3 = enemy;
-                    _imgEnemy = _imgEnemy1;
-                    _imgBoss3 = _imgEnemy;
+                    _imgEnemy = _imgKimJungUn;
+                    _imgBoss3 = _imgKimJungUn;
                 }
                 else if (enemy._type == EnemyType.kamikaze) _imgEnemy = _imgKamikaze;
                 else if (enemy._type == EnemyType.doctor) _imgEnemy = _imgDoctor;
