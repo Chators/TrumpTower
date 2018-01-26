@@ -1026,3 +1026,9 @@
 /processorParam:TextureFormat=Color
 /build:che.png
 
+#begin Sound/AnnouncementKim.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/AnnouncementKim.wav
+

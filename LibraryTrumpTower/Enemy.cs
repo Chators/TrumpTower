@@ -307,16 +307,22 @@ namespace TrumpTower.LibraryTrumpTower
                     _rangeBoss = 200;
                     TargetTower = null;
                     CurrentChain = null;
+                    ManagerSound.PlayAnnouncementKim();
                 }
 
                 Initiliaze = true;
             }
 
-            if (!IsStarting) TimerBeforeStarting--;
+            if (!IsStarting)
+            {
+                TimerBeforeStarting--;
+                /*if (_type == EnemyType.boss3 && TimerBeforeStarting <= 0)
+                    ManagerSound.PlayAnnouncementKim();*/
+            }
             else if (_type != EnemyType.boss1 && _type != EnemyType.boss2 && _type != EnemyType.boss3 && _type != EnemyType.boss2_1)
             {
-                 UpdateAttackWall();
-                 UpdateSaboteur(GetTowers(_position, ActionRadius));
+                UpdateAttackWall();
+                UpdateSaboteur(GetTowers(_position, ActionRadius));
 
                 if (_isCasting == true)
                     StartCasting(_towerBeingCast);
@@ -329,11 +335,13 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && _isCastingBoss1 == false && _isVulnerable == false) UpdateMove();
                 UpdateBoss1();
-            } else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1)
+            }
+            else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1)
             {
-                if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead== false) UpdateMove();
+                if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead == false) UpdateMove();
                 UpdateBossTwins();
-            } else if (_type == EnemyType.boss3)
+            }
+            else if (_type == EnemyType.boss3)
             {
                 if (!WithinReach(Position, _map.Wall.Position, _rangeBoss) && IsDead == false && StateBoss3 == Boss3State.WALK) UpdateMove();
                 UpdateBoss3();

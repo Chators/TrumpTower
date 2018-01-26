@@ -1808,3 +1808,9 @@
 /processorParam:TextureFormat=Color
 /build:Enemies/kimJung.png
 
+#begin Sound/AnnouncementKim.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/AnnouncementKim.wav
+
