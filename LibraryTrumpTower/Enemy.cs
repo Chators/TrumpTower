@@ -316,8 +316,6 @@ namespace TrumpTower.LibraryTrumpTower
             if (!IsStarting)
             {
                 TimerBeforeStarting--;
-                /*if (_type == EnemyType.boss3 && TimerBeforeStarting <= 0)
-                    ManagerSound.PlayAnnouncementKim();*/
             }
             else if (_type != EnemyType.boss1 && _type != EnemyType.boss2 && _type != EnemyType.boss3 && _type != EnemyType.boss2_1)
             {
