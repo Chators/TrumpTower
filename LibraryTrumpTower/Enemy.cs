@@ -84,8 +84,17 @@ namespace TrumpTower.LibraryTrumpTower
             get
             {
                 if (BalanceEvent3.EVENT3_IS_BONUS)
-                    return speed - (BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT * speed / 100);
-                return speed + (BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT * speed / 100);
+                {
+                    if (_type != EnemyType.boss1 && _type != EnemyType.boss2 && _type != EnemyType.boss2_1 && _type != EnemyType.boss3)
+                        return speed - (BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT * speed / 100);
+                    else
+                        return speed;
+                }
+
+                if (_type != EnemyType.boss1 && _type != EnemyType.boss2 && _type != EnemyType.boss2_1 && _type != EnemyType.boss3)
+                    return speed + (BalanceEvent3.EVENT3_CURRENT_SPEED_IN_PERCENT * speed / 100);
+                else
+                    return speed;
             }
             set { speed = value; }
         }
