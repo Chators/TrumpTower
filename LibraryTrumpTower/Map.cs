@@ -122,8 +122,27 @@ namespace TrumpTower.LibraryTrumpTower
             {
                 Events = new Events(this, BalanceEvents.EVENTS_PERCENT_CHANCE_OF_APPEARING, BalanceEvents.EVENTS_TIME_TO_RELOAD);
                 Map._timesBeingRevived = 0;
+                //BOSS2
+                if (Name == "MapCampagne10")
+                {
+                    SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss2, 1);
+                    SpawnsEnemies[1].Waves[0].CreateEnemies(EnemyType.boss2_1, 1);
+                }
+
+                //BOSS1
+                if (Name == "MapCampagne5")
+                {
+                    SpawnsEnemies[0].Waves[3].CreateEnemies(EnemyType.boss1, 1);
+                }
+
+                //BOSS3
+                if (Name == "MapCampagne15")
+                {
+                    SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss3, 1);
+                }
                 AreaExplosion = new List<Vector2>();
                 Initialize = true;
+
             }
 
 
