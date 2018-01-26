@@ -318,6 +318,10 @@ namespace TrumpTower.LibraryTrumpTower
                     CurrentChain = null;
                     ManagerSound.PlayAnnouncementKim();
                 }
+                else if (_type == EnemyType.boss1)
+                {
+                    ManagerSound.PlayChe();
+                }
 
                 Initiliaze = true;
             }
