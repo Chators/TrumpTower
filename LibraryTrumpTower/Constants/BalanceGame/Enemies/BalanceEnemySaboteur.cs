@@ -13,7 +13,7 @@ namespace LibraryTrumpTower.Constants.BalanceGame.Enemies
         public static double ENEMY_SABOTEUR_DAMAGE = 150;
         public static double ENEMY_SABOTEUR_DEFAULT_SPEED = 4;
         public static int ENEMY_SABOTEUR_BOUNTY = 80;
-        public static double ENEMY_SABOTEUR_ACTION_RADIUS = 500;
+        public static double ENEMY_SABOTEUR_ACTION_RADIUS = 650;
 
         public static double ENEMY_SABOTEUR_RELOADING = 4 * 60; // init
     }
