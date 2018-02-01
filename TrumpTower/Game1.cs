@@ -1908,8 +1908,6 @@ namespace TrumpTower
 
             #endregion
 
-            
-
             if (boss3 != null)
             {
                 if (boss3.CurrentChain != null)
@@ -1972,22 +1970,6 @@ namespace TrumpTower
                 }
             }
 
-            #region Air Enemies
-            List<AirUnit> _airUnits = _map.GetAllAirEnemies();
-
-            foreach (AirUnit unit in _airUnits)
-            {
-                if (unit.IsStarting)
-                {
-                    Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
-                    Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
-                    spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
-                    HealthBar enemyHealthBar = new HealthBar(unit.CurrentHp, unit.MaxHp, 1f, 1f);
-                    enemyHealthBar.Draw(spriteBatch, unit.Position, _imgPlane1);
-                }
-            }
-            #endregion
-
             #region WallBoss
             if (_map.WallBoss._isBreached == false)
             {
@@ -2015,6 +1997,22 @@ namespace TrumpTower
                 spriteBatch.Draw(_imgMissileD, new Vector2(missile.Position.X + (_imgMissileD.Width / 2), missile.Position.Y + (_imgMissileD.Height / 2)), null, Color.White, missile.Angle, origin, 1.0f, SpriteEffects.None, 1);
             }
 
+            #endregion
+
+            #region Air Enemies
+            List<AirUnit> _airUnits = _map.GetAllAirEnemies();
+
+            foreach (AirUnit unit in _airUnits)
+            {
+                if (unit.IsStarting)
+                {
+                    Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
+                    Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
+                    spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
+                    HealthBar enemyHealthBar = new HealthBar(unit.CurrentHp, unit.MaxHp, 1f, 1f);
+                    enemyHealthBar.Draw(spriteBatch, unit.Position, _imgPlane1);
+                }
+            }
             #endregion
 
             #region Dollars
