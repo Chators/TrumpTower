@@ -2082,7 +2082,7 @@ namespace TrumpTower
                 _shadowRaidAirClose += _shadowVar;
                 Vector2 positionWarning = new Vector2((VirtualWidth / 2) - (_imgWarning.Width/2), (VirtualHeight / 2) - (_imgWarning.Height / 2));
                 spriteBatch.Draw(_imgWarning, positionWarning, Color.White*_shadowRaidAirClose);
-                spriteBatch.DrawString(_raidAirIsComming, "IMINENT AIR RAID !", new Vector2(positionWarning.X-110, positionWarning.Y+_imgWarning.Height), Color.Red * _shadowRaidAirClose);
+                spriteBatch.DrawString(_raidAirIsComming, "IMINENT AIR RAID !", new Vector2(positionWarning.X-78, positionWarning.Y+_imgWarning.Height+10), Color.Red * _shadowRaidAirClose);
                 if (_shadowRaidAirClose >= 0.6) _shadowVar = -0.005f;
                 else if (_shadowRaidAirClose <= 0.3) _shadowVar = 0.005f;
                 _timerRaidAirClose--;
