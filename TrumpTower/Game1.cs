@@ -769,16 +769,16 @@ namespace TrumpTower
             #region SCENE
             if (_map.Name == "MapCampagne1")
             {
-                _text1 = Content.Load<Texture2D>("text/text1");
+                //_text1 = Content.Load<Texture2D>("text/text1");
                 
-                _kim = Content.Load<Texture2D>("text/kim");
-                _mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump, _kim);
-                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
-                _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
-                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
-                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
-                _mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
-                _mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                //_kim = Content.Load<Texture2D>("text/kim");
+                //_mainDialogue = new MainScene(this, VirtualHeight, VirtualWidth, _trump, _kim);
+                //_mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                //_mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+                //_mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                //_mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
+                //_mainDialogue.AddTalk(new Talk(_mainDialogue, _kim, _text1));
+                //_mainDialogue.AddTalk(new Talk(_mainDialogue, _trump, _text1));
             }
             else if (_map.Name == "MapCampagne2")
             {
