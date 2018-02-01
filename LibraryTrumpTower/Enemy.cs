@@ -289,6 +289,7 @@ namespace TrumpTower.LibraryTrumpTower
                 }
                 else if (_type == EnemyType.boss2 || _type == EnemyType.boss2_1)
                 {
+                    ManagerSound.PlayUrssRock();
                     _reload = BalanceBoss2.BOSS2_DEFAULT_RELOAD;
                     _defaultReload = BalanceBoss2.BOSS2_DEFAULT_RELOAD;
                     _rangeBoss = BalanceBoss2.BOSS2_RANGE;
