@@ -506,7 +506,7 @@ namespace TrumpTower.LibraryTrumpTower
 
             // BalanceBoss2.BOSS2_TIMES_BEING_REVIVED++;
             Map._timesBeingRevived++;
-            //QWERTY
+            ManagerSound.PlayUrssRock();
             _map.SpawnsEnemies[0].Waves[4].CreateEnemies(EnemyType.boss2, 1);
             _map.SpawnsEnemies[1].Waves[4].CreateEnemies(EnemyType.boss2_1, 1);
         }

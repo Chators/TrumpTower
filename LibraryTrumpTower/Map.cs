@@ -125,7 +125,7 @@ namespace TrumpTower.LibraryTrumpTower
                 //BOSS2
                 if (Name == "MapCampagne10")
                 {
-                    //QWERTY
+                    ManagerSound.PlayUrssRock();
                     SpawnsEnemies[0].Waves[4].CreateEnemies(EnemyType.boss2, 1);
                     SpawnsEnemies[1].Waves[4].CreateEnemies(EnemyType.boss2_1, 1);
                 }

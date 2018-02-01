@@ -1032,3 +1032,9 @@
 /processorParam:Quality=Best
 /build:Sound/AnnouncementKim.wav
 
+#begin Sound/urssRock.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/urssRock.wav
+

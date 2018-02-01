@@ -1826,3 +1826,9 @@
 /processorParam:TextureFormat=Color
 /build:Enemies/boss2.png
 
+#begin Sound/urssRock.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/urssRock.wav
+

@@ -115,8 +115,12 @@ namespace TrumpTower.LibraryTrumpTower.Constants
         private static SoundEffect InitAnnouncementKim;
         private static SoundEffectInstance AnnouncementKim;
 
+        private static SoundEffect InitUrssRock;
+        private static SoundEffectInstance UrssRock;
+
         static public void LoadContent(ContentManager Content)
         {
+            InitUrssRock = Content.Load<SoundEffect>("Sound/urssRock");
             InitAnnouncementKim = Content.Load<SoundEffect>("Sound/AnnouncementKim");
             InitPunch = Content.Load<SoundEffect>("Sound/punch");
             InitChe = Content.Load<SoundEffect>("Sound/cheCharging");
@@ -151,6 +155,13 @@ namespace TrumpTower.LibraryTrumpTower.Constants
             InitPayAtCheckout = Content.Load<SoundEffect>("Sound/PayAtCheckout");
             InitYouWin = Content.Load<SoundEffect>("Sound/you_win");
             InitLowLife = Content.Load<SoundEffect>("Sound/low_life_sound");
+        }
+
+        public static void PlayUrssRock()
+        {
+            UrssRock = InitUrssRock.CreateInstance();
+            UrssRock.Volume = 1f;
+            UrssRock.Play();
         }
 
         public static void PlayAnnouncementKim()
