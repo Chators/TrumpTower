@@ -138,7 +138,7 @@ namespace TrumpTower.LibraryTrumpTower
                 //BOSS3
                 if (Name == "MapCampagne15")
                 {
-                    SpawnsEnemies[0].Waves[0].CreateEnemies(EnemyType.boss3, 1);
+                    SpawnsEnemies[0].Waves[3].CreateEnemies(EnemyType.boss3, 1);
                 }
                 AreaExplosion = new List<Vector2>();
                 Initialize = true;
