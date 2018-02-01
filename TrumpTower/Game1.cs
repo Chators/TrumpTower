@@ -1602,6 +1602,7 @@ namespace TrumpTower
 
                 #region CHEATCODE
                 // inflige 10 hp
+                /*
                 if (newStateKeyboard.IsKeyDown(Keys.N) && lastStateKeyboard.IsKeyUp(Keys.N))
                 {
                     List<Enemy> enemies = _map.GetAllEnemies();
@@ -1620,6 +1621,7 @@ namespace TrumpTower
                     _map.Wall.ChangeHp((int)_map.Wall.MaxHp);
                     _map.Wall.TakeHp(_map.Wall.MaxHp - _map.Wall.MaxHp / 4 + 5);
                 }
+                */
                 #endregion
             }
         }
