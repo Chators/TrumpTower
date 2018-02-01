@@ -1683,6 +1683,11 @@ namespace TrumpTower
             }
             #endregion
 
+            #region StickyRice Circle
+            if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
+                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.Blue * 0.3f);
+            #endregion
+
             #region Wall
 
             Wall _wall = _map.Wall;
@@ -2077,9 +2082,7 @@ namespace TrumpTower
             }
             #endregion
 
-            #region StickRice
-            if (_map.StickyRice.IsActivate && _map.StickyRice.PlaneIsClose)
-                spriteBatch.Draw(_circleStickyRice, new Vector2(_map.StickyRice.Position.X - (_circleStickyRice.Width / 2), _map.StickyRice.Position.Y - (_circleStickyRice.Height / 2)), Color.Blue * 0.3f);
+            #region StickRice Plane
             if (_map.StickyRice.PositionPlaneOfRice != new Vector2(-1000, -1000))
             {
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlaneTurbo.Width, _imgPlaneTurbo.Height);
