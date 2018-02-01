@@ -2044,7 +2044,6 @@ namespace TrumpTower
 
             #region Abilities Buttons
             _groupOfButtonsUIAbilities.Draw(spriteBatch);
-            
             #endregion
 
             #endregion

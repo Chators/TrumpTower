@@ -40,9 +40,9 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
             {
                 ButtonUIAbility button = null;
                 button = ButtonsUIArray["explosionAbility"];
-                if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                if ((newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                     newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
-                    newStateKeyboard.IsKeyDown(Keys.A) &&
+                    newStateKeyboard.IsKeyDown(Keys.A)) &&
                     Ctx.Map.Explosion.IsReloaded)
                 {
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
@@ -55,9 +55,9 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 }
 
                 button = ButtonsUIArray["sniperAbility"];
-                if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                if ((newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                     newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
-                    newStateKeyboard.IsKeyDown(Keys.Z) &&
+                    newStateKeyboard.IsKeyDown(Keys.Z)) &&
                     Ctx.Map.Dollars >= Ctx.Map.Sniper.Cost &&
                     Ctx.Map.Sniper.IsReload)
                 {
@@ -71,9 +71,9 @@ namespace TrumpTower.Draw.ButtonsUI.SpecialAbilities
                 }
 
                 button = ButtonsUIArray["stickyRiceAbility"];
-                if (newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
+                if ((newStateMouse.X > button.Position.X && newStateMouse.X < button.Position.X + button.Texture.Width &&
                     newStateMouse.Y > button.Position.Y && newStateMouse.Y < button.Position.Y + button.Texture.Height ||
-                    newStateKeyboard.IsKeyDown(Keys.E) &&
+                    newStateKeyboard.IsKeyDown(Keys.E)) &&
                     Ctx.Map.StickyRice.IsReloaded)
                 {
                     if (newStateMouse.LeftButton == ButtonState.Pressed && lastStateMouse.LeftButton == ButtonState.Released ||
