@@ -1734,7 +1734,10 @@ namespace TrumpTower
                 else if (enemy._type == EnemyType.saboteur && enemy._hasCast) _imgEnemy = _imgSaboteur; // When the saboteur used his charge.
                 Rectangle sourceRectangle = new Rectangle(0, 0, _imgEnemy.Width, _imgEnemy.Height);
                 Vector2 origin = new Vector2(_imgEnemy.Width / 2, _imgEnemy.Height / 2);
-                spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
+                if (enemy._type == EnemyType.boss1 || enemy._type == EnemyType.boss2 || enemy._type == EnemyType.boss2_1 || enemy._type == EnemyType.boss3)
+                    spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.6f, SpriteEffects.None, 1);
+                else
+                    spriteBatch.Draw(_imgEnemy, new Vector2(enemy.Position.X + (_imgEnemy.Width / 2), enemy.Position.Y + (_imgEnemy.Height / 2)), null, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
                 HealthBar enemyHealthBar = new HealthBar(enemy.CurrentHp, enemy.MaxHp, 1f, 1f);
                 enemyHealthBar.Draw(spriteBatch, enemy.Position, _imgEnemy);
             }
@@ -2013,7 +2016,7 @@ namespace TrumpTower
                 {
                     Rectangle sourceRectangle = new Rectangle(0, 0, _imgPlane1.Width, _imgPlane1.Height);
                     Vector2 origin = new Vector2(_imgPlane1.Width / 2, _imgPlane1.Height / 2);
-                    spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.0f, SpriteEffects.None, 1);
+                    spriteBatch.Draw(_imgPlane1, new Vector2(unit.Position.X + (_imgPlane1.Width / 2), unit.Position.Y + (_imgPlane1.Height / 2)), null, Color.White, unit.Rotate, origin, 1.3f, SpriteEffects.None, 1);
                     HealthBar enemyHealthBar = new HealthBar(unit.CurrentHp, unit.MaxHp, 1f, 1f);
                     enemyHealthBar.Draw(spriteBatch, unit.Position, _imgPlane1);
                 }
