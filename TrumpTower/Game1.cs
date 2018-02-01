@@ -1370,12 +1370,29 @@ namespace TrumpTower
                             {
                                 if (_myTow.Position == _towerSelectorUpgrade)
                                 {
-                                    _map.Towers.Remove(_myTow);
-                                    _map.ChangeLocation((int)_myTow.Position.X / Constant.imgSizeMap, (int)_myTow.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
-                                    _myTow.Sell(_myTow);
-                                    ManagerSound.PlaySell();
-                                    _verif4 = false;
-                                    _verif3 = false;
+                                    // Verify if boss3 don't have this tower
+                                    bool towerCannotBeSell = false;
+                                    foreach (Enemy enemy in _map.GetAllEnemies2())
+                                    {
+                                        if (enemy._type == EnemyType.boss3)
+                                        {
+                                            if (enemy.TargetTower == _myTow)
+                                            {
+                                                towerCannotBeSell = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (!towerCannotBeSell)
+                                    {
+                                        _map.Towers.Remove(_myTow);
+                                        _map.ChangeLocation((int)_myTow.Position.X / Constant.imgSizeMap, (int)_myTow.Position.Y / Constant.imgSizeMap, (int)MapTexture.emptyTower);
+                                        _myTow.Sell(_myTow);
+                                        ManagerSound.PlaySell();
+                                        _verif4 = false;
+                                        _verif3 = false;
+                                    }
                                 }
                                 _towerSelectorUpgrade = new Vector2(-1000, -1000);
                             }
