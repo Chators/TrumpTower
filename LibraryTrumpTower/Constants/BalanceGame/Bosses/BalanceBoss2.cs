@@ -14,7 +14,7 @@ namespace LibraryTrumpTower.Constants.BalanceGame.Bosses
         //   public static int BOSS2_TIMES_BEING_REVIVED = 0;
         //  public static double BOSS2_DAMAGE = 10 * (1 + BOSS2_TIMES_BEING_REVIVED);
         //  public static double BOSS2_DEFAULT_SPEED = 3 * (1 + BOSS2_TIMES_BEING_REVIVED);
-        public static double BOSS2_DAMAGE = 250; // Set wall to around 2K hp, add units, prob planes
+        public static double BOSS2_DAMAGE = 200; // Set wall to around 2K hp, add units, prob planes
         public static double BOSS2_DEFAULT_SPEED = 3;            
         public static double BOSS2_DEFAULT_RELOAD = 2 * 60;
         public static double BOSS2_RANGE = 200;
