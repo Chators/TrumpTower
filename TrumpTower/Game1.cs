@@ -342,7 +342,7 @@ namespace TrumpTower
 
             #region Graphics Device 
 
-            Window.Position = new Point(800, 600);
+            //Window.Position = new Point(800, 600);
 
             Window.Title = "Trump Tower";
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
